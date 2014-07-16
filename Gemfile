@@ -29,6 +29,8 @@ gem 'spring',        group: :development
 # Simple helps you with powerful components to create your forms.
 gem 'simple_form'
 
+# State machines for Ruby classes, Read more: https://github.com/aasm/aasm
+gem 'aasm'
 # bootstrap-sass is a Sass-powered version of Bootstrap. Read more: https://github.com/twbs/bootstrap-sass
 gem 'bootstrap-sass', '~> 3.2.0'
 
