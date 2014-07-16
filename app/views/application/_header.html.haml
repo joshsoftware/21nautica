@@ -8,6 +8,17 @@
       = link_to '21 Nautica', '#', class: 'navbar-brand'
     .collapse.navbar-collapse{id: 'nav-header-collapse'}
       %ul.nav.navbar-nav
-        %li= link_to 'Import', '#'
-        %li= link_to 'Export', '#'
-
+        %li.dropdown
+          = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
+            New Order
+            %span.caret
+          %ul.dropdown-menu
+            %li= link_to 'Import', '#'
+            %li= link_to 'Export', new_export_path
+        %li.dropdown
+          = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
+            Tracking
+            %span.caret
+          %ul.dropdown-menu
+            %li= link_to 'Import', '#'
+            %li= link_to 'Export', '#'
