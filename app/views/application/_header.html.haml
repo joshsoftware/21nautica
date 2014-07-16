@@ -1,0 +1,13 @@
+.navbar.navbar-inverse.navbar-static-top
+  .container
+    .navbar-header
+      %button.navbar-toggle{"data-target" => "#nav-header-collapse", "data-toggle" => "collapse"}
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      = link_to '21 Nautica', '#', class: 'navbar-brand'
+    .collapse.navbar-collapse{id: 'nav-header-collapse'}
+      %ul.nav.navbar-nav
+        %li= link_to 'Import', '#'
+        %li= link_to 'Export', '#'
+
