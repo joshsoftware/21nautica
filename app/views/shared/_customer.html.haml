@@ -1,0 +1,5 @@
+.form-group
+  .col-md-2
+    = label_tag 'Customer Name', nil, class: 'control-label'
+  .col-sm-10
+    = select_tag 'customers', options_for_select(customers.collect{|customer| [customer.name, customer.id]})

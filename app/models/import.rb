@@ -1,6 +1,9 @@
-class Import < Order
+class Import < ActiveRecord::Base
   include AASM
 
+  has_many :order_customers, as: :order
+  has_many :customers, through: :order_customers
+  
   aasm column: 'status' do
     state :new, initial: true
     state :copy_document_received
@@ -25,4 +28,7 @@ class Import < Order
     end
 
   end
+  
+  auditable only: [:status, :updated_at]
+
 end

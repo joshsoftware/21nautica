@@ -1,0 +1,15 @@
+%table.table
+  %thead
+    %th R/O Number
+    %th Line
+    %th Equipment
+    %th Quantity
+    %th Placed
+  %tbody
+    - @exports.each do |export|
+      %tr
+        %td= export.release_order_number
+        %td= export.shipping_line
+        %td= export.equipment
+        %td= export.quantity
+        %td= export.placed

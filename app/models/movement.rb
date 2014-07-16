@@ -30,4 +30,7 @@ class Movement < ActiveRecord::Base
     end
 
   end
+  
+  auditable only: [:status, :updated_at, :current_location]
+
 end

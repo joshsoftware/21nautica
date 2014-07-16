@@ -1,0 +1,8 @@
+= simple_form_for @export , html: {class: 'form-horizontal'} do |f|
+  = f.input :export_type, collection: Export::TYPE, as: :radio_buttons, label: 'Type'
+  = render '/shared/customer', customers: @customers
+  = f.input :equipment
+  = f.input :quantity
+  = f.input :shipping_line
+  = f.input :release_order_number
+  = f.submit 'Save', class: 'btn-primary'

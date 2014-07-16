@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140715191232) do
+ActiveRecord::Schema.define(version: 20140716170314) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,23 @@ ActiveRecord::Schema.define(version: 20140715191232) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "espinita_audits", force: true do |t|
+    t.integer  "auditable_id"
+    t.string   "auditable_type"
+    t.integer  "user_id"
+    t.string   "user_type"
+    t.text     "audited_changes"
+    t.string   "comment"
+    t.integer  "version"
+    t.string   "action"
+    t.string   "remote_address"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "espinita_audits", ["auditable_id", "auditable_type"], name: "index_espinita_audits_on_auditable_id_and_auditable_type", using: :btree
+  add_index "espinita_audits", ["user_id", "user_type"], name: "index_espinita_audits_on_user_id_and_user_type", using: :btree
 
   create_table "export_items", force: true do |t|
     t.string   "container"
@@ -34,6 +51,8 @@ ActiveRecord::Schema.define(version: 20140715191232) do
   end
 
   create_table "exports", force: true do |t|
+    t.string   "equipment"
+    t.string   "quantity"
     t.string   "export_type"
     t.string   "shipping_line"
     t.integer  "placed"
@@ -57,6 +76,8 @@ ActiveRecord::Schema.define(version: 20140715191232) do
   end
 
   create_table "imports", force: true do |t|
+    t.string   "equipment"
+    t.integer  "quantity"
     t.string   "from"
     t.string   "to"
     t.string   "bl_number"
@@ -85,10 +106,10 @@ ActiveRecord::Schema.define(version: 20140715191232) do
     t.datetime "updated_at"
   end
 
-  create_table "orders", force: true do |t|
-    t.string   "equipment"
-    t.integer  "quantity"
-    t.string   "type"
+  create_table "order_customers", force: true do |t|
+    t.integer  "order_id"
+    t.string   "order_type"
+    t.integer  "customer_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

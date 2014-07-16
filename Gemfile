@@ -39,6 +39,11 @@ gem 'haml-rails'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+# Espinita is an ORM extension that logs all changes to your models
+gem "espinita", git: 'git@github.com:anilmaurya/espinita.git'
+
+# Select2 is a jQuery based replacement for select boxes. It supports searching, remote data sets, and infinite scrolling of results.
+#gem "select2-rails"
 # Quiet Assets turns off the Rails asset pipeline log. Read more: https://github.com/evrone/quiet_assets
 gem 'quiet_assets', group: :development
 # Use unicorn as the app server

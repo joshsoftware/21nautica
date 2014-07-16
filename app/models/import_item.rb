@@ -14,4 +14,7 @@ class ImportItem < ActiveRecord::Base
       transitions from: :awaiting_loading, to: :loaded_out
     end
   end
+  
+  auditable only: [:status, :updated_at, :current_location]
+
 end
