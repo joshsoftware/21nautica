@@ -9,10 +9,10 @@
     // Responsive, Mobile Compatibility
     %meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}/
   %body
-    .flash_messages.global
-      = render 'flash_message'
     .wrapper
       = render 'header'
+      .flash_messages.global
+        = render 'flash_message'
       .container-fluid
         .row-fluid
           = yield

@@ -1,0 +1,16 @@
+.modal.fade{data: {is: 'newCustomerModal'}, tabindex: '-1', role: 'dialog', aria: {labelledby: 'newCustomerModel'}}
+  .modal-dialog.modal-user
+    = simple_form_for(@customer, html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+      .modal-content
+        .modal-header
+          = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+          %h1.modal-title Add new customer
+        
+        .modal-body
+          = f.input :name
+          = f.input :emails, hint: 'Enter comman seperated emails' 
+        
+        .modal-footer
+          = link_to 'Close', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+          = f.submit 'Save', class: 'btn btn-primary'
+
