@@ -56,4 +56,8 @@ gem 'quiet_assets', group: :development
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
-
+group :test do
+  gem 'minitest-rails'
+  gem 'database_cleaner'
+  gem 'factory_girl_rails'
+end
