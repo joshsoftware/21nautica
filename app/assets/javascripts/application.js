@@ -16,3 +16,9 @@
 //= require turbolinks
 //= require select2
 //= require_tree .
+
+$(document).ready(function(){
+    $(document).on("page:load", function(){
+        $('.alert').delay(5000).fadeOut("slow", function () { $(this).remove(); })
+    });
+})

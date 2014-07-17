@@ -21,7 +21,7 @@ class ExportsController < ApplicationController
   private
 
   def export_params
-    params.require(:export).permit(:export_type, :equipment, :quantity, :shipping_line, :release_order_number)
+    params.require(:export).permit(:export_type, :equipment, :quantity, :shipping_line, :release_order_number, :customer_id)
   end
 
 end

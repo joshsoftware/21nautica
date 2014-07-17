@@ -11,6 +11,7 @@ class CreateImports < ActiveRecord::Migration
       t.string  :rate
       t.string  :status
       t.date    :out_of_port_date
+      t.integer :customer_id
       t.timestamps
     end
   end

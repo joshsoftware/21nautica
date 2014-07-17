@@ -1,2 +1,3 @@
 $(document).ready ->
-    $("[data-for='multiselect']").select2()
+    $(document).on "page:load", ->
+        $("[data-for='multiselect']").select2()

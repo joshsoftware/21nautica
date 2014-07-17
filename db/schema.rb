@@ -57,6 +57,7 @@ ActiveRecord::Schema.define(version: 20140716170314) do
     t.string   "shipping_line"
     t.integer  "placed"
     t.string   "release_order_number"
+    t.integer  "customer_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -86,6 +87,7 @@ ActiveRecord::Schema.define(version: 20140716170314) do
     t.string   "rate"
     t.string   "status"
     t.date     "out_of_port_date"
+    t.integer  "customer_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -102,14 +104,6 @@ ActiveRecord::Schema.define(version: 20140716170314) do
     t.string   "custom_seal"
     t.string   "current_location"
     t.string   "status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "order_customers", force: true do |t|
-    t.integer  "order_id"
-    t.string   "order_type"
-    t.integer  "customer_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

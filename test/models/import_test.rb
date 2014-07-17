@@ -13,6 +13,7 @@
 #  rate             :string(255)
 #  status           :string(255)
 #  out_of_port_date :date
+#  customer_id      :integer
 #  created_at       :datetime
 #  updated_at       :datetime
 #

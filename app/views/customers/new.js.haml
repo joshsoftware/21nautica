@@ -1,9 +1,10 @@
 - if request.get?
   $("[data-for='newCustomer']").html('#{escape_javascript(render "form")}')
+  $("[data-is='modelName']").val(window.location.pathname.replace('s/new', '').replace(/\//, ''))
   $("[data-is='newCustomerModal']").modal('show')
 - else
   $('.flash_messages').html('#{escape_javascript(render :partial => 'flash_message')}');
-  $('.alert').delay(5000).fadeOut("slow", function () { $(this).remove(); })
-  $("[data-for='customerSelect']").html('#{escape_javascript(render '/shared/customer', customers: @customers)}')
-  $("[data-for='multiselect']").select2()
-  $("[data-is='newCustomerModal']").modal('hide')
+  $("[data-for='customerSelect']").html('#{escape_javascript(render '/shared/customer', customers: @customers, model: params[:model])}');
+  $('.alert').delay(5000).fadeOut("slow", function () { $(this).remove(); });
+  $("[data-for='multiselect']").select2();
+  $("[data-is='newCustomerModal']").modal('hide');

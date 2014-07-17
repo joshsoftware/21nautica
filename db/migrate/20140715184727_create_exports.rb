@@ -7,6 +7,7 @@ class CreateExports < ActiveRecord::Migration
       t.string  :shipping_line
       t.integer :placed
       t.string  :release_order_number
+      t.integer :customer_id
       t.timestamps
     end
   end

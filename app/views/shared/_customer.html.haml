@@ -1,7 +1,8 @@
 .form-group
   .col-md-3
-    = label_tag 'Customer Name', nil, class: 'control-label'
+    = label_tag 'Customer name', nil, class: 'control-label'
   .col-md-6
-    = select_tag 'customers', options_for_select(customers.collect{|customer| [customer.name, customer.id]}), multiple: true, data: {for: 'multiselect'}, class: 'customer_select'
-  .col-sm-2
+    = select_tag "#{model}[customer_id]", options_for_select(customers.collect{|customer| [customer.name, customer.id]}), {data: {for: 'multiselect'}, class: 'customer_select'}
+  .col-md-2
     = link_to 'Add new customer', new_customer_path, remote: true, class: 'btn btn-info'
+

@@ -9,13 +9,13 @@
 #  shipping_line        :string(255)
 #  placed               :integer
 #  release_order_number :string(255)
+#  customer_id          :integer
 #  created_at           :datetime
 #  updated_at           :datetime
 #
 
 class Export < ActiveRecord::Base
-  has_many :order_customers, as: :order
-  has_many :customers, through: :order_customers
+  belongs_to :customer
 
   TYPE = ['TBL', 'Haulage']
 end

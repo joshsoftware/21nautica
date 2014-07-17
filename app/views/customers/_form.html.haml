@@ -8,7 +8,8 @@
         
         .modal-body
           = f.input :name
-          = f.input :emails, hint: 'Enter comman seperated emails' 
+          = f.input :emails, hint: 'Enter comman seperated emails'
+          = hidden_field_tag 'model', nil, data: {is: 'modelName'}
         
         .modal-footer
           = link_to 'Close', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
