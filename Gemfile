@@ -44,8 +44,10 @@ gem "espinita", git: 'git@github.com:anilmaurya/espinita.git'
 
 #Add a comment summarizing the current schema to the top of models
 gem 'annotate', ">=2.6.0"
+
 # Select2 is a jQuery based replacement for select boxes. It supports searching, remote data sets, and infinite scrolling of results.
 gem "select2-rails"
+
 # Quiet Assets turns off the Rails asset pipeline log. Read more: https://github.com/evrone/quiet_assets
 gem 'quiet_assets', group: :development
 # Use unicorn as the app server
