@@ -23,9 +23,6 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0',          group: :doc
 
-# Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-gem 'spring',        group: :development
-
 # Simple helps you with powerful components to create your forms.
 gem 'simple_form'
 
@@ -48,8 +45,22 @@ gem 'annotate', ">=2.6.0"
 # Select2 is a jQuery based replacement for select boxes. It supports searching, remote data sets, and infinite scrolling of results.
 gem "select2-rails"
 
-# Quiet Assets turns off the Rails asset pipeline log. Read more: https://github.com/evrone/quiet_assets
-gem 'quiet_assets', group: :development
+# bootstrap-datepicker-rails project integrates a datepicker with Rails 3 assets pipeline.
+gem 'bootstrap-datepicker-rails'
+
+group :development do
+  
+  # Quiet Assets turns off the Rails asset pipeline log. Read more: https://github.com/evrone/quiet_assets
+  gem 'quiet_assets'
+
+  # better_errors and binding_of_caller show errors in html and can debug on html
+  gem 'better_errors'
+  gem 'binding_of_caller'
+
+  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'spring'
+
+end
 # Use unicorn as the app server
 # gem 'unicorn'
 

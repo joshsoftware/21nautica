@@ -16,6 +16,7 @@
 
 class Export < ActiveRecord::Base
   belongs_to :customer
+  has_many :export_items
 
   TYPE = ['TBL', 'Haulage']
 end

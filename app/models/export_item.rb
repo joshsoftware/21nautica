@@ -13,4 +13,14 @@
 #
 
 class ExportItem < ActiveRecord::Base
+
+  belongs_to :export
+
+  def as_json(options= {})
+    super(only: [:id, :export_id, :container, :location], methods: [:date_of_placement])
+  end
+
+  def date_of_placement
+    created_at.to_date.to_s
+  end
 end

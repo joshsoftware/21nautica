@@ -10,15 +10,17 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require jquery
+//= require jquery.min
 //= require bootstrap-sprockets
 //= require jquery_ujs
 //= require turbolinks
 //= require select2
+//= require bootstrap-datepicker
 //= require_tree .
 
 $(document).ready(function(){
     $(document).on("page:load", function(){
         $('.alert').delay(5000).fadeOut("slow", function () { $(this).remove(); })
+        $('[data-behaviour~=datepicker]').datepicker();
     });
 })

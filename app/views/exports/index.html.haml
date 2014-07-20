@@ -1,5 +1,6 @@
-%table.table
+%table.table{id: 'exports_table'}
   %thead
+    %th
     %th R/O Number
     %th Line
     %th Equipment
@@ -7,9 +8,34 @@
     %th Placed
   %tbody
     - @exports.each do |export|
-      %tr
+      %tr{id: "#{export.id}"}
+        %td= image_tag 'plus.png'
         %td= export.release_order_number
         %td= export.shipping_line
         %td= export.equipment
         %td= export.quantity
         %td= export.placed
+.hide
+  %table{id: "detailsTable"}
+    %thead
+      %tr
+        %th Container
+        %th Date of Placement
+        %th Location
+        %th= link_to 'Add Container', '#', id: "btnAddNewRow", class: 'btn btn-primary'
+    %body
+.hide
+  %form{id: 'formAddNewRow', action: '#', title: 'Add new container'}
+    = label_tag 'container', 'Container'
+    %br
+    = text_field_tag 'container', nil, rel: 0 
+    %br
+    = label_tag 'Date of Placement', 'Date of Placement'
+    = text_field_tag 'date_of_placement', nil, rel: 1, data: {behaviour: 'datepicker'}
+    %br
+    = label_tag 'location', 'location'
+    %br
+    = text_field_tag 'location', nil, rel: 2
+    = hidden_field_tag 'link', nil, rel: 3
+:coffeescript
+  @exportItems = #{@export_items.to_json}
