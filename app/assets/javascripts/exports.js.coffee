@@ -10,7 +10,9 @@ fnFormatDetails = (table_id, html) ->
 datatable_initialize = ->
 
   $(document).on("dialogopen", ".ui-dialog", (event, ui) ->
-    $('[data-behaviour~=datepicker]').datepicker();  
+    $('[data-behaviour~=datepicker]').datepicker({
+      dateFormat: 'yy-mm-dd'
+    });  
   );
   exportsTable = $('#exports_table').dataTable({
                     "bJQueryUI": true

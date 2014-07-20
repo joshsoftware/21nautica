@@ -9,6 +9,6 @@ class ExportItemsController < ApplicationController
   private
 
   def export_items_params
-    params.permit(:container, :location)
+    params.permit(:container, :location, :date_of_placement)
   end
 end
