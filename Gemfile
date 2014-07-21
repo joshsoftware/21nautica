@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-
+ruby "2.1.2"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.1'
 # Use postgres as the database for Active Record
@@ -37,7 +37,7 @@ gem 'haml-rails'
 # gem 'bcrypt', '~> 3.1.7'
 
 # Espinita is an ORM extension that logs all changes to your models
-gem "espinita", git: 'git@github.com:anilmaurya/espinita.git'
+gem "espinita", github: 'anilmaurya/espinita'
 
 #Add a comment summarizing the current schema to the top of models
 gem 'annotate', ">=2.6.0"
@@ -73,4 +73,9 @@ group :test do
   gem 'minitest-rails'
   gem 'database_cleaner'
   gem 'factory_girl_rails'
+end
+
+group :production do
+  gem 'rails_12factor'
+  gem 'unicorn'
 end
