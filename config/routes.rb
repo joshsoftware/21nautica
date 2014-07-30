@@ -1,9 +1,4 @@
 Rails.application.routes.draw do
-<<<<<<< HEAD
-
-=======
-  
->>>>>>> 5494b3acbad226f1dc2112cb7f1e285d5f1e3046
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -14,12 +9,7 @@ Rails.application.routes.draw do
   resources :exports, only: [:new, :create, :index]
   resources :export_items, only: [:new, :create]
   resources :customers, only: [:new, :create]
-<<<<<<< HEAD
   resources :movements, only: [:new, :create, :index]
-  
-=======
-
->>>>>>> 5494b3acbad226f1dc2112cb7f1e285d5f1e3046
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
