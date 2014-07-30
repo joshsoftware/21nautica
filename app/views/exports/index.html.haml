@@ -23,6 +23,7 @@
         %th Date of Placement
         %th Location
         %th= link_to 'Add Container', 'javascript:void(0)', id: "btnAddNewRow", class: 'btn btn-primary'
+        
     %body
 .hide
   %form{id: 'formAddNewRow', action: '#', title: 'Add new container'}
@@ -37,5 +38,33 @@
     %br
     = text_field_tag 'location', nil, rel: 2
     = hidden_field_tag 'link', nil, rel: 3
+
+#basicModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    = simple_form_for(@movement, html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+      .modal-content
+        .modal-header
+          = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+          %h1.modal-title Add new Movement
+        
+        .modal-body
+          = f.input :booking_number
+          = f.input :truck_number
+          = f.input :vessel_targeted
+          = f.input :point_of_destination
+          = f.input :movement_type
+          
+          
+          
+          /= f.input :emails, hint: 'Enter comman seperated emails'
+          = hidden_field_tag 'model', nil, data: {is: 'modelName'}
+        
+        .modal-footer
+          = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+          = f.submit 'Save', class: 'btn btn-primary'        
+    
+    
+
 :coffeescript
   @exportItems = #{@export_items.to_json}
+  
