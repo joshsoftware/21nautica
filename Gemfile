@@ -73,6 +73,7 @@ group :test do
   gem 'minitest-rails'
   gem 'database_cleaner'
   gem 'factory_girl_rails'
+  gem "codeclimate-test-reporter", require: nil
 end
 
 group :production do
