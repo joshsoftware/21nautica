@@ -2,9 +2,9 @@
   = f.input :export_type, collection: Export::TYPE, as: :select, label: 'Type', include_blank: false
   %div{data: {for: 'customerSelect'}}
     = render '/shared/customer', customers: @customers, model: 'export'
-  = f.input :equipment
+  = f.input :equipment, collection: Export::EQUIPMENT_TYPE, as: :select, label: 'Equipment', include_blank: false  
   = f.input :quantity
-  = f.input :shipping_line
+  = f.input :shipping_line, collection: Export::SHIPPING_LINE, as: :select, label: 'Shipping line', include_blank: false 
   = f.input :release_order_number, label: 'R/O Number'
   .form-group
     .col-sm-offset-2.col-sm-2

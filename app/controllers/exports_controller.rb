@@ -3,6 +3,7 @@ class ExportsController < ApplicationController
   def index
     @exports = Export.all.to_a
     @export_items = @exports.collect{|export| export.export_items.as_json}
+    @movement=Movement.new
   end
 
   def new

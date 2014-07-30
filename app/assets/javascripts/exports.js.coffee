@@ -33,12 +33,13 @@ datatable_initialize = ->
     
     else
       # Open this row
+
       rowIndex = exportsTable.fnGetPosition( $(nTds).closest('tr')[0] )
       detailsRowData = exportItems[rowIndex]
       this.src = "/images/minus.png"
 
       exportsTable.fnOpen(nTr, fnFormatDetails(id, detailsTableHtml), 'details');
-  
+      
       oInnerTable = $("#exportItem_" + id).dataTable({
       "bJQueryUI": true,
       "bFilter": false,
@@ -49,10 +50,17 @@ datatable_initialize = ->
                     { "mDataProp": "date_of_placement" },
                     { "mDataProp": "location" },
                     { "mDataProp": "id" }
-                    ]
+                    ],
+      columnDefs: [
+        targets: 3,
+        render: (data, type, full, meta) ->
+          "<a href='#'' class='btn btn-lg btn-primary' data-toggle='modal'   
+              data-target='#basicModal' >Movement</a>"
+      ]
       }).makeEditable({
         sUpdateURL: '/export_items/update'
         sAddURL: '/export_items?export_id='+id
+
       });
 
 

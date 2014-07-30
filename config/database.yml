@@ -6,11 +6,12 @@
 #
 default: &default
   adapter: postgresql
-  username: postgres
+  username: postgres    
   pool: 5
   timeout: 5000
   unicode: unicode
   prepared_statements: false
+  
 
 development:
   <<: *default

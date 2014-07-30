@@ -19,4 +19,7 @@ class Export < ActiveRecord::Base
   has_many :export_items
 
   TYPE = ['TBL', 'Haulage']
+  EQUIPMENT_TYPE =['20GP','40GP','40OT','40FR','20OT']
+  SHIPPING_LINE =['CMA CGM','Maersk','Evergreen','Safmarine','PIL']
+
 end
