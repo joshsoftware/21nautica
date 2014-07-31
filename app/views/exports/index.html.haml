@@ -51,12 +51,9 @@
           = f.input :booking_number
           = f.input :truck_number
           = f.input :vessel_targeted
-          = f.input :point_of_destination
-          = f.input :movement_type
-          
-          
-          
-          /= f.input :emails, hint: 'Enter comman seperated emails'
+          = f.input :point_of_destination,label:'Port of Destination'
+          /= label_tag 'container', 'Container' , class: 'control-label'
+          /%input#query{name: "query", type: "text", value: $this.parents('tr').attr('id')}
           = hidden_field_tag 'model', nil, data: {is: 'modelName'}
         
         .modal-footer
