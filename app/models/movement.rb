@@ -21,6 +21,8 @@
 class Movement < ActiveRecord::Base
   include AASM
 
+  has_one :export_item 
+
   aasm column: 'status' do
     state :loaded, initial: true
     state :arrived_malaba_border
@@ -53,4 +55,11 @@ class Movement < ActiveRecord::Base
   
   auditable only: [:status, :updated_at, :current_location]
 
+  def as_json(options= {})
+    super(methods: [:container_number])
+  end
+
+	def container_number
+		ExportItem.where(movement_id: self.id).first.container
+	end
 end

@@ -1,2 +1,25 @@
-%h1 Movement#index
-%p Find me in app/views/movement/index.html.haml
+%table.table{id: 'movements_table'}
+  %thead
+    %th
+    %th Booking Number
+  %tbody
+    - @booking_number_list.each do |booking_num|
+      %tr{id: "#{booking_num.id}"}
+        %td= image_tag 'plus.png'
+        %td= booking_num.booking_number
+= @export_items_container
+.hide
+  %table{id: "detailsTable"}
+    %thead
+      %tr
+        %th Id 
+        %th Truck Number
+        %th Vessel
+        %th Port of Discharge
+        %th Container
+        %th Type
+        %th Shipping Line     
+    %body   
+:coffeescript
+  @movementsList = #{@movements_list.to_json}
+  @movementsListContainer = #{@movements_list_container.to_json}
