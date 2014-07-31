@@ -60,6 +60,7 @@ class Movement < ActiveRecord::Base
   end
 
 	def container_number
-		ExportItem.where(movement_id: self.id).first.container
+		export_item = ExportItem.where(movement_id: self.id).first
+    !export_item.nil? ? export_item.container : nil
 	end
 end

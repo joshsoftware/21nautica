@@ -9,12 +9,6 @@ fnFormatDetails = (table_id, html) ->
 
 datatable_initialize = ->
 
-#  $(document).on("dialogopen", ".ui-dialog", (event, ui) ->
-#    $('[data-behaviour~=datepicker]').datepicker({
-#      dateFormat: 'yy-mm-dd'
-#    });  
-#  );
-
   movementsTable = $('#movements_table').dataTable({
                     "bJQueryUI": true
                     "sPaginationType": "full_numbers"
@@ -33,14 +27,8 @@ datatable_initialize = ->
       movementsTable.fnClose(nTr)
     else
       # Open this row
-      rowIndex = movementsTable.fnGetPosition( $(nTds).closest('tr')[0] )
-      
-
-      detailsRowData = movementsList[rowIndex]
-      #detailsRowDataContainer = movementsListContainer[rowIndex]
-      
+      detailsRowData = movementsList[($(nTds).closest('tr')[0]).id]  
       this.src = "/images/minus.png"
-
       movementsTable.fnOpen(nTr, fnFormatDetails(id, detailsTableHtml), 'details');
   
       oInnerTable = $("#movementList_" + id).dataTable({
@@ -57,9 +45,6 @@ datatable_initialize = ->
                     { "mDataProp": "movement_type" },
                     { "mDataProp": "shipping_seal" }
                     ]
-#      }).makeEditable({
-#        sUpdateURL: '/export_items/update'
-#        sAddURL: '/export_items?export_id='+id
       });
 
 $(document).on "page:load", datatable_initialize
