@@ -3,11 +3,10 @@
     %th
     %th Booking Number
   %tbody
-    - @booking_number_list.each do |booking_num|
-      %tr{id: "#{booking_num.id}"}
+    - @movements.each do |key, value|
+      %tr{id: "#{key}"}
         %td= image_tag 'plus.png'
-        %td= booking_num.booking_number
-= @export_items_container
+        %td= key
 .hide
   %table{id: "detailsTable"}
     %thead
@@ -21,5 +20,4 @@
         %th Shipping Line     
     %body   
 :coffeescript
-  @movementsList = #{@movements_list.to_json}
-  @movementsListContainer = #{@movements_list_container.to_json}
+  @movementsList = #{@movements.to_json}
