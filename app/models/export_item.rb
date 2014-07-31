@@ -14,11 +14,11 @@
 #
 
 class ExportItem < ActiveRecord::Base
-
   belongs_to :export
   belongs_to :movement
+
   def as_json(options= {})
-    super(only: [:id, :export_id, :container, :location, :date_of_placement])
+    super(only: [:id, :export_id, :container, :location, :date_of_placement,:movement_id])
   end
 
 end

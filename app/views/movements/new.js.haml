@@ -1,0 +1,8 @@
+- if request.get?
+  $("[data-is='modelName']").val(window.location.pathname.replace('s/new', '').replace(/\//, ''))
+  $("[data-is='basicModal']").modal('show')
+- else
+  $('.flash_messages').html('#{escape_javascript(render :partial => 'flash_message')}');
+  $('.alert').delay(5000).fadeOut("slow", function () { $(this).remove(); });
+  $("[data-for='multiselect']").select2();
+  $('#basicModal').modal('hide');
