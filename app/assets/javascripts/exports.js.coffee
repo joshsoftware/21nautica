@@ -7,6 +7,17 @@ fnFormatDetails = (table_id, html) ->
     sOut += "</table>"
     return sOut
 
+defaultEditable = ->
+  tooltip: 'Click to edit',
+  indicator: "Saving..."
+  sUpdateURL: "export_items/update"
+  submit:'Save changes',
+  fnOnCellUpdated: (sStatus, sValue, settings) ->
+    alert("(Cell Callback): Cell is updated with value " + sValue)
+
+fnOnCellUpdated = (sStatus, sValue, a, b, settings) ->
+  alert("wtf" +  sStatus)
+
 datatable_initialize = ->
 
   $(document).on("dialogopen", ".ui-dialog", (event, ui) ->
@@ -36,7 +47,7 @@ datatable_initialize = ->
       rowIndex = exportsTable.fnGetPosition( $(nTds).closest('tr')[0] )
       detailsRowData = exportItems[rowIndex]
       this.src = "/images/minus.png"
-      exportsTable.fnOpen(nTr, fnFormatDetails(id, detailsTableHtml), 'details');
+      exportsTable.fnOpen(nTr, fnFormatDetails(id, detailsTableHtml), 'details')
       oInnerTable = $("#exportItem_" + id).dataTable({
       "bJQueryUI": true,
       "bFilter": false,
@@ -59,10 +70,14 @@ datatable_initialize = ->
       ],
       createdRow: ( row, data, index ) ->
          $(row).attr('id', data.id)
-      }).makeEditable({
-        sUpdateURL: '/export_items/update'
-        sAddURL: '/export_items?export_id='+id
       })
+
+     oInnerTable.makeEditable(
+        aoColumns: [ { name: "container", sUpdateURL: "export_items/update" },
+                     { name: 'date_of_placement', sUpdateURL: "export_items/update"},
+                     { name: 'location', sUpdateURL: "export_items/update"}, null
+                   ]
+      )
 
 $(document).on "page:load", datatable_initialize
 $(document).ready datatable_initialize
