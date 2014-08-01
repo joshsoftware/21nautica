@@ -73,6 +73,7 @@ datatable_initialize = ->
       })
 
      oInnerTable.makeEditable(
+        sAddURL: '/export_items?export_id=' + id
         aoColumns: [ { name: "container", sUpdateURL: "export_items/update" },
                      { name: 'date_of_placement', sUpdateURL: "export_items/update"},
                      { name: 'location', sUpdateURL: "export_items/update"}, null
