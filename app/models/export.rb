@@ -16,7 +16,7 @@
 
 class Export < ActiveRecord::Base
   belongs_to :customer
-  has_many :export_items
+  has_many :export_items, dependent: :destroy
 
   TYPE = ['TBL', 'Haulage']
   EQUIPMENT_TYPE =['20GP','40GP','40OT','40FR','20OT']

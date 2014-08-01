@@ -12,8 +12,8 @@ datatable_initialize = ->
   $(document).on("dialogopen", ".ui-dialog", (event, ui) ->
     $('[data-behaviour~=datepicker]').datepicker({
       dateFormat: 'yy-mm-dd'
-    });  
-  );
+    })
+  )
   exportsTable = $('#exports_table').dataTable({
                     "bJQueryUI": true
                     "sPaginationType": "full_numbers"
@@ -54,12 +54,15 @@ datatable_initialize = ->
           console.log(full)
           $('#basicModal #export_item_id1').val full.id
           $('#basicModal #export_item_id').val full.export_id
-          "<a href='#'' class='btn btn-lg btn-primary' data-toggle='modal'   
-              data-target='#basicModal' >Movement</a>"
+          "<a href='#'' id='movement_#{full.id}' class='btn btn-small btn-primary' data-toggle='modal'   
+              data-target='#basicModal' data-row='##{full.id}'>Movement</a>"
+      ],
+      createdRow: ( row, data, index ) ->
+         $(row).attr('id', data.id)
       }).makeEditable({
         sUpdateURL: '/export_items/update'
         sAddURL: '/export_items?export_id='+id
-      });
+      })
 
 $(document).on "page:load", datatable_initialize
 $(document).ready datatable_initialize

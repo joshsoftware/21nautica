@@ -21,8 +21,6 @@
 class Movement < ActiveRecord::Base
   include AASM
 
-  has_one :export_item 
-
   aasm column: 'status' do
     state :loaded, initial: true
     state :arrived_malaba_border
