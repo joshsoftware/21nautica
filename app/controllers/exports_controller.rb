@@ -17,8 +17,9 @@ class ExportsController < ApplicationController
   def create 
     @export = Export.new(export_params)
 
-    # FIXME: create an empty export item, so that we can list it
-    @export.export_items.build  
+    # Add as many containers as mentioned in the Order#quantity
+    @export.quantity.times { @export.export_items.build }
+
     if @export.save
       redirect_to exports_path
     else

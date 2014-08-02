@@ -2,7 +2,7 @@ class CreateExports < ActiveRecord::Migration
   def change
     create_table :exports do |t|
       t.string  :equipment
-      t.string  :quantity
+      t.integer :quantity
       t.string  :export_type
       t.string  :shipping_line
       t.integer :placed

@@ -50,6 +50,10 @@ class Movement < ActiveRecord::Base
     end
 
   end
+
+  before_save do |record|
+    record.booking_number.upcase!
+  end
   
   auditable only: [:status, :updated_at, :current_location]
 
@@ -57,8 +61,8 @@ class Movement < ActiveRecord::Base
     super(methods: [:container_number])
   end
 
-	def container_number
-		export_item = ExportItem.where(movement_id: self.id).first
+  def container_number
+    export_item = ExportItem.where(movement_id: self.id).first
     !export_item.nil? ? export_item.container : nil
-	end
+  end
 end
