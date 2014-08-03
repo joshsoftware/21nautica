@@ -4,6 +4,10 @@ class MovementsController < ApplicationController
     @movements = Movement.where.not(status: "document_handed").group_by(&:booking_number)
   end
   
+  def history
+    @movements_history = Movement.where(status: "document_handed")
+  end
+
   # JS call.
   def create
     movement = Movement.new(movement_params)

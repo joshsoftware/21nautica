@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   resources :export_items, only: [:new, :create]
   resources :customers, only: [:new, :create]
   resources :movements, only: [:new, :create, :index]
+  get 'export/history' => 'movements#history' 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

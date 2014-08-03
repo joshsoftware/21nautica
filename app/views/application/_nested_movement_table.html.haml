@@ -1,0 +1,23 @@
+%table.table{id: 'movements_table'}
+  %thead
+    %th
+    %th Booking Number
+  %tbody
+    - movements.each do |key, value|
+      %tr{id: "#{key}"}
+        %td= image_tag 'plus.png'
+        %td= key
+.hide
+  %table{id: "detailsTable"}
+    %thead
+      %tr
+        %th Id 
+        %th Truck Number
+        %th Vessel
+        %th Port of Discharge
+        %th Container
+        %th Type
+        %th Shipping Line     
+    %body   
+:coffeescript
+  @movementsList = #{movements.to_json}
