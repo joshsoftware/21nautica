@@ -7,17 +7,6 @@ fnFormatDetails = (table_id, html) ->
     sOut += "</table>"
     return sOut
 
-defaultEditable = ->
-  tooltip: 'Click to edit',
-  indicator: "Saving..."
-  sUpdateURL: "export_items/update"
-  submit:'Save changes',
-  fnOnCellUpdated: (sStatus, sValue, settings) ->
-    alert("(Cell Callback): Cell is updated with value " + sValue)
-
-fnOnCellUpdated = (sStatus, sValue, a, b, settings) ->
-  alert("wtf" +  sStatus)
-
 datatable_initialize = ->
 
   $(document).on("dialogopen", ".ui-dialog", (event, ui) ->
@@ -71,7 +60,7 @@ datatable_initialize = ->
 
      oInnerTable.makeEditable(
         aoColumns: [ { name: "container", sUpdateURL: "export_items/update" },
-                     { name: 'date_of_placement', sUpdateURL: "export_items/update"},
+                     { name: 'date_of_placement', placeholder: "yyyy-mm-dd", tooltip: "yyyy-mm-dd", sUpdateURL: "export_items/update"},
                      { name: 'location', sUpdateURL: "export_items/update"}, null
                    ]
       )
