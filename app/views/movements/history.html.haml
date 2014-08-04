@@ -1,21 +1,2 @@
-%table.table{id: 'movements_table'}
-  %thead
-    %th Id
-    %th Booking Number
-    %th Truck Number
-    %th Vessel
-    %th Port of Discharge
-    %th Container
-    %th Type
-    %th Shipping Line
-  %tbody
-    - @movements_history.each do |movement|
-      %tr        
-        %td= movement.id
-        %td= movement.booking_number
-        %td= movement.truck_number
-        %td= movement.vessel_targeted
-        %td= movement.point_of_destination
-        %td= movement.container_number
-        %td= movement.movement_type
-        %td= movement.shipping_seal
+= render "movements_table"
+

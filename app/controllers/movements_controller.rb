@@ -1,11 +1,11 @@
 class MovementsController < ApplicationController
 
   def index
-    @movements = Movement.where.not(status: "document_handed").group_by(&:booking_number)
+    @movements = Movement.where.not(status: "document_handed").order(:booking_number)
   end
   
   def history
-    @movements_history = Movement.where(status: "document_handed")
+    @movements = Movement.where(status: "document_handed").order(:booking_number)
   end
 
   # JS call.

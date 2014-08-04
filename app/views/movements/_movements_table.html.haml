@@ -1,0 +1,19 @@
+%table.table{id: 'movements_table'}
+  %thead
+    %th Booking Number
+    %th Truck Number
+    %th Vessel
+    %th Port of Discharge
+    %th Container
+    %th Type
+    %th Shipping Line
+  %tbody
+    - @movements.each do |element|
+      %tr
+        %td= element.booking_number
+        %td= element.truck_number
+        %td= element.vessel_targeted
+        %td= element.port_of_destination
+        %td= element.container_number
+        %td= element.movement_type
+        %td= element.shipping_seal
