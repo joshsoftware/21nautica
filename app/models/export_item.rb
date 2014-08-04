@@ -17,7 +17,9 @@ class ExportItem < ActiveRecord::Base
   belongs_to :export
   belongs_to :movement
 
-  validates :date_of_placement, format: { with: /\d{4}-\d{1,2}-\d{1,2}/ }
+  # We need to validate only on :update, because we pre-create export-items
+  # based on quantity
+  validates :date_of_placement, format: { with: /\d{4}-\d{1,2}-\d{1,2}/, on: :update }
   validate :date_of_placement_cannot_be_in_future
 
   def date_of_placement_cannot_be_in_future
