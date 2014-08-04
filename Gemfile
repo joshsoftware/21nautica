@@ -48,6 +48,8 @@ gem "select2-rails"
 # bootstrap-datepicker-rails project integrates a datepicker with Rails 3 assets pipeline.
 gem 'bootstrap-datepicker-rails'
 
+gem 'axlsx'
+
 group :development do
   
   # Quiet Assets turns off the Rails asset pipeline log. Read more: https://github.com/evrone/quiet_assets
