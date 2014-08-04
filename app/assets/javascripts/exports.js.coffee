@@ -62,18 +62,14 @@ datatable_initialize = ->
       columnDefs: [
         targets: 3,
         render: (data, type, full, meta) ->
-          console.log(full)
-          $('#basicModal #export_item_id1').val full.id
-          $('#basicModal #export_item_id').val full.export_id
           "<a href='#'' id='movement_#{full.id}' class='btn btn-small btn-primary' data-toggle='modal'   
-              data-target='#basicModal' data-row='##{full.id}'>Movement</a>"
+              data-target='#basicModal' data-export='##{full.export_id}' data-row='##{full.id}'>Movement</a>"
       ],
       createdRow: ( row, data, index ) ->
          $(row).attr('id', data.id)
       })
 
      oInnerTable.makeEditable(
-        sAddURL: '/export_items?export_id=' + id
         aoColumns: [ { name: "container", sUpdateURL: "export_items/update" },
                      { name: 'date_of_placement', sUpdateURL: "export_items/update"},
                      { name: 'location', sUpdateURL: "export_items/update"}, null
@@ -82,3 +78,5 @@ datatable_initialize = ->
 
 $(document).on "page:load", datatable_initialize
 $(document).ready datatable_initialize
+
+

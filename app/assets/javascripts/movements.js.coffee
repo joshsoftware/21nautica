@@ -40,7 +40,7 @@ datatable_initialize = ->
                     { "mDataProp": "id" },
                     { "mDataProp": "truck_number" },
                     { "mDataProp": "vessel_targeted" },
-                    { "mDataProp": "point_of_destination" },
+                    { "mDataProp": "port_of_destination" },
                     { "mDataProp": "container_number" },
                     { "mDataProp": "movement_type" },
                     { "mDataProp": "shipping_seal" }

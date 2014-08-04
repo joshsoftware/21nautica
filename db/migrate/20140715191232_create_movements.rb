@@ -4,8 +4,8 @@ class CreateMovements < ActiveRecord::Migration
       t.string :booking_number
       t.string :truck_number
       t.string :vessel_targeted
-      t.string :point_of_destination
-      t.string :point_of_loading
+      t.string :port_of_destination
+      t.string :port_of_loading
       t.date   :estimate_delivery
       t.string :movement_type
       t.string :shipping_seal

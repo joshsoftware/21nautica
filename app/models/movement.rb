@@ -6,8 +6,8 @@
 #  booking_number       :string(255)
 #  truck_number         :string(255)
 #  vessel_targeted      :string(255)
-#  point_of_destination :string(255)
-#  point_of_loading     :string(255)
+#  port_of_destination :string(255)
+#  port_of_loading     :string(255)
 #  estimate_delivery    :date
 #  movement_type        :string(255)
 #  shipping_seal        :string(255)

@@ -10,7 +10,7 @@
     - @exports.each do |export|
       %tr{id: "#{export.id}"}
         %td= image_tag 'plus.png'
-        %td= export.release_order_number
+        %td.ro_number= export.release_order_number
         %td= export.shipping_line
         %td= export.equipment
         %td= export.quantity
@@ -22,8 +22,8 @@
         %th Container
         %th Date of Placement
         %th Location
-        /%th= link_to 'Add Container', 'javascript:void(0)', id: "btnAddNewRow", class: 'btn btn-primary'
-        %th Action
+        %th#btnAddNewRow 
+          /= link_to 'Add Container', 'javascript:void(0)', id: "btnAddNewRow", class: 'btn btn-primary'
     %body
 .hide
   %form{id: 'formAddNewRow', action: '#', title: 'Add new container'}
@@ -41,20 +41,17 @@
 
 #basicModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog
-    = simple_form_for(@movement, html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+    = simple_form_for(:movement, url: 'wtf', html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
       .modal-content
         .modal-header
           = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
           %h1.modal-title Add new Movement
         
         .modal-body
-          = f.input :booking_number,value: params[:export_item_id]
+          = f.input :booking_number
           = f.input :truck_number
           = f.input :vessel_targeted
-          = f.input :point_of_destination,label:'Port of Destination'
-          = hidden_field_tag 'export_item_id', nil
-          = hidden_field_tag 'export_item_id1',nil
-          = hidden_field_tag 'model', nil, data: {is: 'modelName'}
+          = f.input :port_of_destination, collection: DESTINATION_PORTS
         
         .modal-footer
           = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
@@ -62,4 +59,11 @@
     
 :coffeescript
   @exportItems = #{@export_items.to_json}
+
+  $('#basicModal').on 'show.bs.modal', (event) ->
+    export_item = $(event.relatedTarget).attr('data-row')
+    ro_number = $("#exports_table tr" + $(event.relatedTarget).attr('data-export') + " td.ro_number").text()
+    $('#basicModal #movement_booking_number').val ro_number
+    $('#basicModal form').attr('action', "/movements?export_item_id=" + export_item.slice(1))
+    
   
