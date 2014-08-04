@@ -11,6 +11,9 @@ class MovementsController < ApplicationController
   # JS call.
   def create
     movement = Movement.new(movement_params)
+    @export_item = ExportItem.find(params[:export_item_id])
+    movement.shipping_seal = @export_item.export.shipping_line
+    movement.movement_type = @export_item.export.export_type
     if movement.save
       @export_item = ExportItem.find(params[:export_item_id])
       @export_item.movement_id = movement.id

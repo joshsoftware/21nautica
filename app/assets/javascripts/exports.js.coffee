@@ -43,8 +43,8 @@ datatable_initialize = ->
       "aaData": detailsRowData,
       "bPaginate": false,
       "aoColumns": [
-                    { "mDataProp": "container" },
                     { "mDataProp": "date_of_placement" },
+                    { "mDataProp": "container" },
                     { "mDataProp": "location" },
                     { "mDataProp": "id" }
                     ],
@@ -59,9 +59,9 @@ datatable_initialize = ->
       })
 
      oInnerTable.makeEditable(
-        aoColumns: [ { name: "container", sUpdateURL: "export_items/update" },
-                     { name: 'date_of_placement', placeholder: "yyyy-mm-dd", tooltip: "yyyy-mm-dd", sUpdateURL: "export_items/update"},
-                     { name: 'location', sUpdateURL: "export_items/update"}, null
+        aoColumns: [ { name: 'date_of_placement', onblur: 'submit', placeholder: "yyyy-mm-dd", tooltip: "yyyy-mm-dd", sUpdateURL: "export_items/update"},
+                     { name: "container", onblur: 'submit', sUpdateURL: "export_items/update" },
+                     { name: 'location', onblur: 'submit', sUpdateURL: "export_items/update"}, null
                    ]
       )
 
