@@ -16,10 +16,10 @@ module Report
                                 :border => {:style => :thin, :color => "00" }
           column_style = s.add_style alignment: {horizontal: :center}, bg_color: "E6E0EC",
                                :border => {:style => :thin, :color => "00" }
-			    
+          
           workbook.add_worksheet(name: "Under Clearance") do |sheet|
-      	 
-  				  add_under_clearance_worksheet(customer,sheet,heading,center)
+         
+            add_under_clearance_worksheet(customer,sheet,heading,center)
             sheet.col_style 2, column_style,  row_offset: 1
             sheet.col_style 5, column_style,  row_offset: 1
           end
@@ -32,8 +32,8 @@ module Report
         end 
         package.use_shared_strings = true
         package.serialize("#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}_#{time}.xlsx", 
-      	                 filename: "#{customer.name.tr(" ", "_")}_#{time}.xlsx", 
-      	                 type: "application/vnd.ms-excel")
+                         filename: "#{customer.name.tr(" ", "_")}_#{time}.xlsx", 
+                         type: "application/vnd.ms-excel")
       end
     end
 
@@ -59,7 +59,7 @@ module Report
             end
                     
             sheet.add_row [movement.truck_number, movement.booking_number,
-                  movement.vessel_targeted, movement.port_of_destination, 
+                  movement.vessel_targeted, movement.port_of_discharge, 
                   movement.port_of_loading, item.container, export.export_type,
                   export.equipment, export.shipping_line, movement.shipping_seal,
                   movement.custom_seal, h["loaded"], h["arrived_malaba_border"], 
@@ -95,7 +95,7 @@ module Report
             end
                     
             sheet.add_row [movement.truck_number, movement.booking_number,
-                  movement.vessel_targeted, movement.port_of_destination, 
+                  movement.vessel_targeted, movement.port_of_discharge, 
                   movement.port_of_loading, item.container, export.export_type,
                   export.equipment, export.shipping_line, movement.shipping_seal,
                   movement.custom_seal, h["loaded"], h["arrived_malaba_border"], 
