@@ -2,14 +2,14 @@
   %thead
     %th Booking Number
     %th Truck Number
-    %th Vessel
-    %th Port of Discharge
-    %th Container
-    %th Type
-    %th Shipping Line
+    %th Vessel Targeted
+    %th Port of Destination
+    %th Container Number
+    %th Movement Type
+    %th Shipping Seal
   %tbody
     - @movements.each do |element|
-      %tr
+      %tr{id: element.id}
         %td= element.booking_number
         %td= element.truck_number
         %td= element.vessel_targeted

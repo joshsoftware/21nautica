@@ -51,10 +51,6 @@ class Movement < ActiveRecord::Base
 
   end
 
-  before_save do |record|
-    record.booking_number.upcase!
-  end
-  
   auditable only: [:status, :updated_at, :current_location]
 
   def as_json(options= {})

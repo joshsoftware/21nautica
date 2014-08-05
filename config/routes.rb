@@ -5,15 +5,16 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'welcome#index'
+  get 'export/history' => 'movements#history' 
 
   # special inline edit for export_items
   post '/export_items/update'
+  post '/movements/update'
 
   resources :exports, only: [:new, :create, :index]
   resources :export_items, only: [:new, :create]
   resources :customers, only: [:new, :create]
-  resources :movements, only: [:new, :create, :index]
-  get 'export/history' => 'movements#history' 
+  resources :movements, only: [:new, :create, :index ]
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

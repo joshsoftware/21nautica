@@ -6,7 +6,15 @@ datatable_initialize = ->
                     "bJQueryUI": true,
                     "bFilter": true,
                     "sPaginationType": "full_numbers"
-                  })
+                  }).makeEditable(
+                     sUpdateURL: 'movements/update',
+                     aoColumns: [ {sUpdateURL: 'movements/update',},
+                                  {sUpdateURL: 'movements/update',},
+                                  {sUpdateURL: 'movements/update',},
+                                  {sUpdateURL: 'movements/update',},
+                                  null, null, null
+                     ]
+                  )
 
 $(document).on "page:load", datatable_initialize
 $(document).ready datatable_initialize

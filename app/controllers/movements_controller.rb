@@ -29,6 +29,22 @@ class MovementsController < ApplicationController
     @movement=Movement.new
   end
 
+  def update
+    movement = Movement.find(movement_update_params[:id])
+    attribute = movement_update_params[:columnName].downcase.gsub(' ', '_').to_sym
+    if movement.update(attribute => movement_update_params[:value])
+      render text: movement_update_params[:value]
+    else
+      render text: movement.errors.full_messages
+    end
+  end
+
+  private
+
+  def movement_update_params
+    params.permit(:id, :columnName, :value)
+  end
+
   def movement_params
     params.permit(:export_item_id)
     params.require(:movement).permit(:booking_number, :truck_number, :vessel_targeted, :port_of_destination, :movement_type)
