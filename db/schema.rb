@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140720125433) do
+ActiveRecord::Schema.define(version: 20140805024439) do
 
   create_table "customers", force: true do |t|
     t.string   "name"
@@ -94,7 +94,7 @@ ActiveRecord::Schema.define(version: 20140720125433) do
     t.string   "booking_number"
     t.string   "truck_number"
     t.string   "vessel_targeted"
-    t.string   "port_of_destination"
+    t.string   "port_of_discharge"
     t.string   "port_of_loading"
     t.date     "estimate_delivery"
     t.string   "movement_type"
