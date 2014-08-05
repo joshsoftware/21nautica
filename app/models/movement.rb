@@ -34,19 +34,23 @@ class Movement < ActiveRecord::Base
     end
 
     event :exit_malaba_border do
-      transitions from: :arrived_malaba_border, to: :crossed_malaba_border
+      transitions from: [:loaded, :arrived_malaba_border], to: :crossed_malaba_border
     end
 
     event :release_order do
-      transitions from: :crossed_malaba_border, to: :order_released
+      transitions from: [:loaded, :arrived_malaba_border, :crossed_malaba_border], 
+                  to: :order_released
     end
 
     event :enter_port do
-      transitions from: :order_released, to: :arrived_port
+      transitions from: [:loaded, :arrived_malaba_border, :crossed_malaba_border, :order_released], 
+                  to: :arrived_port    
     end
 
     event :handover_document do
-      transitions from: :arrived_port, to: :document_handed
+      transitions from: [:loaded, :arrived_malaba_border, :crossed_malaba_border, 
+                         :order_released, :arrived_port], 
+                  to: :document_handed
     end
 
   end

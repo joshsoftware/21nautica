@@ -10,11 +10,15 @@ Rails.application.routes.draw do
   # special inline edit for export_items
   post '/export_items/update'
   post '/movements/update'
-
+ 
   resources :exports, only: [:new, :create, :index]
   resources :export_items, only: [:new, :create]
   resources :customers, only: [:new, :create]
-  resources :movements, only: [:new, :create, :index ]
+  resources :movements, only: [:new, :create, :index ] do
+    member do
+      post 'updateStatus'
+    end
+  end
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

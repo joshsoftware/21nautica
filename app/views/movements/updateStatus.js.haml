@@ -1,0 +1,6 @@
+$('#statusModal').modal('hide')
+- if @movement.status == "document_handed"
+	$("#movements_table tr##{@movement.id}").remove()
+- else	
+	$("#movements_table tr##{@movement.id} td.updateStatus button").attr('data-states', "#{@movement.aasm.events.join(',')}")
+	$("#movements_table tr##{@movement.id} td.updateStatus .updateStatus").text("#{@movement.status.humanize}")
