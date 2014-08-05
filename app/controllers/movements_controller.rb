@@ -47,7 +47,7 @@ class MovementsController < ApplicationController
 
   def movement_params
     params.permit(:export_item_id)
-    params.require(:movement).permit(:booking_number, :truck_number, :vessel_targeted, :port_of_destination, :movement_type)
+    params.require(:movement).permit(:booking_number, :truck_number, :vessel_targeted, :port_of_discharge, :movement_type)
   end
 
 end
