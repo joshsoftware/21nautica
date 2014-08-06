@@ -23,9 +23,13 @@ class ExportItem < ActiveRecord::Base
   validate :date_of_placement_cannot_be_in_future
 
   def date_of_placement_cannot_be_in_future
-    if date_of_placement.present? && date_of_placement >= Date.today
-      errors.add(:date_of_placement, "Must be in the past")
+    if date_of_placement.present? && date_of_placement > Date.today
+      errors.add(:date_of_placement, "Must be not be in the future")
     end
+  end
+
+  before_create do |record|
+    record.date_of_placement = Date.today
   end
 
   def as_json(options= {})
