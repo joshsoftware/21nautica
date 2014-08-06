@@ -43,7 +43,12 @@
 :coffeescript
   $('#statusModal').on 'show.bs.modal', (event) ->
     id = $(event.relatedTarget).attr('data-movement-id')
+    $("#movements_table tr#"+ id + " td.updateStatus .updateStatus").hide()
     $('#statusModal form').attr('action', "/movements/" + id + "/updateStatus")
     $('#statusModal form #movement_status').html("")
     for i in $(event.relatedTarget).attr('data-states').split(",")
       $('#statusModal form #movement_status').append("<option value=" + i + ">" + i.replace(/_/g, ' ') + "</option>")
+
+  $('#statusModal').on 'hide.bs.modal', (event) ->
+    $("#movements_table tr td.updateStatus .updateStatus").show()
+    
