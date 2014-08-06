@@ -1,4 +1,8 @@
 Rails.application.configure do
+require 'net/smtp'
+require 'tlsmail'
+require 'openssl'
+Net::SMTP.enable_tls(OpenSSL::SSL::VERIFY_NONE)
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
@@ -34,4 +38,18 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+  #Defined SMTP options
+  #SMTP
+  config.action_mailer.default_url_options = { :host => 'localhost:3000'}
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :address              => 'smtp.gmail.com',
+    :port                 => 587,
+    :domain               => 'gmail.com', #you can also use google.com
+    :authentication       => :login,
+    :user_name            => ENV['SENDGRID_USERNAME'],
+    :password             => ENV['SENDGRID_PASSWORD'],
+    :authentication       => 'login',
+    :enable_starttls_auto => true
+  }
 end

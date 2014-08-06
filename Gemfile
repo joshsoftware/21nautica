@@ -51,7 +51,7 @@ gem 'bootstrap-datepicker-rails'
 gem 'axlsx'
 
 group :development do
-  
+  gem 'tlsmail'
   # Quiet Assets turns off the Rails asset pipeline log. Read more: https://github.com/evrone/quiet_assets
   gem 'quiet_assets'
 
