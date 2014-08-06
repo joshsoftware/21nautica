@@ -21,9 +21,9 @@
         %td.updateStatus{class: "text-center"}
           .updateStatus.h5.text-capitalize
             = element.status.humanize
-          %button.btn.btn-small.btn-primary{'data-movement-id' => "#{element.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 
-           'data-states' => element.aasm.events.join(',')} Update
-
+          -if @show_update                        
+            %button.btn.btn-small.btn-primary{'data-movement-id' => "#{element.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => element.aasm.events.join(',')} Update
+          
 #statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog
     = simple_form_for(:movement, url: '', html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
@@ -51,4 +51,4 @@
 
   $('#statusModal').on 'hide.bs.modal', (event) ->
     $("#movements_table tr td.updateStatus .updateStatus").show()
-    
+  

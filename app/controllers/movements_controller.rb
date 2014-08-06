@@ -2,6 +2,7 @@ class MovementsController < ApplicationController
 
   def index
     @movements = Movement.where.not(status: "document_handed").order(:booking_number)
+    @show_update = true
   end
   
   def history
@@ -39,10 +40,10 @@ class MovementsController < ApplicationController
     end
   end
 
-  def updateStatus
+  def updateStatus 
     @movement = Movement.find(params[:id])
     @movement.current_location = movement_params[:current_location]
-    @movement.send("#{movement_params[:status].downcase.gsub(' ', '_')}!".to_sym)  
+    @movement.send("#{movement_params[:status].downcase.gsub(' ', '_')}!".to_sym) 
   end
 
   private

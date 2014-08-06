@@ -1,6 +1,5 @@
 $('#statusModal').modal('hide')
-url = window.location.pathname.substring(1)
-- if @movement.status == "document_handed" && '#{url}' == "movements"
+- if @movement.status == "document_handed"
 	$("#movements_table tr##{@movement.id}").remove()
 - else	
 	$("#movements_table tr##{@movement.id} td.updateStatus button").attr('data-states', "#{@movement.aasm.events.join(',')}")
