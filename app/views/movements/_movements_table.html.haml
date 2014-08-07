@@ -1,26 +1,36 @@
 %table.table{id: 'movements_table'}
   %thead
     %th Booking Number
+    %th Customer Name
     %th Truck Number
+    %th Transporter Name
     %th Vessel Targeted
     %th Port of Discharge
     %th Container Number
     %th Movement Type
     %th Shipping Seal
+    %th W O Number
     %th#btnAddNewRow Status
   %tbody
     - @movements.each do |element|
       %tr{id: element.id }
         %td= element.booking_number
+        %td= element.customer_name
         %td= element.truck_number
+        %td= element.transporter_name
         %td= element.vessel_targeted
         %td= element.port_of_discharge
         %td= element.container_number
         %td= element.movement_type
         %td= element.shipping_seal
+        %td= element.w_o_number
         %td.updateStatus{class: "text-center"}
           .updateStatus.h5.text-capitalize
-            = element.status.humanize
+            .status
+              = element.status.humanize
+              %br
+            .status_updated_at  
+              = element.audits.select{|k| k[:audited_changes][:status].present? && k[:audited_changes][:status].second == element.status}.first.audited_changes[:updated_at].second.to_date.strftime("%d-%b-%Y")
           -if @show_update                        
             %button.btn.btn-small.btn-primary{'data-movement-id' => "#{element.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => element.aasm.events.join(',')} Update
           

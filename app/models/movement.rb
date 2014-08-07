@@ -21,6 +21,8 @@
 class Movement < ActiveRecord::Base
   include AASM
 
+  has_one :export_item
+
   aasm column: 'status' do
     state :loaded, initial: true
     state :arrived_malaba_border
@@ -62,7 +64,11 @@ class Movement < ActiveRecord::Base
   end
 
   def container_number
-    export_item = ExportItem.where(movement_id: self.id).first
-    !export_item.nil? ? export_item.container : nil
+    !export_item.nil? ? self.export_item.container : nil
   end
+
+  def customer_name
+    !export_item.nil? ? self.export_item.export.customer.name : nil
+  end
+
 end
