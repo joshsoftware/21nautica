@@ -9,10 +9,15 @@ datatable_initialize = ->
                   }).makeEditable(
                      sUpdateURL: 'movements/update',
                      aoColumns: [ {sUpdateURL: 'movements/update',},
+                                  null,
                                   {sUpdateURL: 'movements/update',},
                                   {sUpdateURL: 'movements/update',},
                                   {sUpdateURL: 'movements/update',},
-                                  null, null, null
+                                  {sUpdateURL: 'movements/update',},
+                                  {sUpdateURL: 'movements/update',},
+                                  null, null,
+                                  {sUpdateURL: 'movements/update',},
+                                  null
                      ]
                   )
 

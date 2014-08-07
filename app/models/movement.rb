@@ -65,4 +65,10 @@ class Movement < ActiveRecord::Base
     export_item = ExportItem.where(movement_id: self.id).first
     !export_item.nil? ? export_item.container : nil
   end
+
+  def customer_name
+    export_item = ExportItem.where(movement_id: self.id).first
+    !export_item.nil? ? Customer.find(Export.find(export_item.export_id).customer_id).name : nil
+  end
+
 end
