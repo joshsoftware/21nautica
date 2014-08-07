@@ -1,35 +1,34 @@
 module Report
   class Daily
 
-    def create
+    def create(customer)
       time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
-      customers = Customer.includes({exports: :export_items})
-      customers.each do |customer|  
-        package = Axlsx::Package.new
-        workbook = package.workbook
-        workbook.styles do |s|
-          heading = s.add_style alignment: {horizontal: :center}, 
+
+      package = Axlsx::Package.new
+      workbook = package.workbook
+      workbook.styles do |s|
+        heading = s.add_style alignment: {horizontal: :center}, 
                                 b: true, sz: 12, bg_color: "4F81BD", wrap_text: true,
                                  :border => {:style => :thin, :color => "00"}
-          center = s.add_style alignment: {horizontal: :center}, 
+        center = s.add_style alignment: {horizontal: :center}, 
                                 :border => {:style => :thin, :color => "00" }
-          column_style = s.add_style alignment: {horizontal: :center}, bg_color: "E6E0EC",
+        column_style = s.add_style alignment: {horizontal: :center}, bg_color: "E6E0EC",
                                :border => {:style => :thin, :color => "00" }
           
           # 2 worksheets in the workbook
-          { 'Under Clearnance' => nil, 'HANDED OVER' => 'document_handed'}.each do |name, status|
-            workbook.add_worksheet(name: name) do |sheet|
-              add_data(customer, sheet, heading, center, status)
-              sheet.col_style 2, column_style,  row_offset: 1
-              sheet.col_style 5, column_style,  row_offset: 1
-            end
+        { 'Under Clearnance' => nil, 'HANDED OVER' => 'document_handed'}.each do |name, status|
+          workbook.add_worksheet(name: name) do |sheet|
+            add_data(customer, sheet, heading, center, status)
+            sheet.col_style 2, column_style,  row_offset: 1
+            sheet.col_style 5, column_style,  row_offset: 1
           end
-        end 
-        package.use_shared_strings = true
-        package.serialize("#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}_#{time}.xlsx", 
+        end
+      end 
+      package.use_shared_strings = true
+      package.serialize("#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}_#{time}.xlsx", 
                          filename: "#{customer.name.tr(" ", "_")}_#{time}.xlsx", 
                          type: "application/vnd.ms-excel")
-      end
+      
     end
 
     def add_data(customer, sheet, heading, center, status)
@@ -40,8 +39,9 @@ module Report
                       "Document Handed Date", "Current Status"],
                       style: heading, height: 40
          
+      exports = customer.exports.includes(:export_items)
 
-      customer.exports.each do |export|
+      exports.each do |export|
         export.export_items.each do |item|
           movements = Movement.where(id: item.movement_id)
           movements = movements.where(status: status) if status # special cases
@@ -49,7 +49,7 @@ module Report
           movements.each do |movement|
             
             h ={}
-            movement.audits.to_a.collect(&:audited_changes).each do |a|
+            movement.audits.collect(&:audited_changes).each do |a|
               if !a[:status].blank? then
                 h[a[:status].second] = a[:updated_at].second.to_date.strftime("%d-%b-%Y")
               end
@@ -57,8 +57,8 @@ module Report
                     
             sheet.add_row [movement.truck_number, movement.booking_number,
                   movement.vessel_targeted, movement.port_of_discharge, 
-                  movement.port_of_loading, item.container, export.export_type,
-                  export.equipment, export.shipping_line, movement.shipping_seal,
+                  movement.port_of_loading, item.container, export.equipment,
+                  item.weight, export.shipping_line, movement.shipping_seal,
                   movement.custom_seal, h["loaded"], h["arrived_malaba_border"], 
                   h["crossed_malaba_border"], h["order_released"], h["arrived_port"],
                   h["document_handed"], movement.current_location], style: center

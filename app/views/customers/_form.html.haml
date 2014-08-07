@@ -7,7 +7,7 @@
           %h1.modal-title Add new customer
         
         .modal-body
-          = f.input :name, hint:"Can't be left blank"
+          = f.input :name, hint:"Can't be left blank", input_html: {autocomplete: 'off'}
           = f.input :emails, hint: 'Enter comman seperated emails'
           = hidden_field_tag 'model', nil, data: {is: 'modelName'}
         

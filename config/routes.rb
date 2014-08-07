@@ -10,7 +10,8 @@ Rails.application.routes.draw do
   # special inline edit for export_items
   post '/export_items/update'
   post '/movements/update'
- 
+  post 'customers/daily_report'
+  
   resources :exports, only: [:new, :create, :index]
   resources :export_items, only: [:new, :create]
   resources :customers, only: [:new, :create]

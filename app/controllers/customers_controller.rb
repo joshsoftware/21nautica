@@ -8,9 +8,6 @@ class CustomersController < ApplicationController
     customer = Customer.new(customer_params)
     if customer.save
       flash[:notice] = 'Successfully added new Customer'
-      if Rails.development?
-        UserMailer.welcome_email(customer).deliver
-      end
     else
       flash[:error] = 'Error while saving customer'
     end
@@ -18,9 +15,18 @@ class CustomersController < ApplicationController
     render 'new'
   end
 
+  def daily_report
+    customer = Customer.find_by_name(daily_report_params[:name])
+    UserMailer.mail_report(customer).deliver
+  end
+
   private
   def customer_params
     params.require(:customer).permit(:name, :emails)
+  end
+
+  def daily_report_params
+    params.permit(:name)
   end
 
 end
