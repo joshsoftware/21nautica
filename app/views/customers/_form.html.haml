@@ -1,14 +1,14 @@
 .modal.fade{data: {is: 'newCustomerModal'}, tabindex: '-1', role: 'dialog', aria: {labelledby: 'newCustomerModel'}}
   .modal-dialog.modal-user
-    = simple_form_for(@customer, html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+    = simple_form_for(@customer, html: { class: 'form-horizontal'}, remote: true,defaults: {input_html: {class: 'form-control'}}) do |f|
       .modal-content
         .modal-header
           = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
           %h1.modal-title Add new customer
         
         .modal-body
-          = f.input :name, hint:"Can't be left blank", input_html: {autocomplete: 'off'}
-          = f.input :emails, hint: 'Enter comman seperated emails'
+          = f.input :name, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Name is required."}
+          = f.input :emails,hint: 'enter comma seperated emails', input_html:{:"data-validation" => "email", :"data-validation-error-msg" => "Email is not in proper format"}
           = hidden_field_tag 'model', nil, data: {is: 'modelName'}
         
         .modal-footer

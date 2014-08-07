@@ -2,6 +2,7 @@
   %thead
     %th
     %th R/O Number
+    %th Customer Name
     %th Line
     %th Equipment
     %th Quantity
@@ -11,6 +12,7 @@
       %tr{id: "#{export.id}"}
         %td= image_tag 'plus.png'
         %td.ro_number= export.release_order_number
+        %td= export.customer_name
         %td= export.shipping_line
         %td= export.equipment
         %td= export.quantity

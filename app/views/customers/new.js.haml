@@ -2,6 +2,10 @@
   $("[data-for='newCustomer']").html('#{escape_javascript(render "form")}')
   $("[data-is='modelName']").val(window.location.pathname.replace('s/new', '').replace(/\//, ''))
   $("[data-is='newCustomerModal']").modal('show')
+  :plain
+    $("[data-is='newCustomerModal']").bind('shown.bs.modal', function(){
+      validate_form();
+    })
 - else
   $('.flash_messages').html('#{escape_javascript(render :partial => 'flash_message')}');
   $("[data-for='customerSelect']").html('#{escape_javascript(render '/shared/customer', customers: @customers, model: params[:model])}');

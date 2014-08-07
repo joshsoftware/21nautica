@@ -18,4 +18,7 @@ class Export < ActiveRecord::Base
   belongs_to :customer
   has_many :export_items, dependent: :destroy
   validates_presence_of :quantity
+  def customer_name
+    Customer.find(customer_id).name
+  end
  end
