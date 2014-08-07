@@ -14,8 +14,7 @@ datatable_initialize = ->
                                   {sUpdateURL: 'movements/update',},
                                   {sUpdateURL: 'movements/update',},
                                   {sUpdateURL: 'movements/update',},
-                                  {sUpdateURL: 'movements/update',},
-                                  null, null,
+                                  null, null, null,
                                   {sUpdateURL: 'movements/update',},
                                   null
                      ]
