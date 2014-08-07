@@ -8,7 +8,7 @@ class CustomersController < ApplicationController
     customer = Customer.new(customer_params)
     if customer.save
       flash[:notice] = 'Successfully added new Customer'
-      if Rails.development?
+      if Rails.env=="development"     
         UserMailer.welcome_email(customer).deliver
       end
     else
