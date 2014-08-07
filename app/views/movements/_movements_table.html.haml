@@ -30,9 +30,9 @@
               = element.status.humanize
               %br
             .status_updated_at  
-              = element.audits.select{|k| k[:audited_changes][:status].present? && k[:audited_changes][:status].second == element.status}.first.audited_changes[:updated_at].second.to_date.strftime("%d-%b-%Y")
+              = element.audits.select{|k| k[:audited_changes][:status].present? && k[:audited_changes][:status].second == element.status}.first.audited_changes[:updated_at].second
           -if @show_update                        
-            %button.btn.btn-small.btn-primary{'data-movement-id' => "#{element.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => element.aasm.events.join(',')} Update
+            %button.btn.btn-small.btn-primary{'data-movement-id' => "#{element.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => element.status + ',' + element.aasm.events.join(',')} Update
           
 #statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog
@@ -43,7 +43,7 @@
           %h1.modal-title Update Status and Location
         
         .modal-body
-          = f.input :status, collection: []
+          = f.input :status, collection: [], :input_html => {:class => 'select required form-control text-capitalize'}
           = f.input :current_location, as: :text
 
         .modal-footer
@@ -61,4 +61,3 @@
 
   $('#statusModal').on 'hide.bs.modal', (event) ->
     $("#movements_table tr td.updateStatus .updateStatus").show()
-  

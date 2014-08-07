@@ -43,7 +43,8 @@ class MovementsController < ApplicationController
   def updateStatus 
     @movement = Movement.find(params[:id])
     @movement.current_location = movement_params[:current_location]
-    @movement.send("#{movement_params[:status].downcase.gsub(' ', '_')}!".to_sym) 
+    status = movement_params[:status].downcase.gsub(' ', '_')
+    status != @movement.status ? @movement.send("#{status}!".to_sym) : @movement.save 
   end
 
   private
