@@ -4,4 +4,4 @@ $('#statusModal').modal('hide')
 - else	
 	$("#movements_table tr##{@movement.id} td.updateStatus button").attr('data-states', "#{@movement.status},#{@movement.aasm.events.join(',')}")
 	$("#movements_table tr##{@movement.id} td.updateStatus .updateStatus .status").text("#{@movement.status.humanize}")
-	$("#movements_table tr##{@movement.id} td.updateStatus .updateStatus .status_updated_at").text("#{@movement.audits.select{|k| k[:audited_changes][:status].present? && k[:audited_changes][:status].second == @movement.status}.first.audited_changes[:updated_at].second}")
+	$("#movements_table tr##{@movement.id} td.updateStatus .updateStatus .status_updated_at").text("#{status_updated_at(@movement)}")

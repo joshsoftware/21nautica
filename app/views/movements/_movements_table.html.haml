@@ -30,7 +30,7 @@
               = element.status.humanize
               %br
             .status_updated_at  
-              = element.audits.select{|k| k[:audited_changes][:status].present? && k[:audited_changes][:status].second == element.status}.first.audited_changes[:updated_at].second
+              = status_updated_at(element)
           -if @show_update                        
             %button.btn.btn-small.btn-primary{'data-movement-id' => "#{element.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => element.status + ',' + element.aasm.events.join(',')} Update
           
