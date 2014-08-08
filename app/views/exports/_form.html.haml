@@ -3,9 +3,9 @@
   %div{data: {for: 'customerSelect'}}
     = render '/shared/customer', customers: @customers, model: 'export'
   = f.input :equipment, collection: EQUIPMENT_TYPE, as: :select, label: 'Equipment', include_blank: false  
-  = f.input :quantity
+  = f.input :quantity,input_html: {:"data-validation" => "number", :"data-validation-error-msg" => "Quantity Should be a valid Positive Number."}
   = f.input :shipping_line, collection: SHIPPING_LINE, as: :select, label: 'Shipping line', include_blank: false 
-  = f.input :release_order_number, label: 'R/O Number'
+  = f.input :release_order_number, label: 'R/O Number',input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "R/O number is mandatory."}
   .form-group
     .col-sm-offset-2.col-sm-2
       = f.submit 'Save', class: 'btn-primary'
