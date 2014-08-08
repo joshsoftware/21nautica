@@ -24,13 +24,14 @@
         %td= element.movement_type
         %td= element.shipping_seal
         %td= element.w_o_number
-        %td.updateStatus{class: "text-center"}
-          .updateStatus.h5.text-capitalize
-            .status
+        - updated_at = status_updated_at(element).localtime
+        %td.updateStatus{class: "text-center", style: ("background-color: #d9534f" if alert(updated_at, element))} 
+          .updateStatus.h5
+            .status.text-capitalize
               = element.status.humanize
               %br
             .status_updated_at  
-              = status_updated_at(element)
+              = updated_at
           -if @show_update                        
             %button.btn.btn-small.btn-primary{'data-movement-id' => "#{element.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => element.status + ',' + element.aasm.events.join(',')} Update
           

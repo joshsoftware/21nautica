@@ -4,4 +4,6 @@ $('#statusModal').modal('hide')
 - else	
 	$("#movements_table tr##{@movement.id} td.updateStatus button").attr('data-states', "#{@movement.status},#{@movement.aasm.events.join(',')}")
 	$("#movements_table tr##{@movement.id} td.updateStatus .updateStatus .status").text("#{@movement.status.humanize}")
-	$("#movements_table tr##{@movement.id} td.updateStatus .updateStatus .status_updated_at").text("#{status_updated_at(@movement)}")
+	- updated_at = status_updated_at(@movement).localtime
+	$("#movements_table tr##{@movement.id} td.updateStatus .updateStatus .status_updated_at").text("#{updated_at}")
+	$("#movements_table tr##{@movement.id} td.updateStatus").attr('style',"#{"background-color: #d9534f" if alert(updated_at, @movement)}")

@@ -6,4 +6,15 @@ module MovementsHelper
 		end
 		audit.first.present? ? audit.first.audited_changes[:updated_at].second : nil 
 	end
+
+	def time_in_seconds(time)
+		seconds = time[0]*24*60*60 + time[1]*60*60 + time[2]*60 + time[3]
+	end
+
+	def alert(updated_at, element)
+    status_change_duration = STATUS_CHANGE_DURATION
+    time = time_in_seconds(status_change_duration[element.aasm.events.first.to_sym])
+    (Time.now - updated_at) > time  
+	end
+
 end
