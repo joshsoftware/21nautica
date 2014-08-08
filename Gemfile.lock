@@ -90,6 +90,9 @@ GEM
     jquery-rails (3.1.1)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
+    jquery-turbolinks (2.0.2)
+      railties (>= 3.1.0)
+      turbolinks
     json (1.8.1)
     kgio (2.9.2)
     libv8 (3.16.14.3)
@@ -209,6 +212,7 @@ DEPENDENCIES
   haml-rails
   jbuilder (~> 2.0)
   jquery-rails
+  jquery-turbolinks
   minitest-rails
   pg
   quiet_assets

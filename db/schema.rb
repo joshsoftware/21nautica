@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20140807075532) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "customers", force: true do |t|
     t.string   "name"
     t.string   "emails"
@@ -34,8 +37,8 @@ ActiveRecord::Schema.define(version: 20140807075532) do
     t.datetime "updated_at"
   end
 
-  add_index "espinita_audits", ["auditable_id", "auditable_type"], name: "index_espinita_audits_on_auditable_id_and_auditable_type"
-  add_index "espinita_audits", ["user_id", "user_type"], name: "index_espinita_audits_on_user_id_and_user_type"
+  add_index "espinita_audits", ["auditable_id", "auditable_type"], name: "index_espinita_audits_on_auditable_id_and_auditable_type", using: :btree
+  add_index "espinita_audits", ["user_id", "user_type"], name: "index_espinita_audits_on_user_id_and_user_type", using: :btree
 
   create_table "export_items", force: true do |t|
     t.string   "container"
