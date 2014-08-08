@@ -51,11 +51,22 @@ datatable_initialize = ->
       columnDefs: [
         targets: 3,
         render: (data, type, full, meta) ->
-          "<a href='#'' id='movement_#{full.id}' class='btn btn-small btn-primary' data-toggle='modal'   
-              data-target='#basicModal' data-export='##{full.export_id}' data-row='##{full.id}'>Movement</a>"
+          "<a href='#'' id='movement_#{full.id}' class='btn btn-small btn-primary btn-movement' data-toggle='modal'   
+             data-export='##{full.export_id}' data-container='##{full.container}' data-row='##{full.id}'>Movement</a>" 
       ],
       createdRow: ( row, data, index ) ->
-         $(row).attr('id', data.id)
+        $(row).attr('id', data.id)
+      fnDrawCallback: ->
+        console.log('I am call back');
+        $('.btn-movement').on 'click', (event) ->
+          id = this.id
+          container = $('#' + id).attr('data-container')
+          console.log '>>>>', container
+          if container == '#null' || container == '#'
+            console.log 'No Modal'
+          else
+            $('#'+ id).attr('data-target', '#basicModal')
+            console.log  'Modal' 
       })
 
      oInnerTable.makeEditable(
@@ -65,7 +76,9 @@ datatable_initialize = ->
                    ]
       )
 
+
 $(document).on "page:load", datatable_initialize
 $(document).ready datatable_initialize
+
 
 
