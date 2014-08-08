@@ -12,8 +12,7 @@ module MovementsHelper
 	end
 
 	def alert(updated_at, element)
-    status_change_duration = STATUS_CHANGE_DURATION
-    time = time_in_seconds(status_change_duration[element.aasm.events.first.to_sym])
+    time = time_in_seconds(STATUS_CHANGE_DURATION[element.aasm.events.first.to_sym])
     (Time.now - updated_at) > time  
 	end
 
