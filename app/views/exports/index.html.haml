@@ -25,21 +25,8 @@
         %th Container
         %th Location
         %th Days since placed
-        %th#btnAddNewRow      
+        %th
     %body
-.hide
-  %form{id: 'formAddNewRow', action: '#', title: 'Add new container'}
-    = label_tag 'container', 'Container'
-    %br
-    = text_field_tag 'container', nil, rel: 0 
-    %br
-    = label_tag 'Date of Placement', 'Date of Placement'
-    = text_field_tag 'date_of_placement', nil, rel: 1, data: {behaviour: 'datepicker'}
-    %br
-    = label_tag 'location', 'location'
-    %br
-    = text_field_tag 'location', nil, rel: 2
-    = hidden_field_tag 'link', nil, rel: 3
 
 #basicModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog
@@ -66,11 +53,11 @@
   @exportItems = #{@export_items.to_json}
 
   $('#basicModal').on 'show.bs.modal', (event) ->
+    if $(event.relatedTarget).attr('data-container') == "null" or
+       $(event.relatedTarget).attr('data-container') == ""
+      alert("Add container first!")
+      return false
     export_item = $(event.relatedTarget).attr('data-row')
     ro_number = $("#exports_table tr" + $(event.relatedTarget).attr('data-export') + " td.ro_number").text()
     $('#basicModal #movement_booking_number').val ro_number
     $('#basicModal form').attr('action', "/movements?export_item_id=" + export_item.slice(1))
-  
-
-  
-  

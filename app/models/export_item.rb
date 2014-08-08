@@ -32,8 +32,12 @@ class ExportItem < ActiveRecord::Base
     record.date_of_placement = Date.today
   end
 
+  def date_since_placement
+    (Date.today - self.date_of_placement).to_i
+  end
+
   def as_json(options= {})
-    super(only: [:id, :export_id, :container, :location, :date_of_placement,:movement_id])
+    super(only: [:id, :export_id, :container, :location, :date_of_placement, :movement_id], methods: :date_since_placement)
   end
 
 end
