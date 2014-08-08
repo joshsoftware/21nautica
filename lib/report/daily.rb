@@ -38,9 +38,9 @@ module Report
       end 
       package.use_shared_strings = true
 
-      package.serialize("#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}_#{time}.xlsx",
-                        filename: "#{customer.name.tr(" ", "_")}_#{time}.xlsx", 
-                          type: "application/vnd.ms-excel")
+      package.serialize("#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}_#{time}.xlsx")
+                        #filename: "#{customer.name.tr(" ", "_")}_#{time}.xlsx", 
+                          #type: "application/vnd.ms-excel")
 
     end
 
