@@ -53,6 +53,7 @@
           = f.input :truck_number
           = f.input :vessel_targeted
           = f.input :port_of_discharge, collection: DESTINATION_PORTS
+          = f.input :transporter_name,collection: TRANSPORTERS
         
         .modal-footer
           = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
