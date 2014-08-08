@@ -30,29 +30,40 @@ datatable_initialize = ->
       # This row is already open - close it
       this.src = "/images/plus.png"
       exportsTable.fnClose(nTr)
-    
+      
     else
       # Open this row
       rowIndex = exportsTable.fnGetPosition( $(nTds).closest('tr')[0] )
       detailsRowData = exportItems[rowIndex]
       this.src = "/images/minus.png"
       exportsTable.fnOpen(nTr, fnFormatDetails(id, detailsTableHtml), 'details')
+
+      console.log detailsRowData
       oInnerTable = $("#exportItem_" + id).dataTable({
       "bJQueryUI": true,
       "bFilter": false,
       "aaData": detailsRowData,
       "bPaginate": false,
       "aoColumns": [
-                    { "mDataProp": "date_of_placement" },
-                    { "mDataProp": "container" },
-                    { "mDataProp": "location" },
-                    { "mDataProp": "id" }
+                    { "atargets": [0], "mDataProp": "date_of_placement" },
+                    { "atargets": [1], "mDataProp": "container" },
+                    { "atargets": [2], "mDataProp": "location"}
                     ],
       columnDefs: [
-        targets: 3,
+        {targets: 3,
+        render: (data, type, full, meta) ->
+          console.log full.date_of_placement
+          d1 = new Date(full.date_of_placement)
+          d2 = new Date
+          DAY = 1000 * 60 * 60  * 24
+          diff = Math.round((d2.getTime() - d1.getTime()) / DAY)
+          return diff        
+          },
+        {targets: 4,
         render: (data, type, full, meta) ->
           "<a href='#'' id='movement_#{full.id}' class='btn btn-small btn-primary btn-movement' data-toggle='modal'   
-             data-export='##{full.export_id}' data-container='##{full.container}' data-row='##{full.id}'>Movement</a>" 
+             data-export='##{full.export_id}' data-container='##{full.container}' data-row='##{full.id}'>Movement</a>"  
+        },     
       ],
       createdRow: ( row, data, index ) ->
         $(row).attr('id', data.id)
@@ -63,6 +74,7 @@ datatable_initialize = ->
           container = $('#' + id).attr('data-container')
           console.log '>>>>', container
           if container == '#null' || container == '#'
+            $('#' + id).attr('disabled','disabled')
             console.log 'No Modal'
           else
             $('#'+ id).attr('data-target', '#basicModal')
@@ -72,7 +84,7 @@ datatable_initialize = ->
      oInnerTable.makeEditable(
         aoColumns: [ { name: 'date_of_placement', onblur: 'submit', placeholder: "yyyy-mm-dd", tooltip: "yyyy-mm-dd", sUpdateURL: "export_items/update"},
                      { name: "container", onblur: 'submit', sUpdateURL: "export_items/update" },
-                     { name: 'location', onblur: 'submit', sUpdateURL: "export_items/update"}, null
+                     { name: 'location', onblur: 'submit', sUpdateURL: "export_items/update"}, null, null
                    ]
       )
 

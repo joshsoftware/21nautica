@@ -24,7 +24,8 @@
         %th Date of Placement
         %th Container
         %th Location
-        %th#btnAddNewRow
+        %th Days since placed
+        %th#btnAddNewRow      
     %body
 .hide
   %form{id: 'formAddNewRow', action: '#', title: 'Add new container'}
@@ -58,6 +59,8 @@
         .modal-footer
           = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
           = f.submit 'Save', class: 'btn btn-primary'        
+
+
 
 :coffeescript
   @exportItems = #{@export_items.to_json}
