@@ -27,11 +27,11 @@
         - updated_at = status_updated_at(element).localtime
         %td.updateStatus{class: "text-center", style: ("background-color: #d9534f" if alert(updated_at, element))} 
           .updateStatus.h5
+            .status_updated_at  
+              = updated_at.to_date.to_formatted_s
             .status.text-capitalize
               = element.status.humanize
               %br
-            .status_updated_at  
-              = updated_at
           -if @show_update                        
             %button.btn.btn-small.btn-primary{'data-movement-id' => "#{element.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => element.status + ',' + element.aasm.events.join(',')} Update
           
