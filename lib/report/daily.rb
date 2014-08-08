@@ -37,13 +37,8 @@ module Report
         end
       end 
       package.use_shared_strings = true
-      if Rails.env.production?
-        # heroku special file
-        filepath = "/tmp/#{customer.name.tr(" ", "_")}_#{time}.xlsx" 
-      else
-        filepath = "#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}_#{time}.xlsx"
-      end
-      package.serialize(filepath,
+
+      package.serialize("#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}_#{time}.xlsx",
                         filename: "#{customer.name.tr(" ", "_")}_#{time}.xlsx", 
                           type: "application/vnd.ms-excel")
 
