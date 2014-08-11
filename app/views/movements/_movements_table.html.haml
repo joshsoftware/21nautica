@@ -14,7 +14,8 @@
     %th Remarks
   %tbody
     - @movements.each do |element|
-      %tr{id: element.id }
+      - updated_at = status_updated_at(element).localtime
+      %tr{id: element.id, class: ("danger" if alert(updated_at, element)) }
         %td= element.booking_number
         %td= element.customer_name
         %td= element.truck_number
@@ -25,8 +26,7 @@
         %td= element.movement_type
         %td= element.shipping_seal
         %td= element.w_o_number
-        - updated_at = status_updated_at(element).localtime
-        %td.updateStatus{class: "text-center", style: ("background-color: #d9534f" if alert(updated_at, element))} 
+        %td.updateStatus{class: "text-center"} 
           .updateStatus.h5
             .status_updated_at  
               = updated_at.to_date.to_formatted_s
