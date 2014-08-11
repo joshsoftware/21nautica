@@ -10,16 +10,17 @@
         .modal-header
           = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
           %h1.modal-title Daily Reports
-        
+
         .modal-body
           = label_tag 'Customer name'
           = select_tag 'name', options_for_select(Customer.all.collect{|customer| [customer.name]}), style: "width:300px"
-          
+
         .modal-footer
           = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
-          = f.submit 'Daily Report', class: 'btn btn-primary' 
+          = f.submit 'Daily Report', id: 'submit', class: 'btn btn-primary', onClick: 'disabled =true, value = "sending...." '
 
 :coffeescript
 $(document).ready ->
   $("#name").select2()
   return
+
