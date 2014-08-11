@@ -3,8 +3,8 @@ class MovementsController < ApplicationController
   def index
     @movements = Movement.where.not(status: "container_handed_over_to_KPA").order(:booking_number)
     @show_update = true
-    @transporters = TRANSPORTERS
-    @destination_ports = DESTINATION_PORTS
+    @transporters = TRANSPORTERS.inject({}) {|h, x| h[x] = x; h }
+    @destination_ports = DESTINATION_PORTS.inject({}) {|h, x| h[x] = x; h }
   end
   
   def history
@@ -58,7 +58,7 @@ class MovementsController < ApplicationController
   def movement_params
     params.permit(:export_item_id, :id)
     params.require(:movement).permit(:booking_number, :truck_number, :vessel_targeted, 
-                   :remarks, :status, :port_of_discharge, :movement_type)
+                   :remarks, :status, :port_of_discharge, :movement_type, :transporter_name)
   end
 
 end
