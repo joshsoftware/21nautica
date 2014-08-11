@@ -42,7 +42,7 @@ class MovementsController < ApplicationController
 
   def updateStatus 
     @movement = Movement.find(params[:id])
-    @movement.current_location = movement_params[:current_location]
+    @movement.remarks = movement_params[:remarks]
     status = movement_params[:status].downcase.gsub(' ', '_')
     status != @movement.status ? @movement.send("#{status}!".to_sym) : @movement.save 
   end
@@ -56,7 +56,7 @@ class MovementsController < ApplicationController
   def movement_params
     params.permit(:export_item_id, :id)
     params.require(:movement).permit(:booking_number, :truck_number, :vessel_targeted, 
-                   :current_location, :status, :port_of_discharge, :movement_type)
+                   :remarks, :status, :port_of_discharge, :movement_type)
   end
 
 end

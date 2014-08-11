@@ -12,10 +12,12 @@
 #  movement_type        :string(255)
 #  shipping_seal        :string(255)
 #  custom_seal          :string(255)
-#  current_location     :string(255)
+#  remarks              :string(255)
 #  status               :string(255)
 #  created_at           :datetime
 #  updated_at           :datetime
+#  transporter_name     :string(255)
+#  w_o_number           :string(255)
 #
 
 class Movement < ActiveRecord::Base
@@ -53,7 +55,7 @@ class Movement < ActiveRecord::Base
 
   end
 
-  auditable only: [:status, :updated_at, :current_location]
+  auditable only: [:status, :updated_at, :remarks]
 
   def as_json(options= {})
     super(methods: [:container_number])

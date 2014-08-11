@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140807075532) do
+ActiveRecord::Schema.define(version: 20140811043601) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,7 +103,7 @@ ActiveRecord::Schema.define(version: 20140807075532) do
     t.string   "movement_type"
     t.string   "shipping_seal"
     t.string   "custom_seal"
-    t.string   "current_location"
+    t.string   "remarks"
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
