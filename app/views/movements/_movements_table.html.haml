@@ -34,7 +34,7 @@
               = element.status.humanize
               %br
           -if @show_update                        
-            %button.btn.btn-small.btn-primary{'data-movement-id' => "#{element.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => element.status + ',' + element.aasm.events.join(',')} Update
+            %button.btn.btn-small.btn-primary{'data-movement-id' => "#{element.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => element.status + ',' + element.aasm.events.join(','), 'data-truck-number' => element.truck_number, 'data-container-number' => element.container_number} Update
         %th.remarks.h5
           = element.remarks  
 #statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
@@ -46,6 +46,10 @@
           %h1.modal-title Update Status and Location
         
         .modal-body
+          #truck_number
+            = f.label :truck_number
+          #container_number
+            = f.label :container_number
           = f.input :status, collection: [], :input_html => {:class => 'select required form-control text-capitalize'}
           = f.input :remarks, as: :text
 
@@ -55,12 +59,18 @@
     
 :coffeescript
   $('#statusModal').on 'show.bs.modal', (event) ->
-    id = $(event.relatedTarget).attr('data-movement-id')
+    link_tag = $(event.relatedTarget)  
+    id = link_tag.attr('data-movement-id')
+   
     $("#movements_table tr#"+ id + " td.updateStatus .updateStatus").hide()
-    $('#statusModal form').attr('action', "/movements/" + id + "/updateStatus")
+    $('#statusModal #truck_number label').text("Truck Number : " + link_tag.attr('data-truck-number'))
+    $('#statusModal #container_number label').text("Container Number : " + link_tag.attr('data-container-number'))
+    
     $('#statusModal form #movement_status').html("")
-    for i in $(event.relatedTarget).attr('data-states').split(",")
+    for i in link_tag.attr('data-states').split(",")
       $('#statusModal form #movement_status').append("<option value=" + i + ">" + i.replace(/_/g, ' ') + "</option>")
+
+    $('#statusModal form').attr('action', "/movements/" + id + "/updateStatus")
 
   $('#statusModal').on 'hide.bs.modal', (event) ->
     $("#movements_table tr td.updateStatus .updateStatus").show()
