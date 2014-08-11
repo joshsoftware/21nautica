@@ -504,4 +504,21 @@
         }
     };
 
+
+jQuery.editable.addInputType('datepicker', {
+        element: function(settings, original) {
+            var input = jQuery('<input size="15" class="smooth" />');
+            settings.onblur = function(e) { }; 
+            input.datepicker({
+                dateFormat: 'yy-mm-dd',
+                changeMonth: true,
+                changeYear: true,
+                maxDate: "+0D",
+                showOn: 'both'
+            });  
+            input.datepicker('option', 'showAnim', 'slide');
+            jQuery(this).append(input);
+            return (input);
+        }    
+    });  
 })(jQuery);

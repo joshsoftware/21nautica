@@ -23,7 +23,7 @@ datatable_initialize = ->
   $('#exports_table tbody td img').click ->
     nTr = $(this).parents('tr')[0]
     nTds = this
-   
+    
     id = $(this).parents('tr').attr('id')
 
     if exportsTable.fnIsOpen(nTr)
@@ -38,7 +38,6 @@ datatable_initialize = ->
       this.src = "/images/minus.png"
       exportsTable.fnOpen(nTr, fnFormatDetails(id, detailsTableHtml), 'details')
 
-      console.log detailsRowData
       oInnerTable = $("#exportItem_" + id).dataTable({
       "bJQueryUI": true,
       "bFilter": false,
@@ -58,9 +57,9 @@ datatable_initialize = ->
         },
       ],
       fnCreatedRow: ( row, data, index ) ->
-        $(row).attr('id', data.id)
+        $(row).attr('id', data.id)   
       }).makeEditable(
-        aoColumns: [ { name: 'date_of_placement', onblur: 'submit', placeholder: "yyyy-mm-dd", tooltip: "yyyy-mm-dd", sUpdateURL: "export_items/update"},
+        aoColumns: [ { name: 'date_of_placement', submit: 'okay', tooltip: "yyyy-mm-dd", sUpdateURL: "export_items/update", type: 'datepicker', event: 'click'},
                      { name: "container", onblur: 'submit', sUpdateURL: "export_items/update" },
                      { name: 'location', onblur: 'submit', sUpdateURL: "export_items/update"}, null, null
                    ]

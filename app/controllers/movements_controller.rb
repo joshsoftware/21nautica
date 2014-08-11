@@ -3,6 +3,8 @@ class MovementsController < ApplicationController
   def index
     @movements = Movement.where.not(status: "container_handed_over_to_KPA").order(:booking_number)
     @show_update = true
+    @transporters = TRANSPORTERS
+    @destination_ports = DESTINATION_PORTS
   end
   
   def history
