@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default from: ENV['SENDGRID_USERNAME']
+  default from: "support@21nautica.com"
   def mail_report(customer)
   	@customer = customer
     time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
