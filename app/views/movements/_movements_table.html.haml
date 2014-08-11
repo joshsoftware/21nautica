@@ -15,7 +15,7 @@
   %tbody
     - @movements.each do |element|
       - updated_at = status_updated_at(element).localtime
-      %tr{id: element.id, class: ("danger" if alert(updated_at, element)) }
+      %tr{id: element.id, class: ("danger" if @show_update && alert(updated_at, element)) }
         %td= element.booking_number
         %td= element.customer_name
         %td= element.truck_number
