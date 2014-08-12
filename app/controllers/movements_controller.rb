@@ -21,9 +21,6 @@ class MovementsController < ApplicationController
       @export_item = ExportItem.find(params[:export_item_id])
       @export_item.movement_id = movement.id
       @export_item.save
-      flash[:notice] = 'Successfully added new Movement'
-    else
-      flash[:error] = 'Error while saving movement'
     end
     render 'new'
   end

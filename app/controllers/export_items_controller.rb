@@ -6,11 +6,14 @@ class ExportItemsController < ApplicationController
   end
 
   def update
-    export = ExportItem.find(export_items_params[:id])
-    if export.update_attributes(export_items_params)
-      render text: export_items_params[:container] || export_items_params[:date_of_placement] ||export_items_params[:location]
-    else
-      render text: export.errors.full_messages
+    @export_item = ExportItem.find(export_items_params[:id])
+    if @export_item.update_attributes!(export_items_params)
+      export= Export.find(@export_item[:export_id])
+      export_items= ExportItem.where(export_id: @export_item.export_id).where.not(container: nil)
+      @e =export_items.count
+      export[:placed]=@e
+      @id = export.id
+      export.save
     end
   end
 

@@ -33,11 +33,10 @@ datatable_initialize = ->
       
     else
       # Open this row
-      rowIndex = exportsTable.fnGetPosition( $(nTds).closest('tr')[0] )
+      rowIndex = $(nTr).attr("id")
       detailsRowData = exportItems[rowIndex]
       this.src = "/images/minus.png"
       exportsTable.fnOpen(nTr, fnFormatDetails(id, detailsTableHtml), 'details')
-
       oInnerTable = $("#exportItem_" + id).dataTable({
       "bJQueryUI": true,
       "bFilter": false,
@@ -59,9 +58,12 @@ datatable_initialize = ->
       fnCreatedRow: ( row, data, index ) ->
         $(row).attr('id', data.id)   
       }).makeEditable(
-        aoColumns: [ { name: 'date_of_placement', submit: 'okay', tooltip: "yyyy-mm-dd", sUpdateURL: "export_items/update", type: 'datepicker', event: 'click'},
-                     { name: "container", onblur: 'submit', sUpdateURL: "export_items/update" },
-                     { name: 'location', onblur: 'submit', sUpdateURL: "export_items/update"}, null, null
+        oAddNewRowOkButtonOptions: null
+        oAddNewRowCancelButtonOptions: null
+        aoColumns: [ {name: 'date_of_placement', submit: 'okay', tooltip: "yyyy-mm-dd", sUpdateURL: "export_items/update", type: 'datepicker', event: 'click'},
+                     { name: "container", onblur: 'submit', sUpdateURL: "export_items/update",placeholder:"Click to enter Container", fnOnCellUpdated: (sStatus, sValue, settings) ->
+                                   eval(sValue) }
+                     { name: 'location', onblur: 'submit', sUpdateURL: "export_items/update",placeholder:"Click to enter Location"}, null, null
                    ]
       )
 

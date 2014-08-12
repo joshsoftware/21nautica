@@ -16,7 +16,7 @@
         %td= export.shipping_line
         %td= export.equipment
         %td= export.quantity
-        %td= export.placed
+        %td.placed= export.placed
 .hide
   %table{id: "detailsTable"}
     %thead
@@ -51,7 +51,6 @@
 
 :coffeescript
   @exportItems = #{@export_items.to_json}
-  console.log(@export_items)
   $('#basicModal').on 'show.bs.modal', (event) ->
     if $(event.relatedTarget).attr('data-container') == "null" or
        $(event.relatedTarget).attr('data-container') == ""
