@@ -2,6 +2,7 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 datatable_initialize = ->
+
   movementsTable = $('#movements_table').dataTable({
                     "bJQueryUI": true,
                     "bFilter": true,
@@ -17,15 +18,15 @@ datatable_initialize = ->
                                     event: 'click',
                                     data: JSON.stringify(@transporters),
                                     onblur: 'submit'
-                                    sUpdateURL: 'movements/update'
-                                    },
+                                    sUpdateURL: 'movements/update',
+                                  },
                                   {sUpdateURL: 'movements/update',},
                                   {
                                     type: 'select',
                                     event: 'click'
                                     data: JSON.stringify(@destination_ports),
                                     onblur: 'submit'
-                                    sUpdateURL: 'movements/update'
+                                    sUpdateURL: 'movements/update',
                                     },
                                   null, null, null,
                                   {sUpdateURL: 'movements/update',},
@@ -33,5 +34,5 @@ datatable_initialize = ->
                      ]
                   )
 
-$(document).on "page:load", datatable_initialize
+$(document).ready datatable_initialize
 
