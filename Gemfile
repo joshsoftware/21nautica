@@ -80,6 +80,7 @@ group :test do
   gem 'factory_girl_rails'
   gem "codeclimate-test-reporter", require: nil
 end
+gem 'mocha'
 
 group :production do
   gem 'rails_12factor'

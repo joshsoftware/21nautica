@@ -60,10 +60,22 @@ datatable_initialize = ->
       }).makeEditable(
         oAddNewRowOkButtonOptions: null
         oAddNewRowCancelButtonOptions: null
-        aoColumns: [ {name: 'date_of_placement', submit: 'okay', tooltip: "yyyy-mm-dd", sUpdateURL: "export_items/update", type: 'datepicker', event: 'click'},
-                     { name: "container", onblur: 'submit', sUpdateURL: "export_items/update",placeholder:"Click to enter Container", fnOnCellUpdated: (sStatus, sValue, settings) ->
-                                   eval(sValue) }
-                     { name: 'location', onblur: 'submit', sUpdateURL: "export_items/update",placeholder:"Click to enter Location"}, null, null
+        aoColumns: [{name: 'date_of_placement', submit: 'okay', tooltip: "yyyy-mm-dd", sUpdateURL:  "export_items/update",
+        type: 'datepicker', event: 'click'},
+
+                     { name: "container", onblur: 'submit',placeholder:"Click to enter Container",
+                     sUpdateURL: (value,settings) ->
+                                       $.post("export_items/updatecontainer",
+                                       { id: $($(this).parents('tr')[0]).attr("id"),container: value})
+                                         .done(( data ) ->
+                                           $("#exports_table tr##{id} td.placed").text("#{data}"))
+                                       return value
+                      },
+
+                     { name: 'location', onblur: 'submit',
+                     sUpdateURL: "export_items/update",placeholder:"Click to enter",
+                     },
+                     null, null
                    ]
       )
 
