@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   post '/export_items/update'
   post '/movements/update'
   post 'customers/daily_report'
-  
+  post 'export_items/updatecontainer'
   resources :exports, only: [:new, :create, :index]
   resources :export_items, only: [:new, :create]
   resources :customers, only: [:new, :create]
