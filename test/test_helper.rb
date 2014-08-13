@@ -32,7 +32,7 @@ class ActiveSupport::TestCase
 end
 
 class ActionController::TestCase
-
+  include Devise::TestHelpers
   def setup
     DatabaseCleaner.start
   end

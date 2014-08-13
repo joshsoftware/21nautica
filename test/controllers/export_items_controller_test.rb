@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class ExportItemsControllerTest < ActionController::TestCase
+  setup do
+    @user = FactoryGirl.create :user
+    sign_in @user
+  end
+
   test "should create export_item" do
     export = FactoryGirl.create :export
 
