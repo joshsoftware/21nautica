@@ -2,6 +2,8 @@ require 'test_helper'
 
 class ExportsControllerTest < ActionController::TestCase
   setup do
+    @user = FactoryGirl.create :user
+    sign_in @user
     @export = FactoryGirl.create :export
   end
 
