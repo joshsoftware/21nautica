@@ -9,6 +9,8 @@ require "minitest/rails"
 require "factory_girl_rails"
 require "database_cleaner"
 
+require 'mocha/mini_test'
+
 DatabaseCleaner.strategy = :transaction
 
 # To add Capybara feature tests add `gem "minitest-rails-capybara"`
