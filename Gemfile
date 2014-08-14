@@ -52,6 +52,7 @@ gem 'bootstrap-datepicker-rails'
 gem 'axlsx'
 
 gem 'devise'
+gem 'devise_invitable'
 
 group :development do
   gem 'tlsmail'
