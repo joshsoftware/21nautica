@@ -22,6 +22,7 @@
 FactoryGirl.define do 
 	factory :movement do
   	booking_number '1'
+  	truck_number 't1'
   	status 'loaded'
   end
 end

@@ -18,6 +18,6 @@ FactoryGirl.define do
   factory :export_item do
     container '12345678'
     location  'test location'
-    date_of_placement Date.today
+    date_of_placement Date.today  
   end
 end

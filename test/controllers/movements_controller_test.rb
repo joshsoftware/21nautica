@@ -7,6 +7,8 @@ class MovementsControllerTest < ActionController::TestCase
     @user = FactoryGirl.create :user
     sign_in @user
     @movement = FactoryGirl.create :movement
+    @export = FactoryGirl.create :export
+    @export_item = FactoryGirl.create :export_item
   end
 
   test "should get index" do
@@ -19,7 +21,41 @@ class MovementsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should get create" do
+  test "should get history" do
+    get :history
+    assert_response :success
+  end
+  
+  test "should create movement" do
+    @export_item.export = @export
+    @export_item.save
+    assert_difference('Movement.count') do
+      post :create, { id: @movement.id ,
+                      movement: {
+                                  truck_number: 't1', 
+                                  point_of_discharge: 'Mundra', 
+                                  transporter_name: 'Mansons'},
+                      export_item_id: @export_item.id
+                    }                                
+    end
+    assert_response :success
+  end
+
+  test "should update movement" do
+    xhr :post, :update, { id: @movement.id,
+                    columnName: 'Truck Number',
+                    value: 't2'
+                    } 
+    @movement.reload
+    assert_equal 't2', @movement.truck_number        
+  end
+
+  test "should update status for movement" do
+    
+  end
+
+  test "movement should not happen unless container assigned" do
+    
   end
 
   status=["loaded",
