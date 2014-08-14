@@ -20,10 +20,9 @@ datatable_initialize = ->
                   })
   detailsTableHtml = $("#detailsTable").html()
 
-  $('#exports_table tbody td img').click ->
+  $('#exports_table tbody').on('click','#exports_table tr td img',()->
     nTr = $(this).parents('tr')[0]
     nTds = this
-    
     id = $(this).parents('tr').attr('id')
 
     if exportsTable.fnIsOpen(nTr)
@@ -77,6 +76,6 @@ datatable_initialize = ->
                      },
                      null, null
                    ]
-      )
+      ))
 
 $(document).ready datatable_initialize
