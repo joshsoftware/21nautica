@@ -7,10 +7,13 @@
     %th Equipment
     %th Quantity
     %th Placed
+    %th Moved
   %tbody
     - @exports.each do |export|
       - if export.placed.nil?
         - export.placed = 0
+      - if export.moved.nil?
+        -export.moved = 0
       %tr{id: "#{export.id}"}
         %td= image_tag 'plus.png'
         %td.ro_number= export.release_order_number
@@ -19,6 +22,7 @@
         %td= export.equipment
         %td= export.quantity
         %td.placed= export.placed
+        %td.moved= export.moved
 .hide
   %table{id: "detailsTable"}
     %thead

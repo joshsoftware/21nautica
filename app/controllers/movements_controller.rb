@@ -15,12 +15,21 @@ class MovementsController < ApplicationController
   def create
     movement = Movement.new(movement_params)
     @export_item = ExportItem.find(params[:export_item_id])
+    export = @export_item.export
     movement.shipping_seal = @export_item.export.shipping_line
     movement.movement_type = @export_item.export.export_type
     if movement.save
-      @export_item = ExportItem.find(params[:export_item_id])
       @export_item.movement_id = movement.id
       @export_item.save
+      @moved_count = @export_item.export.export_items.where.not(movement_id: nil).count
+      export_items = export.export_items.where(movement_id: nil).where.not(container: ['', nil])
+      @count = export_items.count
+      export[:placed] = @count
+      export[:moved] = @moved_count
+      @id = export.id
+      export.save
+    else
+      render text :movement.errors.full_messages
     end
     render 'new'
   end
