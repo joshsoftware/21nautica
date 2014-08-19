@@ -18,7 +18,7 @@ class ExportItemsController < ApplicationController
     @export_item = ExportItem.find(export_items_params[:id])
     if @export_item.update_attributes(export_items_params)
       export = @export_item.export
-      export_items = export.export_items.where.not(container: ['', nil])
+      export_items = export.export_items.where.not(container: ['', nil]).where(movement_id: nil)
       export[:placed] = export_items.count
       if !export.save
         render text: export.error.full_messages
