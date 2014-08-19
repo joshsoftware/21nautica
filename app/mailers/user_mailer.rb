@@ -1,11 +1,13 @@
 class UserMailer < ActionMailer::Base
-  default from: "support@21nautica.com"
+  default from: "kaushik@21nautica.com"
   def mail_report(customer)
-  	@customer = customer
+    @customer = customer
     time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
+
     daily_report =Report::Daily.new
     daily_report.create(@customer)
-	attachments["#{customer.name.tr(" ", "_")}_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}_#{time}.xlsx")
-    mail(to: @customer.emails, subject: 'DAILY REPORT')
+
+    attachments["#{customer.name.tr(" ", "_")}_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}_#{time}.xlsx")
+    mail(to: @customer.emails, subject: "Customer Update #{customer.name}")
   end
 end
