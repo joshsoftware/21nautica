@@ -6,4 +6,6 @@
   $('#basicModal').modal('hide');
   $("#exports_table tr##{@id} td.moved").text("#{@moved_count}")
   $("#exports_table tr##{@id} td.placed").text("#{@count}")
-  $($('#movement_#{@export_item.id}').attr('data-row')).remove()
+  table = export_insta[#{@id}]
+  row = $('#exportItem_#{@id} tr##{@export_item.id}')
+  table.fnDeleteRow(row[0])
