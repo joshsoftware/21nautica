@@ -30,7 +30,7 @@ datatable_initialize = ->
       # This row is already open - close it
       this.src = "/images/plus.png"
       exportsTable.fnClose(nTr)
-      
+
     else
       # Open this row
       rowIndex = $(nTr).attr("id")
@@ -56,7 +56,7 @@ datatable_initialize = ->
         },
       ],
       fnCreatedRow: ( row, data, index ) ->
-        $(row).attr('id', data.id)   
+        $(row).attr('id', data.id)
       }).makeEditable(
         oAddNewRowOkButtonOptions: null
         oAddNewRowCancelButtonOptions: null
@@ -66,7 +66,8 @@ datatable_initialize = ->
                      { name: "container", onblur: 'submit',placeholder:"Click to enter Container",
                      sUpdateURL: (value,settings) ->
                                        $.post("export_items/updatecontainer",
-                                       { id: $($(this).parents('tr')[0]).attr("id"),container: value})
+                                       { id: $($(this).parents('tr')[0]).attr("id"),container: (if value is "" then undefined else value)
+                                       })
                                          .done(( data ) ->
                                            $("#exports_table tr##{id} td.placed").text("#{data}"))
                                        return value
