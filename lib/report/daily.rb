@@ -47,7 +47,11 @@ module Report
       exports.each do |export|
         export.export_items.each do |item|
           movements = Movement.where(id: item.movement_id)
-          movements = movements.where(status: status) if status # special cases
+          if status
+            movements = movements.where(status: status) # special cases
+          else
+            movements = movements.where.not(status: 'container_handed_over_to_KPA')
+          end
 
           movements.each do |movement|
 
