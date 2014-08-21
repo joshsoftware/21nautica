@@ -6,6 +6,5 @@
   $('#basicModal').modal('hide');
   $("#exports_table tr##{@id} td.moved").text("#{@moved_count}")
   $("#exports_table tr##{@id} td.placed").text("#{@count}")
-  table = export_insta[#{@id}]
-  row = $('#exportItem_#{@id} tr##{@export_item.id}')
-  table.fnDeleteRow(row[0])
+  oTable = $("#exportItem_#{@id}").dataTable()
+  oTable.fnDeleteRow("tr##{@export_item.id}")

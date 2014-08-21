@@ -1,7 +1,6 @@
 # Place all the behaviors and hooks related to the matching controller here.
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
-window.export_insta={}
 fnFormatDetails = (table_id, html) ->
     sOut = "<table id=\"exportItem_" + table_id + "\">"
     sOut += html
@@ -78,7 +77,5 @@ datatable_initialize = ->
                      },
                      null, null
                    ]
-       )
-      export_insta[id]=oInnerTable
-  )
+       ))
 $(document).ready datatable_initialize
