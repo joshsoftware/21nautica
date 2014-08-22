@@ -18,6 +18,7 @@ class Export < ActiveRecord::Base
   belongs_to :customer
   has_many :export_items, dependent: :destroy
   validates_presence_of :quantity
+  validates_uniqueness_of :release_order_number,message: "Duplicate R/O Number not allowed!"
   def customer_name
     Customer.find(customer_id).name
   end

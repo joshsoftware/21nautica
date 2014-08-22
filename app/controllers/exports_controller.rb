@@ -14,6 +14,7 @@ class ExportsController < ApplicationController
 
   def create 
     @export = Export.new(export_params)
+    @customers = Customer.all
     # Add as many containers as mentioned in the Order#quantity
     @export.quantity.times { @export.export_items.build }
     if @export.save
