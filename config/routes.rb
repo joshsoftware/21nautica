@@ -10,7 +10,8 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'welcome#index'
-  get 'export/history' => 'movements#history' 
+  get 'export/history' => 'movements#history'
+  post 'export/movements/update' => 'movements#update' 
 
   # special inline edit for export_items
   post '/export_items/update'
