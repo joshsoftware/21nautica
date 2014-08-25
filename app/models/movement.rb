@@ -24,6 +24,14 @@ class Movement < ActiveRecord::Base
   include AASM
 
   has_one :export_item
+  validates :truck_number, presence: true
+  validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
+  def assignment_of_truck_number
+   count = Movement.where(truck_number: truck_number).where.not(status: :container_handed_over_to_KPA).count
+   if count > 0 && truck_number != nil
+     errors.add(:truck_number," #{truck_number} is not free !")
+   end
+  end
 
   aasm column: 'status' do
     state :loaded, initial: true

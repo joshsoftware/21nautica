@@ -32,8 +32,8 @@ class MovementsControllerTest < ActionController::TestCase
     assert_difference('Movement.count') do
       post :create, { id: @movement.id ,
                       movement: {
-                                  truck_number: 't1', 
-                                  point_of_discharge: 'Mundra', 
+                                  truck_number: 't12',
+                                  point_of_discharge: 'Mundra',
                                   transporter_name: 'Mansons'},
                       export_item_id: @export_item.id
                     }                                
