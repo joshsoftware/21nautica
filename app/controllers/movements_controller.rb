@@ -31,7 +31,7 @@ class MovementsController < ApplicationController
       @id = export.id
       export.save
     else
-      render text :movement.errors.full_messages
+      @error = movement.errors.full_messages
     end
     render 'new'
   end

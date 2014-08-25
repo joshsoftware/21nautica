@@ -3,8 +3,14 @@
   $("[data-is='basicModal']").modal('show')
 - else
   $('.flash_messages').html('#{escape_javascript(render :partial => 'flash_message')}');
-  $('#basicModal').modal('hide');
+  $('#basicModal .modal-body #movement_truck_number').val("");
+  $('#basicModal .alert').remove();
+  - if !@error.present?
+    $('#basicModal').modal('hide');
+    oTable = $("#exportItem_#{@id}").dataTable()
+    oTable.fnDeleteRow("tr##{@export_item.id}")
+  - else
+    -@error.each do |msg|
+      $('#basicModal .modal-body').append("<div class='alert alert-danger'>#{msg}</div>");
   $("#exports_table tr##{@id} td.moved").text("#{@moved_count}")
   $("#exports_table tr##{@id} td.placed").text("#{@count}")
-  oTable = $("#exportItem_#{@id}").dataTable()
-  oTable.fnDeleteRow("tr##{@export_item.id}")
