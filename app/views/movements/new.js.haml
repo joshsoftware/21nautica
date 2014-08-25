@@ -7,10 +7,10 @@
   $('#basicModal .alert').remove();
   - if !@error.present?
     $('#basicModal').modal('hide');
+    $("#exports_table tr##{@id} td.moved").text("#{@moved_count}")
+    $("#exports_table tr##{@id} td.placed").text("#{@count}")
     oTable = $("#exportItem_#{@id}").dataTable()
     oTable.fnDeleteRow("tr##{@export_item.id}")
   - else
     -@error.each do |msg|
       $('#basicModal .modal-body').append("<div class='alert alert-danger'>#{msg}</div>");
-  $("#exports_table tr##{@id} td.moved").text("#{@moved_count}")
-  $("#exports_table tr##{@id} td.placed").text("#{@count}")
