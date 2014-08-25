@@ -66,3 +66,4 @@
     ro_number = $("#exports_table tr" + $(event.relatedTarget).attr('data-export') + " td.ro_number").text()
     $('#basicModal #movement_booking_number').val ro_number
     $('#basicModal form').attr('action', "/movements?export_item_id=" + export_item.slice(1))
+    $('#basicModal .alert').remove()

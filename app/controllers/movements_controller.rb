@@ -9,6 +9,8 @@ class MovementsController < ApplicationController
   
   def history
     @movements = Movement.where(status: "container_handed_over_to_KPA").order(:booking_number)
+    @transporters = TRANSPORTERS.inject({}) {|h, x| h[x] = x; h }
+    @destination_ports = DESTINATION_PORTS.inject({}) {|h, x| h[x] = x; h }
   end
 
   # JS call.
@@ -29,7 +31,7 @@ class MovementsController < ApplicationController
       @id = export.id
       export.save
     else
-      render text :movement.errors.full_messages
+      @error = movement.errors.full_messages
     end
     render 'new'
   end
@@ -51,6 +53,8 @@ class MovementsController < ApplicationController
   def updateStatus 
     @movement = Movement.find(params[:id])
     @movement.remarks = movement_params[:remarks]
+    @movement.booking_number = movement_params[:booking_number]
+    @movement.vessel_targeted = movement_params[:vessel_targeted]
     status = movement_params[:status].downcase.gsub(' ', '_')
     status != @movement.status ? @movement.send("#{status}!".to_sym) : @movement.save 
   end
