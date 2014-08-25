@@ -23,10 +23,15 @@ class ExportItemsController < ApplicationController
       if !export.save
         render text: export.error.full_messages
       end
-      render json: export_items.count
+      render text: export_items_params[:container]
     else
-      render text: export.error.full_messages
+      render text: @export_item.errors.full_messages
     end
+  end
+
+  def getcount
+    export = Export.find(export_items_params[:id])
+    render text: export.export_items.where.not(container: ['', nil]).where(movement_id: nil).count
   end
 
   private

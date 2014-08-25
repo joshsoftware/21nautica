@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   post '/movements/update'
   post 'customers/daily_report'
   post 'export_items/updatecontainer'
+  post 'export_items/getcount'
   resources :exports, only: [:new, :create, :index]
   resources :export_items, only: [:new, :create]
   resources :customers, only: [:new, :create]
