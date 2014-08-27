@@ -17,10 +17,17 @@
             %li= link_to 'Export', new_export_path
         %li.dropdown
           = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
-            Operations
+            Import
             %span.caret
           %ul.dropdown-menu
-            %li= link_to 'Import', '#'
+            %li= link_to 'Port Operation', '#'
+            %li= link_to 'Import Tracking', '#'
+            %li= link_to 'Import History', '#'
+        %li.dropdown
+          = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
+            Export
+            %span.caret
+          %ul.dropdown-menu
             %li= link_to 'Export Placement', exports_path
             %li= link_to 'Export Tracking', movements_path
             %li= link_to 'Export History', export_history_path
