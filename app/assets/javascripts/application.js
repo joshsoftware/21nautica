@@ -16,7 +16,8 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require select2
-//= require bootstrap-datepicker
+//= require jquery-ui
+//= require bootstrap-datepicker/core
 //= require jquery.form-validator
 //= require_tree .
 
