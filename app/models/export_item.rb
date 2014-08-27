@@ -21,6 +21,23 @@ class ExportItem < ActiveRecord::Base
   # based on quantity
   validates :date_of_placement, format: { with: /\d{4}-\d{1,2}-\d{1,2}/, on: :update }
   validate :date_of_placement_cannot_be_in_future
+  validate :assignment_of_container, if: "container.present? && container_changed?"
+
+  def assignment_of_container
+    count=0
+    count1 = 0
+    export_items=ExportItem.where(container: container)
+    export_items.each do |item|
+      if !item.movement.nil?
+        count += 1 if item.movement.status != "container_handed_over_to_KPA"
+      else
+        count1 += 1
+      end
+    end
+    if count > 0 || count1>0
+      errors.add(:container,"#{container} is not free !")
+    end
+  end
 
   def date_of_placement_cannot_be_in_future
     if date_of_placement.present? && date_of_placement > Date.today

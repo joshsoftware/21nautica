@@ -1,4 +1,5 @@
 class ImportsController < ApplicationController
+
   def new
     @import = Import.new
     @customers = Customer.all
@@ -19,4 +20,9 @@ class ImportsController < ApplicationController
                                    :bl_number, :estimate_arrival, :description,
                                    :shipping_line, :customer_id)
   end
+
+
+	def history
+	end
 end
+

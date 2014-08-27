@@ -62,14 +62,12 @@ datatable_initialize = ->
         aoColumns: [{name: 'date_of_placement', submit: 'okay', tooltip: "yyyy-mm-dd", sUpdateURL:  "export_items/update",
         type: 'datepicker', event: 'click'},
 
-                     { name: "container", onblur: 'submit',placeholder:"Click to enter Container",
-                     sUpdateURL: (value,settings) ->
-                                       $.post("export_items/updatecontainer",
-                                       { id: $($(this).parents('tr')[0]).attr("id"),container: (if value is "" then undefined else value)
-                                       })
-                                         .done(( data ) ->
-                                           $("#exports_table tr##{id} td.placed").text("#{data}"))
-                                       return value
+                     { name: "container", onblur: 'submit',placeholder:"Click to enter Container",sUpdateURL :"export_items/updatecontainer
+                     ",fnOnCellUpdated: (sStatus, sValue, settings) ->
+                        $.post("export_items/getcount" ,
+                         { id: id})
+                           .done((data)->
+                             $("#exports_table tr##{id} td.placed").text("#{data}"))
                       },
 
                      { name: 'location', onblur: 'submit',
