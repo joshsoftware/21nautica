@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   root 'welcome#index'
   get 'export/history' => 'movements#history'
   post 'export/movements/update' => 'movements#update' 
+  get 'import/history' => 'import_items#history'
 
   # special inline edit for export_items
   post '/export_items/update'
@@ -22,6 +23,8 @@ Rails.application.routes.draw do
   resources :exports, only: [:new, :create, :index]
   resources :export_items, only: [:new, :create]
   resources :customers, only: [:new, :create]
+  resources :imports, only: [:new ,:create ,:index]
+  resources :import_items,only: [:new,:create,:index]
   resources :movements, only: [:new, :create, :index ] do
     member do
       post 'updateStatus'
