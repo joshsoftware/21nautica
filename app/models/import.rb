@@ -24,6 +24,8 @@ class Import < ActiveRecord::Base
   has_many :import_items
   belongs_to :customer
 
+  accepts_nested_attributes_for :import_items
+  
   aasm column: 'status' do
     state :new, initial: true
     state :copy_document_received
