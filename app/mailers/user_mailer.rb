@@ -12,6 +12,7 @@ class UserMailer < ActionMailer::Base
   end
   def welcome_message_import(import)
     @import = import
-    mail(from:"anuragpratap92apsc@gmail.com",to: "anuragpratap_apsc@yahoo.in",subject: "Welcome")
+    customer = Customer.find(@import.customer_id)
+    mail(to: customer.emails,subject: "Welcome")
   end
 end
