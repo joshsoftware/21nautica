@@ -10,4 +10,8 @@ class UserMailer < ActionMailer::Base
     attachments["#{customer.name.tr(" ", "_")}_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}_#{time}.xlsx")
     mail(to: @customer.emails, subject: "Customer Update #{customer.name}")
   end
+  def welcome_message_import(import)
+    @import = import
+    mail(from:"anuragpratap92apsc@gmail.com",to: "anuragpratap_apsc@yahoo.in",subject: "Welcome")
+  end
 end
