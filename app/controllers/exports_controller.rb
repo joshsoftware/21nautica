@@ -5,6 +5,10 @@ class ExportsController < ApplicationController
     @export_items = ExportItem.includes(:export).where(movement_id: nil).group_by(&:export_id)
     @exports = Export.where(id: @export_items.keys)
     @movement=Movement.new
+
+    if request.xhr?
+      render json: @export_items.to_json
+    end
   end
 
   def new

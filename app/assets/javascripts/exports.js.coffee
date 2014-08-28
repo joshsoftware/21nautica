@@ -8,7 +8,6 @@ fnFormatDetails = (table_id, html) ->
     return sOut
 
 datatable_initialize = ->
-
   $(document).on("dialogopen", ".ui-dialog", (event, ui) ->
     $('[data-behaviour~=datepicker]').datepicker({
       dateFormat: 'yy-mm-dd'
@@ -33,7 +32,14 @@ datatable_initialize = ->
     else
       # Open this row
       rowIndex = $(nTr).attr("id")
-      detailsRowData = exportItems[rowIndex]
+      export_items = exportItems
+      $.ajax(
+        url: "exports",
+        async: false)
+        .done((data)->
+          export_items = data
+          )
+      detailsRowData = export_items[rowIndex]
       this.src = "/images/minus.png"
       exportsTable.fnOpen(nTr, fnFormatDetails(id, detailsTableHtml), 'details')
       oInnerTable = $("#exportItem_" + id).dataTable({

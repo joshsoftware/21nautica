@@ -510,15 +510,15 @@ jQuery.editable.addInputType('datepicker', {
             var input = jQuery('<input size="15" class="smooth" />');
             settings.onblur = function(e) { }; 
             input.datepicker({
-                dateFormat: 'yy-mm-dd',
+                format: 'yyyy-mm-dd',
                 changeMonth: true,
                 changeYear: true,
-                maxDate: "+0D",
+                endDate: '+0d',
                 showOn: 'both'
             });  
             input.datepicker('option', 'showAnim', 'slide');
             jQuery(this).append(input);
             return (input);
         }    
-    });  
+    });
 })(jQuery);
