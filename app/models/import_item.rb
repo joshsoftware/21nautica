@@ -18,6 +18,7 @@
 
 class ImportItem < ActiveRecord::Base
   include AASM
+  belongs_to :import
 
   aasm column: 'status' do
     state :waiting_truck_allocation, initial: true
@@ -38,7 +39,7 @@ class ImportItem < ActiveRecord::Base
     end
 
   end
-  
+
   auditable only: [:status, :updated_at, :current_location]
 
 end

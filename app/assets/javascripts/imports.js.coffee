@@ -5,3 +5,19 @@
 $(document).on "page:load ready", ->
   $(".date").datepicker()
   return
+
+datatable_initialize = ->
+  importsTable = $('#imports_table').dataTable({
+                    "bJQueryUI": true
+                    "bFilter": true,
+                    "sPaginationType": "full_numbers"
+                    }).makeEditable(
+                      sUpdateURL: 'imports/update',
+                      aoColumns: [
+                                  null,null,null,null,
+                                  { sUpdateURL: 'imports/update',placeholder:"Click to enter",},
+                                  null, null, null
+                                 ]
+                  )
+
+$(document).ready datatable_initialize

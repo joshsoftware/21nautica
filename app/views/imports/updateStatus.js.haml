@@ -1,0 +1,8 @@
+$('#statusModal').modal('hide')
+- if @import.status == "truck_allocated"
+  $("#imports_table tr##{@import.id}").remove()
+- else
+  $("#imports_table tr##{@import.id} td.updateStatus button").attr('data-states', "#{@import.status},#{@import.aasm.events.join(',')}")
+  $("#imports_table tr##{@import.id} td.updateStatus .updateStatus .status").text("#{@import.status.humanize}")
+  $("#imports_table tr##{@import.id} td.updateStatus .updateStatus .status_updated_at").text("#{@import.updated_at.to_date.to_formatted_s}")
+  $("#imports_table tr##{@import.id} .remarks").text("#{@import.remarks}")

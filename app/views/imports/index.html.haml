@@ -1,0 +1,61 @@
+%table.table{id: 'imports_table'}
+  %thead
+    %th Customer Name
+    %th BL Number
+    %th Shipping Line
+    %th File Open Date
+    %th Work Order Number
+    %th ETA
+    %th#btnAddNewRow Status
+    %th Remarks
+  %tbody
+    - @imports.each do |import|
+      %tr{id: import.id }
+        %td= import.customer.name
+        %td= import.bl_number
+        %td= import.shipping_line
+        %td= import.created_at.to_date
+        %td= import.work_order_number
+        %td= import.estimate_arrival
+        %td.updateStatus{class: "text-center"}
+          .updateStatus.h5
+            .status_updated_at
+              = import.updated_at.to_date.to_formatted_s
+            .status.text-capitalize
+              = import.status.humanize
+          %button.btn.btn-small.btn-primary{'data-import-id' => "#{import.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => import.status + ',' + import.aasm.events.join(','), 'data-bl-number' => import.bl_number} Update
+        %td.remarks.h5
+          = import.remarks
+
+#statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    = simple_form_for(:import, url: '', html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+      .modal-content
+        .modal-header
+          = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+          %h1.modal-title Update Status
+        .modal-body
+          #bl_number
+            = f.label :bl_number
+          = f.input :status, collection: [], :input_html => {:class => 'select required form-control text-capitalize'}
+          = f.input :remarks, as: :text
+
+        .modal-footer
+          = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+          = f.submit 'Save', class: 'btn btn-primary'
+
+:coffeescript
+  $('#statusModal').on 'show.bs.modal', (event) ->
+    link_tag = $(event.relatedTarget)
+    id = link_tag.attr('data-import-id')
+
+    $("#imports_table tr#"+ id + " td.updateStatus .updateStatus").hide()
+    $('#statusModal #bl_number label').text("BL Number : " + link_tag.attr('data-bl-number'))
+    $('#statusModal form #import_status').html("")
+    for i in link_tag.attr('data-states').split(",")
+      $('#statusModal form #import_status').append("<option value=" + i + ">" + i.replace(/_/g, ' ') + "</option>")
+
+    $('#statusModal form').attr('action', "/imports/" + id + "/updateStatus")
+
+  $('#statusModal').on 'hide.bs.modal', (event) ->
+    $("#imports_table tr td.updateStatus .updateStatus").show()

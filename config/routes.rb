@@ -21,10 +21,15 @@ Rails.application.routes.draw do
   post 'customers/daily_report'
   post 'export_items/updatecontainer'
   post 'export_items/getcount'
+  post '/imports/update'
   resources :exports, only: [:new, :create, :index]
   resources :export_items, only: [:new, :create]
   resources :customers, only: [:new, :create]
-  resources :imports, only: [:new ,:create ,:index]
+  resources :imports, only: [:new ,:create ,:index] do
+    member do
+      post 'updateStatus'
+    end
+  end
   resources :import_items,only: [:new,:create,:index]
   resources :movements, only: [:new, :create, :index ] do
     member do

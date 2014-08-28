@@ -1,5 +1,9 @@
 class ImportsController < ApplicationController
 
+  def index
+     @imports = Import.where.not(status: "truck_allocated")
+  end
+
   def new
     @import = Import.new
     @customers = Customer.all
@@ -8,21 +12,43 @@ class ImportsController < ApplicationController
   def create
     @import = Import.new(import_params)
     if @import.save
-      redirect_to exports_path
+      redirect_to imports_path
     else
       render 'new'
     end
   end
 
+  def update
+    import = Import.find(import_update_params[:id])
+    attribute = import_update_params[:columnName].downcase.gsub(' ', '_').to_sym
+    if import.update(attribute => import_update_params[:value])
+      render text: import_update_params[:value]
+    else
+      render text: import.errors.full_messages
+    end
+  end
+
+  def updateStatus
+    @import = Import.find(params[:id])
+    @import.remarks = import_params[:remarks]
+    status = import_params[:status].downcase.gsub(' ', '_')
+    status != @import.status ? @import.send("#{status}!".to_sym) : @import.save
+  end
+
+  def history
+  end
+
   private
+
   def import_params
     params.require(:import).permit(:equipment, :quantity, :from, :to,
                                    :bl_number, :estimate_arrival, :description,
-                                   :shipping_line, :customer_id)
+                                   :shipping_line, :customer_id, :work_order_number,:remarks,:status)
   end
 
 
-	def history
-	end
+  def import_update_params
+    params.permit(:id, :columnName, :value)
+  end
 end
 

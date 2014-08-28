@@ -25,36 +25,41 @@ class Import < ActiveRecord::Base
   belongs_to :customer
 
   accepts_nested_attributes_for :import_items
-  
+
   aasm column: 'status' do
-    state :new, initial: true
-    state :copy_document_received
-    state :awaiting_vessel_arrival
-    state :awaiting_container_arrival
-    state :container_discharged
-    state :completed
+    state :copy_document_received, initial: true
+    state :awaiting_vessel_arrival_and_manifest
+    state :awaiting_container_discharge
+    state :awaiting_customs_release
+    state :awaiting_release_order
+    state :awaiting_truck_allocation
+    state :truck_allocated
 
-    event :recieve_copy_document do
-      transitions from: :new, to: :copy_document_received
+    event :original_documents_received do
+      transitions from: :copy_document_received, to: :awaiting_vessel_arrival_and_manifest
     end
 
-    event :recieve_original_document do
-      transitions from: [:new, :copy_document_received], to: :awaiting_vessel_arrival
-    end
-    
-    event :lodge_entry do
-      transitions from: :awaiting_vessel_arrival, to: :awaiting_container_arrival
+    event :vessel_arrived do
+      transitions from: :awaiting_vessel_arrival_and_manifest, to: :awaiting_container_discharge
     end
 
-    event :discharge_container do
-      transitions from: :awaiting_container_arrival, to: :container_discharged
+    event :container_discharged do
+      transitions from: :awaiting_container_discharge, to: :awaiting_customs_release
     end
 
-    event :order_delivered do
-      transitions from: :container_discharged, to: :completed
+    event :customs_entry_passed  do
+      transitions from: :awaiting_customs_release, to: :awaiting_release_order
+    end
+
+    event :release_order_secured do
+      transitions from: :awaiting_release_order, to: :awaiting_truck_allocation
+    end
+
+    event :truck_allocated do
+      transitions from: :awaiting_truck_allocation, to: :truck_allocated
     end
   end
-  
+
   auditable only: [:status, :updated_at]
 
 end
