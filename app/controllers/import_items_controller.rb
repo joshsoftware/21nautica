@@ -1,7 +1,7 @@
 class ImportItemsController < ApplicationController
- 
+
   def index
-  	imports = Import.includes(:import_item).where(status: "truck_allocated").select("id")
+  	imports = Import.includes(:import_item).where(status: "awaiting_truck_allocation").select("id")
     @import_items = ImportItem.where(import_id: imports).where.not(status: "delivered")
   end
 
@@ -15,11 +15,11 @@ class ImportItemsController < ApplicationController
     end
   end
 
-  def updateStatus 
+  def updateStatus
     @import_item = ImportItem.find(params[:id])
     @import_item.truck_number = import_item_params[:truck_number]
     status = import_item_params[:status].downcase.gsub(' ', '_')
-    status != @import_item.status ? @import_item.send("#{status}!".to_sym) : @import_item.save 
+    status != @import_item.status ? @import_item.send("#{status}!".to_sym) : @import_item.save
   end
 
   private

@@ -33,7 +33,6 @@ class Import < ActiveRecord::Base
     state :awaiting_customs_release
     state :awaiting_release_order
     state :awaiting_truck_allocation
-    state :truck_allocated
 
     event :original_documents_received do
       transitions from: :copy_document_received, to: :awaiting_vessel_arrival_and_manifest
@@ -55,9 +54,6 @@ class Import < ActiveRecord::Base
       transitions from: :awaiting_release_order, to: :awaiting_truck_allocation
     end
 
-    event :truck_allocated do
-      transitions from: :awaiting_truck_allocation, to: :truck_allocated
-    end
   end
 
   auditable only: [:status, :updated_at]

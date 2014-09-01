@@ -1,7 +1,7 @@
 class ImportsController < ApplicationController
 
   def index
-     @imports = Import.where.not(status: "truck_allocated")
+     @imports = Import.where.not(status: "awaiting_truck_allocation")
   end
 
   def new
