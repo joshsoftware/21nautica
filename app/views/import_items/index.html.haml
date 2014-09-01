@@ -8,7 +8,7 @@
 		%th Status
 	%tbody
 		- @import_items.each do |item|
-			%tr{id: item.id}	
+			%tr{id: item.id}
 				%td= item.import.customer.name
 				%td= item.import.bl_number
 				%td= item.container_number
@@ -20,7 +20,7 @@
 							= item.updated_at.to_date.to_formatted_s
 						.status.text.capatilize
 							= item.status.humanize
-					%button.btn.btn-small.btn-primary{'data-importitem-id' => "#{item.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => item.status + ',' + item.aasm.events.join(',')} Update		
+					%button.btn.btn-small.btn-primary{'data-importitem-id' => "#{item.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => item.status + ',' + item.aasm.events.join(','), 'data-truck-number' => "#{item.truck_number}"} Update
 
 #statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
 	.modal-dialog
@@ -30,7 +30,8 @@
 					= link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
 					%h1.modal-title Update Status
 				.modal-body
-					= f.input :truck_number
+					#truck_number
+						= f.label :truck_number
 					= f.input :status, collection: [], :input_html => {:class => 'select required form-control text-capitalize'}
 				.modal-footer
 					= link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
@@ -38,11 +39,17 @@
 
 :coffeescript
 	$('#statusModal').on 'show.bs.modal', (event) ->
+		if $(event.relatedTarget).attr('data-truck-number') == "null" or
+			 $(event.relatedTarget).attr('data-truck-number') == ""
+			alert("Add Truck Number first!")
+			return false
+
 		link_tag = $(event.relatedTarget)
 		id = link_tag.attr('data-importitem-id')
-		console.log id
+
 
 		$("#import_items_table tr#"+ id + " td.updatestatus .updatestatus").hide()
+		$('#statusModal #truck_number label').text("Truck Number : " + link_tag.attr('data-truck-number'))
 		$('#statusModal form #import_item_status').html("")
 		for i in link_tag.attr('data-states').split(",")
 			$('#statusModal form #import_item_status').append("<option value=" + i + ">" + i.replace(/_/g, ' ') + "</option>")
