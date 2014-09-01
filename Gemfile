@@ -27,6 +27,7 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 # Simple helps you with powerful components to create your forms.
 gem 'simple_form'
 
+gem 'nested_form'
 # State machines for Ruby classes, Read more: https://github.com/aasm/aasm
 gem 'aasm'
 # bootstrap-sass is a Sass-powered version of Bootstrap. Read more: https://github.com/twbs/bootstrap-sass

@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   post 'export_items/updatecontainer'
   post 'export_items/getcount'
   post '/imports/update'
+  post '/import_items/update'
   resources :exports, only: [:new, :create, :index]
   resources :export_items, only: [:new, :create]
   resources :customers, only: [:new, :create]
@@ -30,7 +31,11 @@ Rails.application.routes.draw do
       post 'updateStatus'
     end
   end
-  resources :import_items,only: [:new,:create,:index]
+  resources :import_items,only: [:new,:create,:index] do
+    member do
+      post 'updateStatus'
+    end
+  end
   resources :movements, only: [:new, :create, :index ] do
     member do
       post 'updateStatus'

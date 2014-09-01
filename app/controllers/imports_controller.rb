@@ -12,7 +12,7 @@ class ImportsController < ApplicationController
   def create
     @import = Import.new(import_params)
     if @import.save
-      UserMailer.welcome_message_import(@import).deliver()
+      #UserMailer.welcome_message_import(@import).deliver()
       redirect_to imports_path
     else
       render 'new'
@@ -44,7 +44,8 @@ class ImportsController < ApplicationController
   def import_params
     params.require(:import).permit(:equipment, :quantity, :from, :to,
                                    :bl_number, :estimate_arrival, :description,
-                                   :shipping_line, :customer_id, :work_order_number,:remarks,:status)
+                                   :shipping_line, :customer_id, :work_order_number,:remarks,:status,
+                                    import_items_attributes:[:container_number])
   end
 
 

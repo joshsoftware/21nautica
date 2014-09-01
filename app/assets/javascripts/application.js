@@ -20,6 +20,7 @@
 //= require bootstrap-datepicker/core
 //= require jquery.form-validator
 //= require_tree .
+//= require jquery_nested_form
 
 $(document).ready(function(){
     $(document).on("page:load", function(){
@@ -27,3 +28,5 @@ $(document).ready(function(){
         $('[data-behaviour~=datepicker]').datepicker();
     });
 })
+
+

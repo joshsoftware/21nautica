@@ -18,24 +18,44 @@
 
 class ImportItem < ActiveRecord::Base
   include AASM
-  belongs_to :import
+  belongs_to :import 
 
   aasm column: 'status' do
-    state :waiting_truck_allocation, initial: true
-    state :awaiting_loading
-    state :loaded_out
+    state :under_loading_process, initial: true
+    state :truck_allocated
+    state :enroute_nairobi
+    state :enroute_malaba
+    state :awaiting_clearance
+    state :enroute_kampala
+    state :arrived_kampala
     state :delivered
 
     event :allocate_truck do
-      transitions from: :waiting_truck_allocation, to: :awaiting_loading
+      transitions from: :under_loading_process, to: :truck_allocated
     end
 
-    event :load_truck do
-      transitions from: :awaiting_loading, to: :loaded_out
+    event :loaded_out_of_port do
+      transitions from: :truck_allocated, to: :enroute_nairobi
+    end
+
+    event :crossed_nairobi do
+      transitions from: :enroute_nairobi, to: :enroute_malaba
+    end
+
+    event :arrived_malaba do
+      transitions from: :enroute_malaba, to: :awaiting_clearance
+    end
+
+    event :clearance_complete do
+      transitions from: :awaiting_clearance, to: :enroute_kampala
+    end
+
+    event :arrived_at_kampala do
+      transitions from: :enroute_kampala, to: :arrived_kampala
     end
 
     event :item_delivered do
-      transitions from: :loaded_out, to: :delivered
+      transitions from: :arrived_kampala, to: :delivered
     end
 
   end
