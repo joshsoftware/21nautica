@@ -18,8 +18,8 @@
           
   = f.fields_for :import_items do |items_form|
     = items_form.text_field :container_number
-  
-  = f.link_to_add "Add Container", :import_items
+
+  = f.link_to_add "", :import_items
     
   = f.input :description, label: 'Description'
   .form-group
@@ -31,24 +31,45 @@
   $('#import_quantity').on 'blur', (event) ->
     existing_count = $('.fields').size()
     quantity = this.value
+    console.log existing_count
     console.log quantity 
-    i = 0
     if quantity > existing_count
+      i = 0
       while i < (quantity - existing_count)
         $('.add_nested_fields').click()
         i++
     else
-      extras = existing_count - quantity 
-      while i < (extras)
+      i = existing_count - 1 
+      while i >= quantity        
         $('.fields')[i].remove()
-        i++    
+        i--    
 
   $('#new_import').on 'submit', (event) ->
     i = 0
+    console.log $('.fields').size()
+    console.log parseInt($('#import_quantity')[0].value)
+    if ($('.fields').size() == parseInt($('#import_quantity')[0].value))
+      while i < $('.fields').size() 
+        if( $('.fields input')[i].value == "" )
+          alert('Please fill in all container numbers')
+          event.preventDefault()
+          return
+        i++ 
+    else
+      alert('Container count not matching with quantity')
+      event.preventDefault()
 
-    while i < $('.fields').size() 
-      if( $('.fields input')[i].value == "" )
-        alert('Please fill in all container numbers')
-        event.preventDefault()
-      i++ 
-    
+  jQuery ($) ->
+  $(document).on "nested:fieldAdded", (event) ->
+    console.log 'Added event'
+    return
+
+  $(document).on "nested:fieldRemoved", (event) ->
+    console.log 'Remove event'
+    if $('#import_quantity')[0].value != ""
+      $('#import_quantity')[0].value = parseInt($('#import_quantity')[0].value) - 1
+    return
+      
+  return
+
+  
