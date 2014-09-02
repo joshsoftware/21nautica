@@ -27,7 +27,7 @@
     .col-md-6
 
 
-      %div
+      %div.scrollable-menu
         = f.fields_for :import_items do |items_form|
           = items_form.input :container_number, input_html: {class: 'form-control'}
           /= items_form.text_field :container_number
