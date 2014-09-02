@@ -1,60 +1,64 @@
 %table.table{id: 'import_items_table'}
-	%thead
-		%th Customer Name
-		%th BL Number
-		%th Container Number
-		%th Estimate Arrival
-		%th Truck Number
-		%th Status
-	%tbody
-		- @import_items.each do |item|
-			%tr{id: item.id}
-				%td= item.import.customer.name
-				%td= item.import.bl_number
-				%td= item.container_number
-				%td= item.import.estimate_arrival
-				%td.truck_number= item.truck_number
-				%td.updatestatus{class: "text-center"}
-					.updatestatus.h5
-						.status_updated_at
-							= item.updated_at.to_date.to_formatted_s
-						.status.text.capatilize
-							= item.status.humanize
-					%button.btn.btn-small.btn-primary{'data-importitem-id' => "#{item.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => item.status + ',' + item.aasm.events.join(','), 'data-truck-number' => "#{item.truck_number}",'truck-number-alloted'=> :false} Update
+  %thead
+    %th Customer Name
+    %th BL Number
+    %th Container Number
+    %th Estimate Arrival
+    %th Truck Number
+    %th Status
+    %th Remarks
+  %tbody
+    - @import_items.each do |item|
+      %tr{id: item.id}
+        %td= item.import.customer.name
+        %td= item.import.bl_number
+        %td= item.container_number
+        %td= item.import.estimate_arrival
+        %td.truck_number= item.truck_number
+        %td.updatestatus{class: "text-center"}
+          .updatestatus.h5
+            .status_updated_at
+              = item.updated_at.to_date.to_formatted_s
+            .status.text.capatilize
+              = item.status.humanize
+          %button.btn.btn-small.btn-primary{'data-importitem-id' => "#{item.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => item.status + ',' + item.aasm.events.join(','), 'data-truck-number' => "#{item.truck_number}",'truck-number-alloted'=> :false} Update
+        %td.remarks.h5
+          = item.remarks
+
 
 #statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
-	.modal-dialog
-		= simple_form_for(:import_item, url: '', html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
-			.modal-content
-				.modal-header
-					= link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
-					%h1.modal-title Update Status
-				.modal-body
-					#truck_number
-						= f.label :truck_number
-					= f.input :status, collection: [], :input_html => {:class => 'select required form-control text-capitalize'}
-				.modal-footer
-					= link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
-					= f.submit 'Save', class: 'btn btn-primary'
+  .modal-dialog
+    = simple_form_for(:import_item, url: '', html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+      .modal-content
+        .modal-header
+          = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+          %h1.modal-title Update Status
+        .modal-body
+          #truck_number
+            = f.label :truck_number
+          = f.input :status, collection: [], :input_html => {:class => 'select required form-control text-capitalize'}
+          = f.input :remarks, as: :text
+        .modal-footer
+          = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+          = f.submit 'Save', class: 'btn btn-primary'
 
 :coffeescript
-	$('#statusModal').on 'show.bs.modal', (event) ->
-		if $(event.relatedTarget).attr('data-truck-number') == "null" or
-			 $(event.relatedTarget).attr('data-truck-number') == ""
-			alert("Add Truck Number first!")
-			return false
+  $('#statusModal').on 'show.bs.modal', (event) ->
+    if $(event.relatedTarget).attr('data-truck-number') == "null" or
+       $(event.relatedTarget).attr('data-truck-number') == ""
+      alert("Add Truck Number first!")
+      return false
 
-		link_tag = $(event.relatedTarget)
-		id = link_tag.attr('data-importitem-id')
+    link_tag = $(event.relatedTarget)
+    id = link_tag.attr('data-importitem-id')
 
+    $("#import_items_table tr#"+ id + " td.updatestatus .updatestatus").hide()
+    $('#statusModal #truck_number label').text("Truck Number : " + link_tag.attr('data-truck-number'))
+    $('#statusModal form #import_item_status').html("")
+    for i in link_tag.attr('data-states').split(",")
+      $('#statusModal form #import_item_status').append("<option value=" + i + ">" + i.replace(/_/g, ' ') + "</option>")
 
-		$("#import_items_table tr#"+ id + " td.updatestatus .updatestatus").hide()
-		$('#statusModal #truck_number label').text("Truck Number : " + link_tag.attr('data-truck-number'))
-		$('#statusModal form #import_item_status').html("")
-		for i in link_tag.attr('data-states').split(",")
-			$('#statusModal form #import_item_status').append("<option value=" + i + ">" + i.replace(/_/g, ' ') + "</option>")
+    $('#statusModal form').attr('action', "/import_items/" + id + "/updateStatus")
 
-		$('#statusModal form').attr('action', "/import_items/" + id + "/updateStatus")
-
-	$('#statusModal').on 'hide.bs.modal', (event) ->
-		$("#import_items_table tr td.updatestatus .updatestatus").show()
+  $('#statusModal').on 'hide.bs.modal', (event) ->
+    $("#import_items_table tr td.updatestatus .updatestatus").show()

@@ -19,7 +19,7 @@ datatable_initialize = ->
                                       $.post("import_items/#{id}/updateStatus",{import_item: {status:"allocate_truck",truck_number: sValue}})
 
                                     },
-                                  null
+                                  null, null
                                  ]
                   )
 
