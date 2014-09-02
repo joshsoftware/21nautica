@@ -1,0 +1,18 @@
+%table.table{id: 'import_history_table'}
+  %thead
+    %th BL Number
+    %th Container Number
+    %th Delivery Date
+    %th
+    %th
+    %th Close Date
+  %tbody
+    - @import_items.each do |item|
+      - updated_at = status_updated_at(item).strftime("%d-%m-%Y")
+      %tr{id: item.id}
+        %td= item.import.bl_number
+        %td= item.container_number
+        %td= updated_at
+        %td
+        %td
+        %td

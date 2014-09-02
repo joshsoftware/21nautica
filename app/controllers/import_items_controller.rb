@@ -25,7 +25,9 @@ class ImportItemsController < ApplicationController
   def history
     @import_items = ImportItem.where(status: "delivered")
   end
-  
+  def empty_containers
+    @import_items = ImportItem.where(status: "delivered")
+  end
   private
 
   def import_item_params

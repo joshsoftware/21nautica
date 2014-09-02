@@ -24,3 +24,26 @@ datatable_initialize = ->
                   )
 
 $(document).ready datatable_initialize
+
+datatable_initialize = ->
+    ohistoryTable = $('#import_history_table').dataTable({
+                    "bJQueryUI": true,
+                    "bFilter": true,
+                    "sPaginationType": "full_numbers"
+                    }).makeEditable(
+                      aoColumns: [
+                                  null,null,null,null,
+                                  null,
+                                  null, null
+                                 ]
+                  )
+
+$(document).ready datatable_initialize
+
+datatable_initialize = ->
+    oemptycontTable = $('#import_empty_containers_table').dataTable({
+                    "bJQueryUI": true,
+                    "bFilter": true,
+                    "sPaginationType": "full_numbers"
+                    })
+$(document).ready datatable_initialize

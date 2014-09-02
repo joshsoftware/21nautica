@@ -1,0 +1,23 @@
+%table.table{id: 'import_empty_containers_table'}
+  %thead
+    %th BL Number
+    %th Container Number
+    %th Customer Name
+    %th G/F Expiry
+    %th
+    %th
+    %th
+  %tbody
+    - @import_items.each do |item|
+      - updated_at = status_updated_at(item).strftime("%d-%m-%Y")
+      %tr{id: item.id}
+        %td= item.import.bl_number
+        %td= item.container_number
+        %td= item.import.customer.name
+        %td= updated_at
+        %td.emptyReturn{class: "text-center"}
+          %button.btn.btn-small.btn-primary Empty Return
+        %td.exportReuse{class: "text-center"}
+          %button.btn.btn-small.btn-primary Export Reuse
+        %td.dropOff{class: "text-center"}
+          %button.btn.btn-small.btn-primary Drop Off
