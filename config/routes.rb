@@ -14,7 +14,6 @@ Rails.application.routes.draw do
   post 'export/movements/update' => 'movements#update'
   get 'import/history' => 'import_items#history'
   get 'import/empty_containers' => 'import_items#empty_containers'
-  get 'import/tracking' => 'import_items#index'
 
   # special inline edit for export_items
   post '/export_items/update'
