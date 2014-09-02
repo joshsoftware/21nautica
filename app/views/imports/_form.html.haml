@@ -1,59 +1,70 @@
-= simple_nested_form_for @import , html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
-  = f.input :bl_number, label: 'BL- Number', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
-  %div{data: {for: 'customerSelect'}}
-    = render '/shared/customer', customers: @customers, model: 'import'
+.row
+  = simple_nested_form_for @import , html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
 
-  = f.input :to, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+    %div{data: {for: 'customerSelect'}}
+    .col-md-6
 
-  = f.input :from, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
-  
-  = f.input :shipping_line, collection: SHIPPING_LINE, as: :select, label: 'Shipping line', include_blank: false
+      = f.input :bl_number, label: 'BL- Number', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
 
-  = f.input :estimate_arrival, as: :string, input_html: { class: 'date', data: {behaviour: "datepicker"}}
-  
-  = f.input :equipment, collection: EQUIPMENT_TYPE, as: :select, label: 'Equipment', include_blank: false
-  
-  = f.input :quantity, input_html: {:"data-validation" => "number", :"data-validation-error-msg" => "Quantity Should be a valid Positive Number."}  
-          
-  = f.fields_for :import_items do |items_form|
-    = items_form.text_field :container_number
+      = render '/shared/customer', customers: @customers, model: 'import'
 
-  = f.link_to_add "", :import_items
-    
-  = f.input :description, label: 'Description'
-  .form-group
-    .col-sm-offset-2.col-sm-2
-      = f.submit 'Save', class: 'btn-primary'
+      = f.input :to, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+
+      = f.input :from, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+
+      = f.input :shipping_line, collection: SHIPPING_LINE, as: :select, label: 'Shipping line', include_blank: false
+
+      = f.input :estimate_arrival, as: :string, input_html: { class: 'date', data: {behaviour: "datepicker"}}
+
+      = f.input :equipment, collection: EQUIPMENT_TYPE, as: :select, label: 'Equipment', include_blank: false
+
+      = f.input :quantity, input_html: {:"data-validation" => "number", :"data-validation-error-msg" => "Quantity Should be a valid Positive Number."}
+
+      = f.input :description, label: 'Description'
+      .form-group
+        .col-sm-offset-2.col-sm-2
+          = f.submit 'Save', class: 'btn-primary'
+    .col-md-6
 
 
-:coffeescript  
+      %div
+        = f.fields_for :import_items do |items_form|
+          = items_form.input :container_number, input_html: {class: 'form-control'}
+          /= items_form.text_field :container_number
+
+        = f.link_to_add "", :import_items
+
+
+
+
+:coffeescript
   $('#import_quantity').on 'blur', (event) ->
     existing_count = $('.fields').size()
     quantity = this.value
     console.log existing_count
-    console.log quantity 
+    console.log quantity
     if quantity > existing_count
       i = 0
       while i < (quantity - existing_count)
         $('.add_nested_fields').click()
         i++
     else
-      i = existing_count - 1 
-      while i >= quantity        
+      i = existing_count - 1
+      while i >= quantity
         $('.fields')[i].remove()
-        i--    
+        i--
 
   $('#new_import').on 'submit', (event) ->
     i = 0
     console.log $('.fields').size()
     console.log parseInt($('#import_quantity')[0].value)
     if ($('.fields').size() == parseInt($('#import_quantity')[0].value))
-      while i < $('.fields').size() 
+      while i < $('.fields').size()
         if( $('.fields input')[i].value == "" )
           alert('Please fill in all container numbers')
           event.preventDefault()
           return
-        i++ 
+        i++
     else
       alert('Container count not matching with quantity')
       event.preventDefault()
@@ -68,7 +79,6 @@
     if $('#import_quantity')[0].value != ""
       $('#import_quantity')[0].value = parseInt($('#import_quantity')[0].value) - 1
     return
-      
+
   return
 
-  
