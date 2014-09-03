@@ -1,6 +1,7 @@
 $('#statusModal').modal('hide')
 - if @movement.status == "container_handed_over_to_KPA"
-	$("#movements_table tr##{@movement.id}").remove()
+	oTable = $("#movements_table").dataTable()
+	oTable.fnDeleteRow("tr##{@movement.id}")
 - else	
 	$("#movements_table tr##{@movement.id} td.updateStatus button").attr('data-states', "#{@movement.status},#{@movement.aasm.events.join(',')}")
 	$("#movements_table tr##{@movement.id} td.updateStatus .updateStatus .status").text("#{@movement.status.humanize}")
