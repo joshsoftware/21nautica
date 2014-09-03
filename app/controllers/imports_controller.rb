@@ -15,6 +15,7 @@ class ImportsController < ApplicationController
       #UserMailer.welcome_message_import(@import).deliver()
       redirect_to imports_path
     else
+      @customers = Customer.all
       render 'new'
     end
   end

@@ -23,7 +23,7 @@ class Import < ActiveRecord::Base
 
   has_many :import_items
   belongs_to :customer
-
+  validates_uniqueness_of :bl_number
   accepts_nested_attributes_for :import_items
 
   aasm column: 'status' do
