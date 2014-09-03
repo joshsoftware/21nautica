@@ -20,7 +20,7 @@ class CustomersController < ApplicationController
     end
     customers = customers.uniq
     customers.each do |customer|
-      UserMailer.mail_report_export(customer).deliver
+      UserMailer.mail_report(customer,'export').deliver
     end
   end
 
@@ -33,7 +33,7 @@ class CustomersController < ApplicationController
     end
     customers = customers.uniq
     customers.each do |customer|
-      UserMailer.mail_report_import(customer).deliver
+      UserMailer.mail_report(customer,'import').deliver
     end
   end
 
