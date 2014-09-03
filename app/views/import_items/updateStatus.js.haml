@@ -1,7 +1,7 @@
 $('#statusModal').modal('hide')
 - if @import_item.status == "delivered"
   oTable = $("#import_items_table").dataTable()
-  oTable.fnDeleteRow("tr##{@import_item.id")
+  oTable.fnDeleteRow("tr##{@import_item.id}")
 - else
   $("#import_items_table tr##{@import_item.id} td.updatestatus button").attr('data-states', "#{@import_item.status},#{@import_item.aasm.events.join(',')}")
   $("#import_items_table tr##{@import_item.id} td.updatestatus .updatestatus .status").text("#{@import_item.status.humanize}")
