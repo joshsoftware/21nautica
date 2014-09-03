@@ -60,8 +60,8 @@ module Report
                      item.container_number, import.equipment, import.description,
                      import.estimate_arrival.nil? ? "" :
                      import.estimate_arrival.to_date.strftime("%d-%b-%Y"),
-                     out_of_port_date, full_remarks, item.truck_number, item.bond_direction,
-                     item.bond_number], style: center, height: 200
+                     out_of_port_date, full_remarks, item.truck_number, item.trailer_number,
+                     item.bond_direction, item.bond_number], style: center, height: 200
 
           full_remarks.clear
 
