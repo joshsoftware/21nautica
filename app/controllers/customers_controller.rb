@@ -11,9 +11,30 @@ class CustomersController < ApplicationController
     render 'new'
   end
 
-  def daily_report
-    customer = Customer.find_by_name(daily_report_params[:name])
-    UserMailer.mail_report(customer).deliver
+  def daily_report_export
+    customers = []
+    movements = Movement.where.not(status: "container_handed_over_to_KPA").select(:booking_number).uniq
+    movements.each do |movement|
+      export = Export.find_by release_order_number: movement.booking_number
+      customers.push(export.customer)
+    end
+    customers = customers.uniq
+    customers.each do |customer|
+      UserMailer.mail_report_export(customer).deliver
+    end
+  end
+
+  def daily_report_import
+    customers = []
+    import_items = ImportItem.where.not(status: "delivered").select(:import_id).uniq
+    import_items.each do |item|
+      import = Import.find(item.import_id)
+      customers.push(import.customer)
+    end
+    customers = customers.uniq
+    customers.each do |customer|
+      UserMailer.mail_report_import(customer).deliver
+    end
   end
 
   private
