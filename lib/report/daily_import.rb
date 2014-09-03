@@ -17,7 +17,7 @@ module Report
         {'In Transit' => nil, 'History' => 'delivered'}.each do |name, status|
           workbook.add_worksheet(name: name) do |sheet|
             add_data(customer, sheet, center, heading, status)
-            sheet.column_info[7].width = 50
+            sheet.column_info[7].width = 70
           end
         end
       end
@@ -42,14 +42,30 @@ module Report
         import.import_items.each do |item|
           full_remarks = ""
           out_of_port_date = ""
+          event = ""
+          import1 = Import.new
+          import_item1 = ImportItem.new
           [import,item].each do |entity|
             entity.audits.collect(&:audited_changes).each do |a|
+
               if !a[:status].blank? then
                 full_remarks.concat(a[:updated_at].second.to_date.strftime("%d-%b-%Y") +
-                                      " " + a[:status].second + "\n")
+                                      " " + event.first.to_s.humanize + ", " +
+                                       a[:status].second.humanize + "\n")
+                if entity.eql?(import) then
+                  import1.status = a[:status].second
+                  event = import1.aasm.events
+                else
+                  import_item1.status = a[:status].second
+                  event = import_item1.aasm.permissible_events
+                end
+
                 if a[:status].second.eql?("enroute_nairobi")
                   out_of_port_date = a[:updated_at].second.to_date.strftime("%d-%b-%Y")
                 end
+
+
+
               end
             end
             entity.remarks.nil? ? full_remarks : full_remarks.concat("Remarks:" +

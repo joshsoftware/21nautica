@@ -27,15 +27,16 @@ class Import < ActiveRecord::Base
   accepts_nested_attributes_for :import_items
 
   aasm column: 'status' do
-    state :copy_document_received, initial: true
+    state :awaiting_original_documents, initial: true
     state :awaiting_vessel_arrival_and_manifest
     state :awaiting_container_discharge
     state :awaiting_customs_release
     state :awaiting_release_order
     state :awaiting_truck_allocation
 
+
     event :original_documents_received do
-      transitions from: :copy_document_received, to: :awaiting_vessel_arrival_and_manifest
+      transitions from: :awaiting_original_documents, to: :awaiting_vessel_arrival_and_manifest
     end
 
     event :vessel_arrived do
