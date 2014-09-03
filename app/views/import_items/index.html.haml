@@ -5,6 +5,7 @@
     %th Container Number
     %th Estimate Arrival
     %th Truck Number
+    %th Transporter Name
     %th Status
     %th Remarks
   %tbody
@@ -15,6 +16,7 @@
         %td= item.container_number
         %td= item.import.estimate_arrival
         %td.truck_number= item.truck_number
+        %td= item.transporter_name
         %td.updatestatus{class: "text-center"}
           .updatestatus.h5
             .status_updated_at
@@ -43,6 +45,8 @@
           = f.submit 'Save', class: 'btn btn-primary'
 
 :coffeescript
+  @transporters = #{@transporters.to_json}
+
   $('#statusModal').on 'show.bs.modal', (event) ->
     if $(event.relatedTarget).attr('data-truck-number') == "null" or
        $(event.relatedTarget).attr('data-truck-number') == ""

@@ -19,6 +19,13 @@ datatable_initialize = ->
                                       $.post("import_items/#{id}/updateStatus",{import_item: {status:"allocate_truck",truck_number: sValue}})
 
                                     },
+                                    {
+                                      type: 'select',
+                                      event: 'click',
+                                      data: JSON.stringify(@transporters),
+                                      onblur: 'submit'
+                                      sUpdateURL: 'import_items/update',
+                                    },
                                   null, null
                                  ]
                   )
