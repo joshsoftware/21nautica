@@ -3,16 +3,20 @@
     %th BL Number
     %th Container Number
     %th Delivery Date
-    %th
-    %th
+    %th After Delivery Status
+    %th Context
     %th Close Date
   %tbody
     - @import_items.each do |item|
       - updated_at = status_updated_at(item).strftime("%d-%m-%Y")
+      - if item.close_date.nil?
+        - close_date = item.close_date
+      -else
+        -  close_date = item.close_date.strftime("%d-%m-%Y")
       %tr{id: item.id}
         %td= item.import.bl_number
         %td= item.container_number
         %td= updated_at
-        %td
-        %td
-        %td
+        %td= item.after_delivery_status
+        %td= item.context
+        %td= close_date

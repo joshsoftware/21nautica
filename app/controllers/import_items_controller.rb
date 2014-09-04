@@ -47,6 +47,6 @@ class ImportItemsController < ApplicationController
   end
 
   def import_item_update_params
-    params.permit(:id, :columnName, :value,:g_f_expiry)
+    params.permit(:id, :columnName, :value,:g_f_expiry,:close_date)
   end
 end
