@@ -18,9 +18,11 @@
 
 class ImportItem < ActiveRecord::Base
   include AASM
-  belongs_to :import 
+  include EspinitaPatch
+
+  belongs_to :import
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
-  
+
   def assignment_of_truck_number
     count = ImportItem.where(truck_number: truck_number).where.not(status: 'delivered').count
     if count > 0 && truck_number != nil
@@ -69,6 +71,6 @@ class ImportItem < ActiveRecord::Base
 
   end
 
-  auditable only: [:status, :updated_at, :current_location]
+  auditable only: [:status, :updated_at, :current_location, :remarks]
 
 end

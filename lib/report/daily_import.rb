@@ -17,7 +17,6 @@ module Report
         {'In Transit' => nil, 'History' => 'delivered'}.each do |name, status|
           workbook.add_worksheet(name: name) do |sheet|
             add_data(customer, sheet, center, heading, status)
-            sheet.column_info[7].width = 70
           end
         end
       end
@@ -27,10 +26,15 @@ module Report
 
     end
 
+
     def add_data(customer, sheet, center, heading, status)
       sheet.add_row ["Work Order No", "BL Number", "Container Number", "Size",
-                     "Goods Description", "ETA", "Out Of Port Date", "Full remarks",
-                     "Truck Number", "Trailer Number", "Bond Direction", "Bond Number"],
+                     "Goods Description", "ETA", "Truck Number", "Trailer Number",
+                     "Bond Direction", "Bond Number", "Copy Documents Received",
+                     "Original Documents Received", "Vessel Arrived", "Container Discharged",
+                     "Customs Entry Passed", "Release Order Secured", "Truck Allocated",
+                     "Loaded Out Of Port", "Crossed Nairobi", "Arrived Malaba",
+                     "Clearance Complete" , "Arrived at Kampala", "Item Delivered"],
                   style: heading, height: 40
       if status
         imports = customer.imports.includes({import_items: :audits}, :audits).where("import_items.status" => status)
@@ -38,48 +42,44 @@ module Report
         imports = customer.imports.includes({import_items: :audits}, :audits).where.not("import_items.status" => "delivered")
       end
 
+      h = {}; h1 = {}
       imports.each do |import|
         import.import_items.each do |item|
-          full_remarks = ""
-          out_of_port_date = ""
-          event = ""
-          import1 = Import.new
-          import_item1 = ImportItem.new
           [import,item].each do |entity|
             entity.audits.collect(&:audited_changes).each do |a|
 
-              if !a[:status].blank? then
-                full_remarks.concat(a[:updated_at].second.to_date.strftime("%d-%b-%Y") +
-                                      " " + event.first.to_s.humanize + ", " +
-                                       a[:status].second.humanize + "\n")
-                if entity.eql?(import) then
-                  import1.status = a[:status].second
-                  event = import1.aasm.events
-                else
-                  import_item1.status = a[:status].second
-                  event = import_item1.aasm.permissible_events
-                end
-
-                if a[:status].second.eql?("enroute_nairobi")
-                  out_of_port_date = a[:updated_at].second.to_date.strftime("%d-%b-%Y")
-                end
-
-
-
+              if !a[:status].blank?  and !a[:status].first.eql?(a[:status].second) then
+                h[a[:status].second].nil? ?  h[a[:status].second] = [] : " "
+                h[a[:status].second].unshift("ON: "+ a[:updated_at].second.to_date.strftime("%d-%b-%Y"))
               end
+
+              if !a[:remarks].blank? then
+                h[a[:status].second].nil? ? h[a[:status].second] = [] : " "
+                h[a[:status].second].unshift(a[:remarks].second)
+                p a[:status].second + a[:remarks].second
+              end
+
+
+
             end
-            entity.remarks.nil? ? full_remarks : full_remarks.concat("Remarks:" +
-                                                  entity.remarks + "\n")
           end
+          h.each_pair{|key, value| h1[key] = value.join("\n")}
 
           sheet.add_row [import.work_order_number, import.bl_number,
                      item.container_number, import.equipment, import.description,
                      import.estimate_arrival.nil? ? "" :
                      import.estimate_arrival.to_date.strftime("%d-%b-%Y"),
-                     out_of_port_date, full_remarks, item.truck_number, item.trailer_number,
-                     item.bond_direction, item.bond_number], style: center, height: 200
+                     item.truck_number, item.trailer_number,
+                     item.bond_direction, item.bond_number, h1["awaiting_original_documents"],
+                     h1["awaiting_vessel_arrival_and_manifest"], h1["awaiting_container_discharge"],
+                     h1["awaiting_customs_release"], h1["awaiting_release_order"],
+                     h1["awaiting_truck_allocation"], h1["truck_allocated"],
+                     h1["enroute_nairobi"], h1["enroute_malaba"], h1["awaiting_clearance"],
+                     h1["enroute_kampala"], h1["arrived_kampala"], h1["delivered"]],
+                     style: center, height: 50
 
-          full_remarks.clear
+          h.clear
+          h1.clear
 
 
         end

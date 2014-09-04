@@ -20,6 +20,7 @@
 
 class Import < ActiveRecord::Base
   include AASM
+	include EspinitaPatch
 
   has_many :import_items
   belongs_to :customer
@@ -57,6 +58,6 @@ class Import < ActiveRecord::Base
 
   end
 
-  auditable only: [:status, :updated_at]
+  auditable only: [:status, :updated_at, :remarks]
 
 end
