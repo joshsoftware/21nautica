@@ -17,6 +17,22 @@ class ImportItemsController < ApplicationController
     end
   end
 
+  def updateContext
+    @import_item = ImportItem.find(params[:id])
+    after_delivery = params[:after_delivery]
+    time = Time.new
+    p time.ctime
+    @import_item[:after_delivery_status] = after_delivery.humanize
+    if(after_delivery == "export_reuse")
+      @import_item[:context] = "Customer Name: " + import_item_params[:context]
+    elsif(after_delivery == "drop_off")  
+      @import_item[:context] = "Yard Name: " + import_item_params[:context]   
+    else
+      @import_item[:context] = "Truck Name" +  import_item_params[:context] 
+    end  
+    @import_item.save
+  end
+
   def updateStatus
     @import_item = ImportItem.find(params[:id])
     initial_status = @import_item.status
@@ -36,14 +52,16 @@ class ImportItemsController < ApplicationController
   def history
     @import_items = ImportItem.where(status: "delivered")
   end
+
   def empty_containers
-    @import_items = ImportItem.where(status: "delivered")
+    @import_items = ImportItem.where(:status => "delivered", :after_delivery_status => nil)
   end
+  
   private
 
   def import_item_params
     params.permit(:id)
-    params.require(:import_item).permit(:truck_number, :status, :remarks)
+    params.require(:import_item).permit(:truck_number, :status, :remarks, :context)
   end
 
   def import_item_update_params

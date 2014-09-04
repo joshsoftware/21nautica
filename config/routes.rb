@@ -35,6 +35,7 @@ Rails.application.routes.draw do
   resources :import_items,only: [:new,:create,:index] do
     member do
       post 'updateStatus'
+      post 'updateContext'
     end
   end
   resources :movements, only: [:new, :create, :index ] do
