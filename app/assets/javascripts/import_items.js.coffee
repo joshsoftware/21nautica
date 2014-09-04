@@ -41,7 +41,7 @@ datatable_initialize = ->
                       aoColumns: [
                                   null,null,null,null,
                                   null,
-                                  null, null
+                                  null
                                  ]
                   )
 
@@ -52,5 +52,13 @@ datatable_initialize = ->
                     "bJQueryUI": true,
                     "bFilter": true,
                     "sPaginationType": "full_numbers"
-                    })
+                    }).makeEditable(
+                      aoColumns: [
+                                  null,null,null,
+                                  {name: 'g_f_expiry', submit: 'okay', tooltip: "yyyy-mm-dd", sUpdateURL:  "import_items/update"
+                                  ,type: 'datepicker2', event: 'click'},
+                                  null,
+                                  null, null
+                                 ]
+                  )
 $(document).ready datatable_initialize

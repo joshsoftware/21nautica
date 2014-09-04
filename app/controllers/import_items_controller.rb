@@ -9,8 +9,9 @@ class ImportItemsController < ApplicationController
   def update
     import_item = ImportItem.find(import_item_update_params[:id])
     attribute = import_item_update_params[:columnName].downcase.gsub(' ', '_').to_sym
-    if import_item.update(attribute => import_item_update_params[:value])
-      render text: import_item_update_params[:value]
+    attribute = import_item_update_params[:columnName].downcase.gsub('/', '_').gsub(' ','_').to_sym
+    if import_item.update(attribute => import_item_update_params[:value]||import_item_update_params[:g_f_expiry])
+      render text: import_item_update_params[:value]||import_item_update_params[:g_f_expiry]
     else
       render text: import_item.errors.full_messages
     end
@@ -46,6 +47,6 @@ class ImportItemsController < ApplicationController
   end
 
   def import_item_update_params
-    params.permit(:id, :columnName, :value)
+    params.permit(:id, :columnName, :value,:g_f_expiry)
   end
 end

@@ -521,4 +521,19 @@ jQuery.editable.addInputType('datepicker', {
             return (input);
         }    
     });
+jQuery.editable.addInputType('datepicker2', {
+        element: function(settings, original) {
+            var input = jQuery('<input size="15" class="smooth" />');
+            settings.onblur = function(e) { };
+            input.datepicker({
+                format: 'yyyy-mm-dd',
+                changeMonth: true,
+                changeYear: true,
+                showOn: 'both'
+            });
+            input.datepicker('option', 'showAnim', 'slide');
+            jQuery(this).append(input);
+            return (input);
+        }
+    });
 })(jQuery);

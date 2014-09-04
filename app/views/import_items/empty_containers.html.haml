@@ -10,11 +10,15 @@
   %tbody
     - @import_items.each do |item|
       - updated_at = status_updated_at(item).strftime("%d-%m-%Y")
+      - if item.g_f_expiry.nil?
+        - g_f_expiry = item.g_f_expiry
+      -else
+        -  g_f_expiry = item.g_f_expiry.strftime("%d-%m-%Y")
       %tr{id: item.id}
         %td= item.import.bl_number
         %td= item.container_number
         %td= item.import.customer.name
-        %td= updated_at
+        %td= g_f_expiry
         %td.emptyReturn{class: "text-center"}
           %button.btn.btn-small.btn-primary Empty Return
         %td.exportReuse{class: "text-center"}
