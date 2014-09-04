@@ -10,11 +10,15 @@
   %tbody
     - @import_items.each do |item|
       - updated_at = status_updated_at(item).strftime("%d-%m-%Y")
+      - if item.g_f_expiry.nil?
+        - g_f_expiry = item.g_f_expiry
+      - else
+        - g_f_expiry = item.g_f_expiry.strftime("%d-%m-%Y")
       %tr{id: item.id}
         %td= item.import.bl_number
         %td= item.container_number
         %td= item.import.customer.name
-        %td= updated_at
+        %td= g_f_expiry
         %td.emptyReturn{class: "text-center"}
           %button.btn.btn-small.btn-primary{"data-target" => "#context", "data-toggle"=>"modal", "data-after-delivery"=>"empty_return", "data-item-id"=> "#{item.id}"}  Empty Return
         %td.exportReuse{class: "text-center"}
@@ -32,7 +36,8 @@
           #title_modal
             %h1.modal-title  
         .modal-body
-          = f.input :context
+          #common
+            = f.input :context
           #some_field.hide
             = f.input :transporter_name 
         .modal-footer
@@ -43,15 +48,20 @@
 :coffeescript
   $('#context').on 'show.bs.modal', (event) ->
     link_tag = $(event.relatedTarget)
-    after_delivery = link_tag.attr('data-after-delivery').toString()  
+    after_delivery = link_tag.attr('data-after-delivery').toString()
     id = link_tag.attr('data-item-id')
-    $('#title_modal .modal-title').html(after_delivery)
+    title = after_delivery.replace('_',' ').toUpperCase()
+    $('#title_modal .modal-title').html(title)
     if (after_delivery == "export_reuse")
+      $('#some_field').addClass("hide")
       $('#context .control-label').html('Customer Name')
     else if(after_delivery == "drop_off")
+      $('#some_field').addClass("hide")
       $('#context .control-label').html('Yard Name')
-    else 
-      $('#context .control-label').html('Truck Number') 
+    else
+      $('#some_field').removeClass("hide")
+      $('#some_field .control-label').text("Transporter name")
+      $('#common  .control-label').html('Truck Number')
   
     $('#context form').attr('action', "/import_items/" + id + "/updateContext?after_delivery=" + after_delivery)
 

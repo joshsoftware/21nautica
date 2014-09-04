@@ -10,8 +10,8 @@ class ImportItemsController < ApplicationController
     import_item = ImportItem.find(import_item_update_params[:id])
     attribute = import_item_update_params[:columnName].downcase.gsub(' ', '_').to_sym
     attribute = import_item_update_params[:columnName].downcase.gsub('/', '_').gsub(' ','_').to_sym
-    if import_item.update(attribute => import_item_update_params[:value]||import_item_update_params[:g_f_expiry])
-      render text: import_item_update_params[:value]||import_item_update_params[:g_f_expiry]
+    if import_item.update(attribute => import_item_update_params[:value]||import_item_update_params[:g_f_expiry]||import_item_update_params[:close_date])
+      render text: import_item_update_params[:value]||import_item_update_params[:g_f_expiry]||import_item_update_params[:close_date]
     else
       render text: import_item.errors.full_messages
     end
@@ -20,15 +20,14 @@ class ImportItemsController < ApplicationController
   def updateContext
     @import_item = ImportItem.find(params[:id])
     after_delivery = params[:after_delivery]
-    time = Time.new
-    p time.ctime
+    date = Date.today
     @import_item[:after_delivery_status] = after_delivery.humanize
     if(after_delivery == "export_reuse")
-      @import_item[:context] = "Customer Name: " + import_item_params[:context]
+      @import_item[:context] = "Customer Name: " + import_item_params[:context]+" , " +date.strftime("%d-%m-%Y")
     elsif(after_delivery == "drop_off")  
-      @import_item[:context] = "Yard Name: " + import_item_params[:context]   
+      @import_item[:context] = "Yard Name: " + import_item_params[:context] +" , " + date.strftime("%d-%m-%Y")
     else
-      @import_item[:context] = "Truck Name" +  import_item_params[:context] 
+      @import_item[:context] = "Truck Number: " + import_item_params[:context] +" , "+"Transporter: "+import_item_params[:transporter_name]+" , " +date.strftime("%d-%m-%Y")
     end  
     @import_item.save
   end
@@ -61,7 +60,7 @@ class ImportItemsController < ApplicationController
 
   def import_item_params
     params.permit(:id)
-    params.require(:import_item).permit(:truck_number, :status, :remarks, :context)
+    params.require(:import_item).permit(:truck_number, :status, :remarks, :context,:transporter_name)
   end
 
   def import_item_update_params
