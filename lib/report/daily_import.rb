@@ -31,10 +31,10 @@ module Report
       sheet.add_row ["Work Order No", "BL Number", "Container Number", "Size",
                      "Goods Description", "ETA", "Truck Number", "Trailer Number",
                      "Bond Direction", "Bond Number", "Copy Documents Received",
-                     "Original Documents Received", "Vessel Arrived", "Container Discharged",
-                     "Customs Entry Passed", "Release Order Secured", "Truck Allocated",
-                     "Loaded Out Of Port", "Crossed Nairobi", "Arrived Malaba",
-                     "Clearance Complete" , "Arrived at Kampala", "Item Delivered"],
+                     "Original Documents Received", "Container Discharged",
+                     "Ready to Load", "Truck Allocated", "Loaded Out Of Port",
+                     "Arrived at Malaba", "Departed From Malaba" , "Arrived at Kampala",
+                     "Truck Released"],
                   style: heading, height: 40
       if status
         imports = customer.imports.includes({import_items: :audits}, :audits).where("import_items.status" => status)
@@ -42,46 +42,38 @@ module Report
         imports = customer.imports.includes({import_items: :audits}, :audits).where.not("import_items.status" => "delivered")
       end
 
-      h = {}; h1 = {}
+      h = {}
       imports.each do |import|
         import.import_items.each do |item|
           [import,item].each do |entity|
             entity.audits.collect(&:audited_changes).each do |a|
+              if !a[:remarks].blank? then
+                h[a[:status].second] = [] if h[a[:status].second].nil?
+                h[a[:status].second].unshift(a[:remarks].second)
+              end
 
               if !a[:status].blank?  and !a[:status].first.eql?(a[:status].second) then
-                h[a[:status].second].nil? ?  h[a[:status].second] = [] : " "
-                h[a[:status].second].unshift("ON: "+ a[:updated_at].second.to_date.strftime("%d-%b-%Y"))
+                h[a[:status].second] = [] if h[a[:status].second].nil?
+                h[a[:status].second].unshift(a[:updated_at].second.to_date.strftime("%d-%b-%Y"))
               end
-
-              if !a[:remarks].blank? then
-                h[a[:status].second].nil? ? h[a[:status].second] = [] : " "
-                h[a[:status].second].unshift(a[:remarks].second)
-                p a[:status].second + a[:remarks].second
-              end
-
-
 
             end
           end
-          h.each_pair{|key, value| h1[key] = value.join("\n")}
+          h.replace( h.merge(h) {|key, value| value = value.join("\n")} )
 
           sheet.add_row [import.work_order_number, import.bl_number,
                      item.container_number, import.equipment, import.description,
                      import.estimate_arrival.nil? ? "" :
                      import.estimate_arrival.to_date.strftime("%d-%b-%Y"),
                      item.truck_number, item.trailer_number,
-                     item.bond_direction, item.bond_number, h1["awaiting_original_documents"],
-                     h1["awaiting_vessel_arrival_and_manifest"], h1["awaiting_container_discharge"],
-                     h1["awaiting_customs_release"], h1["awaiting_release_order"],
-                     h1["awaiting_truck_allocation"], h1["truck_allocated"],
-                     h1["enroute_nairobi"], h1["enroute_malaba"], h1["awaiting_clearance"],
-                     h1["enroute_kampala"], h1["arrived_kampala"], h1["delivered"]],
-                     style: center, height: 50
+                     item.bond_direction, item.bond_number, h["copy_documents_received"],
+                     h["original_documents_received"], h["container_discharged"],
+                     h["ready_to_load"], h["truck_allocated"], h["loaded_out_of_port"],
+                     h["arrived_at_malaba"], h["departed_from_malaba"],
+                     h["arrived_at_kampala"], h["delivered"]],
+                     style: center, height: 25
 
           h.clear
-          h1.clear
-
-
         end
       end
 

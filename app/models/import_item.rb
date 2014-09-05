@@ -30,15 +30,13 @@ class ImportItem < ActiveRecord::Base
     end
   end
 
-
   aasm column: 'status' do
     state :under_loading_process, initial: true
     state :truck_allocated
-    state :enroute_nairobi
-    state :enroute_malaba
-    state :awaiting_clearance
-    state :enroute_kampala
-    state :arrived_kampala
+    state :loaded_out_of_port
+    state :arrived_at_malaba
+    state :departed_from_malaba
+    state :arrived_at_kampala
     state :delivered
 
     event :allocate_truck do
@@ -46,27 +44,23 @@ class ImportItem < ActiveRecord::Base
     end
 
     event :loaded_out_of_port do
-      transitions from: :truck_allocated, to: :enroute_nairobi
+      transitions from: :truck_allocated, to: :loaded_out_of_port
     end
 
-    event :crossed_nairobi do
-      transitions from: :enroute_nairobi, to: :enroute_malaba
+    event :arrived_at_malaba do
+      transitions from: :loaded_out_of_port, to: :arrived_at_malaba
     end
 
-    event :arrived_malaba do
-      transitions from: :enroute_malaba, to: :awaiting_clearance
-    end
-
-    event :clearance_complete do
-      transitions from: :awaiting_clearance, to: :enroute_kampala
+    event :departed_from_malaba do
+      transitions from: :arrived_at_malaba, to: :departed_from_malaba
     end
 
     event :arrived_at_kampala do
-      transitions from: :enroute_kampala, to: :arrived_kampala
+      transitions from: :departed_from_malaba, to: :arrived_at_kampala
     end
 
-    event :item_delivered do
-      transitions from: :arrived_kampala, to: :delivered
+    event :truck_released do
+      transitions from: :arrived_at_kampala, to: :delivered
     end
 
   end

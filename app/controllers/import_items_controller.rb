@@ -1,7 +1,7 @@
 class ImportItemsController < ApplicationController
 
   def index
-    imports = Import.includes(:import_item).where(status: "awaiting_truck_allocation").select("id")
+    imports = Import.includes(:import_item).where(status: "ready_to_load").select("id")
     @import_items = ImportItem.where(import_id: imports).where.not(status: "delivered")
     @transporters = TRANSPORTERS.inject({}) {|h, x| h[x] = x; h}
   end
@@ -24,11 +24,11 @@ class ImportItemsController < ApplicationController
     @import_item[:after_delivery_status] = after_delivery.humanize
     if(after_delivery == "export_reuse")
       @import_item[:context] = "Customer Name: " + import_item_params[:context]+" , " +date.strftime("%d-%m-%Y")
-    elsif(after_delivery == "drop_off")  
+    elsif(after_delivery == "drop_off")
       @import_item[:context] = "Yard Name: " + import_item_params[:context] +" , " + date.strftime("%d-%m-%Y")
     else
       @import_item[:context] = "Truck Number: " + import_item_params[:context] +" , "+"Transporter: "+import_item_params[:transporter_name]+" , " +date.strftime("%d-%m-%Y")
-    end  
+    end
     @import_item.save
   end
 
@@ -57,7 +57,7 @@ class ImportItemsController < ApplicationController
   def empty_containers
     @import_items = ImportItem.where(:status => "delivered", :after_delivery_status => nil)
   end
-  
+
   private
 
   def import_item_params

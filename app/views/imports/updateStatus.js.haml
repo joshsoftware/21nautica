@@ -1,5 +1,5 @@
 $('#statusModal').modal('hide')
-- if @import.status == "awaiting_truck_allocation"
+- if @import.status == "ready_to_load"
   $("#imports_table tr##{@import.id}").remove()
 - else
   $("#imports_table tr##{@import.id} td.updateStatus button").attr('data-states', "#{@import.status},#{@import.aasm.events.join(',')}")
