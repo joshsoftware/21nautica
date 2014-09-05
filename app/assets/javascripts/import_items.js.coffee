@@ -36,7 +36,9 @@ datatable_initialize = ->
     ohistoryTable = $('#import_history_table').dataTable({
                     "bJQueryUI": true,
                     "bFilter": true,
-                    "sPaginationType": "full_numbers"
+                    "sPaginationType": "full_numbers",
+                    "bAutoWidth": false,
+                    "aoColumns": [{ "sWidth": "10%" }, { "sWidth": "10%" }, { "sWidth": "10%" }, { "sWidth": "20%" }, { "sWidth": "40%" }, { "sWidth": "10%" }]
                     }).makeEditable(
                       aoColumns: [
                                   null,null,null,null,
