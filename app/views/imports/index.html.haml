@@ -20,7 +20,7 @@
         %td.updateStatus{class: "text-center"}
           .updateStatus.h5
             .status_updated_at
-              = import.updated_at.to_date.to_formatted_s
+              = status_updated_at(import).to_date.to_formatted_s
             .status.text-capitalize
               = import.status.humanize
           %button.btn.btn-small.btn-primary{'data-import-id' => "#{import.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => import.status + ',' + import.aasm.events.join(','), 'data-bl-number' => import.bl_number} Update
