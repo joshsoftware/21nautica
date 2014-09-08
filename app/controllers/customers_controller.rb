@@ -13,9 +13,9 @@ class CustomersController < ApplicationController
 
   def daily_report_export
     customers = []
-    movements = Movement.where.not(status: "container_handed_over_to_KPA").select(:booking_number).uniq
+    movements = Movement.where.not(status: "container_handed_over_to_KPA")
     movements.each do |movement|
-      export = Export.find_by release_order_number: movement.booking_number
+      export = Export.find_by id: movement.export_item.export_id
       customers.push(export.customer)
     end
     customers = customers.uniq
