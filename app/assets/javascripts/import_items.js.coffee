@@ -3,16 +3,23 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 datatable_initialize = ->
-    imitemsTable = $('#import_items_table').dataTable({
+  row = 0
+  id = 0
+  imitemsTable = $('#import_items_table').dataTable({
                     "bJQueryUI": true,
                     "bFilter": true,
                     "sPaginationType": "full_numbers"
                     }).makeEditable(
                       aoColumns: [
                                   null,null,null,null,
-                                  {sUpdateURL: 'import_items/update', placeholder:"Click to enter",
+                                  {sUpdateURL: (value,settings)->
+                                    row = $(this).parents('tr')[0]
+                                    id = row.id
+                                    $.post("import_items/update",{id:id,columnName:"Truck Number",value:value})
+                                    return value
+                                  , placeholder:"Click to enter",
+
                                   fnOnCellUpdated: (sStatus, sValue, settings) ->
-                                    id = $('.last-updated-cell').parents('tr').attr('id')
                                     $("#import_items_table tr##{id} .text-center .btn.btn-small.btn-primary").attr('data-truck-number',sValue)
                                     if($("[data-importitem-id="+ id +  "]").attr('truck-number-alloted') == 'false')
                                       $("[data-importitem-id="+ id +  "]").attr('truck-number-alloted','true')
@@ -24,7 +31,14 @@ datatable_initialize = ->
                                       event: 'click',
                                       data: JSON.stringify(@transporters),
                                       onblur: 'submit'
-                                      sUpdateURL: 'import_items/update',
+                                      sUpdateURL: (value,settings)->
+                                       row = $(this).parents('tr')[0]
+                                       id = row.id
+                                       $.post("import_items/update",{id:id,columnName:"Transporter Name",value:value})
+                                       return value
+                                     , placeholder:"Click to enter",
+                                     fnOnCellUpdated: (sStatus,sValue,settings) ->
+                                      $.post("import_items/#{id}/updateStatus",{import_item: {status:"allocate_truck",transporter: sValue}})
                                     },
                                   null, null
                                  ]

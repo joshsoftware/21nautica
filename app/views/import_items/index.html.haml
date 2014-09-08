@@ -20,7 +20,7 @@
         %td.updatestatus{class: "text-center"}
           .updatestatus.h5
             .status_updated_at
-              = item.updated_at.to_date.to_formatted_s
+              = status_updated_at(item).to_date.to_formatted_s
             .status.text.capatilize
               = item.status.humanize
           %button.btn.btn-small.btn-primary{'data-importitem-id' => "#{item.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => item.status + ',' + item.aasm.events.join(','), 'data-truck-number' => "#{item.truck_number}",'truck-number-alloted'=> :false} Update
