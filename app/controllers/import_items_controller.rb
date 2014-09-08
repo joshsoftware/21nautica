@@ -35,6 +35,7 @@ class ImportItemsController < ApplicationController
   def updateStatus
     @import_item = ImportItem.find(params[:id])
     initial_status = @import_item.status
+    if import_item_params[:transporter].nil?
        if !import_item_params[:truck_number].nil?
         if initial_status == "under_loading_process"
           @import_item.remarks = import_item_params[:remarks]
@@ -46,6 +47,7 @@ class ImportItemsController < ApplicationController
         status = import_item_params[:status].downcase.gsub(' ', '_')
         status != @import_item.status ? @import_item.send("#{status}!".to_sym) : @import_item.save
        end
+    end
   end
 
   def history
@@ -60,7 +62,7 @@ class ImportItemsController < ApplicationController
 
   def import_item_params
     params.permit(:id)
-    params.require(:import_item).permit(:truck_number, :status, :remarks, :context,:transporter_name)
+    params.require(:import_item).permit(:truck_number, :status, :remarks, :context,:transporter)
   end
 
   def import_item_update_params
