@@ -19,7 +19,6 @@ Rails.application.routes.draw do
   # special inline edit for export_items
   post '/export_items/update'
   post '/movements/update'
-  post 'customers/daily_report'
   post 'export_items/updatecontainer'
   post 'export_items/getcount'
   post '/imports/update'
