@@ -20,7 +20,6 @@ datatable_initialize = ->
                                   , placeholder:"Click to enter",
 
                                   fnOnCellUpdated: (sStatus, sValue, settings) ->
-                                    id = $('.last-updated-cell').parents('tr').attr('id')
                                     $("#import_items_table tr##{id} .text-center .btn.btn-small.btn-primary").attr('data-truck-number',sValue)
                                     if($("[data-importitem-id="+ id +  "]").attr('truck-number-alloted') == 'false')
                                       $("[data-importitem-id="+ id +  "]").attr('truck-number-alloted','true')
