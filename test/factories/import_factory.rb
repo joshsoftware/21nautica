@@ -19,12 +19,14 @@
 #
 
 FactoryGirl.define do
-  
   factory :import do
-    equipment '20'
-    quantity  '20'
-    from      'location 1'
-    to        'location 2'
-    bl_number '12345678'
+    bl_number 		   'BL1'
+    to        		   'location 2'
+    from      		   'location 1'
+    shipping_line		 'Evergreen'
+    estimate_arrival '10-10-2014'
+    equipment        '20GP'
+    quantity				  3
+    association				:customer 
   end
 end
