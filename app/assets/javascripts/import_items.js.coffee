@@ -15,16 +15,21 @@ datatable_initialize = ->
                                   {sUpdateURL: (value,settings)->
                                     row = $(this).parents('tr')[0]
                                     id = row.id
-                                    $.post("import_items/update",{id:id,columnName:"Truck Number",value:value})
+                                    $.ajax(
+                                      url:"import_items/update",
+                                      type: 'POST'
+                                      data: {id:id,columnName:"Truck Number",value:value},
+                                      async: false)
+                                      .done((data) ->
+                                        if (data != value)
+                                          value = data
+                                      )
                                     return value
                                   , placeholder:"Click to enter",
-
                                   fnOnCellUpdated: (sStatus, sValue, settings) ->
-                                    $("#import_items_table tr##{id} .text-center .btn.btn-small.btn-primary").attr('data-truck-number',sValue)
-                                    if($("[data-importitem-id="+ id +  "]").attr('truck-number-alloted') == 'false')
-                                      $("[data-importitem-id="+ id +  "]").attr('truck-number-alloted','true')
-                                      $.post("import_items/#{id}/updateStatus",{import_item: {status:"allocate_truck",truck_number: sValue}})
-
+                                    switch sStatus
+                                      when "success"
+                                        $.post("import_items/#{id}/updateStatus",{import_item:{status:"allocate_truck",truck_number: sValue}})
                                     },
                                     {
                                       type: 'select',
@@ -38,7 +43,7 @@ datatable_initialize = ->
                                        return value
                                      , placeholder:"Click to enter",
                                      fnOnCellUpdated: (sStatus,sValue,settings) ->
-                                      $.post("import_items/#{id}/updateStatus",{import_item: {status:"allocate_truck",transporter: sValue}})
+                                       $.post("import_items/#{id}/updateStatus",{import_item: {status:"allocate_truck",transporter: sValue}})
                                     },
                                   null, null
                                  ]
