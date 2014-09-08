@@ -45,8 +45,13 @@ module Report
       imports.each do |import|
         import.import_items.each do |item|
           [import,item].each do |entity|
-            entity.audits.collect(&:audited_changes).each do |a|
+            audited_changes = entity.audits.collect(&:audited_changes)
 
+            if !status
+              audited_changes.reverse!
+            end
+
+            audited_changes.each do |a|
 
               if !a[:status].blank?  and !a[:status].first.eql?(a[:status].second) then
                 h[a[:status].second] = [] if h[a[:status].second].nil?
@@ -63,7 +68,6 @@ module Report
 
             end
           end
-          h.each_pair{ |k,v| h[k] = v.sort }
           h.replace( h.merge(h) {|key, value| value = value.join("\n")} )
 
           sheet.add_row [import.work_order_number, import.bl_number,
