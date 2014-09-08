@@ -46,18 +46,24 @@ module Report
         import.import_items.each do |item|
           [import,item].each do |entity|
             entity.audits.collect(&:audited_changes).each do |a|
-              if !a[:remarks].blank? then
-                h[a[:status].second] = [] if h[a[:status].second].nil?
-                h[a[:status].second].unshift(a[:remarks].second)
-              end
+
 
               if !a[:status].blank?  and !a[:status].first.eql?(a[:status].second) then
                 h[a[:status].second] = [] if h[a[:status].second].nil?
-                h[a[:status].second].unshift(a[:updated_at].second.to_date.strftime("%d-%b-%Y"))
+                h[a[:status].second].unshift(a[:updated_at].second.to_date.strftime("%d-%b-%Y") +
+                                             " : " + (a[:remarks].nil? ? " " : a[:remarks].second))
+              else
+                if !a[:remarks].blank? then
+                  h[a[:status].second] = [] if h[a[:status].second].nil?
+                  h[a[:status].second].unshift(a[:updated_at].second.to_date.strftime("%d-%b-%Y") +
+                                               " : " + a[:remarks].second)
+                end
               end
+
 
             end
           end
+          h.each_pair{ |k,v| h[k] = v.sort }
           h.replace( h.merge(h) {|key, value| value = value.join("\n")} )
 
           sheet.add_row [import.work_order_number, import.bl_number,
