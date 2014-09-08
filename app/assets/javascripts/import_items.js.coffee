@@ -16,15 +16,17 @@ datatable_initialize = ->
                                     row = $(this).parents('tr')[0]
                                     id = row.id
                                     $.post("import_items/update",{id:id,columnName:"Truck Number",value:value})
-                                    return value
-                                  , placeholder:"Click to enter",
-
-                                  fnOnCellUpdated: (sStatus, sValue, settings) ->
-                                    $("#import_items_table tr##{id} .text-center .btn.btn-small.btn-primary").attr('data-truck-number',sValue)
-                                    if($("[data-importitem-id="+ id +  "]").attr('truck-number-alloted') == 'false')
-                                      $("[data-importitem-id="+ id +  "]").attr('truck-number-alloted','true')
-                                      $.post("import_items/#{id}/updateStatus",{import_item: {status:"allocate_truck",truck_number: sValue}})
-
+                                      .done((data) ->
+                                        if(data == value)
+                                          $("#import_items_table tr##{id} .text-center .btn.btn-small.btn-primary").attr('data-truck-number',value)
+                                          if($("[data-importitem-id="+ id +  "]").attr('truck-number-alloted') == 'false')
+                                            $("[data-importitem-id="+ id +  "]").attr('truck-number-alloted','true')
+                                            $.post("import_items/#{id}/updateStatus",{import_item: {status:"allocate_truck",truck_number: value}})
+                                            $("#import_items_table tr##{id} td.truck_number").text("#{data}")         
+                                        else
+                                          alert data   
+                                        )      
+                                  , placeholder:"Click to enter"
                                     },
                                     {
                                       type: 'select',
@@ -39,6 +41,7 @@ datatable_initialize = ->
                                      , placeholder:"Click to enter",
                                      fnOnCellUpdated: (sStatus,sValue,settings) ->
                                       $.post("import_items/#{id}/updateStatus",{import_item: {status:"allocate_truck",transporter: sValue}})
+                                      val = $("#import_items_table tr##{id} .text-center .btn.btn-small.btn-primary").attr('data-truck-number')
                                     },
                                   null, null
                                  ]
