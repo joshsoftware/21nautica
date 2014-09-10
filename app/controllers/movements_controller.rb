@@ -6,7 +6,7 @@ class MovementsController < ApplicationController
     @transporters = TRANSPORTERS.inject({}) {|h, x| h[x] = x; h }
     @destination_ports = DESTINATION_PORTS.inject({}) {|h, x| h[x] = x; h }
   end
-  
+
   def history
     @movements = Movement.where(status: "container_handed_over_to_KPA").order(:booking_number)
     @transporters = TRANSPORTERS.inject({}) {|h, x| h[x] = x; h }
@@ -50,13 +50,16 @@ class MovementsController < ApplicationController
     end
   end
 
-  def updateStatus 
+  def updateStatus
     @movement = Movement.find(params[:id])
     @movement.remarks = movement_params[:remarks]
     @movement.booking_number = movement_params[:booking_number]
     @movement.vessel_targeted = movement_params[:vessel_targeted]
     status = movement_params[:status].downcase.gsub(' ', '_')
-    status != @movement.status ? @movement.send("#{status}!".to_sym) : @movement.save 
+    status != @movement.status ? @movement.send("#{status}!".to_sym) : @movement.save
+  end
+  def retainStatus
+    @movement = Movement.find(params[:id])
   end
 
   private
@@ -67,7 +70,7 @@ class MovementsController < ApplicationController
 
   def movement_params
     params.permit(:export_item_id, :id)
-    params.require(:movement).permit(:booking_number, :truck_number, :vessel_targeted, 
+    params.require(:movement).permit(:booking_number, :truck_number, :vessel_targeted,
                    :remarks, :status, :port_of_discharge, :movement_type, :transporter_name)
   end
 

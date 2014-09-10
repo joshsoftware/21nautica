@@ -40,6 +40,7 @@ Rails.application.routes.draw do
   resources :movements, only: [:new, :create, :index ] do
     member do
       post 'updateStatus'
+      post 'retainStatus'
     end
   end
   resources :imports, only: [:new, :create]
