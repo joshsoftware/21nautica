@@ -12,7 +12,7 @@ class ImportsController < ApplicationController
   def create
     @import = Import.new(import_params)
     if @import.save
-      #UserMailer.welcome_message_import(@import).deliver()
+      UserMailer.welcome_message_import(@import).deliver()
       redirect_to imports_path
     else
       @customers = Customer.all
