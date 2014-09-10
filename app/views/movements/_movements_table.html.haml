@@ -18,7 +18,7 @@
       %tr{id: element.id, class: ("danger" if @show_update && alert(updated_at, element)) }
         %td.booking_number= element.booking_number
         %td= element.customer_name
-        %td= element.truck_number
+        %td.truck_number= element.truck_number
         %td= element.transporter_name
         %td.vessel_targeted= element.vessel_targeted
         %td= element.port_of_discharge
@@ -26,17 +26,17 @@
         %td= element.movement_type
         %td= element.shipping_seal
         %td= element.w_o_number
-        %td.updateStatus{class: "text-center"} 
+        %td.updateStatus{class: "text-center"}
           .updateStatus.h5
-            .status_updated_at  
+            .status_updated_at
               = updated_at.to_date.to_formatted_s
             .status.text-capitalize
               = element.status.humanize
               %br
-          -if @show_update                        
+          -if @show_update
             %button.btn.btn-small.btn-primary{'data-movement-id' => "#{element.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => element.status + ',' + element.aasm.events.join(','), 'data-truck-number' => element.truck_number, 'data-container-number' => element.container_number,'data-vessel-targeted' => element.vessel_targeted ,'data-booking-number'=> element.booking_number} Update
         %th.remarks.h5
-          = element.remarks  
+          = element.remarks
 #statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog
     = simple_form_for(:movement, url: '', html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
@@ -44,7 +44,7 @@
         .modal-header
           = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
           %h1.modal-title Update Status and Location
-        
+
         .modal-body
           #truck_number
             = f.label :truck_number
@@ -59,21 +59,21 @@
 
         .modal-footer
           = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
-          = f.submit 'Save', class: 'btn btn-primary'        
-    
+          = f.submit 'Save', class: 'btn btn-primary'
+
 :coffeescript
   @transporters = #{@transporters.to_json}
   @destination_ports = #{@destination_ports.to_json}
 
   $('#statusModal').on 'show.bs.modal', (event) ->
-    link_tag = $(event.relatedTarget)  
+    link_tag = $(event.relatedTarget)
     id = link_tag.attr('data-movement-id')
-   
+
     $("#movements_table tr#"+ id + " td.updateStatus .updateStatus").hide()
-    $('#statusModal #truck_number label').text("Truck Number : " + link_tag.attr('data-truck-number'))
+    $('#statusModal #truck_number label').text("Truck Number : " + $("#movements_table tr#"+ id + " td.truck_number").text())
     $('#statusModal #container_number label').text("Container Number : " + link_tag.attr('data-container-number'))
-    booking_number = $(event.relatedTarget).attr('data-booking-number')
-    vessel_targeted = $(event.relatedTarget).attr('data-vessel-targeted')
+    booking_number = $("#movements_table tr#"+ id + " td.booking_number").text()
+    vessel_targeted = $("#movements_table tr#"+ id + " td.vessel_targeted").text()
     $('#statusModal #movement_booking_number').val booking_number
     $('#statusModal #movement_vessel_targeted').val vessel_targeted
     $('#statusModal form #movement_status').html("")
