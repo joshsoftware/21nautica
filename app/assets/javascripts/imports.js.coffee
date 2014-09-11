@@ -15,9 +15,9 @@ datatable_initialize = ->
                     }).makeEditable(
                       sUpdateURL: 'imports/update',
                       aoColumns: [
-                                  null,null,null,null,
+                                  null,null,null,null,null,
                                   { sUpdateURL: 'imports/update',placeholder:"Click to enter",},
-                                  null, null, null
+                                  null, null, null,null
                                  ]
                   )
 

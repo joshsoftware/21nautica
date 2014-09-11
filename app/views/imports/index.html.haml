@@ -3,9 +3,11 @@
     %th Customer Name
     %th BL Number
     %th Shipping Line
+    %th Equipment
     %th File Open Date
     %th Work Order Number
     %th ETA
+    %th Quantity
     %th#btnAddNewRow Status
     %th Remarks
   %tbody
@@ -14,9 +16,11 @@
         %td= import.customer.name
         %td= import.bl_number
         %td= import.shipping_line
+        %td= import.equipment
         %td= import.created_at.to_date
         %td= import.work_order_number
         %td= import.estimate_arrival
+        %td= import.quantity
         %td.updateStatus{class: "text-center"}
           .updateStatus.h5
             .status_updated_at

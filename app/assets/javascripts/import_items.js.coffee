@@ -11,7 +11,7 @@ datatable_initialize = ->
                     "sPaginationType": "full_numbers"
                     }).makeEditable(
                       aoColumns: [
-                                  null,null,null,null,
+                                  null,null,null,null,null,
                                   {sUpdateURL: (value,settings)->
                                     row = $(this).parents('tr')[0]
                                     id = row.id
@@ -45,7 +45,7 @@ datatable_initialize = ->
                                      fnOnCellUpdated: (sStatus,sValue,settings) ->
                                        $.post("import_items/#{id}/updateStatus",{import_item: {status:"allocate_truck",transporter: sValue}})
                                     },
-                                  null, null
+                                  null, null,null
                                  ]
                   )
 
