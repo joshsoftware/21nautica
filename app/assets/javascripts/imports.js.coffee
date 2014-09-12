@@ -8,6 +8,8 @@ $(document).on "page:load ready", ->
   return
 
 datatable_initialize = ->
+  row = 0
+  id = 0
   importsTable = $('#imports_table').dataTable({
                     "bJQueryUI": true
                     "bFilter": true,
@@ -16,7 +18,24 @@ datatable_initialize = ->
                       sUpdateURL: 'imports/update',
                       aoColumns: [
                                   null,null,null,null,null,
-                                  { sUpdateURL: 'imports/update',placeholder:"Click to enter",},
+                                  {sUpdateURL: (value,settings)->
+                                    row = $(this).parents('tr')[0]
+                                    id = row.id
+                                    $.ajax(
+                                      url:"imports/update",
+                                      type: 'POST'
+                                      data: {id:id,columnName:"Work Order Number",value:value},
+                                      async: false)
+                                      .done((data) ->
+                                        if (data != value)
+                                          value = data
+                                      )
+                                    return value
+                                  , placeholder:"Click to enter",
+                                  fnOnCellUpdated: (sStatus, sValue, settings) ->
+                                    $.post("imports/#{id}/retainStatus")},
+
+
                                   null, null, null,null
                                  ]
                   )

@@ -37,6 +37,11 @@ class ImportsController < ApplicationController
     status != @import.status ? @import.send("#{status}!".to_sym) : @import.save
   end
 
+  def retainStatus
+    @import = Import.find(params[:id])
+  end
+
+
   def history
   end
 

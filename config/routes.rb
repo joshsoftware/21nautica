@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   resources :imports, only: [:new ,:create ,:index] do
     member do
       post 'updateStatus'
+      post 'retainStatus'
     end
   end
   resources :import_items,only: [:new,:create,:index] do
