@@ -50,6 +50,7 @@
 
 :coffeescript
   @customers = #{@customers.to_json}
+  @equipment = #{@equipment.to_json}
 
   $('#statusModal').on 'show.bs.modal', (event) ->
     link_tag = $(event.relatedTarget)
