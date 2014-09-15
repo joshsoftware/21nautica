@@ -17,7 +17,21 @@ datatable_initialize = ->
                     }).makeEditable(
                       sUpdateURL: 'imports/update',
                       aoColumns: [
-                                  null,null,null,null,null,
+                                  {
+                                    type: 'select',
+                                    event: 'click',
+                                    data: JSON.stringify(@customers),
+                                    onblur: 'submit',
+                                    sUpdateURL: (value,settings)->
+                                       row = $(this).parents('tr')[0]
+                                       id = row.id
+                                       $.post("imports/update",{id:id,columnName:"customer id",value:value})
+                                       return value
+                                     , placeholder:"Click to enter",
+                                     fnOnCellUpdated: (sStatus,sValue,settings) ->
+                                       $.post("imports/#{id}/retainStatus")
+                                  },
+                                  null,null,null,null,
                                   {sUpdateURL: (value,settings)->
                                     row = $(this).parents('tr')[0]
                                     id = row.id

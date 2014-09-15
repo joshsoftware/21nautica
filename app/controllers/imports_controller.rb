@@ -2,6 +2,8 @@ class ImportsController < ApplicationController
 
   def index
      @imports = Import.where.not(status: "ready_to_load")
+     cust_array = Customer.all.select(:id , :name).to_a
+     @customers = cust_array.inject({}) {|h,x| h[x.id] = x.name; h}
   end
 
   def new

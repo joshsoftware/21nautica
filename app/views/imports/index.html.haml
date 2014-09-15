@@ -49,6 +49,8 @@
           = f.submit 'Save', class: 'btn btn-primary'
 
 :coffeescript
+  @customers = #{@customers.to_json}
+
   $('#statusModal').on 'show.bs.modal', (event) ->
     link_tag = $(event.relatedTarget)
     id = link_tag.attr('data-import-id')
