@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   get 'import/empty_containers' => 'import_items#empty_containers'
 
   # special inline edit for export_items
+  post 'exports/update'
   post '/export_items/update'
   post '/movements/update'
   post 'export_items/updatecontainer'

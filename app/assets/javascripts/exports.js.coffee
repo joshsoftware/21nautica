@@ -17,7 +17,32 @@ datatable_initialize = ->
                     "bJQueryUI": true
                     "sPaginationType": "full_numbers"
                   })
+
   detailsTableHtml = $("#detailsTable").html()
+  
+  $('.equipment').editable(((value, settings) ->
+    row = $(this).parents('tr')[0]
+    id = row.id
+    $.post("exports/update",{id:id, columnName:"Equipment", value: value})
+    return value
+  ), {
+    type   : 'select',
+    onblur: 'submit',
+    data: JSON.stringify(@equipment)  
+  })
+
+  $('.customer').editable(((value, settings) ->
+    row = $(this).parents('tr')[0]
+    id = row.id
+    $.post("exports/update",{id:id, columnName:"Customer Id", value:value})
+    return value
+  ), {
+    type   : 'select',
+    onblur: 'submit',
+    data: JSON.stringify(@customers)
+    callback: (value, settings) ->
+      $(this).html(jQuery.parseJSON(settings.data)[value])  
+  })
 
   $('#exports_table tbody').on('click','#exports_table tr td img',()->
     nTr = $(this).parents('tr')[0]
@@ -82,4 +107,5 @@ datatable_initialize = ->
                      null, null
                    ]
        ))
+
 $(document).ready datatable_initialize

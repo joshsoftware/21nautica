@@ -17,9 +17,9 @@
       %tr{id: "#{export.id}"}
         %td= image_tag 'plus.png'
         %td.ro_number= export.release_order_number
-        %td= export.customer_name
+        %td.customer= export.customer_name
         %td= export.shipping_line
-        %td= export.equipment
+        %td.equipment= export.equipment
         %td= export.quantity
         %td.placed= export.placed
         %td.moved= export.moved
@@ -56,6 +56,9 @@
 
 
 :coffeescript
+  @equipment = #{@equipment.to_json}
+  @customers = #{@customers.to_json}
+
   @exportItems = #{@export_items.to_json}
   $('#basicModal').on 'show.bs.modal', (event) ->
     if $(event.relatedTarget).attr('data-container') == "null" or
