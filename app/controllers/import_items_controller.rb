@@ -62,7 +62,7 @@ class ImportItemsController < ApplicationController
 
   def import_item_params
     params.permit(:id)
-    params.require(:import_item).permit(:truck_number, :status, :remarks, :context, :transporter, :transporter_name)
+    params.require(:import_item).permit(:truck_number, :status, :remarks, :context, :transporter_name, :transporter)
   end
 
   def import_item_update_params

@@ -30,7 +30,7 @@ datatable_initialize = ->
                                     switch sStatus
                                       when "success"
                                         $.post("import_items/#{id}/updateStatus",{import_item:{status:"allocate_truck",truck_number: sValue}})
-                                    },
+                                   },
                                     {
                                       type: 'select',
                                       event: 'click',
@@ -43,6 +43,7 @@ datatable_initialize = ->
                                        return value
                                      , placeholder:"Click to enter",
                                      fnOnCellUpdated: (sStatus,sValue,settings) ->
+
                                        $.post("import_items/#{id}/updateStatus",{import_item: {status:"allocate_truck",transporter: sValue}})
                                     },
                                   null, null,null
