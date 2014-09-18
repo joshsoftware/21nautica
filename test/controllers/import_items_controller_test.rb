@@ -1,6 +1,5 @@
 require 'test_helper'
 require "minitest/autorun"
-
 class ImportItemsControllerTest < ActionController::TestCase
   setup do
     @user = FactoryGirl.create :user
@@ -42,14 +41,6 @@ class ImportItemsControllerTest < ActionController::TestCase
     assert_template :updateStatus
   end
 
-  test "Import item status should not change unless truck has been allocated" do
-    @import_item1.truck_number = nil
-    @import_item1.status = 'under_loading_process'
-    @import_item1.save!
-    xhr :post, :updateStatus, import_item: {status: "allocate_truck", "remarks"=>"okay"}, id: @import_item1.id
-    assert_response :success
-  end
-
   test "should get history" do
     @import_item1.status = "delivered"
     @import_item2.status = "delivered"
@@ -81,5 +72,13 @@ class ImportItemsControllerTest < ActionController::TestCase
     assert_equal 'TR23', @import_item1.truck_number
   end
 
+  test "should update the context" do
+    xhr :post, :updateContext, import_item: {"context"=>"tr234", "transporter_name"=>"Trans1"} ,
+                            "after_delivery"=>"empty_return", id: @import_item1.id
+    @import_item1.reload
+    assert_equal "Empty return" ,@import_item1.after_delivery_status
+    assert_equal "Truck Number: tr234 , Transporter: Trans1 , " +
+      Date.today.strftime("%d-%m-%Y") , @import_item1.context
+  end
 
 end
