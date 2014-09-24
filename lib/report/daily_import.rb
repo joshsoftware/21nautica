@@ -17,6 +17,16 @@ module Report
         {'In Transit' => nil, 'History' => 'delivered'}.each do |name, status|
           workbook.add_worksheet(name: name) do |sheet|
             add_data(customer, sheet, center, heading, status)
+            sheet.column_widths nil,nil,nil,nil,nil,nil,30,30,
+                                  25,25,25,25,25,25,25,25
+
+            sheet.sheet_view.pane do |pane|
+              pane.state = :frozen
+              pane.y_split = 1
+              pane.x_split = 2
+              pane.active_pane = :bottom_right
+            end
+
           end
         end
       end
@@ -41,15 +51,12 @@ module Report
         imports = customer.imports.includes({import_items: :audits}, :audits).where.not("import_items.status" => "delivered")
       end
 
+
       h = {}
       imports.each do |import|
         import.import_items.each do |item|
           [import,item].each do |entity|
             audited_changes = entity.audits.collect(&:audited_changes)
-
-            if !status
-              audited_changes.reverse!
-            end
 
             audited_changes.each do |a|
 
@@ -70,6 +77,10 @@ module Report
           end
           h.replace( h.merge(h) {|key, value| value = value.join("\n")} )
 
+          max_height = 0
+          h.each_value{|v| max_height = v.length if v.length > max_height}
+          max_height = (max_height * 0.7) if max_height > 50
+
           sheet.add_row [import.bl_number,
                      item.container_number, import.equipment, import.description,
                      import.estimate_arrival.nil? ? "" :
@@ -79,7 +90,7 @@ module Report
                      h["ready_to_load"], h["truck_allocated"], h["loaded_out_of_port"],
                      h["arrived_at_malaba"], h["departed_from_malaba"],
                      h["arrived_at_kampala"], h["delivered"]],
-                     style: center, height: 25
+                     style: center, height: max_height
 
           h.clear
         end

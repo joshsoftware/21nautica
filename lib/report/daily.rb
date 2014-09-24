@@ -27,6 +27,13 @@ module Report
             end
             sheet.col_style 2, column_style,  row_offset: 1
             sheet.col_style 5, column_style,  row_offset: 1
+
+            sheet.sheet_view.pane do |pane|
+              pane.state = :frozen
+              pane.y_split = 1
+              pane.active_pane = :bottom_right
+            end
+
           end
         end
       end
