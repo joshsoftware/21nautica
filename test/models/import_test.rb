@@ -21,7 +21,15 @@
 require 'test_helper'
 
 class ImportTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  setup do
+    @import = FactoryGirl.create :import
+  end
+
+  test "Bl number must be unique" do
+    import2 = Import.new
+    import2.bl_number = 'BL1'
+    assert_not import2.save
+    assert import2.errors.messages[:bl_number].include?(
+                      'has already been taken')
+  end
 end

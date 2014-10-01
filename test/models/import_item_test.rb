@@ -19,7 +19,18 @@
 require 'test_helper'
 
 class ImportItemTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  setup do
+    @import_item1 = FactoryGirl.create :import_item1
+  end
+
+  test "should not assign truck which is not free" do
+    @import_item1.truck_number = "TR123"
+    @import_item1.save!
+    import_item2 = ImportItem.new
+    import_item2.truck_number = "TR123"
+    assert_not import_item2.save
+    assert import_item2.errors.messages[:truck_number].include?(
+                        " TR123 is not free !")
+  end
+
 end

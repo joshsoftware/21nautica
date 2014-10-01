@@ -21,7 +21,23 @@
 require 'test_helper'
 
 class MovementTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  setup do
+    @movement1 = FactoryGirl.create :movement
+  end
+
+  test "should not assign truck which is not free" do
+    movement2 = Movement.new
+    movement2.truck_number = "t1"
+    assert_not movement2.save
+    assert movement2.errors.messages[:truck_number].include?(
+                      " t1 is not free !")
+  end
+
+  test "should not save movement without truck number" do
+    movement = Movement.new
+    assert_not movement.save
+    assert movement.errors.messages[:truck_number].include?(
+                    "can't be blank")
+  end
+
 end

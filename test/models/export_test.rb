@@ -17,7 +17,21 @@
 require 'test_helper'
 
 class ExportTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  test "quantity must be specified for creation of export" do
+    export = Export.new
+    assert_not export.save
+    assert export.errors.messages[:quantity].include?(
+                  "can't be blank")
+  end
+
+  test  "R/O number must be unique" do
+    export1 = FactoryGirl.create :export
+    export2 = Export.new
+    export2.quantity = 2
+    export2.release_order_number = '12345678'
+    assert_not export2.save
+    assert export2.errors.messages[:release_order_number].include?(
+                    "Duplicate R/O Number not allowed!")
+  end
+
 end
