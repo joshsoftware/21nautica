@@ -38,6 +38,7 @@ class ImportsControllerTest < ActionController::TestCase
                     columnName: 'Work Order Number',
                     value: 'WON'
                     }
+    xhr :post, :retainStatus, {id: @import.id}
     @import.reload
     assert_equal 'WON', @import.work_order_number
   end

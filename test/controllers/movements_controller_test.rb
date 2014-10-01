@@ -25,7 +25,7 @@ class MovementsControllerTest < ActionController::TestCase
     get :history
     assert_response :success
   end
-  
+
   test "should create movement" do
     @export_item.export = @export
     @export_item.save
@@ -36,7 +36,7 @@ class MovementsControllerTest < ActionController::TestCase
                                   point_of_discharge: 'Mundra',
                                   transporter_name: 'Mansons'},
                       export_item_id: @export_item.id
-                    }                                
+                    }
     end
     assert_response :success
   end
@@ -45,17 +45,28 @@ class MovementsControllerTest < ActionController::TestCase
     xhr :post, :update, { id: @movement.id,
                     columnName: 'Truck Number',
                     value: 't2'
-                    } 
+                    }
+    xhr :post, :retainStatus, {id: @movement.id}
     @movement.reload
-    assert_equal 't2', @movement.truck_number        
+    assert_equal 't2', @movement.truck_number
   end
 
   test "should update status for movement" do
-    
-  end
+    get :index
+    assert_response :success
+    assert_select 'table tr', :count => 1
 
-  test "movement should not happen unless container assigned" do
-    
+    assert_raises(AASM::InvalidTransition) do
+      xhr :post, :updateStatus, movement: {status: "document_handed", "remarks"=>"okay"}, id: @movement.id
+    end
+    xhr :post, :updateStatus, movement: {status: "arrived_malaba_border", "remarks"=>"okay"}, id: @movement.id
+    xhr :post, :updateStatus, movement: {status: "crossed_malaba_border", "remarks"=>"okay"}, id: @movement.id
+    xhr :post, :updateStatus, movement: {status: "order_released", "remarks"=>"okay"}, id: @movement.id
+    xhr :post, :updateStatus, movement: {status: "arrived_port", "remarks"=>"okay"}, id: @movement.id
+    xhr :post, :updateStatus, movement: {status: "document_handed", "remarks"=>"okay"}, id: @movement.id
+
+    assert_template :updateStatus
+    assert_select 'table tr', :count => 0
   end
 
   status=["loaded",
@@ -70,9 +81,9 @@ class MovementsControllerTest < ActionController::TestCase
       @movement.save
       time_now = Time.now + STATUS_CHANGE_DURATION[@movement.aasm.events.first.to_sym].day
       Time.stubs(:now).returns(time_now.getlocal)
-      get :index  
+      get :index
       assert_select 'table>tbody' do |element|
-        assert_select "tr[class=?]", "danger" 
+        assert_select "tr[class=?]", "danger"
       end
     end
   end
