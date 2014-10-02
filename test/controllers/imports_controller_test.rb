@@ -57,4 +57,9 @@ class ImportsControllerTest < ActionController::TestCase
     @import.reload
     assert_select 'table tr', :count => 0
   end
+
+  test "should get new" do
+    get :new
+    assert_response :success
+  end
 end

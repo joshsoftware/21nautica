@@ -7,10 +7,12 @@ class ImportItemsControllerTest < ActionController::TestCase
     @import = FactoryGirl.create :import
     @import_item1 = FactoryGirl.create :import_item1
     @import_item2 = FactoryGirl.create :import_item2
+    @import_item3 = FactoryGirl.create :import_item3
     @import.status = "ready_to_load"
     @import.save
     @import_item1.import = @import
     @import_item2.import = @import
+    @import_item3.import = @import
   end
 
   test "should get index" do
@@ -79,6 +81,30 @@ class ImportItemsControllerTest < ActionController::TestCase
     assert_equal "Empty return" ,@import_item1.after_delivery_status
     assert_equal "Truck Number: tr234 , Transporter: Trans1 , " +
       Date.today.strftime("%d-%m-%Y") , @import_item1.context
+
+    xhr :post, :updateContext, import_item: {"context"=>"Cust1"} ,
+                            "after_delivery"=>"export_reuse", id: @import_item2.id
+    @import_item2.reload
+    assert_equal "Export reuse" ,@import_item2.after_delivery_status
+    assert_equal "Customer Name: Cust1 , " +
+      Date.today.strftime("%d-%m-%Y") , @import_item2.context
+
+
+    xhr :post, :updateContext, import_item: {"context"=>"Yard1"} ,
+                            "after_delivery"=>"drop_off", id: @import_item3.id
+    @import_item3.reload
+    assert_equal "Drop off" ,@import_item3.after_delivery_status
+    assert_equal "Yard Name: Yard1 , " +
+      Date.today.strftime("%d-%m-%Y") , @import_item3.context
+  end
+
+  test "should not update truck number to non-free truck" do
+    @import_item1.truck_number = 'TR23'
+    @import_item1.save
+    xhr :post, :update, { id: @import_item2.id, columnName: 'Truck Number',
+                          value: 'TR23'}
+    @import_item2.reload
+    assert_not_equal 'TR23', @import_item2.truck_number
   end
 
 end

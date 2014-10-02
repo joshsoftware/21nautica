@@ -26,4 +26,20 @@ class ExportsControllerTest < ActionController::TestCase
     assert_redirected_to exports_path
   end
 
+  test "should update export" do
+    xhr :post, :update, { id: @export.id,
+                    columnName: 'Equipment',
+                    value: '40'
+                    }
+    @export.reload
+    assert_equal '40', @export.equipment
+  end
+
+  test "should not create export with duplicate R/O number" do
+    assert_no_difference('Export.count') do
+      post :create, export: {export_type: 'TBL', equipment: '20', shipping_line: 'line', quantity: '20', release_order_number: '12345678'}
+    end
+    assert_template :new
+  end
+
 end

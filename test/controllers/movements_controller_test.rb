@@ -88,4 +88,27 @@ class MovementsControllerTest < ActionController::TestCase
     end
   end
 
+  test "should not create movement without truck number" do
+    @export_item.export = @export
+    @export_item.save
+    assert_no_difference('Movement.count') do
+      post :create, { id: 40,
+                      movement: {
+                                  point_of_discharge: 'Mundra',
+                                  transporter_name: 'Mansons'},
+                      export_item_id: @export_item.id
+                    }
+    end
+  end
+
+  test "should update movement truck number to blank" do
+    xhr :post, :update, { id: @movement.id,
+                    columnName: 'Truck Number',
+                    value: ''
+                    }
+    xhr :post, :retainStatus, {id: @movement.id}
+    @movement.reload
+    assert_equal 't1', @movement.truck_number
+  end
+
 end

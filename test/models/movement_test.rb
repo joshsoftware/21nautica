@@ -40,4 +40,9 @@ class MovementTest < ActiveSupport::TestCase
                     "can't be blank")
   end
 
+  test "json should include container field" do
+    assert_not @movement1.attributes.has_key?('container_number')
+    assert @movement1.as_json.has_key?('container_number')
+  end
+
 end

@@ -20,7 +20,7 @@ class ExportItemsControllerTest < ActionController::TestCase
     assert_no_difference('@export_item.date_of_placement') do
     post :update, {id: @export_item.id,
                    date_of_placement: Date.tomorrow }
-    end                  
+    end
   end
 
   test "should update container" do
@@ -28,19 +28,42 @@ class ExportItemsControllerTest < ActionController::TestCase
     @export_item1.export = @export
     @export_item.container = nil
     @export_item1.container = 'c1'
-    @export_item.save 
+    @export_item.save
     @export_item1.save
-    
+
     post :updatecontainer, {id: @export_item1.id,
                             container: 'c2' }
-    @export_item1.reload 
+    @export_item1.reload
     assert_equal @export_item1.container,'c2'
-    #assert_select "table tr", :count => 1 
+    #assert_select "table tr", :count => 1
 
     post :updatecontainer, {id: @export_item.id,
                             container: 'c' }
-    @export_item.reload                       
+    @export_item.reload
     assert_equal @export_item.container,'c'
-    #assert_equal "2", response.body               
-  end 
+    #assert_equal "2", response.body
+  end
+
+  test "should update location and date of placement" do
+    @export_item.export = @export
+    post :update, {id: @export_item.id,
+                            location: 'location11' }
+    @export_item.reload
+    assert_equal @export_item.location,'location11'
+
+    post :update, {id: @export_item.id,
+                            date_of_placement: Date.yesterday }
+    @export_item.reload
+    assert_equal @export_item.date_of_placement, Date.yesterday
+  end
+
+  test "should get count of placed items" do
+    @export_item.export = @export
+    @export_item1.export = @export
+    @export_item.save
+    @export_item1.save
+    xhr :post, :getcount, {id: @export.id }
+    assert_response :success
+  end
+
 end

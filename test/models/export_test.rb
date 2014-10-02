@@ -34,4 +34,11 @@ class ExportTest < ActiveSupport::TestCase
                     "Duplicate R/O Number not allowed!")
   end
 
+  test "should get customer name" do
+    export1 = FactoryGirl.create :export
+    customer = FactoryGirl.create :customer
+    export1.customer = customer
+    assert_equal export1.customer_name, 'Cust1'
+  end
+
 end

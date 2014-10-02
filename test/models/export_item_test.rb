@@ -44,4 +44,9 @@ class ExportItemTest < ActiveSupport::TestCase
     assert export_item3.errors.messages[:container].include?(
                           "1 is not free !")
   end
+
+  test "json should contain date since placement field" do
+    assert_not @export_item.attributes.has_key?('date_since_placement')
+    assert @export_item.as_json.has_key?('date_since_placement')
+  end
 end

@@ -4,6 +4,11 @@ class CustomersControllerTest < ActionController::TestCase
   setup do
   	@user = FactoryGirl.create :user
     sign_in @user
+    @movement = FactoryGirl.create :movement
+    @export = FactoryGirl.create :export
+    @export_item = FactoryGirl.create :export_item
+    @export_item.export = @export
+    @export_item.movement =@movement
 	end
 
   test "should get new" do
@@ -19,8 +24,12 @@ class CustomersControllerTest < ActionController::TestCase
   	end
   end
 
-  test "should create daily report for customer" do
+  test "should create daily import report for customer" do
 
-  end	
+  end
+
+  test "should create daily export report for customer" do
+
+  end
 
 end
