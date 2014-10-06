@@ -9,26 +9,36 @@
       We would like to thank you for your business, we appreciate your support.Kindly note, we would send you regular updates for your shipment.
       %br
       %br
-      %strong BL Number :
-      %td= @import.bl_number
-      %br
-      %strong Equipment :
-      %td= @import.equipment
-      %br
-      %strong Quantity :
-      %td= @import.quantity
-      %br
-      %strong Shipping Line :
-      %td= @import.shipping_line
-      %br
-      %strong ETA :
-      %td= @import.estimate_arrival
-      %br
-      %strong Description :
-      %td= @import.description
-      %br
-      %br
-      %br
+      %table
+        %tbody
+          %tr
+            %td 
+              %strong BL Number:
+            %td= @import.bl_number
+          %tr  
+            %td 
+              %strong Equipment:
+            %td= @import.equipment
+          %tr  
+            %td 
+              %strong Quantity:
+            %td= @import.quantity
+          %tr  
+            %td 
+              %strong Shipping Line:
+            %td= @import.shipping_line
+          %tr  
+            %td 
+              %strong ETA:
+            %td= @import.estimate_arrival
+          %tr
+            %td 
+              %strong Description:
+            %td= @import.description
+        %br
+        %br
+        %br
+      %p
       Warm Regards
       %br
       Kaushik Somanathan
