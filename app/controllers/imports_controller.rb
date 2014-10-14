@@ -5,7 +5,7 @@ class ImportsController < ApplicationController
     cust_array = Customer.all.select(:id , :name).to_a
     @customers = cust_array.inject({}) {|h,x| h[x.id] = x.name; h}
     @equipment = EQUIPMENT_TYPE.inject({}) {|h, x| h[x] = x; h}
-
+    @clearing_agent = CLEARING_AGENTS.inject({}) {|h, x| h[x] = x; h}
   end
 
   def new
@@ -60,7 +60,7 @@ class ImportsController < ApplicationController
 
 
   def import_update_params
-    params.permit(:id, :columnName, :value)
+    params.permit(:id, :columnName, :value, :clearing_agent, :estimate_arrival)
   end
 end
 

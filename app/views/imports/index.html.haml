@@ -6,6 +6,7 @@
     %th Equipment
     %th File Open Date
     %th Work Order Number
+    %th Clearing Agent
     %th ETA
     %th Quantity
     %th#btnAddNewRow Status
@@ -19,6 +20,7 @@
         %td= import.equipment
         %td= import.created_at.to_date
         %td= import.work_order_number
+        %td= import.clearing_agent
         %td= import.estimate_arrival
         %td= import.quantity
         %td.updateStatus{class: "text-center"}
@@ -51,6 +53,7 @@
 :coffeescript
   @customers = #{@customers.to_json}
   @equipment = #{@equipment.to_json}
+  @clearing_agent = #{@clearing_agent.to_json}
 
   $('#statusModal').on 'show.bs.modal', (event) ->
     link_tag = $(event.relatedTarget)
