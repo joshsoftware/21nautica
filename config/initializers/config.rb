@@ -11,5 +11,5 @@ STATUS_CHANGE_DURATION = {arrived_malaba_border: 2,
                           order_released: 2,
                           arrived_port: 3,
                           document_handed: 1}
-CLEARING_AGENTS = %W(Panafrica EACL)
+CLEARING_AGENTS = %W(Panafrica EACL Agility)
 
