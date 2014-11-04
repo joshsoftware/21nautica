@@ -1,0 +1,2 @@
+module BillOfLadingsHelper
+end

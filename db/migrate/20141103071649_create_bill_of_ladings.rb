@@ -7,7 +7,7 @@ class CreateBillOfLadings < ActiveRecord::Migration
       t.string :shipping_line
       t.string :clearing_agent
       t.string :payment_clearing
-      t.string :cheque_clearning
+      t.string :cheque_clearing
       t.string :remarks
 
       t.timestamps

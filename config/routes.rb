@@ -24,6 +24,13 @@ Rails.application.routes.draw do
   post 'export_items/getcount'
   post '/imports/update'
   post '/import_items/update'
+
+  resources :bill_of_ladings, only: [:update] do
+    collection do
+      get 'search'
+    end
+  end
+
   resources :exports, only: [:new, :create, :index]
   resources :export_items, only: [:new, :create]
   resources :customers, only: [:new, :create]
