@@ -1,9 +1,13 @@
 %table.table{id: 'movements_table'}
   %thead
     %th Booking Number
+    %th BL Number
     %th Customer Name
     %th Truck Number
     %th Transporter Name
+    %th Transporter Payment
+    %th Clearing Agent
+    %th Clearing Agent Payment
     %th Vessel Targeted
     %th Port of Discharge
     %th Container Number
@@ -17,9 +21,13 @@
       - updated_at = status_updated_at(element).localtime
       %tr{id: element.id, class: ("danger" if @show_update && alert(updated_at, element)) }
         %td.booking_number= element.booking_number
+        %td= element.bl_number
         %td= element.customer_name
         %td.truck_number= element.truck_number
         %td= element.transporter_name
+        %td= element.transporter_payment
+        %td= element.clearing_agent
+        %td= element.clearing_agent_payment
         %td.vessel_targeted= element.vessel_targeted
         %td= element.port_of_discharge
         %td= element.container_number

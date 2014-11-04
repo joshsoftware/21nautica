@@ -43,10 +43,29 @@ class MovementsController < ApplicationController
   def update
     movement = Movement.find(movement_update_params[:id])
     attribute = movement_update_params[:columnName].downcase.gsub(' ', '_').to_sym
-    if movement.update(attribute => movement_update_params[:value])
-      render text: movement_update_params[:value]
+
+    # Special processing for bl_number
+    if attribute == :bl_number
+      # If no BL of this value, then create one.
+      bl = BillOfLading.where(bl_number: movement_update_params[:value]).first
+      if bl
+        movement.bill_of_lading = bl
+      else
+        movement.build_bill_of_lading(bl_number: movement_update_params[:value])
+      end
+
+      # update the movement
+      if movement.save
+        render text: movement_update_params[:value]
+      else
+        render movement.errors.full_messages
+      end
     else
-      render text: movement.errors.full_messages
+      if movement.update(attribute => movement_update_params[:value])
+        render text: movement_update_params[:value]
+      else
+        render text: movement.errors.full_messages
+      end
     end
   end
 

@@ -24,9 +24,12 @@ class Movement < ActiveRecord::Base
   include AASM
 
   has_one :export_item
+  belongs_to :bill_of_lading
   validates :truck_number, presence: true
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
-  
+
+  delegate :bl_number, to: :bill_of_lading, allow_nil: true
+
   def assignment_of_truck_number
    count = Movement.where(truck_number: truck_number).where.not(status: :container_handed_over_to_KPA).count
    if count > 0 && truck_number != nil

@@ -31,7 +31,7 @@ class Import < ActiveRecord::Base
 
   # Hack: I have intentionally not used delegate here, because,
   # in case of duplicate, the bl_number will be delegated to a non-existent BillOfLading in
-  # the `render :new` call.
+  # the `render :new` call. :allow_nil would not work, as we actually lose the bl_number then!
   def bl_number
     self.bill_of_lading.try(:bl_number) ? self.bill_of_lading.bl_number : self.attributes["bl_number"]
   end
