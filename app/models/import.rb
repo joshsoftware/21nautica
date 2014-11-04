@@ -18,14 +18,36 @@
 #  updated_at       :datetime
 #
 
+require 'patch'
+
 class Import < ActiveRecord::Base
   include AASM
-	include EspinitaPatch
+  include EspinitaPatch
 
   has_many :import_items
   belongs_to :customer
-  validates_uniqueness_of :bl_number
+  belongs_to :bill_of_lading
   accepts_nested_attributes_for :import_items
+
+  # Hack: I have intentionally not used delegate here, because,
+  # in case of duplicate, the bl_number will be delegated to a non-existent BillOfLading in
+  # the `render :new` call.
+  def bl_number
+    self.bill_of_lading.try(:bl_number) ? self.bill_of_lading.bl_number : self.attributes["bl_number"]
+  end
+
+  before_create do |record|
+    # create the bill_of_lading
+    # Hack: Since we are creating a parent before the child is saved,
+    # we need to manipulate the system a little bit
+    bl = BillOfLading.new(bl_number: record["bl_number"])
+    if bl.save
+      record.bill_of_lading = bl
+    else
+      record.errors.messages.merge!(bl.errors.messages)
+      false
+    end
+  end
 
   aasm column: 'status' do
     state :copy_documents_received, initial: true

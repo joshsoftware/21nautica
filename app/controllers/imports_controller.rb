@@ -10,6 +10,7 @@ class ImportsController < ApplicationController
 
   def new
     @import = Import.new
+    @import.build_bill_of_lading
     @customers = Customer.all
   end
 
