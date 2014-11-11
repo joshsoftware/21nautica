@@ -21,7 +21,15 @@ class ImportItem < ActiveRecord::Base
   include EspinitaPatch
 
   belongs_to :import
+  has_one :import_expense, dependent: :destroy
+
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
+
+  delegate :bl_number, to: :import
+
+  after_create do |record|
+    record.create_import_expense
+  end
 
   def assignment_of_truck_number
     count = ImportItem.where(truck_number: truck_number).where.not(status: 'delivered').count

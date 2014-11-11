@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   post 'import/import_items/update' => 'import_items#update'
   get 'import/history' => 'import_items#history'
   get 'import/empty_containers' => 'import_items#empty_containers'
+  get '/import_expenses/search' => "import_expenses#index"
 
   # special inline edit for export_items
   post 'exports/update'
@@ -45,6 +46,8 @@ Rails.application.routes.draw do
       post 'updateStatus'
       post 'updateContext'
     end
+
+    resource :import_expense, only: [:edit, :update, :destroy]
   end
   resources :movements, only: [:new, :create, :index ] do
     member do

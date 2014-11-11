@@ -6,5 +6,14 @@ namespace "21nautica" do
       import.save
     end
   end
+
+  desc "Every ImportItem should have ImportExpense"
+  task :create_import_expense do
+    ImportItem.all.each do |import|
+      import.create_import_expense
+    end
+  end
+
+
 end
 

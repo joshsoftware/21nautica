@@ -32,8 +32,14 @@
             %li= link_to 'Export Placement', exports_path,  "data-no-turbolink" =>true
             %li= link_to 'Export Tracking', movements_path
             %li= link_to 'Export History', export_history_path
-      %form.right.navbar-form.navbar-left{role: "search", action: "/bill_of_ladings/search"}
-        .form-group
-          %input.form-control{placeholder: "BL Number", type: "text", name: "id"}
-        %button.btn.btn-default{type: "Submit"} BL Payment
+      %div.navbar-form.navbar-left
+        %form{role: "search", action: "/bill_of_ladings/search"}
+          .form-group
+            %input.form-control{placeholder: "BL Number", type: "text", name: "id"}
+          %button.btn.btn-success{type: "Submit"} BL Payment
+      %div.navbar-form.navbar-left
+        %form{role: "search", action: "/import_expenses/search"}
+          .form-group
+            %input.form-control{placeholder: "Container Number", type: "text", name: "id"}
+          %button.btn.btn-danger{type: "Submit"} Import Expenses
         
