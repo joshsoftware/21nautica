@@ -21,14 +21,18 @@ class ImportItem < ActiveRecord::Base
   include EspinitaPatch
 
   belongs_to :import
-  has_one :import_expense, dependent: :destroy
+  has_many :import_expenses, dependent: :destroy
 
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
 
   delegate :bl_number, to: :import
 
+  accepts_nested_attributes_for :import_expenses
+
   after_create do |record|
-    record.create_import_expense
+    CATEGORIES.each do |category|
+      record.import_expenses.create(category: category)
+    end
   end
 
   def assignment_of_truck_number

@@ -10,7 +10,9 @@ namespace "21nautica" do
   desc "Every ImportItem should have ImportExpense"
   task :create_import_expense do
     ImportItem.all.each do |import|
-      import.create_import_expense
+      ImportExpense::CATEGORIES.each do |category|
+        import.import_expenses.create(category: category)
+      end
     end
   end
 

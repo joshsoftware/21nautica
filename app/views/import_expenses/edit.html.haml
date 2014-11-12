@@ -1,15 +1,21 @@
 .row
-  = simple_nested_form_for @import_expense, url: import_item_import_expense_path, html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
-    .col-md-6
-      = f.input :category, collection: ImportExpense::CATEGORIES, as: :select, label: 'Category', include_blank: true
-      = f.input :name, as: :string
-      = f.input :amount, as: :string
-      = f.input :currency, collection: ImportExpense::CURRENCY, as: :select, label: 'Equipment', include_blank: false
-      = f.input :invoice_date, as: :string
-      = f.input :delivery_date, as: :string
-
-      .form-group
-        .col-sm-offset-2.col-sm-2
-          = f.submit 'Save', class: 'btn-primary'
-    .col-md-6
+  = simple_nested_form_for @import_item, url: import_item_import_expense_path, html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |of|
+    = of.simple_fields_for :import_expenses do |f|
+      .col-md-5.panel-primary
+        .panel-heading
+          .panel-title #{f.object.category}
+        .panel-body
+          = f.input :category, as: :hidden
+          = f.input :amount, as: :string
+          - if %w(Haulage Demurrage).include?(f.object.category)
+            = f.input :name, disabled: true
+          - else
+            = f.input :name, as: :select, collection: f.object.get_collection
+          = f.input :currency, collection: ImportExpense::CURRENCY, as: :select, label: 'Currency', include_blank: false
+          = f.input :invoice_date, as: :string
+          - unless %w(Haulage Empty).include?(f.object.category)
+            = f.input :delivery_date, as: :string
+    .form-group
+      .col-sm-offset-2.col-sm-2
+        = of.submit "Update Import Expenses",  class: 'btn btn-large btn-primary'
 

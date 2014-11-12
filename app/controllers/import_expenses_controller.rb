@@ -22,13 +22,12 @@ class ImportExpensesController < ApplicationController
   end
 
   def edit
-    @import_expense = ImportItem.find(import_expense_params[:import_item_id]).import_expense
+    @import_item = ImportItem.find(import_expense_params[:import_item_id])
   end
 
   def update
-    @import_expense = ImportItem.find(import_expense_params[:import_item_id]).import_expense
-
-    @import_expense.update_attributes!(import_expense_update_params)
+    @import_item = ImportItem.find(import_expense_params[:import_item_id])
+    @import_item.update_attributes!(import_expense_update_params)
     redirect_to :root
   end
 
@@ -39,6 +38,6 @@ class ImportExpensesController < ApplicationController
   end
 
   def import_expense_update_params
-    params.require(:import_expense).permit(:category, :currency, :invoice_date, :delivery_date, :name, :amount)
+    params.require(:import_item).permit(:import_expenses_attributes => [:category, :currency, :invoice_date, :delivery_date, :name, :amount, :id])
   end
 end
