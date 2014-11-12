@@ -1,10 +1,12 @@
-%h3 #{@import_items.first.container_number} is associated with multiple BL Numbers.. Choose one
+%h3 Multiple Entries found. Choose one
 
 %table.table.table-striped
   %th BL Number
   %th Container
+  %th Work Order Number
   %tbody
     - @import_items.each do |item|
       %tr
         %td= link_to item.bl_number, edit_import_item_import_expense_path(item)
         %td= item.container_number
+        %td= item.import.work_order_number
