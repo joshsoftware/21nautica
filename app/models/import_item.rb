@@ -30,7 +30,7 @@ class ImportItem < ActiveRecord::Base
   accepts_nested_attributes_for :import_expenses
 
   after_create do |record|
-    CATEGORIES.each do |category|
+    ImportExpense::CATEGORIES.each do |category|
       record.import_expenses.create(category: category)
     end
   end
