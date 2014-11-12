@@ -1,3 +1,4 @@
+%h3 BL Number: #{@import_item.bl_number}, Container Number: #{@import_item.container_number}
 .row
   = simple_nested_form_for @import_item, url: import_item_import_expense_path, html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |of|
     = of.simple_fields_for :import_expenses do |f|
@@ -8,13 +9,13 @@
           = f.input :category, as: :hidden
           = f.input :amount, as: :string
           - if %w(Haulage Demurrage).include?(f.object.category)
-            = f.input :name, disabled: true
+            = f.input :name, as: :string, input_html: { value: f.object.get_collection.first}, disabled: true
           - else
             = f.input :name, as: :select, collection: f.object.get_collection
           = f.input :currency, collection: ImportExpense::CURRENCY, as: :select, label: 'Currency', include_blank: false
-          = f.input :invoice_date, as: :string
+          = f.input :invoice_date, as: :string, placeholder: 'yyyy-mm-dd'
           - unless %w(Haulage Empty).include?(f.object.category)
-            = f.input :delivery_date, as: :string
+            = f.input :delivery_date, as: :string, placeholder: 'yyyy-mm-dd'
     .form-group
       .col-sm-offset-2.col-sm-2
         = of.submit "Update Import Expenses",  class: 'btn btn-large btn-primary'
