@@ -1,6 +1,6 @@
 class ImportExpensesController < ApplicationController
   def index
-    @import_items = ImportItem.where("container_number like ?", "#{import_expense_params[:id]}%")
+    @import_items = ImportItem.where("container_number like ?", "%#{import_expense_params[:id]}%")
 
     # In case, the bl_number has also been provided, use it (secondary search)
     if params[:bl_number]
