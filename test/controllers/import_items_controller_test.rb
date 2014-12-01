@@ -34,7 +34,7 @@ class ImportItemsControllerTest < ActionController::TestCase
       xhr :post, :updateStatus, import_item: {status: "loaded_out_of_port", "remarks"=>"okay"}, id: @import_item1.id
     end
     @import_item1.truck_number = 'TR2345'
-    xhr :post, :updateStatus, import_item: {status: "allocate_truck", "remarks"=>"okay"}, id: @import_item1.id
+    xhr :post, :updateStatus, import_item: {status: "allocate_truck", "remarks"=>"okay", truck_number: 'TR1'}, id: @import_item1.id
     xhr :post, :updateStatus, import_item: {status: "loaded_out_of_port", "remarks"=>"okay"}, id: @import_item1.id
     xhr :post, :updateStatus, import_item: {status: "arrived_at_malaba", "remarks"=>"okay"}, id: @import_item1.id
     xhr :post, :updateStatus, import_item: {status: "departed_from_malaba", "remarks"=>"okay"}, id: @import_item1.id
@@ -106,5 +106,5 @@ class ImportItemsControllerTest < ActionController::TestCase
     @import_item2.reload
     assert_not_equal 'TR23', @import_item2.truck_number
   end
-
 end
+

@@ -19,6 +19,12 @@ class ExportsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test "should get index for xhr request" do
+    xhr :get, :index
+    assert_not_nil assigns(:exports)
+    assert_response :success
+  end
+
   test "should create export" do
     assert_difference('Export.count') do
       post :create, export: {export_type: 'TBL', equipment: '20', quantity: '20', shipping_line: 'line', release_order_number: '12345'}
