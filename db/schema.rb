@@ -11,10 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141013125601) do
+ActiveRecord::Schema.define(version: 20141107060201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "bill_of_ladings", force: true do |t|
+    t.string   "bl_number"
+    t.string   "payment_ocean"
+    t.string   "cheque_ocean"
+    t.string   "shipping_line"
+    t.string   "clearing_agent"
+    t.string   "payment_clearing"
+    t.string   "cheque_clearing"
+    t.string   "remarks"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "customers", force: true do |t|
     t.string   "name"
@@ -64,6 +77,18 @@ ActiveRecord::Schema.define(version: 20141013125601) do
     t.string   "moved"
   end
 
+  create_table "import_expenses", force: true do |t|
+    t.integer  "import_item_id"
+    t.string   "category"
+    t.string   "name"
+    t.string   "amount"
+    t.string   "currency"
+    t.string   "invoice_date"
+    t.string   "delivery_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "import_items", force: true do |t|
     t.string   "container_number"
     t.string   "trailer_number"
@@ -103,6 +128,7 @@ ActiveRecord::Schema.define(version: 20141013125601) do
     t.string   "work_order_number"
     t.string   "remarks"
     t.string   "clearing_agent"
+    t.string   "bill_of_lading_id"
   end
 
   create_table "movements", force: true do |t|
@@ -121,6 +147,10 @@ ActiveRecord::Schema.define(version: 20141013125601) do
     t.datetime "updated_at"
     t.string   "transporter_name"
     t.string   "w_o_number"
+    t.string   "bill_of_lading_id"
+    t.string   "clearing_agent"
+    t.string   "clearing_agent_payment"
+    t.string   "transporter_payment"
   end
 
   create_table "users", force: true do |t|
