@@ -9,6 +9,7 @@ class MovementsControllerTest < ActionController::TestCase
     @movement = FactoryGirl.create :movement
     @export = FactoryGirl.create :export
     @export_item = FactoryGirl.create :export_item
+    @bill_of_lading = FactoryGirl.create :bill_of_lading
   end
 
   test "should get index" do
@@ -49,6 +50,24 @@ class MovementsControllerTest < ActionController::TestCase
     xhr :post, :retainStatus, {id: @movement.id}
     @movement.reload
     assert_equal 't2', @movement.truck_number
+  end
+
+  test "should update bl_number, assigns existing bill_of_lading if present" do
+    xhr :post, :update, { id: @movement.id,
+                           columnName: 'BL Number',
+                           value: 'BL2'}
+    xhr :post, :retainStatus, {id: @movement.id}
+    @movement.reload
+    assert_equal 'BL2', @movement.bl_number
+  end
+
+  test "should update bl_number, creates and assign new bill_of_lading if not present" do
+     xhr :post, :update, { id: @movement.id,
+                            columnName: 'BL Number',
+                            value: 'BL3'}
+     xhr :post, :retainStatus, {id: @movement.id}
+     @movement.reload
+     assert_equal 'BL3', @movement.bl_number
   end
 
   test "should update status for movement" do
