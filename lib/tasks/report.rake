@@ -13,4 +13,10 @@ namespace :report do
     end
   end
 
+  desc "TODO"
+  task expense_dump: :environment do
+    Expense::Dump.new.generate
+    UserMailer.mail_expense_dump.deliver
+  end
+
 end
