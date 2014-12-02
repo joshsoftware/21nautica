@@ -16,8 +16,4 @@ class CustomersController < ApplicationController
     params.require(:customer).permit(:name, :emails)
   end
 
-  def daily_report_params
-    params.permit(:name)
-  end
-
 end
