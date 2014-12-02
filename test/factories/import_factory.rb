@@ -27,6 +27,7 @@ FactoryGirl.define do
     estimate_arrival '10-10-2014'
     equipment        '20GP'
     quantity				  3
-    association				:customer 
+    remarks 'remark1'
+    association				:customer
   end
 end
