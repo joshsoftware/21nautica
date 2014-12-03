@@ -18,4 +18,7 @@ class ImportExpense < ActiveRecord::Base
         return [self.import_item.import.shipping_line]
     end
   end
+
+  auditable only: [:name, :amount, :updated_at]
+
 end

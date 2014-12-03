@@ -58,7 +58,7 @@ class Movement < ActiveRecord::Base
     end
 
     event :arrived_port do
-      transitions from: :arranging_shipping_order_and_vessel_nomination, to: :arrived_port    
+      transitions from: :arranging_shipping_order_and_vessel_nomination, to: :arrived_port
     end
 
     event :document_handed do
@@ -67,7 +67,8 @@ class Movement < ActiveRecord::Base
 
   end
 
-  auditable only: [:status, :updated_at, :remarks]
+  auditable only: [:status, :updated_at, :remarks, :transporter_name, :transporter_payment,
+    :clearing_agent, :clearing_agent_payment]
 
   def as_json(options= {})
     super(methods: [:container_number])

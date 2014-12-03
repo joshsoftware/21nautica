@@ -19,4 +19,10 @@ namespace :report do
     UserMailer.mail_expense_dump.deliver
   end
 
+  desc "TODO"
+  task expense_delta: :environment do
+    Expense::Delta.generate_report
+  end
+
+
 end
