@@ -39,10 +39,10 @@ module Expense
         demurrage = item.import_expenses.where(category: "Demurrage").first
         icd = item.import_expenses.where(category: "ICD").first
 
-        sheet.add_row [item.bl_number, item.container_number, 
-                       haulage.name, haulage.amount, empty.name, 
-                       empty.amount, final_clearing.name, 
-                       final_clearing.amount, demurrage.name, 
+        sheet.add_row [item.bl_number, item.container_number,
+                       haulage.name, haulage.amount, empty.name,
+                       empty.amount, final_clearing.name,
+                       final_clearing.amount, demurrage.name,
                        demurrage.amount, icd.name, icd.amount]
       end
     end
@@ -53,8 +53,8 @@ module Expense
                      "Clearing Agent Payment"]
       movements = Movement.all
       movements.each do |movement|
-        sheet.add_row [movement.bl_number, movement.container_number, 
-                       movement.transporter_name, movement.transporter_payment, 
+        sheet.add_row [movement.bl_number, movement.container_number,
+                       movement.transporter_name, movement.transporter_payment,
                        movement.clearing_agent, movement.clearing_agent_payment]
       end
 
@@ -64,15 +64,13 @@ module Expense
       sheet.add_row ["BL Number", "Type", "Payment Ocean",
                      "Cheque Ocean", "Payment Clearing",
                      "Cheque Clearing"]
-      imports = Import.all
-      movements = Movement.all
-      [imports, movements].each_with_index do |name,index|
-        name.each do |entry|
-          bol = entry.bill_of_lading
-          sheet.add_row [entry.bl_number, index.eql?(0) ? "import" : "export", bol.nil? ? "" :  bol.payment_ocean, 
-                       bol.nil? ? "" : bol.cheque_ocean, bol.nil? ? "" : bol.payment_clearing, 
-                       bol.nil? ? "" : bol.cheque_clearing]
-        end
+      bills_of_lading = BillOfLading.all
+
+      bills_of_lading.each do |bol|
+        sheet.add_row [bol.bl_number,
+          Import.where(bl_number: bol.bl_number).blank? ? "export" : "import",
+          bol.payment_ocean, bol.cheque_ocean, bol.payment_clearing,
+          bol.cheque_clearing]
       end
     end
   end
