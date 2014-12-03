@@ -25,7 +25,7 @@ class UserMailer < ActionMailer::Base
   def mail_expense_dump
     time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
     attachments["Expense_Dump_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/Expense_Dump_#{time}.xlsx")
-    mail(to: "kaushik@21nautica.com" ,subject: "Expense Dump")
+    mail(to: "kaushik@21nautica.com, anuja.joshi@joshsoftware.com" ,subject: "Expense Dump")
   end
 
 end
