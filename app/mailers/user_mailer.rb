@@ -22,10 +22,11 @@ class UserMailer < ActionMailer::Base
     mail(to: customer.emails,subject: "Your new order")
   end
 
-  def mail_expense_dump
+  def mail_expense_report(type)
+    @type = type
     time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
-    attachments["Expense_Dump_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/Expense_Dump_#{time}.xlsx")
-    mail(to: "kaushik@21nautica.com, anuja.joshi@joshsoftware.com" ,subject: "Expense Dump")
+    attachments["Expense_#{@type}_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/Expense_#{@type}_#{time}.xlsx")
+    mail(to: "kaushik@21nautica.com, anuja.joshi@joshsoftware.com" ,subject: "Expense #{@type}")
   end
 
 end
