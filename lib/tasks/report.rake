@@ -15,7 +15,7 @@ namespace :report do
 
   desc "TODO"
   task expense_dump: :environment do
-    Expense::Dump.new.generate
+    Expense::Dump.generate_report
     UserMailer.mail_expense_report("Dump").deliver
   end
 
