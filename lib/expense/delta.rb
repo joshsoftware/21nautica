@@ -29,7 +29,7 @@ module Expense
           h["Haulage_name"], h["Haulage_amount"], h["Empty_name"],
           h["Empty_amount"], h["Final Clearing_name"], h["Final Clearing_amount"],
           h["Demurrage_name"], h["Demurrage_amount"], h["ICD_name"],
-          h["ICD_amount"]], height: max_height
+          h["ICD_amount"]], height: max_height unless h.blank?
         h.clear
       end
       sheet.column_widths 15, 15, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
@@ -47,7 +47,7 @@ module Expense
                           field_array = ["transporter_name", "transporter_payment", "clearing_agent", "clearing_agent_payment"])
         sheet.add_row [movement.bl_number, movement.container_number,
           h["transporter_name"],h["transporter_payment"], h["clearing_agent"],
-          h["clearing_agent_payment"]], height: max_height, alignment: { wrap_text: true}
+          h["clearing_agent_payment"]], height: max_height unless h.blank?
       end
       sheet.column_widths 15, 15, 30, 30, 30, 30
 
@@ -67,7 +67,7 @@ module Expense
         sheet.add_row [bill_of_lading.bl_number,
           Import.where(bl_number: bill_of_lading.bl_number).blank? ? "export" : "import",
           h["payment_ocean"],h["cheque_ocean"], h["payment_clearing"],
-          h["cheque_clearing"]], height: max_height, alignment: { wrap_text: true}
+          h["cheque_clearing"]], height: max_height unless h.blank?
       end
       sheet.column_widths 15, 15, 30, 30, 30, 30
     end
