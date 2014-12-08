@@ -56,6 +56,9 @@ Rails.application.routes.draw do
     end
   end
   resources :imports, only: [:new, :create]
+  resources :payments, only: [:new, :create]
+  resources :paid, controller: 'payments', type: 'Paid', only: [:new, :create]
+  resources :received, controller: 'payments', type: 'Received', only: [:new, :create]
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  participants_name: MyString
+  date_of_payment: 2014-12-05
+  amount: 1
+  mode_of_payment: MyString
+  reference: MyString
+  remarks: MyString
+  type: 
+
+two:
+  participants_name: MyString
+  date_of_payment: 2014-12-05
+  amount: 1
+  mode_of_payment: MyString
+  reference: MyString
+  remarks: MyString
+  type: 

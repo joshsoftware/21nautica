@@ -1,0 +1,2 @@
+class Paid < Payment
+end

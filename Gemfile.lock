@@ -243,6 +243,7 @@ DEPENDENCIES
   sdoc (~> 0.4.0)
   select2-rails
   simple_form
+  simplecov
   spring
   therubyracer
   tlsmail

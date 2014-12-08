@@ -80,6 +80,7 @@ group :test do
   gem 'minitest-rails'
   gem 'database_cleaner'
   gem 'factory_girl_rails'
+  gem 'simplecov'
   gem "codeclimate-test-reporter", require: nil
 end
 gem 'mocha'
