@@ -9,11 +9,11 @@
     %th
   %tbody
     - @import_items.each do |item|
-      - updated_at = status_updated_at(item).strftime("%d-%m-%Y")
+      - updated_at = status_updated_at(item).strftime("%Y-%m-%d")
       - if item.g_f_expiry.nil?
         - g_f_expiry = item.g_f_expiry
       - else
-        - g_f_expiry = item.g_f_expiry.strftime("%d-%m-%Y")
+        - g_f_expiry = item.g_f_expiry.strftime("%Y-%m-%d")
       %tr{id: item.id}
         %td= item.import.bl_number
         %td= item.container_number
