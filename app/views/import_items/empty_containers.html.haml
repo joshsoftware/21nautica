@@ -17,7 +17,7 @@
       %tr{id: item.id}
         %td= item.import.bl_number
         %td= item.container_number
-        %td= item.import.customer.name
+        %td= item.customer_name
         %td= g_f_expiry
         %td.emptyReturn{class: "text-center"}
           %button.btn.btn-small.btn-primary{"data-target" => "#context", "data-toggle"=>"modal", "data-after-delivery"=>"empty_return", "data-item-id"=> "#{item.id}"}  Empty Return

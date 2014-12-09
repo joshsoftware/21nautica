@@ -2,6 +2,7 @@
   %thead
     %th BL Number
     %th Container Number
+    %th Customer
     %th Delivery Date
     %th After Delivery Status
     %th Context
@@ -16,6 +17,7 @@
       %tr{id: item.id}
         %td= item.import.bl_number
         %td= item.container_number
+        %td= item.customer_name
         %td= updated_at
         %td= item.after_delivery_status
         %td= item.context

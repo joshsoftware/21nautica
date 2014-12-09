@@ -42,6 +42,10 @@ class ImportItem < ActiveRecord::Base
     end
   end
 
+  def customer_name
+    self.import.customer.name
+  end
+
   aasm column: 'status' do
     state :under_loading_process, initial: true
     state :truck_allocated
