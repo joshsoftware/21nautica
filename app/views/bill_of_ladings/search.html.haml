@@ -6,8 +6,8 @@
       = f.input :payment_ocean
       = f.input :cheque_ocean, label: "Cheque Number"
       = f.input :shipping_line
-      = f.input :payment_clearing, label: "Clearing Charges"
-      = f.input :cheque_clearing, label: "Cheque Number"
+      = f.input :payment_clearing, label: "Clearing Charges" , disabled: @bl.is_export_bl?
+      = f.input :cheque_clearing, label: "Cheque Number" , disabled: @bl.is_export_bl?
       = f.input :remarks
       .form-group
         .col-sm-offset-2.col-sm-2
