@@ -19,6 +19,8 @@
       = f.input :quantity, input_html: {:"data-validation" => "number", :"data-validation-error-msg" => "Quantity Should be a valid Positive Number."}
 
       = f.input :description, label: 'Description', label: "#{@import.description}"
+      = f.input :rate_agreed
+      = f.input :weight
       .form-group
         .col-sm-offset-2.col-sm-2
           = f.submit 'Save', class: 'btn-primary'
