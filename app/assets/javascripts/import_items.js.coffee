@@ -59,11 +59,12 @@ datatable_initialize = ->
                     "sPaginationType": "full_numbers",
                     "bAutoWidth": false,
                     "aoColumns": [{ "sWidth": "10%" }, { "sWidth": "10%" }, { "sWidth": "10%" }, 
-                    { "sWidth": "10%" }, { "sWidth": "15%" }, { "sWidth": "35%" }, { "sWidth": "10%" }]
+                    { "sWidth": "10%" }, { "sWidth": "10%" }, { "sWidth": "10%" }, 
+                    { "sWidth": "30%" }, { "sWidth": "10%" }]
                     }).makeEditable(
                       aoColumns: [
                                   null,null,null,null,
-                                  null,null,
+                                  null,null, null,
                                   {name: 'close_date', submit: 'okay', tooltip: "yyyy-mm-dd", sUpdateURL:  "import_items/update"
                                   ,type: 'datepicker2', event: 'click'}
                                  ]
