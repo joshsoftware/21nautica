@@ -38,6 +38,7 @@ class ImportExpensesController < ApplicationController
   end
 
   def import_expense_update_params
-    params.require(:import_item).permit(:import_expenses_attributes => [:category, :currency, :invoice_date, :delivery_date, :name, :amount, :id])
+    params.require(:import_item).permit(:import_expenses_attributes => [:category, :currency, 
+      :invoice_date, :invoice_number, :delivery_date, :name, :amount, :id])
   end
 end
