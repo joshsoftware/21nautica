@@ -292,7 +292,75 @@ datatable_initialize = ->
                                       )
                                     return value
                                   , placeholder:"Click to enter"
-                                    },null,null,null,null,
+                                    },
+                                  {sUpdateURL: (value,settings)->
+                                    row = $(this).parents('tr')[0]
+                                    id = row.id
+                                    $.ajax(
+                                      url:"movements/update",
+                                      type: 'POST'
+                                      data: {id:id,columnName:"Transporter Invoice Number",value:value},
+                                      async: false)
+                                      .done((data) ->
+                                        if (data != value)
+                                          value = data
+                                      )
+                                    return value
+                                  , placeholder:"Click to enter"
+                                    },
+                                  {
+                                    type: 'datepicker2',
+                                    event: 'click',
+                                    submit: 'okay',
+                                    tooltip: "yyyy-mm-dd",
+                                    sUpdateURL: (value, settings) ->
+                                      row = $(this).parents('tr')[0]
+                                      id = row.id
+                                      $.ajax(
+                                        url:"movements/update",
+                                        type: 'POST'
+                                        data: {id:id, columnName:"Transporter Invoice Date", value:value}
+                                        async: false
+                                      ).done((data) ->
+                                        value = data
+                                      )
+                                      return value
+                                    , placeholder:"Click to enter"
+                                  },
+                                  {sUpdateURL: (value,settings)->
+                                    row = $(this).parents('tr')[0]
+                                    id = row.id
+                                    $.ajax(
+                                      url:"movements/update",
+                                      type: 'POST'
+                                      data: {id:id,columnName:"Clearing Agent Invoice Number",value:value},
+                                      async: false)
+                                      .done((data) ->
+                                        if (data != value)
+                                          value = data
+                                      )
+                                    return value
+                                  , placeholder:"Click to enter"
+                                    },
+                                  {
+                                    type: 'datepicker2',
+                                    event: 'click',
+                                    submit: 'okay',
+                                    tooltip: "yyyy-mm-dd",
+                                    sUpdateURL: (value, settings) ->
+                                      row = $(this).parents('tr')[0]
+                                      id = row.id
+                                      $.ajax(
+                                        url:"movements/update",
+                                        type: 'POST'
+                                        data: {id:id, columnName:"Clearing Agent Invoice Date", value:value}
+                                        async: false
+                                      ).done((data) ->
+                                        value = data
+                                      )
+                                      return value
+                                    , placeholder:"Click to enter"
+                                  },
                                   {sUpdateURL: (value,settings)->
                                     row = $(this).parents('tr')[0]
                                     id = row.id
