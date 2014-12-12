@@ -1,6 +1,7 @@
 class MovementsController < ApplicationController
 
   def index
+    @action = action_name
     @movements = Movement.where.not(status: "container_handed_over_to_KPA").order(:booking_number)
     @show_update = true
     @transporters = TRANSPORTERS.inject({}) {|h, x| h[x] = x; h }
@@ -8,6 +9,7 @@ class MovementsController < ApplicationController
   end
 
   def history
+    @action = action_name
     @movements = Movement.where(status: "container_handed_over_to_KPA").order(:booking_number)
     @transporters = TRANSPORTERS.inject({}) {|h, x| h[x] = x; h }
     @destination_ports = DESTINATION_PORTS.inject({}) {|h, x| h[x] = x; h }

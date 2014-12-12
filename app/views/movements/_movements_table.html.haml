@@ -1,4 +1,4 @@
-%table.table{id: 'movements_table'}
+%table.table{id: "movements_#{@action}_table", class: 'movements_table'}
   %thead
     %th Booking Number
     %th BL Number
@@ -8,6 +8,11 @@
     %th Transporter Payment
     %th Clearing Agent
     %th Clearing Agent Payment
+    - if @action.eql?("history")
+      %th Transporter Invoice Number
+      %th Transporter Invoice Date
+      %th Clearing Agent Invoice Number
+      %th Clearing Agent Invoice Date
     %th Vessel Targeted
     %th Port of Discharge
     %th Container Number
@@ -28,6 +33,11 @@
         %td= element.transporter_payment
         %td= element.clearing_agent
         %td= element.clearing_agent_payment
+        - if @action.eql?("history")
+          %td= element.transporter_invoice_number
+          %td= element.transporter_invoice_date
+          %td= element.clearing_agent_invoice_number
+          %td= element.clearing_agent_invoice_date
         %td.vessel_targeted= element.vessel_targeted
         %td= element.port_of_discharge
         %td= element.container_number
@@ -77,11 +87,11 @@
     link_tag = $(event.relatedTarget)
     id = link_tag.attr('data-movement-id')
 
-    $("#movements_table tr#"+ id + " td.updateStatus .updateStatus").hide()
-    $('#statusModal #truck_number label').text("Truck Number : " + $("#movements_table tr#"+ id + " td.truck_number").text())
+    $("#movements_index_table tr#"+ id + " td.updateStatus .updateStatus").hide()
+    $('#statusModal #truck_number label').text("Truck Number : " + $("#movements_index_table tr#"+ id + " td.truck_number").text())
     $('#statusModal #container_number label').text("Container Number : " + link_tag.attr('data-container-number'))
-    booking_number = $("#movements_table tr#"+ id + " td.booking_number").text()
-    vessel_targeted = $("#movements_table tr#"+ id + " td.vessel_targeted").text()
+    booking_number = $("#movements_index_table tr#"+ id + " td.booking_number").text()
+    vessel_targeted = $("#movements_index_table tr#"+ id + " td.vessel_targeted").text()
     $('#statusModal #movement_booking_number').val booking_number
     $('#statusModal #movement_vessel_targeted').val vessel_targeted
     $('#statusModal form #movement_status').html("")
@@ -91,4 +101,4 @@
     $('#statusModal form').attr('action', "/movements/" + id + "/updateStatus")
 
   $('#statusModal').on 'hide.bs.modal', (event) ->
-    $("#movements_table tr td.updateStatus .updateStatus").show()
+    $("#movements_index_table tr td.updateStatus .updateStatus").show()
