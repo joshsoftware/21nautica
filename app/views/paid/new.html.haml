@@ -1,0 +1,15 @@
+%h3 Payments
+.row
+  = simple_form_for @paid , html: {class: 'form-horizontal'},url: url_for(action: 'create', :controller => 'paid'), method: 'post', defaults: {input_html: {class: 'form-control'}} do |f|
+    .col-md-6
+      = f.input :participants_name, collection: TRANSPORTERS, as: :select, label: 'Vendor Name' , include_blank: false
+      = render '/shared/payments' , f: f
+
+:javascript
+  window.validate_form = function(){
+    $.validate({
+      form: '#new_paid',
+      scrollToTopOnError : false
+    });
+  }
+  validate_form();
