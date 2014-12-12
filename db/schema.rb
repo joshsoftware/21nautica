@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141211095149) do
+ActiveRecord::Schema.define(version: 20141211102330) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -154,6 +154,10 @@ ActiveRecord::Schema.define(version: 20141211095149) do
     t.string   "clearing_agent"
     t.string   "clearing_agent_payment"
     t.string   "transporter_payment"
+    t.date     "transporter_invoice_date"
+    t.string   "transporter_invoice_number"
+    t.date     "clearing_agent_invoice_date"
+    t.string   "clearing_agent_invoice_number"
   end
 
   create_table "users", force: true do |t|
