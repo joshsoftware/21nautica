@@ -151,7 +151,7 @@ datatable_initialize = ->
                                     sUpdateURL: (value,settings)->
                                        row = $(this).parents('tr')[0]
                                        id = row.id
-                                       $.post("movements/update",{id:id,columnName:"Port of destination",value:value})
+                                       $.post("movements/update",{id:id,columnName:"Port of discharge",value:value})
                                        return value
                                      , placeholder:"Click to enter",
                                      fnOnCellUpdated: (sStatus,sValue,settings) ->
@@ -382,7 +382,7 @@ datatable_initialize = ->
                                     sUpdateURL: (value,settings)->
                                        row = $(this).parents('tr')[0]
                                        id = row.id
-                                       $.post("movements/update",{id:id,columnName:"Port of destination",value:value})
+                                       $.post("movements/update",{id:id,columnName:"Port of discharge",value:value})
                                        return value
                                      , placeholder:"Click to enter"
                                     },
