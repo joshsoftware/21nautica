@@ -2,6 +2,8 @@ class BillOfLadingsController < ApplicationController
   # bill_of_ladings/search
   def search
     @bl = BillOfLading.where(bl_number: params[:id]).first
+    @work_order_number = Import.where(bill_of_lading_id: @bl.id.to_s).first.try(&:work_order_number) ||
+    Movement.where(bill_of_lading_id: @bl.id.to_s).first.try(&:w_o_number) unless @bl.nil?
     redirect_to :root, error: "WTF" and return unless @bl
   end
 
@@ -18,7 +20,7 @@ class BillOfLadingsController < ApplicationController
   protected
   def bill_of_ladings_params
     params.require(:bill_of_lading).permit(:bl_number, :payment_ocean, :cheque_ocean,
-                                           :shipping_line, :clearing_agent, 
+                                           :shipping_line, :clearing_agent,
                                            :payment_clearing, :cheque_clearing, :remarks)
   end
 end
