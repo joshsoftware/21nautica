@@ -10,6 +10,7 @@ require "factory_girl_rails"
 require "database_cleaner"
 
 require 'mocha/mini_test'
+SimpleCov.start
 
 DatabaseCleaner.strategy = :transaction
 
