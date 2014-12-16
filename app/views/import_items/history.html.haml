@@ -2,6 +2,7 @@
   %thead
     %th BL Number
     %th Container Number
+    %th Work Order Number
     %th Customer Name
     %th Equipment
     %th Delivery Date
@@ -18,6 +19,7 @@
       %tr{id: item.id}
         %td= item.import.bl_number
         %td= item.container_number
+        %td= item.import.work_order_number
         %td= item.customer_name
         %td= item.import.equipment
         %td= updated_at
