@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141211102330) do
+ActiveRecord::Schema.define(version: 20141216100316) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,13 +20,13 @@ ActiveRecord::Schema.define(version: 20141211102330) do
     t.string   "bl_number"
     t.string   "payment_ocean"
     t.string   "cheque_ocean"
-    t.string   "shipping_line"
     t.string   "clearing_agent"
     t.string   "payment_clearing"
     t.string   "cheque_clearing"
     t.string   "remarks"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "shipping_line"
   end
 
   create_table "customers", force: true do |t|
@@ -142,7 +142,6 @@ ActiveRecord::Schema.define(version: 20141211102330) do
     t.string   "port_of_loading"
     t.date     "estimate_delivery"
     t.string   "movement_type"
-    t.string   "shipping_seal"
     t.string   "custom_seal"
     t.string   "remarks"
     t.string   "status"
