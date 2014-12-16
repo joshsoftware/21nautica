@@ -1,4 +1,4 @@
-%table.table{id: "movements_#{@action}_table", class: 'movements_table'}
+%table.table{id: "movements_index_table", class: 'movements_table'}
   %thead
     %th Booking Number
     %th BL Number
@@ -8,11 +8,6 @@
     %th Transporter Payment
     %th Clearing Agent
     %th Clearing Agent Payment
-    - if @action.eql?("history")
-      %th Transporter Invoice Number
-      %th Transporter Invoice Date
-      %th Clearing Agent Invoice Number
-      %th Clearing Agent Invoice Date
     %th Vessel Targeted
     %th Port of Discharge
     %th Container Number
@@ -33,11 +28,6 @@
         %td= element.transporter_payment
         %td= element.clearing_agent
         %td= element.clearing_agent_payment
-        - if @action.eql?("history")
-          %td= element.transporter_invoice_number
-          %td= element.transporter_invoice_date
-          %td= element.clearing_agent_invoice_number
-          %td= element.clearing_agent_invoice_date
         %td.vessel_targeted= element.vessel_targeted
         %td= element.port_of_discharge
         %td= element.container_number
