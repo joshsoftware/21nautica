@@ -82,7 +82,6 @@ group :test do
   gem 'factory_girl_rails'
   gem 'simplecov'
   gem "codeclimate-test-reporter", require: nil
-  gem 'simplecov'
 end
 gem 'mocha'
 
