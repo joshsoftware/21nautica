@@ -1,4 +1,4 @@
-%h3 Payments
+%h3 Payments Made
 .row
   = simple_form_for @paid , html: {class: 'form-horizontal'},url: url_for(action: 'create', :controller => 'paid'), method: 'post', defaults: {input_html: {class: 'form-control'}} do |f|
     .col-md-6
