@@ -82,10 +82,11 @@ group :test do
   gem 'factory_girl_rails'
   gem 'simplecov'
   gem "codeclimate-test-reporter", require: nil
+  gem 'simplecov'
 end
 gem 'mocha'
 
-group :production do
+group :production, :staging do
   gem 'rails_12factor'
   gem 'unicorn'
 end

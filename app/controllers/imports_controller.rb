@@ -55,8 +55,9 @@ class ImportsController < ApplicationController
   def import_params
     params.require(:import).permit(:equipment, :quantity, :from, :to,
                                    :bl_number, :estimate_arrival, :description,
-                                   :shipping_line, :customer_id, :work_order_number,:remarks,:status,
-                                    import_items_attributes:[:container_number])
+                                   :shipping_line, :customer_id, :rate_agreed, :weight, 
+                                   :work_order_number,:remarks,:status, 
+                                   import_items_attributes:[:container_number])
   end
 
 

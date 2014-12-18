@@ -1,2 +1,60 @@
-= render "movements_table"
+%table.table{id: "movements_history_table", class: 'movements_table'}
+  %thead
+    %th W O Number
+    %th Booking Number
+    %th BL Number
+    %th Customer Name
+    %th Container Number
+    %th Truck Number
+    %th Transporter Name
+    %th Transporter Invoice Number
+    %th Transporter Invoice Date
+    %th Transporter Payment
+    %th Clearing Agent
+    %th Clearing Agent Invoice Number
+    %th Clearing Agent Invoice Date
+    %th Clearing Agent Payment
+    %th Vessel Targeted
+    %th Port of Discharge
+    %th Movement Type
+    %th Shipping Seal
+    %th#btnAddNewRow Status
+    %th Remarks
+  %tbody
+    - @movements.each do |element|
+      - updated_at = status_updated_at(element).localtime
+      %tr{id: element.id}
+        %td= element.w_o_number
+        %td.booking_number= element.booking_number
+        %td= element.bl_number
+        %td= element.customer_name
+        %td= element.container_number
+        %td.truck_number= element.truck_number
+        %td= element.transporter_name
+        %td= element.transporter_invoice_number
+        %td= element.transporter_invoice_date
+        %td= element.transporter_payment
+        %td= element.clearing_agent
+        %td= element.clearing_agent_invoice_number
+        %td= element.clearing_agent_invoice_date
+        %td= element.clearing_agent_payment
+        %td.vessel_targeted= element.vessel_targeted
+        %td= element.port_of_discharge
+        %td= element.movement_type
+        %td= element.shipping_seal
+        %td.updateStatus{class: "text-center"}
+          .updateStatus.h5
+            .status_updated_at
+              = updated_at.to_date.to_formatted_s
+            .status.text-capitalize
+              = element.status.humanize
+              %br
+        %th.remarks.h5
+          = element.remarks
+
+
+:coffeescript
+  @transporters = #{@transporters.to_json}
+  @destination_ports = #{@destination_ports.to_json}
+
 

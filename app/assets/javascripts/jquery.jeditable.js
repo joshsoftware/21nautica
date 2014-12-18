@@ -526,7 +526,7 @@ jQuery.editable.addInputType('datepicker2', {
             var input = jQuery('<input size="15" class="smooth" />');
             settings.onblur = function(e) { };
             input.datepicker({
-                format: 'dd-mm-yyyy',
+                format: 'yyyy-mm-dd',
                 changeMonth: true,
                 changeYear: true,
                 showOn: 'both'

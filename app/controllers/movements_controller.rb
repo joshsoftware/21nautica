@@ -18,7 +18,6 @@ class MovementsController < ApplicationController
     movement = Movement.new(movement_params)
     @export_item = ExportItem.find(params[:export_item_id])
     export = @export_item.export
-    movement.shipping_seal = @export_item.export.shipping_line
     movement.movement_type = @export_item.export.export_type
     if movement.save
       @export_item.movement_id = movement.id

@@ -9,15 +9,15 @@
     %th
   %tbody
     - @import_items.each do |item|
-      - updated_at = status_updated_at(item).strftime("%d-%m-%Y")
+      - updated_at = status_updated_at(item).strftime("%Y-%m-%d")
       - if item.g_f_expiry.nil?
         - g_f_expiry = item.g_f_expiry
       - else
-        - g_f_expiry = item.g_f_expiry.strftime("%d-%m-%Y")
+        - g_f_expiry = item.g_f_expiry.strftime("%Y-%m-%d")
       %tr{id: item.id}
         %td= item.import.bl_number
         %td= item.container_number
-        %td= item.import.customer.name
+        %td= item.customer_name
         %td= g_f_expiry
         %td.emptyReturn{class: "text-center"}
           %button.btn.btn-small.btn-primary{"data-target" => "#context", "data-toggle"=>"modal", "data-after-delivery"=>"empty_return", "data-item-id"=> "#{item.id}"}  Empty Return

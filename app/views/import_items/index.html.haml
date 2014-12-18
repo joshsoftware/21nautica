@@ -13,7 +13,7 @@
   %tbody
     - @import_items.each do |item|
       %tr{id: item.id}
-        %td= item.import.customer.name
+        %td= item.customer_name
         %td= item.import.bl_number
         %td= item.container_number
         %td= item.import.equipment

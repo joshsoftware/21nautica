@@ -82,4 +82,8 @@ class Movement < ActiveRecord::Base
     !export_item.nil? ? self.export_item.export.customer.name : nil
   end
 
+  def shipping_seal
+    self.export_item.export.shipping_line
+  end
+
 end

@@ -1,12 +1,12 @@
-%h3 Update #{@bl.bl_number} Payment details (USD)
+%h3 Update BL #{@bl.bl_number} details (USD) with Work Order #{@work_order_number} :
 .row
   = simple_nested_form_for @bl, html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
     .col-md-6
+      = f.input :shipping_line, disabled: true
       = f.input :payment_ocean
-      = f.input :cheque_ocean
-      = f.input :shipping_line
-      = f.input :payment_clearing
-      = f.input :cheque_clearing
+      = f.input :cheque_ocean, label: "Cheque Number"
+      = f.input :payment_clearing, label: "Clearing Charges" , disabled: @bl.is_export_bl?
+      = f.input :cheque_clearing, label: "Cheque Number" , disabled: @bl.is_export_bl?
       = f.input :remarks
       .form-group
         .col-sm-offset-2.col-sm-2

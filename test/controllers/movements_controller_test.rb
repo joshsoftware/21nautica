@@ -10,6 +10,13 @@ class MovementsControllerTest < ActionController::TestCase
     @export = FactoryGirl.create :export
     @export_item = FactoryGirl.create :export_item
     @bill_of_lading = FactoryGirl.create :bill_of_lading
+    @customer = FactoryGirl.create :customer
+    @movement.export_item = @export_item
+    @export_item.export = @export
+    @export.customer = @customer
+    @export.save!
+    @export_item.save!
+    @movement.save!
   end
 
   test "should get index" do

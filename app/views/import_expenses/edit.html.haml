@@ -2,7 +2,7 @@
 .row
   = simple_nested_form_for @import_item, url: import_item_import_expense_path, html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |of|
     = of.simple_fields_for :import_expenses do |f|
-      .col-md-5.panel-primary
+      .col-md-6.panel-primary
         .panel-heading
           .panel-title #{f.object.category}
         .panel-body
@@ -13,6 +13,7 @@
           - else
             = f.input :name, as: :select, collection: f.object.get_collection
           = f.input :currency, collection: ImportExpense::CURRENCY, as: :select, label: 'Currency', include_blank: false
+          = f.input :invoice_number, as: :string
           = f.input :invoice_date, as: :string, placeholder: 'yyyy-mm-dd'
           - unless %w(Haulage Empty).include?(f.object.category)
             = f.input :delivery_date, as: :string, placeholder: 'yyyy-mm-dd'
