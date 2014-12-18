@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141205072654) do
+ActiveRecord::Schema.define(version: 20141216104508) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,7 +20,6 @@ ActiveRecord::Schema.define(version: 20141205072654) do
     t.string   "bl_number"
     t.string   "payment_ocean"
     t.string   "cheque_ocean"
-    t.string   "shipping_line"
     t.string   "clearing_agent"
     t.string   "payment_clearing"
     t.string   "cheque_clearing"
@@ -87,6 +86,7 @@ ActiveRecord::Schema.define(version: 20141205072654) do
     t.string   "delivery_date"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "invoice_number"
   end
 
   create_table "import_items", force: true do |t|
@@ -129,6 +129,8 @@ ActiveRecord::Schema.define(version: 20141205072654) do
     t.string   "remarks"
     t.string   "clearing_agent"
     t.string   "bill_of_lading_id"
+    t.string   "rate_agreed"
+    t.string   "weight"
   end
 
   create_table "movements", force: true do |t|
@@ -139,7 +141,6 @@ ActiveRecord::Schema.define(version: 20141205072654) do
     t.string   "port_of_loading"
     t.date     "estimate_delivery"
     t.string   "movement_type"
-    t.string   "shipping_seal"
     t.string   "custom_seal"
     t.string   "remarks"
     t.string   "status"
@@ -151,6 +152,10 @@ ActiveRecord::Schema.define(version: 20141205072654) do
     t.string   "clearing_agent"
     t.string   "clearing_agent_payment"
     t.string   "transporter_payment"
+    t.date     "transporter_invoice_date"
+    t.string   "transporter_invoice_number"
+    t.date     "clearing_agent_invoice_date"
+    t.string   "clearing_agent_invoice_number"
   end
 
   create_table "payments", force: true do |t|
