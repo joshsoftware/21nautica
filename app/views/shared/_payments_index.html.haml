@@ -1,0 +1,13 @@
+%table.table.table-hover.table-bordered
+  %h4= @header
+  %thead
+    %th Date
+    %th Reference
+    %th Amount
+
+  %tbody
+    - @paid_payments.each do |payment|
+      %tr
+        %td= payment.date_of_payment
+        %td= payment.reference
+        %td= payment.amount

@@ -4,6 +4,8 @@
     .col-md-6
       = f.input :participants_name, collection: TRANSPORTERS, as: :select, label: 'Vendor Name' , include_blank: false
       = render '/shared/payments' , f: f
+  .col-md-6
+    %div#details_table
 
 :javascript
   window.validate_form = function(){
