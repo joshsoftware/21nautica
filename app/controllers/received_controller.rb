@@ -13,6 +13,16 @@ class ReceivedController < ApplicationController
     end
   end
 
+  def index
+    participants_name = params[:participants_name]
+    @payments = Received.where(participants_name: participants_name)
+    @header = participants_name
+    respond_to do |format|
+      format.js {}
+      format.html {redirect_to :root}
+    end
+  end
+
   private
 
   def paid_params

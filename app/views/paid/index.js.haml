@@ -1,1 +1,1 @@
-$("#details_table").html("#{ escape_javascript(render(partial: 'shared/payments_index', object: @paid_payments, locals: {header: @header} )) }")
+$("#paid_details_table").html("#{ escape_javascript(render(partial: 'shared/payments_index', object: @payments, locals: {header: @header} )) }")

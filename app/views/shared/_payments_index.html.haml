@@ -6,7 +6,7 @@
     %th Amount
 
   %tbody
-    - @paid_payments.each do |payment|
+    - @payments.each do |payment|
       %tr
         %td= payment.date_of_payment
         %td= payment.reference

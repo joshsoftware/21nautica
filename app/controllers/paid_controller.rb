@@ -15,7 +15,7 @@ class PaidController < ApplicationController
 
   def index
     participants_name = params[:participants_name]
-    @paid_payments = Paid.where(participants_name: participants_name)
+    @payments = Paid.where(participants_name: participants_name)
     @header = participants_name
     respond_to do |format|
       format.js {}
