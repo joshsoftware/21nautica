@@ -1,16 +1,10 @@
 module Expense
   class Delta
     def self.generate_report
-      time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
-      package = Axlsx::Package.new
-      workbook = package.workbook
-      ['Import Expenses', 'Export', 'BL Payment'].each do |name|
-        workbook.add_worksheet(name: name)
-      end
+      package, workbook = ReportHelper::add_worksheet
       add_import_expense_data(workbook)
       fetch_bol_export_audits(workbook)
-      package.use_shared_strings = true
-      package.serialize("#{Rails.root}/tmp/Expense_Delta_#{time}.xlsx")
+      ReportHelper::serialize_package(package, "Delta")
     end
 
     def self.add_import_expense_data(workbook)
