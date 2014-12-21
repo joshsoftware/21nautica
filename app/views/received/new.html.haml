@@ -5,7 +5,7 @@
       = f.input :participants_name, collection: Customer.all.collect(&:name), as: :select, label: 'Customer Name' , include_blank: false
       = render '/shared/payments' , f: f
   .col-md-6
-    %div#received_details_table
+    %div#received_details_table.scroll-table
 
 :javascript
   window.validate_form = function(){

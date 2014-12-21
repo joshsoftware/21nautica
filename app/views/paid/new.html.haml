@@ -5,7 +5,7 @@
       = f.input :participants_name, collection: TRANSPORTERS, as: :select, label: 'Vendor Name' , include_blank: false
       = render '/shared/payments' , f: f
   .col-md-6
-    %div#paid_details_table
+    %div#paid_details_table.scroll-table
 
 :javascript
   window.validate_form = function(){
