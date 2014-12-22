@@ -15,8 +15,7 @@ class ReceivedController < ApplicationController
 
   def index
     participants_name = params[:participants_name]
-    @payments = Received.where(participants_name: participants_name)
-    @header = participants_name
+    @payments = Received.where(participants_name: participants_name).order(date_of_payment: :desc)
     respond_to do |format|
       format.js {}
       format.html {redirect_to :root}
