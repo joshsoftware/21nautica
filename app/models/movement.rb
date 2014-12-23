@@ -25,6 +25,7 @@ class Movement < ActiveRecord::Base
 
   has_one :export_item
   belongs_to :bill_of_lading
+  belongs_to :vendor
   validates :truck_number, presence: true
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
 
@@ -84,6 +85,15 @@ class Movement < ActiveRecord::Base
 
   def shipping_seal
     self.export_item.export.shipping_line
+  end
+
+  def transporter_name
+    self.vendor.try(:name)
+  end
+
+  def transporter_name=(transporter_name)
+    vendor_id = Vendor.where(name: transporter_name).first.try(:id)
+    self.vendor_id = vendor_id
   end
 
 end
