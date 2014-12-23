@@ -2,8 +2,10 @@
 .row
   = simple_form_for @received , html: {class: 'form-horizontal'},url: url_for(action: 'create', :controller => 'received'), method: 'post', defaults: {input_html: {class: 'form-control'}} do |f|
     .col-md-6
-      = f.input :participants_name, collection: Customer.all.collect(&:name), as: :select, label: 'Customer Name' , include_blank: false
+      = f.input :customer_id, collection: @customers, as: :select, label: 'Customer Name' , include_blank: false
       = render '/shared/payments' , f: f
+  .col-md-6
+    %div#received_details_table.scroll-table
 
 :javascript
   window.validate_form = function(){
