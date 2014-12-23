@@ -1,7 +1,11 @@
 module Expense
   class Dump
     def self.generate_report
-      ReportHelper::add_worksheet_and_data(Dump)
+      package, workbook = ReportHelper::add_worksheet
+      add_import_expenses_data(workbook.sheet_by_name("Import Expenses"))
+      add_export_data(workbook.sheet_by_name("Export"))
+      add_bl_payment_data(workbook.sheet_by_name("BL Payment"))
+      ReportHelper::serialize_package(package, "Dump")
     end
 
     def self.add_import_expenses_data(sheet)
