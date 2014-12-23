@@ -39,8 +39,10 @@ module Expense
       audits_hash = {}
       audits.each do |audit|
         audit.audited_changes.each do |key,value|
-          (((audits_hash[audit.auditable_type] ||= {}) [audit.auditable_id] ||= 
-            {}) [key] ||= "").concat("\n #{value.second.to_s}")
+          audit_value = (((audits_hash[audit.auditable_type] ||= {}) [audit.auditable_id] ||= 
+            {}) [key] ||= "")
+          key.eql?(:vendor_id) ? audit_value.concat("#{Vendor.where(id: value.second).first.try(:name)} \n") : 
+          audit_value.concat("\n #{value.second.to_s}")
         end 
       end
       add_export_data(workbook.sheet_by_name("Export"),audits_hash["Movement"])
@@ -54,9 +56,10 @@ module Expense
       data.each do |key, value|
         movement = Movement.where(id: key).first
         sheet.add_row [movement.try(:bl_number), movement.try(:container_number), 
-          value[:transporter_name], value[:transporter_payment], value[:clearing_agent], 
-          value[:clearing_agent_payment]], height: 30
-      end
+          value[:vendor_id], value[:transporter_payment], 
+          value[:clearing_agent], value[:clearing_agent_payment]], height: 30
+      end unless data.nil?
+      sheet.column_widths 20,20,20,20,20,20
     end
 
     def self.add_bl_payments_data(sheet, data)
@@ -68,7 +71,7 @@ module Expense
         sheet.add_row [bol.bl_number, bol.is_export_bl? ? "Export" : "Import", 
           value[:payment_ocean], value[:cheque_ocean], value[:payment_clearing], 
           value[:cheque_clearing]],height: 30
-      end
+      end unless data.nil?
     end
  
   end
