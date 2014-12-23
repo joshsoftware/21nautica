@@ -68,7 +68,7 @@ class Movement < ActiveRecord::Base
 
   end
 
-  auditable only: [:status, :remarks, :vendor_id, :transporter_payment,
+  auditable only: [:status, :updated_at, :remarks, :vendor_id, :transporter_payment,
     :clearing_agent, :clearing_agent_payment]
 
   def as_json(options= {})
