@@ -14,7 +14,7 @@ class PaidControllerTest < ActionController::TestCase
 
   test "should create paid payment" do
     assert_difference('Paid.count') do
-      post :create, paid: {amount: 400}
+      post :create, paid: {vendor_id: 1, amount: 400}
     end
     assert_response :redirect
   end

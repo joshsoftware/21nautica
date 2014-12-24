@@ -14,7 +14,7 @@ class ReceivedControllerTest < ActionController::TestCase
 
   test "should create received payment" do
     assert_difference('Received.count') do
-      post :create, received: {amount: 400}
+      post :create, received: {customer_id: 1, amount: 400}
     end
     assert_response :redirect
   end
