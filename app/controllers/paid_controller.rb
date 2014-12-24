@@ -15,9 +15,9 @@ class PaidController < ApplicationController
   end
 
   def index
-    participants_name = params[:participants_name]
-    @payments = Paid.where(participants_name: participants_name).order(date_of_payment: :desc)
-    @header = participants_name
+    vendor_id = params[:vendor_id]
+    @payments = Paid.where(vendor_id: vendor_id).order(date_of_payment: :desc)
+    @header = Vendor.find_by(id: vendor_id).try(:name)
     respond_to do |format|
       format.js {}
       format.html {redirect_to :root}
@@ -27,8 +27,8 @@ class PaidController < ApplicationController
   private
 
   def paid_params
-    params.require(:paid).permit(:participants_name, :date_of_payment,
-            :amount, :mode_of_payment, :reference, :remarks, :vendor_id)
+    params.require(:paid).permit(:date_of_payment, :amount, :mode_of_payment, 
+      :reference, :remarks, :vendor_id)
   end
 
 end
