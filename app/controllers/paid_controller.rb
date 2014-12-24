@@ -1,6 +1,7 @@
 class PaidController < ApplicationController
   def new
     @paid = Paid.new
+    @transporters =  Vendor.pluck(:name,:id).to_h
   end
 
   def create
@@ -27,7 +28,7 @@ class PaidController < ApplicationController
 
   def paid_params
     params.require(:paid).permit(:participants_name, :date_of_payment,
-            :amount, :mode_of_payment, :reference, :remarks)
+            :amount, :mode_of_payment, :reference, :remarks, :vendor_id)
   end
 
 end

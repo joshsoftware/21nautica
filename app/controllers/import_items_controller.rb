@@ -3,7 +3,7 @@ class ImportItemsController < ApplicationController
   def index
     imports = Import.includes(:import_item).where(status: "ready_to_load").select("id")
     @import_items = ImportItem.where(import_id: imports).where.not(status: "delivered")
-    @transporters = TRANSPORTERS.inject({}) {|h, x| h[x] = x; h}
+    @transporters = Vendor.pluck(:name).inject({}) {|h, x| h[x] = x; h}
   end
 
   def update

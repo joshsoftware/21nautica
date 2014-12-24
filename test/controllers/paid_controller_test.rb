@@ -21,7 +21,7 @@ class PaidControllerTest < ActionController::TestCase
 
   test "should not save paid payment without amount" do
     assert_no_difference('Paid.count') do
-      post :create, paid: {participants_name: "ABC"}
+      post :create, paid: {vendor_id: 1}
     end
     assert_response :success
   end

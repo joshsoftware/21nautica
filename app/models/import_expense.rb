@@ -9,7 +9,7 @@ class ImportExpense < ActiveRecord::Base
       when 'Haulage'
         return [self.import_item.transporter_name]
       when 'Empty'
-        return TRANSPORTERS
+        return Vendor.pluck(:name)
       when 'ICD'
         return %w(Maina Multiple)
       when 'Final Clearing'

@@ -3,13 +3,13 @@ class MovementsController < ApplicationController
   def index
     @movements = Movement.where.not(status: "container_handed_over_to_KPA").order(:booking_number)
     @show_update = true
-    @transporters = TRANSPORTERS.inject({}) {|h, x| h[x] = x; h }
+    @transporters = Vendor.pluck(:name).inject({}) {|h, x| h[x] = x; h }
     @destination_ports = DESTINATION_PORTS.inject({}) {|h, x| h[x] = x; h }
   end
 
   def history
     @movements = Movement.where(status: "container_handed_over_to_KPA").order(:booking_number)
-    @transporters = TRANSPORTERS.inject({}) {|h, x| h[x] = x; h }
+    @transporters = Vendor.pluck(:name).inject({}) {|h, x| h[x] = x; h }
     @destination_ports = DESTINATION_PORTS.inject({}) {|h, x| h[x] = x; h }
   end
 

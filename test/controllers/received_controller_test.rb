@@ -21,7 +21,7 @@ class ReceivedControllerTest < ActionController::TestCase
 
   test "should not save received payment without amount" do
     assert_no_difference('Received.count') do
-      post :create, received: {participants_name: "ABC"}
+      post :create, received: {customer_id: 1}
     end
     assert_response :success
   end

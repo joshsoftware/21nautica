@@ -21,6 +21,7 @@ class ImportItem < ActiveRecord::Base
   include EspinitaPatch
 
   belongs_to :import
+  belongs_to :vendor
   has_many :import_expenses, dependent: :destroy
 
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
@@ -82,5 +83,14 @@ class ImportItem < ActiveRecord::Base
   end
 
   auditable only: [:status, :updated_at, :current_location, :remarks]
+
+  def transporter_name
+    self.vendor.try(:name)
+  end
+
+  def transporter_name=(transporter_name)
+    vendor_id = Vendor.where(name: transporter_name).first.try(:id)
+    self.vendor_id = vendor_id
+  end
 
 end

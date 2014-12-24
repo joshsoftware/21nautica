@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141216104508) do
+ActiveRecord::Schema.define(version: 20141224091643) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,12 +102,12 @@ ActiveRecord::Schema.define(version: 20141216104508) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "remarks"
-    t.string   "transporter_name"
     t.string   "yard_name"
     t.datetime "g_f_expiry"
     t.datetime "close_date"
     t.string   "after_delivery_status"
     t.string   "context"
+    t.integer  "vendor_id"
   end
 
   create_table "imports", force: true do |t|
@@ -146,7 +146,6 @@ ActiveRecord::Schema.define(version: 20141216104508) do
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "transporter_name"
     t.string   "w_o_number"
     t.string   "bill_of_lading_id"
     t.string   "clearing_agent"
@@ -156,10 +155,10 @@ ActiveRecord::Schema.define(version: 20141216104508) do
     t.string   "transporter_invoice_number"
     t.date     "clearing_agent_invoice_date"
     t.string   "clearing_agent_invoice_number"
+    t.integer  "vendor_id"
   end
 
   create_table "payments", force: true do |t|
-    t.string   "participants_name"
     t.date     "date_of_payment"
     t.integer  "amount"
     t.string   "mode_of_payment"
@@ -168,6 +167,8 @@ ActiveRecord::Schema.define(version: 20141216104508) do
     t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "customer_id"
+    t.integer  "vendor_id"
   end
 
   create_table "users", force: true do |t|
@@ -198,5 +199,11 @@ ActiveRecord::Schema.define(version: 20141216104508) do
   add_index "users", ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
   add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "vendors", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end
