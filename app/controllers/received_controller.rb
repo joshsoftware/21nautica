@@ -15,8 +15,9 @@ class ReceivedController < ApplicationController
   end
 
   def index
-    participants_name = params[:participants_name]
-    @payments = Received.where(participants_name: participants_name).order(date_of_payment: :desc)
+    customer_id = params[:customer_id]
+    @payments = Received.where(customer_id: customer_id).order(date_of_payment: :desc)
+    @header = Customer.find_by(id: customer_id).try(:name)
     respond_to do |format|
       format.js {}
       format.html {redirect_to :root}
@@ -26,8 +27,8 @@ class ReceivedController < ApplicationController
   private
 
   def paid_params
-    params.require(:received).permit(:participants_name, :date_of_payment,
-            :amount, :mode_of_payment, :reference, :remarks, :customer_id)
+    params.require(:received).permit(:date_of_payment, :amount, 
+      :mode_of_payment, :reference, :remarks, :customer_id)
   end
 
 end
