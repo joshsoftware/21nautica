@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141222131050) do
+ActiveRecord::Schema.define(version: 20141224091643) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,7 +102,6 @@ ActiveRecord::Schema.define(version: 20141222131050) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "remarks"
-    t.string   "transporter_name"
     t.string   "yard_name"
     t.datetime "g_f_expiry"
     t.datetime "close_date"
@@ -156,12 +155,10 @@ ActiveRecord::Schema.define(version: 20141222131050) do
     t.string   "transporter_invoice_number"
     t.date     "clearing_agent_invoice_date"
     t.string   "clearing_agent_invoice_number"
-    t.string   "transporter_name"
     t.integer  "vendor_id"
   end
 
   create_table "payments", force: true do |t|
-    t.string   "participants_name"
     t.date     "date_of_payment"
     t.integer  "amount"
     t.string   "mode_of_payment"
