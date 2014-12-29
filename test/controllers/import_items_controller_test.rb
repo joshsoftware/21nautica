@@ -8,6 +8,7 @@ class ImportItemsControllerTest < ActionController::TestCase
     @import_item1 = FactoryGirl.create :import_item1
     @import_item2 = FactoryGirl.create :import_item2
     @import_item3 = FactoryGirl.create :import_item3
+    @vendor = FactoryGirl.create :vendor
     @import.status = "ready_to_load"
     @import.save
     @import_item1.import = @import
@@ -106,5 +107,13 @@ class ImportItemsControllerTest < ActionController::TestCase
     @import_item2.reload
     assert_not_equal 'TR23', @import_item2.truck_number
   end
+
+  test "should update transporter_name" do
+    xhr :post, :update, { id: @import_item2.id, columnName: 'Transporter Name',
+                          value: 'Mansons'}
+    @import_item2.reload
+    assert_equal 'Mansons', @import_item2.transporter_name
+  end
+
 end
 
