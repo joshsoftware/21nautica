@@ -13,7 +13,7 @@ class BillOfLadingsController < ApplicationController
     if @bl.update_attributes(bill_of_ladings_params)
       redirect_to :root
     else
-      render :edit
+      render :search
     end
   end
 
