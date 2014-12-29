@@ -8,6 +8,7 @@ class ExportsController < ApplicationController
     cust_array = Customer.all.select(:id , :name).to_a
     @customers = cust_array.inject({}) {|h,x| h[x.id] = x.name; h}
     @equipment = EQUIPMENT_TYPE.inject({}) {|h, x| h[x] = x; h}   
+    @transporters = Vendor.pluck(:name)
     if request.xhr?
       render json: @export_items.to_json
     end
