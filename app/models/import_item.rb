@@ -93,4 +93,17 @@ class ImportItem < ActiveRecord::Base
     self.vendor_id = vendor_id
   end
 
+  def work_order_number
+    self.import.work_order_number
+  end
+
+  def equipment_type
+    self.import.equipment
+  end
+
+  def as_json(options= {})
+    super(only: [:container_number, :id], methods: [:bl_number, :customer_name, 
+      :work_order_number, :equipment_type])
+  end
+
 end

@@ -1,12 +1,26 @@
 %h3 Multiple Entries found. Choose one
+%div.bg-info
+  %input#searchbox{placeholder: "Search..."}
+%br
 
-%table.table.table-striped
+%table.table.table-striped.table-bordered
   %th BL Number
   %th Container
   %th Work Order Number
-  %tbody
-    - @import_items.each do |item|
+  %th Equipment Type
+  %th Customer Number
+  %tbody#search_result
+    %script#search_result_template{:type => "text/html"}
       %tr
-        %td= link_to item.bl_number, edit_import_item_import_expense_path(item)
-        %td= item.container_number
-        %td= item.import.work_order_number
+        %td 
+          <a href="/import_items/<%= id %>/import_expense/edit" > <%= bl_number%> </a>
+        %td <%= container_number %>
+        %td <%= work_order_number %>
+        %td <%= equipment_type %>
+        %td <%= customer_name %>
+
+:javascript
+  var items = #{@import_items.to_json};
+  $(document).on('ready page:load', function(){
+    filterInit();
+  })
