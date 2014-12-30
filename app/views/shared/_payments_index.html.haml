@@ -1,13 +1,20 @@
-%table.table.table-hover.table-bordered
-  %h4= @header
+%table.table.table-hover.table-bordered#payment_details_table
+  %h4.col-sm-4= @header
+  %div.col-sm-4
+    = select_tag(:filter_by_days_select, options_for_select(get_date_range), class: "form-control")
   %tr.info
     %th Date
     %th Reference
     %th Amount
 
-  %tbody
-    - @payments.each do |payment|
+  %tbody#payment_search_result
+    %script#payment_search_result_template{:type => "text/html"}
       %tr
-        %td= payment.date_of_payment
-        %td= payment.reference
-        %td= payment.amount
+        %td <%= date_of_payment %>
+        %td <%= reference %>
+        %td <%= amount %>
+
+:javascript
+  payments = #{@payments.to_json}
+  PaidFilterInt();
+  
