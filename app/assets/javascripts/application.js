@@ -30,3 +30,10 @@ $(document).ready(function(){
 })
 
 
+function PaymentFilterInit(){
+  var FJS = FilterJS(payments, '#payment_search_result', {
+    template: '#payment_search_result_template',
+    search: {}
+  });
+  FJS.addCriteria({field: 'date_of_payment', ele: '#filter_by_days_select', type: 'range'});
+}
