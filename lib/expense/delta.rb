@@ -1,9 +1,12 @@
 module Expense
   class Delta
     def self.generate_report
-      package, workbook = ReportHelper::add_worksheet
+      package, workbook = ReportHelper::add_worksheet(['Import Expenses', 'Export', 
+        'BL Payment', 'payments Made', 'payments Rcvd'])
       add_import_expense_data(workbook)
       fetch_bol_export_audits(workbook)
+      add_payments_data(workbook.sheet_by_name("payments Made"), "Paid".constantize)
+      add_payments_data(workbook.sheet_by_name("payments Rcvd"), "Received".constantize)
       ReportHelper::serialize_package(package, "Delta")
     end
 
@@ -73,6 +76,17 @@ module Expense
           value[:cheque_clearing]],height: 30
       end unless data.nil?
     end
- 
+
+    def self.add_payments_data(sheet, class_name)
+      sheet.add_row ["Date", class_name.to_s.eql?("Paid") ? "Vendor Name" : "customer Name", 
+        "Amount", "Remarks"]
+      payments = class_name.where(created_at: 1.day.ago..Time.now.utc)
+      payments.each do |payment|
+        sheet.add_row [payment.date_of_payment, 
+          class_name.to_s.eql?("Paid") ? payment.vendor.name : payment.customer.name, 
+          payment.amount, payment.remarks]
+      end
+    end
+
   end
 end

@@ -1,8 +1,8 @@
 module ReportHelper
-  def ReportHelper.add_worksheet
+  def ReportHelper.add_worksheet(sheet_names)
     package = Axlsx::Package.new
     workbook = package.workbook
-    ['Import Expenses', 'Export', 'BL Payment'].each do |name|
+    sheet_names.each do |name|
       workbook.add_worksheet(name: name)
     end
     return package, workbook
