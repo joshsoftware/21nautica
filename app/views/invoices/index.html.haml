@@ -1,0 +1,26 @@
+%table.table.table-hover.table-bordered
+  %tr.info
+    %th Customer Name
+    %th Invoice Number
+    %th Invoiced Date
+    %th BL Number
+    %th Document Number
+    %th Invoice Amount
+    %th Status
+    %th Actions
+
+  %tbody
+    - @invoices.each do |invoice|
+      %tr
+        %td= invoice.customer.try(:name)
+        %td= invoice.number
+        %td= invoice.date
+        %td= invoice.bill_of_lading.bl_number
+        %td= invoice.document_number   
+        %td= invoice.amount
+        %td= invoice.status
+        %td
+          %button.btn.btn-small.btn-link Update
+          %button.btn.btn-small.btn-link Send
+          %button.btn.btn-small.btn-link Download
+          %button.btn.btn-small.btn-link Additional Invoice
