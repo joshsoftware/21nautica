@@ -1,3 +1,8 @@
+%h3 Invoices
+%div.bg-info
+  %input#invoices_searchbox{placeholder: "Search..."}
+%br
+
 %table.table.table-hover.table-bordered
   %tr.info
     %th Customer Name
@@ -9,18 +14,24 @@
     %th Status
     %th Actions
 
-  %tbody
-    - @invoices.each do |invoice|
+  %tbody#invoices_search_result
+    %script#invoices_search_result_template{:type => "text/html"}
       %tr
-        %td= invoice.customer.try(:name)
-        %td= invoice.number
-        %td= invoice.date
-        %td= invoice.bill_of_lading.bl_number
-        %td= invoice.document_number   
-        %td= invoice.amount
-        %td= invoice.status
+        %td <%= customer_name %>
+        %td <%= number %>
+        %td <%= date %>
+        %td <%= bl_number %>
+        %td <%= document_number %>   
+        %td <%= amount %>
+        %td <%= status %>
         %td
           %button.btn.btn-small.btn-link Update
           %button.btn.btn-small.btn-link Send
           %button.btn.btn-small.btn-link Download
           %button.btn.btn-small.btn-link Additional Invoice
+
+:javascript
+  var invoices = #{@invoices.to_json};
+  $(document).on('ready page:load', function(){
+    InvoiceFilterInit();
+  })

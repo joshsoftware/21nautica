@@ -3,6 +3,7 @@ class Invoice < ActiveRecord::Base
 
   belongs_to :customer
   belongs_to :bill_of_lading
+  delegate :bl_number, to: :bill_of_lading
 
   aasm column: 'status' do
     state :new, initial: true
@@ -17,4 +18,13 @@ class Invoice < ActiveRecord::Base
       transitions from: :ready, to: :sent
     end
   end 
+
+  def customer_name
+    self.customer.name
+  end
+
+  def as_json(options={})
+    super(methods: [:bl_number, :customer_name])
+  end 
+
 end
