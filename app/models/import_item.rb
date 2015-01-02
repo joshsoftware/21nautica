@@ -125,7 +125,8 @@ class ImportItem < ActiveRecord::Base
     bill_of_lading = self.find_bill_of_lading
     invoice = bill_of_lading.invoice
     return if (invoice && invoice.status.eql?("ready"))
-    (bill_of_lading.build_invoice(date: Date.current); bill_of_lading.save!) unless bill_of_lading.invoice
+    (bill_of_lading.build_invoice(date: Date.current, 
+      customer_id: self.import.customer_id); bill_of_lading.save!) unless bill_of_lading.invoice
     status = self.find_all_containers_status
     bill_of_lading.invoice.invoice_ready! unless status.include?("under_loading_process")
   end
