@@ -33,4 +33,22 @@ class ImportItemTest < ActiveSupport::TestCase
                         " TR123 is not free !")
   end
 
+  test "NEW invoice if loaded out of port and invoice not already present" do
+  end
+
+  test "READY invoice if loaded out of port and truck assigned to rest containers" do
+  end
+
+  test "do nothing if loaded out of port but invoice is already ready" do
+  end
+
+  test "READY invoice if truck is allocated to all containers and invoice present" do
+  end
+
+  test "No invoice if, only truck allocated to all containers and no container is ready to load" do
+  end
+
+  test "date of Invoice should be the date of Loaded_out_of_Port for the first container" do
+  end
+  
 end

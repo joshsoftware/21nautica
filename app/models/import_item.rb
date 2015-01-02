@@ -56,11 +56,11 @@ class ImportItem < ActiveRecord::Base
     state :arrived_at_kampala
     state :delivered
 
-    event :allocate_truck do
+    event :allocate_truck, :after => :check_rest_of_the_containers do
       transitions from: :under_loading_process, to: :truck_allocated
     end
 
-    event :loaded_out_of_port do
+    event :loaded_out_of_port, :after => :check_for_invoice do
       transitions from: :truck_allocated, to: :loaded_out_of_port
     end
 
@@ -104,6 +104,30 @@ class ImportItem < ActiveRecord::Base
   def as_json(options= {})
     super(only: [:container_number, :id], methods: [:bl_number, :customer_name, 
       :work_order_number, :equipment_type])
+  end
+
+  def find_bill_of_lading
+    BillOfLading.where(bl_number: self.bl_number).first
+  end
+
+  def find_all_containers_status
+    ImportItem.where(import_id: self.import_id).pluck(:status)
+  end
+
+  def check_rest_of_the_containers
+    bill_of_lading = self.find_bill_of_lading
+    status = self.find_all_containers_status
+    bill_of_lading.invoice.invoice_ready! if 
+      (!status.include?("under_loading_process") && status.include?("loaded_out_of_port"))
+  end
+
+  def check_for_invoice
+    bill_of_lading = self.find_bill_of_lading
+    invoice = bill_of_lading.invoice
+    return if (invoice && invoice.status.eql?("ready"))
+    (bill_of_lading.build_invoice(date: Date.current); bill_of_lading.save!) unless bill_of_lading.invoice
+    status = self.find_all_containers_status
+    bill_of_lading.invoice.invoice_ready! unless status.include?("under_loading_process")
   end
 
 end
