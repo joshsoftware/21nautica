@@ -18,7 +18,7 @@ module Expense
                      "Demurrage Name", "Demurrage Amount", "ICD name",
                      "ICD amount"]
       audits = Espinita::Audit.where(created_at: 1.day.ago..Time.now.utc, 
-        auditable_type: "ImportExpense")
+        auditable_type: "ImportExpense", action: "update")
       audits_hash = {}
       audits.each do |audit|
         import_item = audit.auditable.import_item.id
