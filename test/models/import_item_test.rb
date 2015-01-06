@@ -42,7 +42,8 @@ class ImportItemTest < ActiveSupport::TestCase
   test "do nothing if loaded out of port but invoice is already ready" do
   end
 
-  test "READY invoice if truck is allocated to all containers and invoice present" do
+  test "for multiple containers,READY invoice if state of container changed to :truck_allocated, invoice present
+  (at least one container is loaded out of port) and no container is in :under_loading_process state" do
   end
 
   test "No invoice if, only truck allocated to all containers and no container is ready to load" do
@@ -51,4 +52,6 @@ class ImportItemTest < ActiveSupport::TestCase
   test "date of Invoice should be the date of Loaded_out_of_Port for the first container" do
   end
   
+  test "READY invoice if loaded out of port and invoice not already present and BL has only one container" do
+  end
 end

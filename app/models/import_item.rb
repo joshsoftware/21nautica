@@ -118,7 +118,7 @@ class ImportItem < ActiveRecord::Base
     bill_of_lading = self.find_bill_of_lading
     status = self.find_all_containers_status
     bill_of_lading.invoice.invoice_ready! if 
-      (!status.include?("under_loading_process") && status.include?("loaded_out_of_port"))
+      (!status.include?("under_loading_process") && bill_of_lading.invoice.present?)
   end
 
   def check_for_invoice
