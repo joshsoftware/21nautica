@@ -17,12 +17,15 @@ module Expense
                      "Final Clearing Name", "Final Clearing Amount",
                      "Demurrage Name", "Demurrage Amount", "ICD name",
                      "ICD amount"]
-      audits = Espinita::Audit.where(created_at: 1.day.ago..Time.now.utc, auditable_type: "ImportExpense")
+      audits = Espinita::Audit.where(created_at: 1.day.ago..Time.now.utc, 
+        auditable_type: "ImportExpense")
       audits_hash = {}
       audits.each do |audit|
         import_item = audit.auditable.import_item.id
         category = audit.auditable.category
-        audit.audited_changes.each do |key,value|
+        changes = audit.audited_changes
+        next if (changes.length.eql?(1) && changes.include?(:updated_at)) 
+        changes.each do |key,value|
           ((audits_hash[import_item] ||= {}) [category + 
             "_" + key.to_s] ||= " ").concat("\n #{value.second.to_s}")
         end 
@@ -38,10 +41,12 @@ module Expense
 
     def self.fetch_bol_export_audits(workbook)
       audits = Espinita::Audit.where(created_at: 1.day.ago..Time.now.utc, 
-        auditable_type: ["Movement", "BillOfLading"])
+        auditable_type: ["Movement", "BillOfLading"], action: "update")
       audits_hash = {}
       audits.each do |audit|
-        audit.audited_changes.each do |key,value|
+        changes = audit.audited_changes
+        next if (changes.length.eql?(1) && changes.include?(:updated_at)) 
+        changes.each do |key,value|
           audit_value = (((audits_hash[audit.auditable_type] ||= {}) [audit.auditable_id] ||= 
             {}) [key] ||= "")
           key.eql?(:vendor_id) ? audit_value.concat("#{Vendor.where(id: value.second).first.try(:name)} \n") : 
