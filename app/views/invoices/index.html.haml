@@ -3,7 +3,7 @@
   %input#invoices_searchbox{placeholder: "Search..."}
 %br
 
-%table.table.table-hover.table-bordered
+%table.table.table-hover.table-bordered#invoices_index_table
   %tr.info
     %th Customer Name
     %th Invoice Number
@@ -16,22 +16,51 @@
 
   %tbody#invoices_search_result
     %script#invoices_search_result_template{:type => "text/html"}
-      %tr
-        %td <%= customer_name %>
-        %td <%= number %>
-        %td <%= date %>
-        %td <%= bl_number %>
-        %td <%= document_number %>   
-        %td <%= amount %>
-        %td <%= status %>
-        %td
-          %button.btn.btn-small.btn-link Update
-          %button.btn.btn-small.btn-link Send
-          %button.btn.btn-small.btn-link Download
-          %button.btn.btn-small.btn-link Additional Invoice
+      <tr invoice_id= '<%= id %>'>
+      %td.customer <%= customer_name %>
+      %td.number <%= number %>
+      %td.date <%= date %>
+      %td.bl_num <%= bl_number %>
+      %td.document_num <%= document_number %>   
+      %td.amount <%= amount %>
+      %td <%= status %>
+      %td
+        <button class="btn btn-small btn-primary" data-target="#invoiceUpdateModal" data-toggle="modal", data-invoice-id='<%= id %>'> Update </button>
+        %button.btn.btn-small.btn-primary Send
+        %button.btn.btn-small.btn-primary Download
+        %button.btn.btn-small.btn-primary Additional Invoice
+      </tr>
+
+#invoiceUpdateModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    = simple_form_for(:invoice, url: '', method: :patch, html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+      .modal-content
+        .modal-header
+          = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+          %h1.modal-title Update Invoice
+
+        .modal-body
+          #customer_name
+            = f.label :customer_name
+          #bl_number
+            = f.label :bl_number
+          #invoiced_date
+            =f.label :invoiced_date
+          #invoice_number
+            =f.input :number, as: :text
+          #document_number
+            = f.input :document_number, as: :text
+          #invoice_amount
+            = f.input :amount, as: :text
+
+        .modal-footer
+          = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+          = f.submit 'Save', class: 'btn btn-primary'
 
 :javascript
   var invoices = #{@invoices.to_json};
   $(document).on('ready page:load', function(){
     InvoiceFilterInit();
-  })
+    loadupdatemodal();
+  });
+

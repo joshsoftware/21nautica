@@ -1,0 +1,10 @@
+$('#invoiceUpdateModal .alert').remove();
+- if @error.present?
+  -@error.each do |msg|
+    $('#invoiceUpdateModal .modal-body').append("<div class='alert alert-danger'>#{msg}</div>");
+- else
+  $('#invoiceUpdateModal').modal('hide')
+  row = $("#invoices_index_table tr[invoice_id= '" + #{@id} + "']")
+  $(row).find("td.number").text("#{@number}")
+  $(row).find("td.document_num").text("#{@document_number}")
+  $(row).find("td.amount").text("#{@amount}")
