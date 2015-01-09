@@ -1,0 +1,6 @@
+$('#AdditionalInvoiceModal .alert').remove();
+- if @error.present?
+  -@error.each do |msg|
+    $('#AdditionalInvoiceModal .modal-body').append("<div class='alert alert-danger'>#{msg}</div>");
+- else
+  $('#AdditionalInvoiceModal').modal('hide')

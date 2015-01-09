@@ -29,4 +29,9 @@
 
     $('#invoiceUpdateModal form').attr('action', "/invoices/" + id )
     $('#invoiceUpdateModal .alert').remove()
-    
+
+@load_additional_invoice_modal = ->
+  $('#AdditionalInvoiceModal').on 'show.bs.modal', (event) ->
+    link_tag = $(event.relatedTarget)
+    id = link_tag.attr('data-invoice-id')
+    $('#AdditionalInvoiceModal form').attr('action', "/invoices/" + id + "/additional-invoice")

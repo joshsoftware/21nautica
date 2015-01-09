@@ -1,6 +1,6 @@
 class InvoicesController < ApplicationController
   def index
-    @invoices = Invoice.all
+    @invoices = Invoice.where(previous_invoice_id: nil)
   end
 
   def update
@@ -14,6 +14,13 @@ class InvoicesController < ApplicationController
     else 
       @error = invoice.errors.full_messages
     end
+  end
+
+  def additional_invoice
+    previous_invoice = Invoice.find(params[:id])
+    invoice = Invoice.create(invoice_params)
+    invoice.previous_invoice = previous_invoice
+    @error = invoice.errors.full_messages unless invoice.save
   end
 
   private
