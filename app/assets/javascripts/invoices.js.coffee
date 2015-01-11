@@ -13,7 +13,7 @@
     link_tag = $(event.relatedTarget)
     id = link_tag.attr('data-invoice-id')
     row = $("#invoices_index_table tr[invoice_id= '" + id + "']")
-    
+    console.log($(row).find("td.customer").text())    
     $('#invoiceUpdateModal #customer_name label').text("Customer Name : 
     " + $(row).find("td.customer").text())
     

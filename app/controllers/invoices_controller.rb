@@ -1,6 +1,6 @@
 class InvoicesController < ApplicationController
   def index
-    @invoices = Invoice.where(previous_invoice_id: nil)
+    @invoices = Invoice.all
   end
 
   def update
@@ -18,9 +18,12 @@ class InvoicesController < ApplicationController
 
   def additional_invoice
     previous_invoice = Invoice.find(params[:id])
-    invoice = Invoice.create(invoice_params)
-    invoice.previous_invoice = previous_invoice
-    @error = invoice.errors.full_messages unless invoice.save
+    @invoice = Invoice.create(invoice_params)
+    @invoice.date = Date.current
+    @invoice.previous_invoice = previous_invoice
+    @invoice.customer = previous_invoice.customer
+    @invoice.bill_of_lading = previous_invoice.bill_of_lading
+    @error = invoice.errors.full_messages unless @invoice.save
   end
 
   private
