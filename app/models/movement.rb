@@ -71,6 +71,12 @@ class Movement < ActiveRecord::Base
   auditable only: [:status, :updated_at, :remarks, :vendor_id, :transporter_payment,
     :clearing_agent, :clearing_agent_payment]
 
+  def ready_haulage_export_invoice
+    invoice = Invoice.create(date: Date.current)
+    invoice.customer = self.export_item.export.customer
+    invoice.invoice_ready!
+  end
+
   def as_json(options= {})
     super(methods: [:container_number])
   end

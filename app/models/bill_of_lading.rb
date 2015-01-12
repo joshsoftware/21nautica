@@ -13,4 +13,14 @@ class BillOfLading < ActiveRecord::Base
   def shipping_line
     self.import.try(&:shipping_line) || self.movements.first.try(&:shipping_seal)
   end
+
+  def ready_TBL_export_invoice
+    invoice_date = self.movements.minimum(:created_at)
+    customer = self.movements.first.export_item.export.customer
+    invoice = Invoice.create(date: invoice_date)
+    invoice.bill_of_lading = self
+    invoice.customer = customer
+    invoice.invoice_ready!
+  end
+
 end

@@ -29,6 +29,7 @@ class MovementsController < ApplicationController
       export[:moved] = @moved_count
       @id = export.id
       export.save
+      movement.ready_haulage_export_invoice if movement.movement_type.eql?('Haulage')
     else
       @error = movement.errors.full_messages
     end

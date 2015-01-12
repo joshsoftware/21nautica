@@ -11,6 +11,7 @@ class BillOfLadingsController < ApplicationController
   def update
     @bl = BillOfLading.find(params[:id])
     if @bl.update_attributes(bill_of_ladings_params)
+      @bl.ready_TBL_export_invoice if (@bl.is_export_bl? && @bl.invoice.blank?)
       redirect_to :root
     else
       render :search
