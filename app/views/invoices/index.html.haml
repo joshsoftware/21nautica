@@ -27,7 +27,7 @@
       %td
         <button class="btn btn-small btn-primary" data-target="#invoiceUpdateModal" data-toggle="modal", data-invoice-id='<%= id %>'> Update </button>
         %button.btn.btn-small.btn-primary Send
-        %button.btn.btn-small.btn-primary Download
+        <a class="btn btn-small btn-primary" href="/invoices/<%= id %>/download.pdf" > Download </a>
         <button class="btn btn-small btn-primary" data-target="#AdditionalInvoiceModal" data-toggle="modal",
         data-invoice-id='<%= id %>'> Additional Invoice </button>
       </tr>

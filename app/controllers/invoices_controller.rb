@@ -26,6 +26,15 @@ class InvoicesController < ApplicationController
     @error = invoice.errors.full_messages unless @invoice.save
   end
 
+  def download
+    @invoice = Invoice.find(params[:id])
+    html = render_to_string(:action => 'download.html.haml', :layout=> false)
+    kit = PDFKit.new(html) 
+    respond_to do |format|
+      format.pdf {send_data(kit.to_pdf, :filename => 'invoice.pdf', :type => 'application/pdf')}
+    end
+  end
+
   private
   def invoice_params
     params.require(:invoice).permit(:number, :document_number, :amount)

@@ -61,6 +61,7 @@ Rails.application.routes.draw do
   resources :invoices, only: [:index, :update] do
     member do
       post 'additional-invoice'
+      get 'download'
     end
   end
   # Example of regular route:
