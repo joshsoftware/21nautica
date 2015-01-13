@@ -45,7 +45,7 @@ module Expense
       audits_hash = {}
       audits.each do |audit|
         changes = audit.audited_changes
-        next if (changes.length.eql?(1) && changes.include?(:updated_at)) 
+        next if ((changes.length.eql?(1) && changes.include?(:updated_at)) || changes.include?(:status))
         changes.each do |key,value|
           audit_value = (((audits_hash[audit.auditable_type] ||= {}) [audit.auditable_id] ||= 
             {}) [key] ||= "")
