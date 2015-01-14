@@ -1,8 +1,96 @@
-%table{border: '2px'}
-  %thead
-    %th ID
-    %th Customer
-  %tbody
-    %tr
-      %td= @invoice.id
-      %td= @invoice.customer_name
+%div#invoice_pdf
+  //%div.rectangle LOGO
+  //%center
+  //  =image_tag("#{HOST}/images/i.jpg", width: 100, height: 100)
+  %br
+  %table.invoice{border: '1'}
+    %thead
+      %th{colspan: "4", style: "text-align:center"} INVOICE
+    %tbody
+      %tr
+        %td{colspan: "2"}
+          #{@invoice.customer_name} 
+          %br/
+          Address: ?
+          %p
+          Container Number: ?
+          %br/ 
+          BL Number: #{@invoice.bl_number} 
+          %br/
+          Equipment Type: ? 
+          %br/
+          X Qty: ? 
+          %br/
+          Job Number: ?
+        %td{colspan: "2", valign: "top"}
+          Inv Number: #{@invoice.number}
+          %br/
+          Inv Date: #{@invoice.date}
+          %br/
+          BL Number: #{@invoice.bl_number} 
+          %br/
+          Pick Up Location: ? 
+          %br/
+          Destination: ?
+      %tr
+        %td{colspan: "4", height: '20px'}
+      %tr
+        %th{style: "text-align:center"}  Particulars
+        %th Qty
+        %th Rate
+        %th Total
+      %tr
+        %td{rowspan: "3", style: "text-align:center"} 
+          Haulage Charges
+          %br/
+          Ocean Freight
+          %br/
+          Local Clearing
+        %td 
+        %td  
+        %td 
+      %tr
+        %td 
+        %td 
+        %td  
+      %tr
+        %td  
+        %td  
+        %td 
+      %tr{height: "40px"}
+        %td{colspan: "3", style: "text-align:center"} subtotal
+        %td  
+      %tr
+        %td{colspan: "3", style: "text-align:center"} Figure In WORDS
+        %td Figure
+      %tr
+        %td{colspan: "4"}
+          TotalE. & O.E.
+          %br/
+          PAN NO: AAACZ6633M
+          %br/
+          SERVICE TAX NO: AAACZ6633MSD002
+          %br/
+          %br/
+          %b Terms & Conditions:
+          %ol
+            %li
+              1. Payment should be made by A/C Payee cheque or draft in favour of “21 Nautica Logistics Limited” or by NEFT / RTGS into:
+              %br/
+              Account Name: 21 Nautica Logistics Limited
+              %br/
+              Account Number: 8500000057
+              %br/
+              Bank: Imperial Bank ( Uganda ) Limited
+              %br/
+              Branch: Kampala , Uganda
+              %br/
+              Swift Code: IMPLUGKA
+            %li   
+              Our liability will never exceed the liability of the carrier, railways, transporter who have a part in the entire act of carriage of cargo
+            %li
+              Any errors or omissions must be brought to our notice within 3 days of receipt of this bill, failing which the contents of this invoice shall be deemed to have been accepted by the customer.
+      %tr
+        %td{colspan: "2"} Company Address
+        %td{colspan: "2"}
+          %b Stamp & signature

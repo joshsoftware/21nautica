@@ -29,7 +29,8 @@ class InvoicesController < ApplicationController
   def download
     @invoice = Invoice.find(params[:id])
     html = render_to_string(:action => 'download.html.haml', :layout=> false)
-    kit = PDFKit.new(html) 
+    kit = PDFKit.new(html)
+    kit.stylesheets << "#{Rails.root}/app/assets/stylesheets/invoices.css.scss"
     respond_to do |format|
       format.pdf {send_data(kit.to_pdf, :filename => 'invoice.pdf', :type => 'application/pdf')}
     end
