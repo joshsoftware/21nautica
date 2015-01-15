@@ -34,8 +34,8 @@ module Expense
         import_item = ImportItem.where(id: key).first
         sheet.add_row [import_item.try(:bl_number), import_item.try(:container_number), 
           value["Haulage_name"], value["Haulage_amount"], value["Empty_name"], value["Empty_amount"], 
-          value["Final Clearing_name"], value["Final Clearing_amount"], value["Demurrage_amount"], 
-          value["Demurrage_name"], value["ICD_name"], value["ICD_amount"]], height: 30
+          value["Final Clearing_name"], value["Final Clearing_amount"], value["Demurrage_name"],
+          value["Demurrage_amount"], value["ICD_name"], value["ICD_amount"]], height: 30
       end
     end
 
@@ -64,8 +64,10 @@ module Expense
       data.each do |key, value|
         movement = Movement.where(id: key).first
         sheet.add_row [movement.try(:bl_number), movement.try(:container_number), 
-          value[:vendor_id], value[:transporter_payment], 
-          value[:clearing_agent], value[:clearing_agent_payment]], height: 30
+          (value[:vendor_id].blank? && !value[:transporter_payment].blank?) ? 
+          movement.transporter_name : value[:vendor_id], value[:transporter_payment], 
+          (value[:clearing_agent].blank? && !value[:clearing_agent_payment].blank?) ? 
+          movement.clearing_agent : value[:clearing_agent], value[:clearing_agent_payment]], height: 30
       end unless data.nil?
       sheet.column_widths 20,20,20,20,20,20
     end
