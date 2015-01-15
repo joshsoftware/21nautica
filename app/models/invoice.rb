@@ -2,8 +2,8 @@ class Invoice < ActiveRecord::Base
   include AASM
 
   belongs_to :customer
-  belongs_to :bill_of_lading
-  delegate :bl_number, to: :bill_of_lading, allow_nil: true
+  belongs_to :invoiceable, polymorphic: true
+  delegate :bl_number, to: :invoiceable, allow_nil: true
   has_many :additional_invoices, class_name: "Invoice", 
     foreign_key: "previous_invoice_id"
   belongs_to :previous_invoice, class_name: "Invoice"

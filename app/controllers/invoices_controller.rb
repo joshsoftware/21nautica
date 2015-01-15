@@ -22,7 +22,7 @@ class InvoicesController < ApplicationController
     @invoice.date = Date.current
     @invoice.previous_invoice = previous_invoice
     @invoice.customer = previous_invoice.customer
-    @invoice.bill_of_lading = previous_invoice.bill_of_lading
+    @invoice.invoiceable = previous_invoice.invoiceable
     @error = invoice.errors.full_messages unless @invoice.save
   end
 

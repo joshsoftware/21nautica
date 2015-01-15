@@ -30,6 +30,7 @@ class Movement < ActiveRecord::Base
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
 
   delegate :bl_number, to: :bill_of_lading, allow_nil: true
+  has_one :invoice, as: :invoiceable
 
   def assignment_of_truck_number
    count = Movement.where(truck_number: truck_number).where.not(status: :container_handed_over_to_KPA).count
@@ -74,6 +75,7 @@ class Movement < ActiveRecord::Base
   def ready_haulage_export_invoice
     invoice = Invoice.create(date: Date.current)
     invoice.customer = self.export_item.export.customer
+    invoice.invoiceable = self
     invoice.invoice_ready!
   end
 

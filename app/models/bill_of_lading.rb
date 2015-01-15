@@ -1,7 +1,7 @@
 class BillOfLading < ActiveRecord::Base
   has_one :import
   has_many :movements
-  has_one :invoice
+  has_one :invoice, as: :invoiceable
   validates_uniqueness_of :bl_number
   auditable only: [:payment_ocean, :cheque_ocean,
     :payment_clearing, :cheque_clearing, :updated_at]
@@ -18,7 +18,7 @@ class BillOfLading < ActiveRecord::Base
     invoice_date = self.movements.minimum(:created_at)
     customer = self.movements.first.export_item.export.customer
     invoice = Invoice.create(date: invoice_date)
-    invoice.bill_of_lading = self
+    invoice.invoiceable = self
     invoice.customer = customer
     invoice.invoice_ready!
   end
