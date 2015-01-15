@@ -1,9 +1,8 @@
 %div#invoice_pdf
-  //%div.rectangle LOGO
   //%center
-  //  =image_tag("#{HOST}/images/i.jpg", width: 100, height: 100)
+  //  %img{src: "file://#{Rails.root}/public/images/i.jpg", width: 300 , height: 100}
   %br
-  %table.invoice{border: '1'}
+  %table#invoicetable.invoice
     %thead
       %th{colspan: "4", style: "text-align:center"} INVOICE
     %tbody
@@ -17,9 +16,7 @@
           %br/ 
           BL Number: #{@invoice.bl_number} 
           %br/
-          Equipment Type: ? 
-          %br/
-          X Qty: ? 
+          Equipment Type X Qty:
           %br/
           Job Number: ?
         %td{colspan: "2", valign: "top"}
@@ -39,21 +36,21 @@
         %th Qty
         %th Rate
         %th Total
-      %tr
+      %tr{style: "height:20px"}
         %td{rowspan: "3", style: "text-align:center"} 
           Haulage Charges
           %br/
           Ocean Freight
           %br/
           Local Clearing
+        %td
+        %td
+        %td
+      %tr{style: "height:20px"}
+        %td 
         %td 
         %td  
-        %td 
-      %tr
-        %td 
-        %td 
-        %td  
-      %tr
+      %tr{style: "height:20px"}
         %td  
         %td  
         %td 
@@ -75,7 +72,7 @@
           %b Terms & Conditions:
           %ol
             %li
-              1. Payment should be made by A/C Payee cheque or draft in favour of “21 Nautica Logistics Limited” or by NEFT / RTGS into:
+              Payment should be made by A/C Payee cheque or draft in favour of “21 Nautica Logistics Limited” or by NEFT / RTGS into:
               %br/
               Account Name: 21 Nautica Logistics Limited
               %br/

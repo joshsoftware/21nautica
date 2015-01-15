@@ -2,6 +2,19 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+#invoicetable{
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+#invoicetable tr {
+	border: 1px solid black;
+}
+#invoicetable td {
+	border: 1px solid black;
+}
+#invoicetable th {
+  border: 1px solid black;
+}
 .rectangle {
   width: 300px;
   height: 100px;
@@ -11,7 +24,7 @@
   background-image: url("i.jpg");
 }
 .invoice {
-  width: 500px;
+  width: 700px;
   margin-left: auto;
   margin-right: auto;
 }
