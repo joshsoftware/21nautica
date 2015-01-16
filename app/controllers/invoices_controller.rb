@@ -1,4 +1,5 @@
 class InvoicesController < ApplicationController
+  require 'numbers_in_words/duck_punch'
   def index
     @invoices = Invoice.all
   end
@@ -28,6 +29,29 @@ class InvoicesController < ApplicationController
 
   def download
     @invoice = Invoice.find(params[:id])
+    if (@invoice.invoiceable.is_a?(BillOfLading) && !@invoice.invoiceable.is_export_bl?)
+      @charges = @invoice.collect_import_invoice_data #import invoice
+      import = @invoice.invoiceable.import
+      @pick_up = import.from
+      @destination = import.to
+      @equipment = import.equipment
+      @quantity = import.quantity
+      @job_number = import.work_order_number
+    elsif (@invoice.invoiceable.is_a?(BillOfLading) && @invoice.invoiceable.is_export_bl?)
+      @charges = @invoice.collect_export_TBL_data #export TBL
+      #movement = @invoice.invoiceable.movements.first
+      #@pick_up = movement.port_of_discharge
+      #@destination = movement.port_of_loading
+    elsif (@invoice.invoiceable.is_a?(Movement))
+      @charges = @invoice.collect_export_haulage_data  #"export Haulage"
+      movement = @invoice.invoiceable
+      @container = movement.container_number
+      @pick_up = movement.port_of_discharge
+      @destination = movement.port_of_loading
+      @equipment = movement.equipment_type
+      @quantity = 1
+      @job_number = movement.w_o_number
+    end
     html = render_to_string(:action => 'download.html.haml', :layout=> false)
     kit = PDFKit.new(html)
     kit.stylesheets << "#{Rails.root}/app/assets/stylesheets/invoices.css.scss"

@@ -104,4 +104,8 @@ class Movement < ActiveRecord::Base
     self.vendor_id = vendor_id
   end
 
+  def equipment_type
+    self.export_item.export.equipment
+  end
+
 end

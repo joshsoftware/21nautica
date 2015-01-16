@@ -55,6 +55,7 @@ gem 'axlsx'
 gem 'devise'
 gem 'devise_invitable'
 gem 'pdfkit', '~> 0.6.2'
+gem 'numbers_in_words'
 
 group :development do
   gem 'tlsmail'

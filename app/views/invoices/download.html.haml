@@ -12,13 +12,13 @@
           %br/
           Address: ?
           %p
-          Container Number: ?
+          Container Number: #{@container}
           %br/ 
           BL Number: #{@invoice.bl_number} 
           %br/
-          Equipment Type X Qty:
+          #{@equipment} X #{@quantity}
           %br/
-          Job Number: ?
+          Job Number: #{@job_number}
         %td{colspan: "2", valign: "top"}
           Inv Number: #{@invoice.number}
           %br/
@@ -26,9 +26,9 @@
           %br/
           BL Number: #{@invoice.bl_number} 
           %br/
-          Pick Up Location: ? 
+          Pick Up Location: #{@pick_up}
           %br/
-          Destination: ?
+          Destination: #{@destination}
       %tr
         %td{colspan: "4", height: '20px'}
       %tr
@@ -36,30 +36,29 @@
         %th Qty
         %th Rate
         %th Total
-      %tr{style: "height:20px"}
-        %td{rowspan: "3", style: "text-align:center"} 
-          Haulage Charges
-          %br/
-          Ocean Freight
-          %br/
-          Local Clearing
-        %td
-        %td
-        %td
-      %tr{style: "height:20px"}
-        %td 
-        %td 
-        %td  
-      %tr{style: "height:20px"}
-        %td  
-        %td  
-        %td 
+      - subtotal = 0
+      - @charges.each do |key, value|
+        - value.each do |v|
+          %tr{style: "height:20px"}
+            %td= key
+            %td= v.second
+            %td= v.first
+            - total = v.second.to_i*v.first.to_i
+            %td= total
+            - subtotal += total
+      - (1..4).each do |row|
+        %tr{style: "height:20px"}
+          %td
+          %td
+          %td
+          %td
+
       %tr{height: "40px"}
         %td{colspan: "3", style: "text-align:center"} subtotal
-        %td  
+        %td= subtotal
       %tr
-        %td{colspan: "3", style: "text-align:center"} Figure In WORDS
-        %td Figure
+        %td{colspan: "3", style: "text-align:center"}= subtotal.in_words.humanize + " US Dollars Only"
+        %td= subtotal
       %tr
         %td{colspan: "4"}
           TotalE. & O.E.

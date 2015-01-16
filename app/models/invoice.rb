@@ -28,6 +28,52 @@ class Invoice < ActiveRecord::Base
 
   def as_json(options={})
     super(methods: [:bl_number, :customer_name])
-  end 
+  end
+
+  def collect_import_invoice_data
+    bill_of_lading = self.invoiceable
+    import = bill_of_lading.import
+    expenses = []
+    import.import_items.each do |item|
+      expenses.push(item.import_expenses.where.not(amount: nil || ""))
+    end
+    expenses.flatten!
+    payment_hash = {}
+    expenses.each do |expense|
+      (payment_hash[expense.category + " " + "charges"] ||= []).push(expense.amount)
+    end
+    payment_hash["ocean freight"] = [bill_of_lading.payment_ocean] unless bill_of_lading.payment_ocean.blank?
+    payment_hash["clearing charges"] = [bill_of_lading.payment_clearing] unless bill_of_lading.payment_clearing.blank?
+    format_payment_hash(payment_hash)
+  end
+
+  def collect_export_TBL_data
+    bill_of_lading = self.invoiceable
+    payment_hash = {}
+    movements = bill_of_lading.movements.where("movements.transporter_payment IS NOT NULL OR movements.clearing_agent_payment IS NOT NULL")
+    movements.each do |movement|
+      (payment_hash["Haulage/trans payment"] ||= []).push(movement.transporter_payment)
+      (payment_hash["Local clearing"] ||= []).push(movement.clearing_agent_payment)
+    end
+    payment_hash["ocean freight"] = [bill_of_lading.payment_ocean] unless bill_of_lading.payment_ocean.blank?
+    format_payment_hash(payment_hash)
+  end
+
+  def collect_export_haulage_data
+    movement = self.invoiceable
+    payment_hash = {}
+    payment_hash["Haulage/trans payment"] = [movement.transporter_payment] unless movement.transporter_payment.blank?
+    payment_hash["Local clearing"] = [movement.clearing_agent_payment] unless movement.clearing_agent_payment.blank?
+    format_payment_hash(payment_hash)
+  end
+
+  def format_payment_hash(payment_hash)
+    formatted_hash = {}
+    payment_hash.each do |k,v|
+      v.compact!
+      formatted_hash[k] = v.inject({}) {|h,x| h[x.to_s].nil? ? h[x.to_s] = 1 : h[x.to_s] += 1; h}
+    end
+    formatted_hash
+  end
 
 end
