@@ -1,6 +1,6 @@
 %h3 Invoices
-%div.bg-info
-  %input#invoices_searchbox{placeholder: "Search..."}
+//%div.bg-info
+//  %input#invoices_searchbox{placeholder: "Search..."}
 %br
 
 %table.table.table-hover.table-bordered#invoices_index_table
@@ -70,6 +70,7 @@
         .modal-body
           = f.input :number, as: :text, label: "Invoice Number", include_blank: false
           = f.input :document_number, as: :text
+          = f.input :perticular, as: :text
           = f.input :amount, as: :text, label: "Invoice Amount"
 
         .modal-footer

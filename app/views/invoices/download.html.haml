@@ -1,6 +1,6 @@
 %div#invoice_pdf
-  //%center
-  //  %img{src: "file://#{Rails.root}/public/images/i.jpg", width: 300 , height: 100}
+  %center
+    %img{src: "file://#{Rails.root}/public/images/i.jpg", width: 300 , height: 100}
   %br
   %table#invoicetable.invoice{style: "border-collapse: collapse"}
     %thead
@@ -8,9 +8,7 @@
     %tbody
       %tr
         %td{colspan: "2"}
-          #{@invoice.customer_name} 
-          %br/
-          Address: ?
+          #{@invoice.customer_name}
           %p
           Container Number: #{@container}
           %br/ 
@@ -21,14 +19,18 @@
           Job Number: #{@job_number}
         %td{colspan: "2", valign: "top"}
           Inv Number: #{@invoice.number}
+          - unless @perticular.blank?
+            %br/
+            Inv Ref: #{@ref_no}
           %br/
           Inv Date: #{@invoice.date}
           %br/
           BL Number: #{@invoice.bl_number} 
-          %br/
-          Pick Up Location: #{@pick_up}
-          %br/
-          Destination: #{@destination}
+          - unless @charges.blank?
+            %br/
+            Pick Up Location: #{@pick_up}
+            %br/
+            Destination: #{@destination}
       %tr
         %td{colspan: "4", height: '20px'}
       %tr
@@ -37,15 +39,23 @@
         %th Rate
         %th Total
       - subtotal = 0
-      - @charges.each do |key, value|
-        - value.each do |v|
-          %tr{style: "height:20px"}
-            %td= key
-            %td= v.second
-            %td= v.first
-            - total = v.second.to_i*v.first.to_i
-            %td= total
-            - subtotal += total
+      - unless @perticular.blank?
+        %tr{style: "height:20px"}
+          %td= @perticular
+          %td
+          %td
+          %td= @add_charges
+          - subtotal += @add_charges
+      - unless @charges.blank?
+        - @charges.each do |key, value|
+          - value.each do |v|
+            %tr{style: "height:20px"}
+              %td= key
+              %td= v.second
+              %td= v.first
+              - total = v.second.to_i*v.first.to_i
+              %td= total
+              - subtotal += total
       - (1..4).each do |row|
         %tr{style: "height:20px"}
           %td

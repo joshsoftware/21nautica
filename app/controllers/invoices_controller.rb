@@ -29,7 +29,13 @@ class InvoicesController < ApplicationController
 
   def download
     @invoice = Invoice.find(params[:id])
-    if (@invoice.invoiceable.is_a?(BillOfLading) && !@invoice.invoiceable.is_export_bl?)
+    if (@invoice.previous_invoice.present?)# this is additional invoice
+      invoice_type = "additional_invoice"
+      @ref_no = @invoice.previous_invoice.number
+      @perticular = @invoice.perticular
+      @add_charges = @invoice.amount
+    elsif (@invoice.invoiceable.is_a?(BillOfLading) && !@invoice.invoiceable.is_export_bl?)
+      invoice_type = "import_invoice"
       @charges = @invoice.collect_import_invoice_data #import invoice
       import = @invoice.invoiceable.import
       @pick_up = import.from
@@ -38,11 +44,10 @@ class InvoicesController < ApplicationController
       @quantity = import.quantity
       @job_number = import.work_order_number
     elsif (@invoice.invoiceable.is_a?(BillOfLading) && @invoice.invoiceable.is_export_bl?)
+      invoice_type = "TBL_export_invoice"
       @charges = @invoice.collect_export_TBL_data #export TBL
-      #movement = @invoice.invoiceable.movements.first
-      #@pick_up = movement.port_of_discharge
-      #@destination = movement.port_of_loading
     elsif (@invoice.invoiceable.is_a?(Movement))
+      invoice_type = "Haulage_export_invoice"
       @charges = @invoice.collect_export_haulage_data  #"export Haulage"
       movement = @invoice.invoiceable
       @container = movement.container_number
@@ -56,12 +61,12 @@ class InvoicesController < ApplicationController
     kit = PDFKit.new(html)
     kit.stylesheets << "#{Rails.root}/app/assets/stylesheets/invoices.css.scss"
     respond_to do |format|
-      format.pdf {send_data(kit.to_pdf, :filename => 'invoice.pdf', :type => 'application/pdf')}
+      format.pdf {send_data(kit.to_pdf, :filename => "#{invoice_type}.pdf", :type => 'application/pdf')}
     end
   end
 
   private
   def invoice_params
-    params.require(:invoice).permit(:number, :document_number, :amount)
+    params.require(:invoice).permit(:number, :document_number, :amount, :perticular)
   end
 end
