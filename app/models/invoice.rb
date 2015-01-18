@@ -26,8 +26,12 @@ class Invoice < ActiveRecord::Base
     self.customer.name
   end
 
+  def index_row_class
+    self.previous_invoice.present? ? "warning" : ""
+  end
+
   def as_json(options={})
-    super(methods: [:bl_number, :customer_name])
+    super(methods: [:bl_number, :customer_name, :index_row_class])
   end
 
   def collect_import_invoice_data
