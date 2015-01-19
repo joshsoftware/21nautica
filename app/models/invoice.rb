@@ -30,6 +30,10 @@ class Invoice < ActiveRecord::Base
     self.previous_invoice.present? ? "warning" : ""
   end
 
+  def is_additional_invoice?
+    self.previous_invoice.present?
+  end
+
   def as_json(options={})
     super(methods: [:bl_number, :customer_name, :index_row_class])
   end
