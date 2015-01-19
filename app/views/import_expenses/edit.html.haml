@@ -9,7 +9,7 @@
           = f.input :category, as: :hidden
           = f.input :amount, as: :string
           - if %w(Haulage Demurrage).include?(f.object.category)
-            = f.input :name, as: :string, input_html: { value: f.object.get_collection.first}, disabled: true
+            = f.input :name, as: :string, input_html: { value: f.object.get_collection.first, readonly: "readonly" }
           - else
             = f.input :name, as: :select, collection: f.object.get_collection
           = f.input :currency, collection: ImportExpense::CURRENCY, as: :select, label: 'Currency', include_blank: false
