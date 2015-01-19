@@ -34,6 +34,10 @@ class Invoice < ActiveRecord::Base
     self.new? ? "disabled" : ""
   end
 
+  def is_additional_invoice?
+    self.previous_invoice.present?
+  end
+
   def as_json(options={})
     super(methods: [:bl_number, :customer_name, :index_row_class, :send_button_status])
   end
@@ -78,7 +82,7 @@ class Invoice < ActiveRecord::Base
     payment_hash = {}
     movements = bill_of_lading.movements.where("movements.transporter_payment IS NOT NULL OR movements.clearing_agent_payment IS NOT NULL")
     movements.each do |movement|
-      (payment_hash["Haulage/trans payment"] ||= []).push(movement.transporter_payment)
+      (payment_hash["Haulage/transporter payment"] ||= []).push(movement.transporter_payment)
       (payment_hash["Local clearing"] ||= []).push(movement.clearing_agent_payment)
     end
     payment_hash["ocean freight"] = [bill_of_lading.payment_ocean] unless bill_of_lading.payment_ocean.blank?
@@ -88,7 +92,7 @@ class Invoice < ActiveRecord::Base
   def collect_export_haulage_data
     movement = self.invoiceable
     payment_hash = {}
-    payment_hash["Haulage/trans payment"] = [movement.transporter_payment] unless movement.transporter_payment.blank?
+    payment_hash["Haulage/transporter payment"] = [movement.transporter_payment] unless movement.transporter_payment.blank?
     payment_hash["Local clearing"] = [movement.clearing_agent_payment] unless movement.clearing_agent_payment.blank?
     format_payment_hash(payment_hash)
   end

@@ -19,7 +19,7 @@
           Job Number: #{@job_number}
         %td{colspan: "2", valign: "top"}
           Inv Number: #{@invoice.number}
-          - unless @perticular.blank?
+          - if @invoice.is_additional_invoice?
             %br/
             Inv Ref: #{@ref_no}
           %br/

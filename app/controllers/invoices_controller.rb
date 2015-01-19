@@ -57,7 +57,7 @@ class InvoicesController < ApplicationController
 
   def update_amount(invoices)
     invoices.each do |invoice|
-      unless invoice.previous_invoice.present?
+      unless invoice.is_additional_invoice?
         amount = invoice.calculate_amount
         invoice.amount = amount
         invoice.save
