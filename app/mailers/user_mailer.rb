@@ -32,4 +32,10 @@ class UserMailer < ActionMailer::Base
     File.delete("#{Rails.root}/tmp/Expense_#{@type}_#{time}.xlsx")
   end
 
+  def mail_invoice(customer, attachment)
+    attachments["invoice.pdf"] = File.read(attachment)
+    mail(to: customer.emails,subject: "Invoice")
+    File.delete(attachment)
+  end
+
 end

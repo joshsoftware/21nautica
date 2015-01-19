@@ -30,14 +30,20 @@ class InvoicesController < ApplicationController
 
   def download
     invoice = Invoice.find(params[:id])
-    @invoice, invoice_type = collect_pdf_data(invoice)
-    html = render_to_string(:action => 'download.html.haml', :layout=> false)
-    kit = PDFKit.new(html)
-    kit.stylesheets << "#{Rails.root}/app/assets/stylesheets/invoices.css.scss"
+    kit, invoice_type = collect_pdf_data(invoice)
     respond_to do |format|
       format.html {}
       format.pdf {send_data(kit.to_pdf, :filename => "#{invoice_type}.pdf", :type => 'application/pdf')}
     end
+  end
+
+  def send_invoice
+    invoice = Invoice.find(params[:id])
+    kit, invoice_type = collect_pdf_data(invoice)
+    pdf = kit.to_pdf
+    file = kit.to_file("#{Rails.root}/tmp/#{invoice_type}.pdf")
+    UserMailer.mail_invoice(invoice.customer, file).deliver
+    #invoice.invoice_sent!
   end
 
   private
@@ -56,6 +62,7 @@ class InvoicesController < ApplicationController
   end
 
   def collect_pdf_data(invoice)
+    @invoice = invoice
     if (invoice.previous_invoice.present?)# this is additional invoice
       invoice_type = "additional_invoice"
       @ref_no = invoice.previous_invoice.number
@@ -84,6 +91,9 @@ class InvoicesController < ApplicationController
       @quantity = 1
       @job_number = movement.w_o_number
     end
-    return invoice, invoice_type
+    html = render_to_string(:action => 'download.html.haml', :layout=> false)
+    kit = PDFKit.new(html)
+    kit.stylesheets << "#{Rails.root}/app/assets/stylesheets/invoices.css.scss"
+    return kit, invoice_type
   end
 end

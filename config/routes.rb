@@ -62,6 +62,7 @@ Rails.application.routes.draw do
     member do
       post 'additional-invoice'
       get 'download'
+      get 'send_invoice'
     end
   end
   # Example of regular route:
