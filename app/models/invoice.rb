@@ -30,8 +30,12 @@ class Invoice < ActiveRecord::Base
     self.previous_invoice.present? ? "warning" : ""
   end
 
+  def send_button_status
+    self.new? ? "disabled" : ""
+  end
+
   def as_json(options={})
-    super(methods: [:bl_number, :customer_name, :index_row_class])
+    super(methods: [:bl_number, :customer_name, :index_row_class, :send_button_status])
   end
 
   def calculate_amount
