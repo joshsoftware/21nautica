@@ -33,8 +33,9 @@ class UserMailer < ActionMailer::Base
   end
 
   def mail_invoice(customer, attachment)
-    attachments["invoice.pdf"] = File.read(attachment)
-    mail(to: customer.emails,subject: "Invoice")
+    attachment_name = File.basename attachment
+    attachments[attachment_name] = File.read(attachment)
+    mail(to: customer.emails, subject: "Invoice")
     File.delete(attachment)
   end
 
