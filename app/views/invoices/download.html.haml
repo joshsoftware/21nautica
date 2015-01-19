@@ -38,14 +38,12 @@
         %th Qty
         %th Rate
         %th Total
-      - subtotal = 0
       - unless @perticular.blank?
         %tr{style: "height:20px"}
           %td= @perticular
           %td
           %td
           %td= @add_charges
-          - subtotal += @add_charges
       - unless @charges.blank?
         - @charges.each do |key, value|
           - value.each do |v|
@@ -53,9 +51,7 @@
               %td= key
               %td= v.second
               %td= v.first
-              - total = v.second.to_i*v.first.to_i
-              %td= total
-              - subtotal += total
+              %td= (v.second.to_i * v.first.to_i)
       - (1..4).each do |row|
         %tr{style: "height:20px"}
           %td
@@ -64,11 +60,11 @@
           %td
 
       %tr{height: "40px"}
-        %td{colspan: "3", style: "text-align:center"} subtotal
-        %td= subtotal
+        %td{colspan: "3", style: "text-align:center"} Subtotal
+        %td= @invoice.amount
       %tr
-        %td{colspan: "3", style: "text-align:center"}= subtotal.in_words.humanize + " US Dollars Only"
-        %td= subtotal
+        %td{colspan: "3", style: "text-align:center"}= @invoice.amount.in_words.humanize + " US Dollars Only"
+        %td= @invoice.amount
       %tr
         %td{colspan: "4"}
           TotalE. & O.E.
