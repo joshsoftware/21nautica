@@ -23,10 +23,10 @@
       %td.bl_num <%= bl_number %>
       %td.document_num <%= document_number %>   
       %td.amount <%= amount %>
-      %td <%= status %>
+      %td.status <%= status %>
       %td
         <button class="btn btn-small btn-primary" data-target="#invoiceUpdateModal" data-toggle="modal", data-invoice-id='<%= id %>'> Update </button>
-        <a class="btn btn-small btn-primary" href="/invoices/<%= id %>/send_invoice" data-remote="true"> Send </a>
+        <a class="btn btn-small btn-primary" href="/invoices/<%= id %>/send_invoice" data-remote="true" data-disable-with= "sending..." }> Send </a>
         <a class="btn btn-small btn-primary" href="/invoices/<%= id %>/download.pdf" > Download </a>
         <button class="btn btn-small btn-primary" data-target="#AdditionalInvoiceModal" data-toggle="modal",
         data-invoice-id='<%= id %>'> Additional Invoice </button>

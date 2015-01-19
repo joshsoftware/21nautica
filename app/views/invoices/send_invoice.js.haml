@@ -1,0 +1,2 @@
+row = $("#invoices_index_table tr[invoice_id= '" + #{@invoice.id} + "']");
+$(row).find("td.status").text("#{@invoice.status}")
