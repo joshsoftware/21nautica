@@ -25,6 +25,7 @@ class InvoicesController < ApplicationController
     @invoice.previous_invoice = previous_invoice
     @invoice.customer = previous_invoice.customer
     @invoice.invoiceable = previous_invoice.invoiceable
+    @invoice.invoice_ready!
     @error = invoice.errors.full_messages unless @invoice.save
   end
 
