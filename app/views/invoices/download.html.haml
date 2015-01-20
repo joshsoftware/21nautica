@@ -38,7 +38,7 @@
         %th Qty
         %th Rate
         %th Total
-      - unless @perticular.blank?
+      - if @invoice.is_additional_invoice?
         %tr{style: "height:20px"}
           %td= @perticular
           %td
