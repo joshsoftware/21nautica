@@ -34,10 +34,10 @@ class BillOfLading < ActiveRecord::Base
   end
 
   def update_export_TBL_invoice_amount
-    if self.invoice.present?
-      invoice = self.invoice
-      invoice.update_TBL_invoice_amount
-    end
+    ready_TBL_export_invoice if self.invoice.blank?
+    self.reload
+    invoice = self.invoice
+    invoice.update_TBL_invoice_amount
   end
 
 end
