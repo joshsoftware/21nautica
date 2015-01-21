@@ -7,6 +7,7 @@ class Invoice < ActiveRecord::Base
   has_many :additional_invoices, class_name: "Invoice", 
     foreign_key: "previous_invoice_id"
   belongs_to :previous_invoice, class_name: "Invoice"
+  after_create :assign_current_amount, unless: :is_additional_invoice?, if: :is_import_invoice?
 
   aasm column: 'status' do
     state :new, initial: true
@@ -40,6 +41,16 @@ class Invoice < ActiveRecord::Base
 
   def as_json(options={})
     super(methods: [:bl_number, :customer_name, :index_row_class, :send_button_status])
+  end
+
+  def is_import_invoice?
+    invoice_parent = self.invoiceable
+    (invoice_parent.is_a?(BillOfLading) && !invoice_parent.is_export_bl?)
+  end
+
+  def assign_current_amount
+    charges = collect_import_invoice_data #import invoice
+    calulate_and_update_amount(charges)
   end
 
   def update_import_invoice_amount
