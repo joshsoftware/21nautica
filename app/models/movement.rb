@@ -31,6 +31,8 @@ class Movement < ActiveRecord::Base
 
   delegate :bl_number, to: :bill_of_lading, allow_nil: true
   has_one :invoice, as: :invoiceable
+  after_update :update_export_TBL_invoice_amount, if: :is_TBL_type?
+  after_update :update_export_Haulage_invoice_amount, if: :is_Haulage_type?
 
   def assignment_of_truck_number
    count = Movement.where(truck_number: truck_number).where.not(status: :container_handed_over_to_KPA).count
@@ -106,6 +108,29 @@ class Movement < ActiveRecord::Base
 
   def equipment_type
     self.export_item.export.equipment
+  end
+
+  def is_TBL_type?
+    self.movement_type.eql?("TBL")
+  end
+
+  def is_Haulage_type?
+    self.movement_type.eql?("Haulage")
+  end
+
+  def update_export_TBL_invoice_amount
+    bill_of_lading = self.bill_of_lading
+    if bill_of_lading.invoice.present?
+      invoice = bill_of_lading.invoice
+      invoice.update_TBL_invoice_amount
+    end
+  end
+
+  def update_export_Haulage_invoice_amount
+    if self.invoice.present?
+      charges = invoice.collect_export_haulage_data
+      invoice.calulate_and_update_amount(charges)
+    end
   end
 
 end

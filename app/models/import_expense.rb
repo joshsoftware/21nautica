@@ -26,7 +26,7 @@ class ImportExpense < ActiveRecord::Base
     bill_of_lading = self.import_item.import.bill_of_lading
     if bill_of_lading.invoice.present?
       invoice = bill_of_lading.invoice
-      invoice.calulate_and_update_amount
+      invoice.update_import_invoice_amount
     end
   end
 

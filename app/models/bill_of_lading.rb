@@ -7,7 +7,7 @@ class BillOfLading < ActiveRecord::Base
     :payment_clearing, :cheque_clearing, :updated_at]
 
   after_update :update_import_invoice_amount, unless: :is_export_bl?
-  #after_update :update_export_TBL_invoice_amount, if: :is_export_bl?
+  after_update :update_export_TBL_invoice_amount, if: :is_export_bl?
 
   def is_export_bl?
     Import.where(bill_of_lading_id: self.id.to_s).blank?
@@ -29,15 +29,14 @@ class BillOfLading < ActiveRecord::Base
   def update_import_invoice_amount
     if self.invoice.present?
       invoice = self.invoice
-      invoice.calulate_and_update_amount
+      invoice.update_import_invoice_amount
     end
   end
 
   def update_export_TBL_invoice_amount
     if self.invoice.present?
       invoice = self.invoice
-      charges = invoice.collect_export_TBL_data
-      invoice.calulate_and_update_amount(charges)
+      invoice.update_TBL_invoice_amount
     end
   end
 

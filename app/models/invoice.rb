@@ -42,28 +42,24 @@ class Invoice < ActiveRecord::Base
     super(methods: [:bl_number, :customer_name, :index_row_class, :send_button_status])
   end
 
-  def calulate_and_update_amount
-    charges = self.collect_import_invoice_data
-    amount = calulate_amount(charges)
-    self.update(amount: amount)
+  def update_import_invoice_amount
+    charges = collect_import_invoice_data
+    calulate_and_update_amount(charges)
   end
 
-  def calulate_amount(charges)
-    #invoice_parent = self.invoiceable
-    #if (invoice_parent.is_a?(BillOfLading) && !invoice_parent.is_export_bl?)
-    #  charges = self.collect_import_invoice_data #import invoice
-    #elsif (invoice_parent.is_a?(BillOfLading) && invoice_parent.is_export_bl?)
-    #  charges = self.collect_export_TBL_data #export TBL
-    #elsif (invoice_parent.is_a?(Movement))
-    #  charges = self.collect_export_haulage_data  #"export Haulage"
-    #end
+  def update_TBL_invoice_amount
+    charges = collect_export_TBL_data
+    calulate_and_update_amount(charges)
+  end
+
+  def calulate_and_update_amount(charges)
     amount = 0
     charges.each_value do |charge|
       charge.each do |value|
         amount += value.first.to_i * value.second.to_i
       end
     end
-    amount   
+    self.update(amount: amount)
   end
 
   def collect_import_invoice_data
