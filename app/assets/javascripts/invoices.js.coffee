@@ -13,7 +13,7 @@
     link_tag = $(event.relatedTarget)
     id = link_tag.attr('data-invoice-id')
     row = $("#invoices_index_table tr[invoice_id= '" + id + "']")
-    console.log($(row).find("td.customer").text())    
+    row_class = link_tag.attr('data-row-class')
     $('#invoiceUpdateModal #customer_name label').text("Customer Name : 
     " + $(row).find("td.customer").text())
     
@@ -26,8 +26,11 @@
     $('#invoiceUpdateModal #invoice_number').val $(row).find("td.number").text()
     $('#invoiceUpdateModal #invoice_document_number').val $(row).find("td.document_num").text()
     $('#invoiceUpdateModal #invoice_amount').val $(row).find("td.amount").text()
-
+    $('#invoiceUpdateModal #invoice_amount').attr('readonly','readonly') if (row_class isnt 'warning')
     $('#invoiceUpdateModal form').attr('action', "/invoices/" + id )
+
+  $('#invoiceUpdateModal').on 'hide.bs.modal', (event) ->
+    $('#invoiceUpdateModal #invoice_amount').removeAttr('readonly')
     $('#invoiceUpdateModal .alert').remove()
 
 @load_additional_invoice_modal = ->
