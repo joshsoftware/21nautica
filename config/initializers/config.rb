@@ -14,4 +14,6 @@ STATUS_CHANGE_DURATION = {arrived_malaba_border: 2,
                           document_handed: 1}
 CLEARING_AGENTS = %W(Panafrica EACL Agility)
 PAYMENT_MODES = %W(Cheque Cash TT)
+INVOICE_PERTICULARS = %w( Ocean\ Freight Clearing\ Charges ICD Demurrage 
+	Empty Final\ Clearing Haulage Forest\ Permits)
 

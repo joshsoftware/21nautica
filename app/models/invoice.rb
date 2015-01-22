@@ -8,6 +8,7 @@ class Invoice < ActiveRecord::Base
     foreign_key: "previous_invoice_id"
   belongs_to :previous_invoice, class_name: "Invoice"
   has_many :invoice_perticulars
+  accepts_nested_attributes_for :invoice_perticulars
 
   aasm column: 'status' do
     state :new, initial: true
@@ -24,7 +25,7 @@ class Invoice < ActiveRecord::Base
   end 
 
   def customer_name
-    self.customer.name
+    self.customer.try(:name)
   end
 
   def index_row_class
@@ -39,7 +40,20 @@ class Invoice < ActiveRecord::Base
     self.previous_invoice.present?
   end
 
+  def total_containers
+    #find total number of containers according to invoice type
+    if self.invoiceable.is_a?(BillOfLading) && !self.invoiceable.is_export_bl?
+      import = self.invoiceable.import
+      quantity = import.quantity
+    elsif (self.invoiceable.is_a?(BillOfLading) && self.invoiceable.is_export_bl?)
+      quantity = self.invoiceable.movements.count
+    else
+      quantity = 1
+    end
+  end
+
   def as_json(options={})
-    super(methods: [:bl_number, :customer_name, :index_row_class, :send_button_status])
+    super(methods: [:bl_number, :customer_name, :index_row_class, 
+      :send_button_status, :total_containers])
   end
 end

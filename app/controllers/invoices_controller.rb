@@ -50,7 +50,8 @@ class InvoicesController < ApplicationController
 
   private
   def invoice_params
-    params.require(:invoice).permit(:number, :document_number, :amount)
+    params.require(:invoice).permit(:number, :document_number, :amount, 
+      invoice_perticulars_attributes: [:id, :name, :_destroy, :rate, :quantity, :subtotal])
   end
 
   def update_amount(invoices)

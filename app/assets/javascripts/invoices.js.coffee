@@ -2,6 +2,19 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
+containers_quantity = (value) ->
+  quantity = if value in ["ICD", "Demurrage", "Empty", "Final Clearing", "Haulage", "Forest Permits"] then containers else 1
+
+@load_nested_form_events = ->
+  $(document).on "nested:fieldAdded", (event) ->
+    field = event.field
+    select_field = field.find(".myselect")
+    select_field.change ->
+      value = $(this).find(".select.optional:eq(1)").val()
+      containers = containers_quantity(value)
+      $(this).closest(".fields").find(".quantity").val containers
+
+
 @InvoiceFilterInit = ->
   FilterJS invoices, "#invoices_search_result",
     template: "#invoices_search_result_template"
@@ -14,6 +27,7 @@
     id = link_tag.attr('data-invoice-id')
     row = $("#invoices_index_table tr[invoice_id= '" + id + "']")
     row_class = link_tag.attr('data-row-class')
+    window.containers = link_tag.attr('data-total-containers')
     $('#invoiceUpdateModal #customer_name label').text("Customer Name : 
     " + $(row).find("td.customer").text())
     
