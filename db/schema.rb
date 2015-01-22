@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150116143010) do
+ActiveRecord::Schema.define(version: 20150122102242) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -145,7 +145,6 @@ ActiveRecord::Schema.define(version: 20150116143010) do
     t.integer  "previous_invoice_id"
     t.integer  "invoiceable_id"
     t.string   "invoiceable_type"
-    t.string   "perticular"
   end
 
   create_table "movements", force: true do |t|

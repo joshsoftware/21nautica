@@ -21,7 +21,7 @@
           Inv Number: #{@invoice.number}
           - if @invoice.is_additional_invoice?
             %br/
-            Inv Ref: #{@ref_no}
+            Inv Ref: #{@invoice.previous_invoice.number}
           %br/
           Inv Date: #{@invoice.date}
           %br/
