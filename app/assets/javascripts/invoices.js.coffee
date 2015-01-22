@@ -18,7 +18,8 @@ containers_quantity = (value) ->
       amount = 0
       $('.subtotal').each ->
           amount = parseInt(amount) + parseInt($(this).val())
-      $('#invoiceUpdateModal #invoice_amount').val amount
+      prev_amount = parseInt($('#invoiceUpdateModal #invoice_amount').val())
+      $('#invoiceUpdateModal #invoice_amount').val amount + prev_amount
 
     rate_field = field.find(".rate")
     rate_field.change ->
@@ -28,7 +29,8 @@ containers_quantity = (value) ->
       amount = 0
       $('.subtotal').each ->
           amount = parseInt(amount) + parseInt($(this).val())
-      $('#invoiceUpdateModal #invoice_amount').val amount
+      prev_amount = parseInt($('#invoiceUpdateModal #invoice_amount').val())
+      $('#invoiceUpdateModal #invoice_amount').val amount + prev_amount
 
 @InvoiceFilterInit = ->
   FilterJS invoices, "#invoices_search_result",
