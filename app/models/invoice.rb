@@ -7,7 +7,6 @@ class Invoice < ActiveRecord::Base
   has_many :additional_invoices, class_name: "Invoice", 
     foreign_key: "previous_invoice_id"
   belongs_to :previous_invoice, class_name: "Invoice"
-  after_create :assign_current_amount, unless: :is_additional_invoice?, if: :is_import_invoice?
 
   aasm column: 'status' do
     state :new, initial: true
@@ -42,81 +41,4 @@ class Invoice < ActiveRecord::Base
   def as_json(options={})
     super(methods: [:bl_number, :customer_name, :index_row_class, :send_button_status])
   end
-
-  def is_import_invoice?
-    invoice_parent = self.invoiceable
-    (invoice_parent.is_a?(BillOfLading) && !invoice_parent.is_export_bl?)
-  end
-
-  def assign_current_amount
-    charges = collect_import_invoice_data #import invoice
-    calulate_and_update_amount(charges)
-  end
-
-  def update_import_invoice_amount
-    charges = collect_import_invoice_data
-    calulate_and_update_amount(charges)
-  end
-
-  def update_TBL_invoice_amount
-    charges = collect_export_TBL_data
-    calulate_and_update_amount(charges)
-  end
-
-  def calulate_and_update_amount(charges)
-    amount = 0
-    charges.each_value do |charge|
-      charge.each do |value|
-        amount += value.first.to_i * value.second.to_i
-      end
-    end
-    self.update(amount: amount)
-  end
-
-  def collect_import_invoice_data
-    bill_of_lading = self.invoiceable
-    import = bill_of_lading.import
-    expenses = []
-    import.import_items.each do |item|
-      expenses.push(item.import_expenses.where.not(amount: nil || ""))
-    end
-    expenses.flatten!
-    payment_hash = {}
-    expenses.each do |expense|
-      (payment_hash[expense.category + " " + "charges"] ||= []).push(expense.amount)
-    end
-    payment_hash["ocean freight"] = [bill_of_lading.payment_ocean] unless bill_of_lading.payment_ocean.blank?
-    payment_hash["clearing charges"] = [bill_of_lading.payment_clearing] unless bill_of_lading.payment_clearing.blank?
-    format_payment_hash(payment_hash)
-  end
-
-  def collect_export_TBL_data
-    bill_of_lading = self.invoiceable
-    payment_hash = {}
-    movements = bill_of_lading.movements.where("movements.transporter_payment IS NOT NULL OR movements.clearing_agent_payment IS NOT NULL")
-    movements.each do |movement|
-      (payment_hash["Haulage/transporter payment"] ||= []).push(movement.transporter_payment)
-      (payment_hash["Local clearing"] ||= []).push(movement.clearing_agent_payment)
-    end
-    payment_hash["ocean freight"] = [bill_of_lading.payment_ocean] unless bill_of_lading.payment_ocean.blank?
-    format_payment_hash(payment_hash)
-  end
-
-  def collect_export_haulage_data
-    movement = self.invoiceable
-    payment_hash = {}
-    payment_hash["Haulage/transporter payment"] = [movement.transporter_payment] unless movement.transporter_payment.blank?
-    payment_hash["Local clearing"] = [movement.clearing_agent_payment] unless movement.clearing_agent_payment.blank?
-    format_payment_hash(payment_hash)
-  end
-
-  def format_payment_hash(payment_hash)
-    formatted_hash = {}
-    payment_hash.each do |k,v|
-      v.compact!
-      formatted_hash[k] = v.inject({}) {|h,x| h[x.to_s].nil? ? h[x.to_s] = 1 : h[x.to_s] += 1; h}
-    end
-    formatted_hash
-  end
-
 end

@@ -1,6 +1,5 @@
 class ImportExpense < ActiveRecord::Base
   belongs_to :import_item
-  after_update :update_import_invoice_amount
 
   CATEGORIES = %w(Haulage Empty ICD Final\ Clearing Demurrage)
   CURRENCY = %w(USD UGX)
@@ -21,13 +20,5 @@ class ImportExpense < ActiveRecord::Base
   end
 
   auditable only: [:name, :amount, :updated_at]
-
-  def update_import_invoice_amount
-    bill_of_lading = self.import_item.import.bill_of_lading
-    if bill_of_lading.invoice.present?
-      invoice = bill_of_lading.invoice
-      invoice.update_import_invoice_amount
-    end
-  end
 
 end
