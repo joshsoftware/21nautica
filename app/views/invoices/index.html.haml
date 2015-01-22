@@ -82,7 +82,7 @@
                         = perticular.input :name, as: :select, collection: INVOICE_PERTICULARS, label: false
                       = perticular.text_field :rate, class: "rate"
                       = perticular.text_field :quantity, readonly: "readonly", class: "quantity"
-                      = perticular.text_field :subtotal, readonly: "readonly"
+                      = perticular.text_field :subtotal, readonly: "readonly", class: "subtotal"
                       = perticular.link_to_remove "Remove"
  
         .modal-footer

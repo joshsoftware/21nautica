@@ -12,8 +12,23 @@ containers_quantity = (value) ->
     select_field.change ->
       value = $(this).find(".select.optional:eq(1)").val()
       containers = containers_quantity(value)
+      rate = $(this).closest(".fields").find(".rate").val()
       $(this).closest(".fields").find(".quantity").val containers
+      $(this).closest(".fields").find(".subtotal").val (containers * rate)
+      amount = 0
+      $('.subtotal').each ->
+          amount = parseInt(amount) + parseInt($(this).val())
+      $('#invoiceUpdateModal #invoice_amount').val amount
 
+    rate_field = field.find(".rate")
+    rate_field.change ->
+      rate = $(this).val()
+      qty = $(this).closest(".fields").find(".quantity").val()
+      $(this).closest(".fields").find(".subtotal").val (rate * qty)
+      amount = 0
+      $('.subtotal').each ->
+          amount = parseInt(amount) + parseInt($(this).val())
+      $('#invoiceUpdateModal #invoice_amount').val amount
 
 @InvoiceFilterInit = ->
   FilterJS invoices, "#invoices_search_result",
@@ -40,7 +55,8 @@ containers_quantity = (value) ->
     $('#invoiceUpdateModal #invoice_number').val $(row).find("td.number").text()
     $('#invoiceUpdateModal #invoice_document_number').val $(row).find("td.document_num").text()
     $('#invoiceUpdateModal #invoice_amount').val $(row).find("td.amount").text()
-    $('#invoiceUpdateModal #invoice_amount').attr('readonly','readonly') if (row_class isnt 'warning')
+    $('#invoiceUpdateModal #invoice_amount').attr('readonly','readonly')
+
     $('#invoiceUpdateModal form').attr('action', "/invoices/" + id )
 
   $('#invoiceUpdateModal').on 'hide.bs.modal', (event) ->
