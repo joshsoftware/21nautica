@@ -35,6 +35,14 @@ containers_quantity = (value) ->
           amount = parseInt(amount) + parseInt($(this).val())
       $('#invoiceUpdateModal #invoice_amount').val amount + prev_amount
 
+  $(document).on "nested:fieldRemoved", (event) ->
+    $('.fields[style*="display: none;"]').remove()
+    amount = 0
+    $('.subtotal').each ->
+      amount = parseInt(amount) + parseInt($(this).val())
+    $('#invoiceUpdateModal #invoice_amount').val amount + prev_amount
+
+
 @InvoiceFilterInit = ->
   FilterJS invoices, "#invoices_search_result",
     template: "#invoices_search_result_template"
