@@ -18,7 +18,6 @@ containers_quantity = (value) ->
       amount = 0
       $('.subtotal').each ->
           amount = parseInt(amount) + parseInt($(this).val())
-      prev_amount = parseInt($('#invoiceUpdateModal #invoice_amount').val())
       $('#invoiceUpdateModal #invoice_amount').val amount + prev_amount
 
     rate_field = field.find(".rate")
@@ -29,7 +28,6 @@ containers_quantity = (value) ->
       amount = 0
       $('.subtotal').each ->
           amount = parseInt(amount) + parseInt($(this).val())
-      prev_amount = parseInt($('#invoiceUpdateModal #invoice_amount').val())
       $('#invoiceUpdateModal #invoice_amount').val amount + prev_amount
 
 @InvoiceFilterInit = ->
@@ -45,6 +43,7 @@ containers_quantity = (value) ->
     row = $("#invoices_index_table tr[invoice_id= '" + id + "']")
     row_class = link_tag.attr('data-row-class')
     window.containers = link_tag.attr('data-total-containers')
+
     $('#invoiceUpdateModal #customer_name label').text("Customer Name : 
     " + $(row).find("td.customer").text())
     
@@ -58,12 +57,15 @@ containers_quantity = (value) ->
     $('#invoiceUpdateModal #invoice_document_number').val $(row).find("td.document_num").text()
     $('#invoiceUpdateModal #invoice_amount').val $(row).find("td.amount").text()
     $('#invoiceUpdateModal #invoice_amount').attr('readonly','readonly')
+    window.prev_amount = parseInt($('#invoiceUpdateModal #invoice_amount').val())
+    console.log(prev_amount)
 
     $('#invoiceUpdateModal form').attr('action', "/invoices/" + id )
 
   $('#invoiceUpdateModal').on 'hide.bs.modal', (event) ->
     $('#invoiceUpdateModal #invoice_amount').removeAttr('readonly')
     $('#invoiceUpdateModal .alert').remove()
+    $('#invoiceUpdateModal .fields').remove()
 
 @load_additional_invoice_modal = ->
   $('#AdditionalInvoiceModal').on 'show.bs.modal', (event) ->
