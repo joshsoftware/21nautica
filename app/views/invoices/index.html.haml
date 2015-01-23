@@ -28,8 +28,8 @@
         <button class="btn btn-small btn-primary" data-target="#invoiceUpdateModal" data-toggle="modal", data-invoice-id='<%= id %>', data-row-class= '<%= index_row_class %>' , data-total-containers = '<%= total_containers %>'> Update </button>
         <a class="btn btn-small btn-primary" href="/invoices/<%= id %>/send_invoice" data-remote="true" data-disable-with= "sending..." <%= send_button_status %> > Send </a>
         <a class="btn btn-small btn-primary" href="/invoices/<%= id %>/download.pdf" > Download </a>
-        <button class="btn btn-small btn-primary" data-target="#AdditionalInvoiceModal" data-toggle="modal",
-        data-invoice-id='<%= id %>'> Additional Invoice </button>
+        <button class="btn btn-xs-small btn-primary" data-target="#AdditionalInvoiceModal" data-toggle="modal",
+        data-invoice-id='<%= id %>'> Additional INV </button>
       </tr>
 
 #invoiceUpdateModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
@@ -101,7 +101,6 @@
         .modal-body
           = f.input :number, as: :text, label: "Invoice Number", include_blank: false
           = f.input :document_number, as: :text
-          = f.input :amount, as: :text, label: "Invoice Amount"
 
         .modal-footer
           = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}

@@ -29,18 +29,18 @@ class InvoicesController < ApplicationController
 
   def download
     invoice = Invoice.find(params[:id])
-    kit = collect_pdf_data(invoice)
+    kit, invoice_type = collect_pdf_data(invoice)
     respond_to do |format|
       format.html {}
-      format.pdf {send_data(kit.to_pdf, :filename => "invoice.pdf", :type => 'application/pdf')}
+      format.pdf {send_data(kit.to_pdf, :filename => "#{invoice_type}.pdf", :type => 'application/pdf')}
     end
   end
 
   def send_invoice
     invoice = Invoice.find(params[:id])
-    kit = collect_pdf_data(invoice)
+    kit,invoice_type = collect_pdf_data(invoice)
     pdf = kit.to_pdf
-    file = kit.to_file("#{Rails.root}/tmp/invoice.pdf")
+    file = kit.to_file("#{Rails.root}/tmp/#{invoice_type}.pdf")
     UserMailer.mail_invoice(invoice.customer, file).deliver
     invoice.invoice_sent! unless invoice.sent?
     respond_to do |format|
@@ -54,21 +54,33 @@ class InvoicesController < ApplicationController
       invoice_perticulars_attributes: [:id, :name, :_destroy, :rate, :quantity, :subtotal])
   end
 
-  def update_amount(invoices)
-    invoices.each do |invoice|
-      unless invoice.is_additional_invoice?
-        amount = invoice.calculate_amount
-        invoice.amount = amount
-        invoice.save
-      end
-    end
-  end
-
   def collect_pdf_data(invoice)
     @invoice = invoice
+    @particulars = @invoice.invoice_perticulars
+    if (invoice.previous_invoice.present?)# this is additional invoice
+      invoice_type = "additional_invoice"
+      @ref_no = invoice.previous_invoice.number
+    elsif (invoice.invoiceable.is_a?(BillOfLading) && !invoice.invoiceable.is_export_bl?)
+      invoice_type = "import_invoice"
+      import = invoice.invoiceable.import
+      @pick_up = import.from
+      @destination = import.to
+      @equipment = import.equipment
+      @job_number = import.work_order_number
+    elsif (invoice.invoiceable.is_a?(Movement))
+      invoice_type = "Haulage_export_invoice"
+      movement = invoice.invoiceable
+      @container = movement.container_number
+      @pick_up = movement.port_of_discharge
+      @destination = movement.port_of_loading
+      @equipment = movement.equipment_type
+      @job_number = movement.w_o_number
+    else
+      invoice_type = "TBL_export_invoice"
+    end
     html = render_to_string(:action => 'download.html.haml', :layout=> false)
     kit = PDFKit.new(html)
     kit.stylesheets << "#{Rails.root}/app/assets/stylesheets/invoices.css.scss"
-    return kit
+    return kit, invoice_type
   end
 end

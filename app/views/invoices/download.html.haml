@@ -14,7 +14,7 @@
           %br/ 
           BL Number: #{@invoice.bl_number} 
           %br/
-          #{@equipment} X #{@quantity}
+          #{@equipment} X #{@invoice.total_containers}
           %br/
           Job Number: #{@job_number}
         %td{colspan: "2", valign: "top"}
@@ -26,11 +26,10 @@
           Inv Date: #{@invoice.date}
           %br/
           BL Number: #{@invoice.bl_number} 
-          - unless @charges.blank?
-            %br/
-            Pick Up Location: #{@pick_up}
-            %br/
-            Destination: #{@destination}
+          %br/
+          Pick Up Location: #{@pick_up}
+          %br/
+          Destination: #{@destination}
       %tr
         %td{colspan: "4", height: '20px'}
       %tr
@@ -38,20 +37,12 @@
         %th Qty
         %th Rate
         %th Total
-      - if @invoice.is_additional_invoice?
+      - @particulars.each do |particular|
         %tr{style: "height:20px"}
-          %td= @perticular
-          %td
-          %td
-          %td= @add_charges
-      - unless @charges.blank?
-        - @charges.each do |key, value|
-          - value.each do |v|
-            %tr{style: "height:20px"}
-              %td= key
-              %td= v.second
-              %td= v.first
-              %td= (v.second.to_i * v.first.to_i)
+          %td= particular.name
+          %td= particular.rate
+          %td= particular.quantity
+          %td= particular.subtotal
       - (1..4).each do |row|
         %tr{style: "height:20px"}
           %td
