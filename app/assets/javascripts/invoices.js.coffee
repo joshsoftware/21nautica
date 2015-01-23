@@ -11,13 +11,18 @@ containers_quantity = (value) ->
     select_field = field.find(".myselect")
     select_field.change ->
       value = $(this).find(".select.optional:eq(1)").val()
+      if value is "Other"
+        select_name = $(this).find(".select.optional:eq(1)").attr("name")
+        new_input = $(this).find('.select').replaceWith('<input type="text" name=' + select_name + ' data-validation="required" data-validation-error-msg="add particular">')
+
       containers = containers_quantity(value)
       rate = $(this).closest(".fields").find(".rate").val()
       $(this).closest(".fields").find(".quantity").val containers
       $(this).closest(".fields").find(".subtotal").val (containers * rate)
+
       amount = 0
       $('.subtotal').each ->
-          amount = parseInt(amount) + parseInt($(this).val())
+        amount = parseInt(amount) + parseInt($(this).val())
       $('#invoiceUpdateModal #invoice_amount').val amount + prev_amount
 
     rate_field = field.find(".rate")
@@ -58,7 +63,6 @@ containers_quantity = (value) ->
     $('#invoiceUpdateModal #invoice_amount').val $(row).find("td.amount").text()
     $('#invoiceUpdateModal #invoice_amount').attr('readonly','readonly')
     window.prev_amount = parseInt($('#invoiceUpdateModal #invoice_amount').val())
-    console.log(prev_amount)
 
     $('#invoiceUpdateModal form').attr('action', "/invoices/" + id )
 
