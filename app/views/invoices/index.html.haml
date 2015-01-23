@@ -73,10 +73,10 @@
                   .col-md-3
                     Subtotal
                 .panel-body
-                  = f.link_to_add "Add a particular", :invoice_perticulars
+                  = f.link_to_add "Add a particular", :particulars
 
                 .row.col-md-12
-                  = f.fields_for :invoice_perticulars do |perticular|
+                  = f.fields_for :particulars do |perticular|
                     .row.nested_row
                       .col-md-3.myselect
                         = perticular.input :name, as: :select, collection: INVOICE_PERTICULARS, label: false, include_blank: "Select perticular", input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "select particular"} 

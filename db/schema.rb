@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150123084450) do
+ActiveRecord::Schema.define(version: 20150123125407) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -133,16 +133,6 @@ ActiveRecord::Schema.define(version: 20150123084450) do
     t.string   "weight"
   end
 
-  create_table "invoice_perticulars", force: true do |t|
-    t.integer  "invoice_id"
-    t.string   "name"
-    t.integer  "rate"
-    t.integer  "quantity"
-    t.integer  "subtotal",   default: 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "invoices", force: true do |t|
     t.string   "number"
     t.date     "date"
@@ -180,6 +170,16 @@ ActiveRecord::Schema.define(version: 20150123084450) do
     t.date     "clearing_agent_invoice_date"
     t.string   "clearing_agent_invoice_number"
     t.integer  "vendor_id"
+  end
+
+  create_table "particulars", force: true do |t|
+    t.integer  "invoice_id"
+    t.string   "name"
+    t.integer  "rate"
+    t.integer  "quantity"
+    t.integer  "subtotal",   default: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "payments", force: true do |t|

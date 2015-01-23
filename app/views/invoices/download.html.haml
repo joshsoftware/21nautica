@@ -40,8 +40,8 @@
       - @particulars.each do |particular|
         %tr{style: "height:20px"}
           %td= particular.name
-          %td= particular.rate
           %td= particular.quantity
+          %td= particular.rate
           %td= particular.subtotal
       - (1..4).each do |row|
         %tr{style: "height:20px"}

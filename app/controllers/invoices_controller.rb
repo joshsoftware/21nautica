@@ -51,12 +51,12 @@ class InvoicesController < ApplicationController
   private
   def invoice_params
     params.require(:invoice).permit(:number, :document_number, :amount, 
-      invoice_perticulars_attributes: [:id, :name, :_destroy, :rate, :quantity, :subtotal])
+      particulars_attributes: [:id, :name, :_destroy, :rate, :quantity, :subtotal])
   end
 
   def collect_pdf_data(invoice)
     @invoice = invoice
-    @particulars = @invoice.invoice_perticulars
+    @particulars = @invoice.particulars
     if (invoice.previous_invoice.present?)# this is additional invoice
       invoice_type = "additional_invoice"
       @ref_no = invoice.previous_invoice.number
