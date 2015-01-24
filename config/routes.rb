@@ -58,7 +58,7 @@ Rails.application.routes.draw do
   resources :imports, only: [:new, :create]
   resources :paid, only: [:new, :create, :index]
   resources :received, only: [:new, :create, :index]
-  resources :invoices, only: [:index, :update] do
+  resources :invoices, only: [:index, :edit, :update] do
     member do
       post 'additional-invoice'
       get 'download'

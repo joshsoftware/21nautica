@@ -1,0 +1,61 @@
+= simple_nested_form_for(invoice, html: { class: 'form-horizontal', method: "patch"}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+  .modal-content
+    .modal-header
+      = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+      %h1.modal-title Update Invoice
+
+    .modal-body
+      .row.col-md-12
+        .col-md-6
+          #customer_name
+            = f.label "Customer Name: #{invoice.customer_name}"
+          #bl_number
+            = f.label "BL Number: #{invoice.bl_number}"
+          #invoiced_date
+            =f.label "Invoiced Date: #{invoice.date}"
+        .col-md-6
+          .row
+            .col-md-3.h3 Amount
+            .col-md-3
+              #invoice_amount
+                %h3{style: "color: red"} #{invoice.amount}  
+
+      .row.col-md-12
+        .col-md-6
+          #invoice_number
+            =f.input :number, as: :text
+        .col-md-6
+          #document_number
+            = f.input :document_number, as: :text
+      .row.col-md-12
+        .panel.panel-default
+          .panel-heading
+            .panel-title
+              .col-md-3
+                Particular
+              .col-md-3
+                Rate
+              .col-md-3
+                Quantity
+              .col-md-3
+                Subtotal
+              
+            .row.col-md-12#particulars
+              = f.fields_for :particulars do |particular|
+                .row.nested_row
+                  .col-md-3.myselect
+                    = particular.input :name, as: :select, collection: INVOICE_PERTICULARS, label: false, :class => "myselect" , include_blank: "Select particular", input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "select particular"}
+                  = particular.text_field :rate, class: "rate"
+                  = particular.text_field :quantity, readonly: "readonly", class: "quantity"
+                  = particular.text_field :subtotal, readonly: "readonly", class: "subtotal"
+                  = particular.link_to_remove "Remove"
+
+            = f.link_to_add "particular", :particulars, :data => { :target => "#particulars"}, class: "btn btn-primary"
+
+
+
+      = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+      = f.submit 'Save', class: 'btn btn-primary'
+
+:javascript
+  containers = "#{invoice.total_containers}"

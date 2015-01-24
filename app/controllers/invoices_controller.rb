@@ -4,6 +4,13 @@ class InvoicesController < ApplicationController
     @invoices = Invoice.all
   end
 
+  def edit
+    @invoice = Invoice.find(params[:id])
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def update
     invoice = Invoice.find(params[:id])
     invoice.update_attributes(invoice_params)
