@@ -13,28 +13,30 @@ calculate_amount = ->
   removed_amount = 0
   $('.fields[style*="display: none;"] .subtotal').each ->
     removed_amount = parseInt(removed_amount) + parseInt($(this).val())
-
   return (amount - removed_amount)
+
+load_particular_select_and_rate_event = ->
+  $(".myselect").change ->
+    value = $(this).find(".select.optional:eq(1)").val()
+    if value is "Other"
+      select_name = $(this).find(".select.optional:eq(1)").attr("name")
+      new_input = $(this).find('.select').replaceWith('<input type="text" name=' + select_name + ' data-validation="required" data-validation-error-msg="add particular">')
+
+    quantity = containers_quantity(value, containers)
+    rate = $(this).closest(".fields").find(".rate").val()
+    $(this).closest(".fields").find(".quantity").val quantity
+    $(this).closest(".fields").find(".subtotal").val (quantity * rate)
+    $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
+
+  $(".rate").change ->
+    rate = $(this).val()
+    qty = $(this).closest(".fields").find(".quantity").val()
+    $(this).closest(".fields").find(".subtotal").val (rate * qty)
+    $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
 
 @load_nested_form_events = ->
   $(document).on "nested:fieldAdded", (event) ->
-    $(".myselect").change ->
-      value = $(this).find(".select.optional:eq(1)").val()
-      if value is "Other"
-        select_name = $(this).find(".select.optional:eq(1)").attr("name")
-        new_input = $(this).find('.select').replaceWith('<input type="text" name=' + select_name + ' data-validation="required" data-validation-error-msg="add particular">')
-
-      quantity = containers_quantity(value, containers)
-      rate = $(this).closest(".fields").find(".rate").val()
-      $(this).closest(".fields").find(".quantity").val quantity
-      $(this).closest(".fields").find(".subtotal").val (quantity * rate)
-      $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
-
-    $(".rate").change ->
-      rate = $(this).val()
-      qty = $(this).closest(".fields").find(".quantity").val()
-      $(this).closest(".fields").find(".subtotal").val (rate * qty)
-      $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
+    load_particular_select_and_rate_event()
 
   $(document).on "nested:fieldRemoved", (event) ->
     $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
@@ -48,24 +50,7 @@ calculate_amount = ->
 @loadupdatemodal = ->
   $('#invoiceUpdateModal').on 'show.bs.modal', (event) ->
     $('#invoiceUpdateModal #invoice_amount').attr('readonly','readonly')
-    $(".myselect").change ->
-      value = $(this).find(".select.optional:eq(1)").val()
-      if value is "Other"
-        select_name = $(this).find(".select.optional:eq(1)").attr("name")
-        new_input = $(this).find('.select').replaceWith('<input type="text" name=' + select_name + ' data-validation="required" data-validation-error-msg="add particular">')
-
-      quantity = containers_quantity(value, containers)
-      rate = $(this).closest(".fields").find(".rate").val()
-      $(this).closest(".fields").find(".quantity").val quantity
-      $(this).closest(".fields").find(".subtotal").val (quantity * rate)
-      $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
-
-    $(".rate").change ->
-      rate = $(this).val()
-      qty = $(this).closest(".fields").find(".quantity").val()
-      $(this).closest(".fields").find(".subtotal").val (rate * qty)
-      $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
-
+    load_particular_select_and_rate_event()
 
   $('#invoiceUpdateModal').on 'hide.bs.modal', (event) ->
     $('#invoiceUpdateModal .alert').remove()
