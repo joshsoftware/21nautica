@@ -8,7 +8,7 @@ class Invoice < ActiveRecord::Base
     foreign_key: "previous_invoice_id"
   belongs_to :previous_invoice, class_name: "Invoice"
   has_many :particulars
-  accepts_nested_attributes_for :particulars
+  accepts_nested_attributes_for :particulars, allow_destroy: true
 
   aasm column: 'status' do
     state :new, initial: true

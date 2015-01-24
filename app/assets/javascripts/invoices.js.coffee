@@ -9,7 +9,12 @@ calculate_amount = ->
   amount = 0
   $('.subtotal').each ->
     amount = parseInt(amount) + parseInt($(this).val())
-  return amount
+
+  removed_amount = 0
+  $('.fields[style*="display: none;"] .subtotal').each ->
+    removed_amount = parseInt(removed_amount) + parseInt($(this).val())
+
+  return (amount - removed_amount)
 
 @load_nested_form_events = ->
   $(document).on "nested:fieldAdded", (event) ->
@@ -32,9 +37,7 @@ calculate_amount = ->
       $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
 
   $(document).on "nested:fieldRemoved", (event) ->
-    $('.fields[style*="display: none;"]').remove()
     $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
-
 
 @InvoiceFilterInit = ->
   FilterJS invoices, "#invoices_search_result",
