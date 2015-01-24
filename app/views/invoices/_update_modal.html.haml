@@ -14,19 +14,15 @@
           #invoiced_date
             =f.label "Invoiced Date: #{invoice.date}"
         .col-md-6
-          .row
-            .col-md-3.h3 Amount
-            .col-md-3
-              #invoice_amount
-                %h3{style: "color: red"} #{invoice.amount}  
-
+          #invoice_amount
+            =f.input :amount, input_html: {style: "color:red; font-size: 40px; height:  60px;"}
       .row.col-md-12
         .col-md-6
           #invoice_number
-            =f.input :number, as: :text
+            =f.input :number
         .col-md-6
           #document_number
-            = f.input :document_number, as: :text
+            = f.input :document_number
       .row.col-md-12
         .panel.panel-default
           .panel-heading

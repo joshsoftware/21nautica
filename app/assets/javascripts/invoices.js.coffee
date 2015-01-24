@@ -23,17 +23,17 @@ calculate_amount = ->
       rate = $(this).closest(".fields").find(".rate").val()
       $(this).closest(".fields").find(".quantity").val quantity
       $(this).closest(".fields").find(".subtotal").val (quantity * rate)
-      $('#invoiceUpdateModal #invoice_amount h3').text(calculate_amount)
+      $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
 
     $(".rate").change ->
       rate = $(this).val()
       qty = $(this).closest(".fields").find(".quantity").val()
       $(this).closest(".fields").find(".subtotal").val (rate * qty)
-      $('#invoiceUpdateModal #invoice_amount h3').text(calculate_amount)
+      $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
 
   $(document).on "nested:fieldRemoved", (event) ->
     $('.fields[style*="display: none;"]').remove()
-    $('#invoiceUpdateModal #invoice_amount h3').text(calculate_amount)
+    $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
 
 
 @InvoiceFilterInit = ->
@@ -44,6 +44,7 @@ calculate_amount = ->
 
 @loadupdatemodal = ->
   $('#invoiceUpdateModal').on 'show.bs.modal', (event) ->
+    $('#invoiceUpdateModal #invoice_amount').attr('readonly','readonly')
     $(".myselect").change ->
       value = $(this).find(".select.optional:eq(1)").val()
       if value is "Other"
@@ -54,13 +55,13 @@ calculate_amount = ->
       rate = $(this).closest(".fields").find(".rate").val()
       $(this).closest(".fields").find(".quantity").val quantity
       $(this).closest(".fields").find(".subtotal").val (quantity * rate)
-      $('#invoiceUpdateModal #invoice_amount h3').text(calculate_amount)
+      $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
 
     $(".rate").change ->
       rate = $(this).val()
       qty = $(this).closest(".fields").find(".quantity").val()
       $(this).closest(".fields").find(".subtotal").val (rate * qty)
-      $('#invoiceUpdateModal #invoice_amount h3').text(calculate_amount)
+      $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
 
 
   $('#invoiceUpdateModal').on 'hide.bs.modal', (event) ->
