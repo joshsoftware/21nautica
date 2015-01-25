@@ -24,14 +24,21 @@ class InvoicesController < ApplicationController
     end
   end
 
+  def new_additional_invoice
+    @invoice = Invoice.new
+    assign_previous_invoice(@invoice)
+    respond_to do |format|
+      format.js{}
+    end
+  end
+
   def additional_invoice
-    previous_invoice = Invoice.find(params[:id])
-    @invoice = Invoice.create(invoice_params)
-    @invoice.date = Date.current
-    @invoice.previous_invoice = previous_invoice
-    @invoice.customer = previous_invoice.customer
+    @invoice = Invoice.new(invoice_params)
+    assign_previous_invoice(@invoice)
     @invoice.invoice_ready!
-    @error = invoice.errors.full_messages unless @invoice.save
+    respond_to do |format|
+      format.js {}
+    end
   end
 
   def download
@@ -59,6 +66,13 @@ class InvoicesController < ApplicationController
   def invoice_params
     params.require(:invoice).permit(:number, :document_number, :amount, 
       particulars_attributes: [:id, :name, :_destroy, :rate, :quantity, :subtotal])
+  end
+
+  def assign_previous_invoice(invoice)
+    previous_invoice = Invoice.find(params[:id])
+    invoice.previous_invoice = previous_invoice
+    invoice.customer = previous_invoice.customer
+    invoice.date = Date.current
   end
 
   def collect_pdf_data(invoice)

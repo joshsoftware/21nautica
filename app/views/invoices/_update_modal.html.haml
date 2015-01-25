@@ -1,4 +1,4 @@
-= simple_nested_form_for(invoice, html: { class: 'form-horizontal', method: "patch"}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+= simple_nested_form_for(invoice, url: url, html: { class: 'form-horizontal', method: method }, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
   .modal-content
     .modal-header
       = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}

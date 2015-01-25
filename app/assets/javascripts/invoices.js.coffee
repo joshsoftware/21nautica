@@ -55,9 +55,3 @@ load_particular_select_and_rate_event = ->
   $('#invoiceUpdateModal').on 'hide.bs.modal', (event) ->
     $('#invoiceUpdateModal .alert').remove()
     $('#invoiceUpdateModal .fields').remove()
-
-@load_additional_invoice_modal = ->
-  $('#AdditionalInvoiceModal').on 'show.bs.modal', (event) ->
-    link_tag = $(event.relatedTarget)
-    id = link_tag.attr('data-invoice-id')
-    $('#AdditionalInvoiceModal form').attr('action', "/invoices/" + id + "/additional-invoice")

@@ -28,35 +28,17 @@
         <a class="btn btn-small btn-primary" href="/invoices/<%= id %>/edit" data-remote="true"> Update </a>
         <a class="btn btn-small btn-primary" href="/invoices/<%= id %>/send_invoice" data-remote="true" data-disable-with= "sending..." <%= send_button_status %> > Send </a>
         <a class="btn btn-small btn-primary" href="/invoices/<%= id %>/download.pdf" > Download </a>
-        <button class="btn btn-xs-small btn-primary" data-target="#AdditionalInvoiceModal" data-toggle="modal",
-        data-invoice-id='<%= id %>'> Additional INV </button>
+        <a class="btn btn-small btn-primary" href="/invoices/<%= id %>/new-additional-invoice" data-remote="true"> Additional INV </a>
       </tr>
 
 #invoiceUpdateModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog.modal-lg
-
-#AdditionalInvoiceModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
-  .modal-dialog
-    = simple_form_for(:invoice, url: '', html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
-      .modal-content
-        .modal-header
-          = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
-          %h1.modal-title Additional Invoice
-
-        .modal-body
-          = f.input :number, as: :text, label: "Invoice Number", include_blank: false
-          = f.input :document_number, as: :text
-
-        .modal-footer
-          = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
-          = f.submit 'Save', class: 'btn btn-primary'
 
 :javascript
   var invoices = #{@invoices.to_json};
   $(document).on('ready page:load', function(){
     InvoiceFilterInit();
     loadupdatemodal();
-    load_additional_invoice_modal();
     load_nested_form_events();
   });
 
