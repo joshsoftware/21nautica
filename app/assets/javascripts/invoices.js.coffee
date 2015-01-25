@@ -17,10 +17,10 @@ calculate_amount = ->
 
 load_particular_select_and_rate_event = ->
   $(".myselect").change ->
-    value = $(this).find(".select.optional:eq(1)").val()
+    value = $(this).find(".select.required:eq(1)").val()
     if value is "Other"
-      select_name = $(this).find(".select.optional:eq(1)").attr("name")
-      new_input = $(this).find('.select').replaceWith('<input type="text" name=' + select_name + ' data-validation="required" data-validation-error-msg="add particular">')
+      select_name = $(this).find(".select.required:eq(1)").attr("name")
+      new_input = $(this).find('.select').replaceWith('<input type="text" name=' + select_name + ' required="required">')
 
     quantity = containers_quantity(value, containers)
     rate = $(this).closest(".fields").find(".rate").val()
