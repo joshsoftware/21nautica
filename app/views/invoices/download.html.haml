@@ -38,7 +38,7 @@
         %th Rate
         %th Total
       - @particulars.each do |particular|
-        %tr{style: "height:20px"}
+        %tr{style: "height:20px;text-align:center"}
           %td= particular.name
           %td= particular.quantity
           %td= particular.rate
@@ -52,10 +52,10 @@
 
       %tr{height: "40px"}
         %td{colspan: "3", style: "text-align:center"} Subtotal
-        %td= @invoice.amount
+        %td{style: "text-align:center"}= @invoice.amount
       %tr
         %td{colspan: "3", style: "text-align:center"}= @invoice.amount.in_words.humanize + " US Dollars Only"
-        %td= @invoice.amount
+        %td{style: "text-align:center"}= @invoice.amount
       %tr
         %td{colspan: "4"}
           TotalE. & O.E.
