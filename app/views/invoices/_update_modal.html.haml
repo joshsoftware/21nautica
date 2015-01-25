@@ -40,7 +40,10 @@
               = f.fields_for :particulars do |particular|
                 .row.nested_row
                   .col-md-3.myselect
-                    = particular.input :name, as: :select, collection: INVOICE_PERTICULARS, label: false, :class => "myselect" , include_blank: "Select particular", input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "select particular"}
+                    - if (!particular.object.name.blank? && !(INVOICE_PERTICULARS.include?(particular.object.name)))
+                      = particular.text_field :name, class: "myselect"
+                    -else
+                      = particular.input :name, as: :select, collection: INVOICE_PERTICULARS, label: false, :class => "myselect" , include_blank: "Select particular", input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "select particular"}
                   = particular.text_field :rate, class: "rate"
                   = particular.text_field :quantity, readonly: "readonly", class: "quantity"
                   = particular.text_field :subtotal, readonly: "readonly", class: "subtotal"
