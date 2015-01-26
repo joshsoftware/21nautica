@@ -4,7 +4,13 @@ $('#invoiceUpdateModal .alert').remove();
     $('#invoiceUpdateModal .modal-body').append("<div class='alert alert-danger'>#{msg}</div>");
 - else
   $('#invoiceUpdateModal').modal('hide')
-  row = $("#invoices_index_table tr[invoice_id= '" + #{@id} + "']")
-  $(row).find("td.number").text("#{@number}")
-  $(row).find("td.document_num").text("#{@document_number}")
-  $(row).find("td.amount").text("#{@amount}")
+  row = $("#invoices_index_table tr[invoice_id= '" + #{@invoice.id} + "']")
+  $(row).find("td.number").text("#{@invoice.number}")
+  $(row).find("td.document_num").text("#{@invoice.document_number}")
+  $(row).find("td.amount").text("#{@invoice.amount}")
+  additional_invoices = "#{@invoice.additional_invoices.pluck(:id)}"
+  invoices = JSON.parse(additional_invoices);
+  $.each( invoices, function( index, value ){
+  row = $("#invoices_index_table tr[invoice_id= '" + value + "']")
+  $(row).find("#additional_inv").text("Refs Inv: #{@invoice.number}")
+  });

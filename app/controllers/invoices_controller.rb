@@ -12,16 +12,9 @@ class InvoicesController < ApplicationController
   end
 
   def update
-    invoice = Invoice.find(params[:id])
-    invoice.update_attributes(invoice_params)
-    if invoice.save
-      @id = params[:id]
-      @amount = invoice.amount
-      @document_number = invoice.document_number
-      @number = invoice.number
-    else 
-      @error = invoice.errors.full_messages
-    end
+    @invoice = Invoice.find(params[:id])
+    @invoice.update_attributes(invoice_params)
+    @error = invoice.errors.full_messages unless @invoice.save
   end
 
   def new_additional_invoice
