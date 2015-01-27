@@ -20,7 +20,7 @@ load_particular_select_and_rate_event = ->
     value = $(this).find(".form-control").val()
     if value is "Other"
       select_name = $(this).find(".form-control").attr("name")
-      new_input = $(this).find('.form-control').replaceWith('<input type="text" name=' + select_name + ' required="required" class="form-control">')
+      new_input = $(this).find('.form-control').replaceWith('<input type="text" name=' + select_name + ' data-validation-error-msg="Enter particular" data-validation="required" class="form-control">')
 
     quantity = containers_quantity(value, containers)
     rate = $(this).closest(".fields").find(".rate").val()
@@ -39,6 +39,11 @@ load_particular_select_and_rate_event = ->
     load_particular_select_and_rate_event()
 
   $(document).on "nested:fieldRemoved", (event) ->
+    $('.fields[style*="display: none;"] .form-control').each ->
+      $(this).removeAttr("data-validation")
+    $('.fields[style*="display: none;"] .rate').each ->
+      $(this).removeAttr("data-validation")
+
     $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
 
 @InvoiceFilterInit = ->
@@ -55,3 +60,9 @@ load_particular_select_and_rate_event = ->
   $('#invoiceUpdateModal').on 'hide.bs.modal', (event) ->
     $('#invoiceUpdateModal .alert').remove()
     $('#invoiceUpdateModal .fields').remove()
+
+@validate_invoice_form = ->
+  $.validate
+    form: "#invoice_form"
+    scrollToTopOnError: false
+  return
