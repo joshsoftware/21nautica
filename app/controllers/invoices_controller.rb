@@ -14,7 +14,7 @@ class InvoicesController < ApplicationController
   def update
     @invoice = Invoice.find(params[:id])
     @invoice.update_attributes(invoice_params)
-    @error = invoice.errors.full_messages unless @invoice.save
+    @error = @invoice.errors.full_messages unless @invoice.save
   end
 
   def new_additional_invoice
@@ -27,8 +27,12 @@ class InvoicesController < ApplicationController
 
   def additional_invoice
     @invoice = Invoice.new(invoice_params)
-    assign_previous_invoice(@invoice)
-    @invoice.invoice_ready!
+    if @invoice.save
+      assign_previous_invoice(@invoice)
+      @invoice.invoice_ready!
+    else
+      @error = @invoice.errors.full_messages
+    end
     respond_to do |format|
       format.js {}
     end

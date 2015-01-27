@@ -46,7 +46,7 @@
                     -else
                       = particular.select :name, INVOICE_PERTICULARS.map{|i| [i,i]}, {include_blank: "Select particular"}, required: true, class: "myselect form-control", class: 'form-control', "data-validation" => "required", "data-validation-error-msg"=> "Please Select One"
                   .col-md-3
-                    = particular.text_field :rate, class: 'form-control', "data-validation" => " number required", "data-validation-error-msg"=> "Please Enter Valid Rate"
+                    = particular.text_field :rate, class: 'rate form-control', "data-validation" => " number required", "data-validation-error-msg"=> "Please Enter Valid Rate"
                   .col-md-2
                     = particular.text_field :quantity, readonly: "readonly", class: "quantity form-control"
                   .col-md-3
