@@ -28,7 +28,7 @@
         <a class="btn btn-small btn-primary" href="/invoices/<%= id %>/edit" data-remote="true" id="update_button" <%= update_button_status %> > Update </a>
         <a class="btn btn-small btn-primary" href="/invoices/<%= id %>/send_invoice" data-remote="true" data-disable-with= "sending..." <%= send_button_status %> > Send </a>
         <a class="btn btn-small btn-primary" href="/invoices/<%= id %>/download.pdf" > Download </a>
-        <a class="btn btn-small btn-primary" id="additional_inv" href="<%= additional_invoice_button_link %>" data-remote="true" > <%= additional_invoice_button_text %> </a>
+        <a class= "<%= additional_invoice_button_class %>" id="additional_inv" href="<%= additional_invoice_button_link %>" data-remote="true" > <%= additional_invoice_button_text %> </a>
       </tr>
 
 #invoiceUpdateModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}

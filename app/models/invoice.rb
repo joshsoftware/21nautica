@@ -41,12 +41,16 @@ class Invoice < ActiveRecord::Base
   end
 
   def additional_invoice_button_link
-    self.previous_invoice.present? ? "/invoices/#{self.previous_invoice.id}/download.pdf" :
+    self.previous_invoice.present? ? "#" :
      "/invoices/#{self.id}/new-additional-invoice"
   end
 
   def additional_invoice_button_text
-    self.previous_invoice.present? ? "Refs Inv: #{self.previous_invoice.number}" : "Additional INV"
+    self.previous_invoice.present? ? "Refs: #{self.previous_invoice.number}" : "Additional INV"
+  end
+
+  def additional_invoice_button_class
+    self.previous_invoice.present? ? "badge" : "btn btn-small btn-primary"
   end
 
   def is_additional_invoice?
@@ -68,6 +72,7 @@ class Invoice < ActiveRecord::Base
   def as_json(options={})
     super(methods: [:bl_number, :customer_name, :index_row_class, 
       :send_button_status, :total_containers, :update_button_status, 
-      :additional_invoice_button_link, :additional_invoice_button_text])
+      :additional_invoice_button_link, :additional_invoice_button_text, 
+      :additional_invoice_button_class])
   end
 end
