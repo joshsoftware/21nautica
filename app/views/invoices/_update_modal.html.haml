@@ -15,7 +15,7 @@
             =f.label "Invoiced Date: #{invoice.date}"
         .col-md-6
           #invoice_amount
-            =f.input :amount, input_html: {style: "color:red; font-size: 40px; height:  60px;"}
+            =f.input :amount, input_html: {style: "color:red;"}
       .row.col-md-12
         .col-md-6
           #invoice_number
@@ -31,24 +31,29 @@
                 Particular
               .col-md-3
                 Rate
-              .col-md-3
+              .col-md-2
                 Quantity
               .col-md-3
                 Subtotal
               
             .row.col-md-12#particulars
+
               = f.fields_for :particulars do |particular|
                 .row.nested_row
                   .col-md-3.myselect
                     - if (!particular.object.name.blank? && !(INVOICE_PERTICULARS.include?(particular.object.name)))
-                      = particular.text_field :name, class: "myselect"
+                      = particular.text_field :name, class: "form-control"
                     -else
-                      = particular.input :name, as: :select, collection: INVOICE_PERTICULARS, label: false, :class => "myselect" , include_blank: "Select particular", required: true
-                  = particular.text_field :rate, class: "rate", required: true
-                  = particular.text_field :quantity, readonly: "readonly", class: "quantity"
-                  = particular.text_field :subtotal, readonly: "readonly", class: "subtotal"
-                  = particular.link_to_remove class: "btn btn-danger btn-sm" do
-                    %span.glyphicon.glyphicon-remove
+                      = particular.select :name, INVOICE_PERTICULARS.map{|i| [i,i]}, {include_blank: "Select particular"}, required: true, class: "myselect form-control"
+                  .col-md-3
+                    = particular.text_field :rate, class: "rate form-control", required: true
+                  .col-md-2
+                    = particular.text_field :quantity, readonly: "readonly", class: "quantity form-control"
+                  .col-md-3
+                    = particular.text_field :subtotal, readonly: "readonly", class: "subtotal form-control"
+                  .col-md-1
+                    = particular.link_to_remove class: "btn btn-danger btn-sm" do
+                      %span.glyphicon.glyphicon-remove
 
             = f.link_to_add :particulars, :data => { :target => "#particulars"}, class: "btn btn-success" do
               %span.glyphicon.glyphicon-plus Add
