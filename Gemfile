@@ -29,7 +29,7 @@ gem 'simple_form'
 
 gem 'nested_form'
 # State machines for Ruby classes, Read more: https://github.com/aasm/aasm
-gem 'aasm'
+gem 'aasm', '~> 3.3'
 # bootstrap-sass is a Sass-powered version of Bootstrap. Read more: https://github.com/twbs/bootstrap-sass
 gem 'bootstrap-sass', '~> 3.2.0'
 
