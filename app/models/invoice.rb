@@ -1,7 +1,6 @@
 class Invoice < ActiveRecord::Base
   include AASM
 
-  validates_presence_of :number
   belongs_to :customer
   belongs_to :invoiceable, polymorphic: true
   delegate :bl_number, to: :invoiceable, allow_nil: true
@@ -10,6 +9,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :previous_invoice, class_name: "Invoice"
   has_many :particulars
   accepts_nested_attributes_for :particulars, allow_destroy: true
+  after_create :assign_document_number
 
   aasm column: 'status' do
     state :new, initial: true
@@ -50,16 +50,33 @@ class Invoice < ActiveRecord::Base
     self.previous_invoice.present?
   end
 
+  def is_import_invoice?
+    self.invoiceable.is_a?(BillOfLading) && !self.invoiceable.is_export_bl?
+  end
+
+  def is_TBL_export_invoice?
+    (self.invoiceable.is_a?(BillOfLading) && self.invoiceable.is_export_bl?)
+  end
+
   def total_containers
     #find total number of containers according to invoice type
-    if self.invoiceable.is_a?(BillOfLading) && !self.invoiceable.is_export_bl?
+    if is_import_invoice?
       import = self.invoiceable.import
       quantity = import.quantity
-    elsif (self.invoiceable.is_a?(BillOfLading) && self.invoiceable.is_export_bl?)
+    elsif is_TBL_export_invoice?
       quantity = self.invoiceable.movements.count
     else
       quantity = 1
     end
+  end
+
+  def assign_document_number
+    if is_import_invoice?
+      self.document_number = self.invoiceable.import.work_order_number
+    elsif is_TBL_export_invoice?
+      self.document_number = self.invoiceable.movements.first.w_o_number
+    end
+    self.save
   end
 
   def as_json(options={})

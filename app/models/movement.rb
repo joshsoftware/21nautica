@@ -31,6 +31,7 @@ class Movement < ActiveRecord::Base
 
   delegate :bl_number, to: :bill_of_lading, allow_nil: true
   has_one :invoice, as: :invoiceable
+  before_update :assign_w_o_number_to_invoice, if: :w_o_number_changed?
 
   def assignment_of_truck_number
    count = Movement.where(truck_number: truck_number).where.not(status: :container_handed_over_to_KPA).count
@@ -114,6 +115,19 @@ class Movement < ActiveRecord::Base
 
   def is_Haulage_type?
     self.movement_type.eql?("Haulage")
+  end
+
+  def assign_w_o_number_to_invoice
+    if (is_Haulage_type? && self.invoice.present?)
+      invoice.document_number = w_o_number
+      invoice.save
+    else
+      if (self.bill_of_lading.present? && bill_of_lading.invoice.present?)
+        invoice = self.bill_of_lading.invoice
+        invoice.document_number = w_o_number
+        invoice.save
+      end
+    end
   end
 
 end
