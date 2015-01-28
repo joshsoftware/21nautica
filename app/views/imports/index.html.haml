@@ -4,7 +4,7 @@
     %th BL Number
     %th Shipping Line
     %th Equipment
-    %th File Open Date
+    %th Weight
     %th Work Order Number
     %th Clearing Agent
     %th ETA
@@ -18,7 +18,7 @@
         %td= import.bl_number
         %td= import.shipping_line
         %td= import.equipment
-        %td= import.created_at.to_date
+        %td= (import.weight.to_f/import.quantity).round(2)
         %td= import.work_order_number
         %td= import.clearing_agent
         %td= import.estimate_arrival
