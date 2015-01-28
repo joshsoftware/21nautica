@@ -43,7 +43,7 @@ class Invoice < ActiveRecord::Base
 
   def additional_invoice_button
     self.previous_invoice.present? ? "<span class=\"badge\" id=\"additional_inv\" > Refs: #{self.previous_invoice.number} </span>" : 
-    "<a class= \"btn btn-small btn-primary\" id=\"additional_inv\" href= \"/invoices/#{self.id}/new-additional-invoice\" data-remote=\"true\" > Additional INV </a>"
+    "<a class= \"btn btn-primary\" id=\"additional_inv\" href= \"/invoices/#{self.id}/new-additional-invoice\" data-remote=\"true\" > Additional INV </a>"
   end
 
   def is_additional_invoice?
