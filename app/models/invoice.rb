@@ -41,17 +41,9 @@ class Invoice < ActiveRecord::Base
     self.sent? ? "disabled" : ""
   end
 
-  def additional_invoice_button_link
-    self.previous_invoice.present? ? "#" :
-     "/invoices/#{self.id}/new-additional-invoice"
-  end
-
-  def additional_invoice_button_text
-    self.previous_invoice.present? ? "Refs: #{self.previous_invoice.number}" : "Additional INV"
-  end
-
-  def additional_invoice_button_class
-    self.previous_invoice.present? ? "badge" : "btn btn-small btn-primary"
+  def additional_invoice_button
+    self.previous_invoice.present? ? "<span class=\"badge\" id=\"additional_inv\" > Refs: #{self.previous_invoice.number} </span>" : 
+    "<a class= \"btn btn-small btn-primary\" id=\"additional_inv\" href= \"/invoices/#{self.id}/new-additional-invoice\" data-remote=\"true\" > Additional INV </a>"
   end
 
   def is_additional_invoice?
@@ -73,7 +65,6 @@ class Invoice < ActiveRecord::Base
   def as_json(options={})
     super(methods: [:bl_number, :customer_name, :index_row_class, 
       :send_button_status, :total_containers, :update_button_status, 
-      :additional_invoice_button_link, :additional_invoice_button_text, 
-      :additional_invoice_button_class])
+      :additional_invoice_button])
   end
 end
