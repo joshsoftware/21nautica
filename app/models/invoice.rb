@@ -53,6 +53,11 @@ class Invoice < ActiveRecord::Base
     self.invoiceable.is_a?(BillOfLading) && !self.invoiceable.is_export_bl?
   end
 
+  def rate_agreed
+    import = self.invoiceable.try(:import)
+    import.rate_agreed unless import.blank?
+  end
+
   def is_TBL_export_invoice?
     (self.invoiceable.is_a?(BillOfLading) && self.invoiceable.is_export_bl?)
   end

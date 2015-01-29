@@ -2,7 +2,10 @@
   .modal-content
     .modal-header
       = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
-      %h1.modal-title Update Invoice
+      - if invoice.is_additional_invoice?
+        %h1.modal-title Additional Invoice
+      - else
+        %h1.modal-title Update Invoice
 
     .modal-body
       .row.col-md-12
@@ -12,7 +15,16 @@
           #bl_number
             = f.label "BL Number: #{invoice.bl_number}"
           #invoiced_date
-            =f.label "Invoiced Date: #{invoice.date}"
+            = f.label "Invoiced Date: #{invoice.date}"
+          #invoice_quantity
+            = f.label "Number of Equipment: #{invoice.total_containers}"
+
+          - if invoice.is_additional_invoice?
+            #prev_inv_number
+              = f.label "Previous Invoice: #{invoice.previous_invoice.number}/ #{invoice.previous_invoice.amount}"
+          - else
+            #invoice_rate
+              = f.label "Rate Agreed: #{invoice.rate_agreed} "
         .col-md-6
           #invoice_amount
             =f.input :amount, input_html: {style: "color:red;"}
