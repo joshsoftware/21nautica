@@ -60,7 +60,7 @@ Rails.application.routes.draw do
   resources :received, only: [:new, :create, :index]
   resources :invoices, only: [:index, :edit, :update] do
     member do
-      get 'new-additional-invoice'
+      get 'add-additional-invoice' => "invoices#new_additional_invoice"
       post 'additional-invoice'
       get 'download'
       get 'send_invoice'
