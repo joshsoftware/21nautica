@@ -1,6 +1,7 @@
 class Invoice < ActiveRecord::Base
   include AASM
 
+  validates_presence_of :customer
   belongs_to :customer
   belongs_to :invoiceable, polymorphic: true
   delegate :bl_number, to: :invoiceable, allow_nil: true

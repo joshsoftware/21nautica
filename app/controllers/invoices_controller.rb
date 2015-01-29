@@ -28,12 +28,8 @@ class InvoicesController < ApplicationController
 
   def additional_invoice
     @invoice = Invoice.new(invoice_params)
-    if @invoice.save
-      assign_previous_invoice(@invoice)
-      @invoice.invoice_ready!
-    else
-      @error = @invoice.errors.full_messages
-    end
+    assign_previous_invoice(@invoice)
+    @invoice.save ? @invoice.invoice_ready! : @error = @invoice.errors.full_messages
     respond_to do |format|
       format.js {}
     end
