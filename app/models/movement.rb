@@ -30,7 +30,7 @@ class Movement < ActiveRecord::Base
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
 
   delegate :bl_number, to: :bill_of_lading, allow_nil: true
-  has_one :invoice, as: :invoiceable
+  has_many :invoices, as: :invoiceable
   before_update :assign_w_o_number_to_invoice, if: :w_o_number_changed?
 
   def assignment_of_truck_number
@@ -118,8 +118,8 @@ class Movement < ActiveRecord::Base
   end
 
   def assign_w_o_number_to_invoice
-    if (is_Haulage_type? && self.invoice.present?)
-      invoice.update(document_number: w_o_number)
+    if (is_Haulage_type? && self.invoices.present?)
+      invoices.update_all(document_number: w_o_number)
     else
       if (self.bill_of_lading.present? && bill_of_lading.invoices.present?)
         invoices = self.bill_of_lading.invoices
