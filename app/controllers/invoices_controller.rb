@@ -20,6 +20,7 @@ class InvoicesController < ApplicationController
   def new_additional_invoice
     @invoice = Invoice.new
     assign_previous_invoice(@invoice)
+    @invoice.document_number = @invoice.previous_invoice.document_number
     respond_to do |format|
       format.js{}
     end
@@ -70,6 +71,7 @@ class InvoicesController < ApplicationController
     invoice.previous_invoice = previous_invoice
     invoice.customer = previous_invoice.customer
     invoice.date = Date.current
+    invoice.invoiceable = previous_invoice.invoiceable
   end
 
   def collect_pdf_data(invoice)

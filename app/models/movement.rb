@@ -119,13 +119,11 @@ class Movement < ActiveRecord::Base
 
   def assign_w_o_number_to_invoice
     if (is_Haulage_type? && self.invoice.present?)
-      invoice.document_number = w_o_number
-      invoice.save
+      invoice.update(document_number: w_o_number)
     else
-      if (self.bill_of_lading.present? && bill_of_lading.invoice.present?)
-        invoice = self.bill_of_lading.invoice
-        invoice.document_number = w_o_number
-        invoice.save
+      if (self.bill_of_lading.present? && bill_of_lading.invoices.present?)
+        invoices = self.bill_of_lading.invoices
+        invoices.update_all(document_number: w_o_number)
       end
     end
   end

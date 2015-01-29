@@ -117,18 +117,23 @@ class ImportItem < ActiveRecord::Base
   def check_rest_of_the_containers
     bill_of_lading = self.find_bill_of_lading
     status = self.find_all_containers_status
-    bill_of_lading.invoice.invoice_ready! if 
-      (!status.include?("under_loading_process") && bill_of_lading.invoice.present?)
+    invoice = bill_of_lading.invoices.where(previous_invoice_id: nil).first
+    invoice.invoice_ready! if
+      (!status.include?("under_loading_process") && invoice.present?)
   end
 
   def check_for_invoice
     bill_of_lading = self.find_bill_of_lading
-    invoice = bill_of_lading.invoice
+    invoice = bill_of_lading.invoices.where(previous_invoice_id: nil).first
     return if (invoice && invoice.status.eql?("ready"))
-    (bill_of_lading.build_invoice(date: Date.current, 
-      customer_id: self.import.customer_id); bill_of_lading.save!) unless bill_of_lading.invoice
+    if invoice.blank?
+      invoice = Invoice.create(date: Date.current, customer_id: self.import.customer_id)
+      invoice.invoiceable = bill_of_lading
+      invoice.document_number = bill_of_lading.import.work_order_number
+      invoice.save
+    end
     status = self.find_all_containers_status
-    bill_of_lading.invoice.invoice_ready! unless status.include?("under_loading_process")
+    invoice.invoice_ready! unless status.include?("under_loading_process")
   end
 
 end

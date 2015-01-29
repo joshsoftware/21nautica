@@ -1,7 +1,7 @@
 class BillOfLading < ActiveRecord::Base
   has_one :import
   has_many :movements
-  has_one :invoice, as: :invoiceable
+  has_many :invoices, as: :invoiceable
   validates_uniqueness_of :bl_number
   auditable only: [:payment_ocean, :cheque_ocean,
     :payment_clearing, :cheque_clearing, :updated_at]
@@ -17,7 +17,7 @@ class BillOfLading < ActiveRecord::Base
   end
 
   def invoice_not_present?
-    self.invoice.blank?
+    self.invoices.blank?
   end
 
   def ready_TBL_export_invoice
@@ -26,14 +26,8 @@ class BillOfLading < ActiveRecord::Base
     invoice = Invoice.create(date: invoice_date)
     invoice.invoiceable = self
     invoice.customer = customer
+    invoice.document_number = self.movements.first.w_o_number
     invoice.invoice_ready!
-  end
-
-  def update_import_invoice_amount
-    if self.invoice.present?
-      invoice = self.invoice
-      invoice.update_import_invoice_amount
-    end
   end
 
 end

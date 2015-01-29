@@ -9,7 +9,6 @@ class Invoice < ActiveRecord::Base
   belongs_to :previous_invoice, class_name: "Invoice"
   has_many :particulars
   accepts_nested_attributes_for :particulars, allow_destroy: true
-  after_create :assign_document_number
 
   aasm column: 'status' do
     state :new, initial: true
@@ -68,15 +67,6 @@ class Invoice < ActiveRecord::Base
     else
       quantity = 1
     end
-  end
-
-  def assign_document_number
-    if is_import_invoice?
-      self.document_number = self.invoiceable.import.work_order_number
-    elsif is_TBL_export_invoice?
-      self.document_number = self.invoiceable.movements.first.w_o_number
-    end
-    self.save
   end
 
   def as_json(options={})
