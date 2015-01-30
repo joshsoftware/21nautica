@@ -26,7 +26,7 @@ class BillOfLading < ActiveRecord::Base
     invoice = Invoice.create(date: invoice_date)
     invoice.invoiceable = self
     invoice.customer = customer
-    invoice.document_number = self.movements.first.w_o_number
+    invoice.document_number = self.movements.pluck(:w_o_number).join(",")
     invoice.invoice_ready!
   end
 

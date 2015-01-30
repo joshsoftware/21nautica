@@ -77,24 +77,14 @@ class InvoicesController < ApplicationController
   def collect_pdf_data(invoice)
     @invoice = invoice
     @particulars = @invoice.particulars
-    if (invoice.previous_invoice.present?)# this is additional invoice
+    if (invoice.is_additional_invoice?)# this is additional invoice
       invoice_type = "additional_invoice"
       @ref_no = invoice.previous_invoice.number
-    elsif (invoice.invoiceable.is_a?(BillOfLading) && !invoice.invoiceable.is_export_bl?)
+    elsif invoice.is_import_invoice?
       invoice_type = "import_invoice"
       import = invoice.invoiceable.import
-      @pick_up = import.from
-      @destination = import.to
-      @equipment = import.equipment
-      @job_number = import.work_order_number
-    elsif (invoice.invoiceable.is_a?(Movement))
+    elsif invoice.is_Haulage_export_invoice?
       invoice_type = "Haulage_export_invoice"
-      movement = invoice.invoiceable
-      @container = movement.container_number
-      @pick_up = movement.port_of_discharge
-      @destination = movement.port_of_loading
-      @equipment = movement.equipment_type
-      @job_number = movement.w_o_number
     else
       invoice_type = "TBL_export_invoice"
     end

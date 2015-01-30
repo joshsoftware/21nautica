@@ -8,15 +8,18 @@
     %tbody
       %tr
         %td{colspan: "2"}
+          Customer Name:
+          %br/
           #{@invoice.customer_name}
-          %p
-          Container Number: #{@container}
-          %br/ 
-          BL Number: #{@invoice.bl_number} 
           %br/
-          #{@equipment} X #{@invoice.total_containers}
+          - unless @invoice.container_number.blank?
+            %p
+            Container Number: #{@invoice.container_number}
           %br/
-          Job Number: #{@job_number}
+          - pick_up, destination, equipment  = @invoice.container_data
+          #{equipment} X #{@invoice.total_containers}
+          %br/
+          Job Number: #{@invoice.document_number}
         %td{colspan: "2", valign: "top"}
           Inv Number: #{@invoice.number}
           - if @invoice.is_additional_invoice?
@@ -25,11 +28,11 @@
           %br/
           Inv Date: #{@invoice.date}
           %br/
-          BL Number: #{@invoice.bl_number} 
+          BL Number: #{@invoice.bl_number}
           %br/
-          Pick Up Location: #{@pick_up}
+          Pick Up Location: #{pick_up}
           %br/
-          Destination: #{@destination}
+          Destination: #{destination}
       %tr
         %td{colspan: "4", height: '20px'}
       %tr
@@ -54,11 +57,13 @@
         %td{colspan: "3", style: "text-align:center"} Subtotal
         %td{style: "text-align:center"}= @invoice.amount
       %tr
-        %td{colspan: "3", style: "text-align:center"}= @invoice.amount.in_words.humanize + " US Dollars Only"
-        %td{style: "text-align:center"}= @invoice.amount
+        %td{colspan: "3", style: "text-align:center"}
+          %b= @invoice.amount.in_words.humanize + " US Dollars Only"
+        %td{style: "text-align:center"}
+          %b= @invoice.amount.to_s + " USD"
       %tr
         %td{colspan: "4"}
-          TotalE. & O.E.
+          E. & O.E.
           %br/
           PAN NO: AAACZ6633M
           %br/
@@ -89,7 +94,7 @@
           %br/
           First Floor, Nakawa House,
           %br/
-          Portbell Road, Kampala
+          Portbell Road, Kampala.
           %br/
           Phone : +256 757527576
         %td{colspan: "2"}

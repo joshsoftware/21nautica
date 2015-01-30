@@ -122,8 +122,10 @@ class Movement < ActiveRecord::Base
       invoices.update_all(document_number: w_o_number)
     else
       if (self.bill_of_lading.present? && bill_of_lading.invoices.present?)
+        w_o_numbers = self.bill_of_lading.movements.where.not(id: self.id).pluck(:w_o_number).to_a
+        w_o_numbers << self.w_o_number
         invoices = self.bill_of_lading.invoices
-        invoices.update_all(document_number: w_o_number)
+        invoices.update_all(document_number: w_o_numbers.join(","))
       end
     end
   end

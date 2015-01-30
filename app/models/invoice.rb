@@ -62,6 +62,10 @@ class Invoice < ActiveRecord::Base
     (self.invoiceable.is_a?(BillOfLading) && self.invoiceable.is_export_bl?)
   end
 
+  def is_Haulage_export_invoice?
+    self.invoiceable.is_a?(Movement)
+  end
+
   def total_containers
     #find total number of containers according to invoice type
     if is_import_invoice?
@@ -72,6 +76,33 @@ class Invoice < ActiveRecord::Base
     else
       quantity = 1
     end
+  end
+
+  def container_number
+    # will be only available for haulage type of invoices
+    self.invoiceable.container_number if is_Haulage_export_invoice?
+  end
+
+  def container_data
+    if (self.is_additional_invoice?)# this is additional invoice
+      pick_up, destination, equipment = self.previous_invoice.container_data
+    elsif self.is_import_invoice?
+      import = self.invoiceable.import
+      pick_up = import.from
+      destination = import.to
+      equipment = import.equipment
+    elsif self.is_Haulage_export_invoice?
+      movement = self.invoiceable
+      pick_up = movement.port_of_loading
+      destination = movement.port_of_discharge
+      equipment = movement.equipment_type
+    else
+      movement = self.invoiceable.movements.first
+      pick_up = movement.port_of_loading
+      destination = movement.port_of_discharge
+      equipment = movement.export_item.export.equipment
+    end
+    return pick_up, destination, equipment
   end
 
   def as_json(options={})
