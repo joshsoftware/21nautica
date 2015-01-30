@@ -96,7 +96,7 @@ class Invoice < ActiveRecord::Base
       pick_up = movement.port_of_loading
       destination = movement.port_of_discharge
       equipment = movement.equipment_type
-    else
+    elsif self.is_TBL_export_invoice?
       movement = self.invoiceable.movements.first
       pick_up = movement.port_of_loading
       destination = movement.port_of_discharge
