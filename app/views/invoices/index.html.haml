@@ -1,0 +1,50 @@
+%h3 Invoices
+%div.bg-info
+  %input#invoices_searchbox{placeholder: "Search..."}
+%br
+
+%table.table.table-hover.table-bordered#invoices_index_table
+  %tr.info
+    %th Customer Name
+    %th Invoice Number
+    %th Invoiced Date
+    %th BL Number
+    %th Document Number
+    %th Invoice Amount
+    %th Status
+    %th Actions
+
+  %tbody#invoices_search_result
+    %script#invoices_search_result_template{:type => "text/html"}
+      <tr invoice_id= '<%= id %>', class= '<%= index_row_class %>'>
+      %td.customer <%= customer_name %>
+      %td.number <%= number %>
+      %td.date <%= date %>
+      %td.bl_num <%= bl_number %>
+      %td.document_num <%= document_number %>   
+      %td.amount <%= amount %>
+      %td.status <%= status %>
+      %td.row.col-md-4
+        .col-sm-3
+          <a class="btn btn-primary" href="/invoices/<%= id %>/edit" data-remote="true" id="update_button" <%= update_button_status %> > Update </a>
+        .col-sm-2
+          <a class="btn  btn-primary" href="/invoices/<%= id %>/send_invoice" data-remote="true" data-disable-with= "sending..." <%= send_button_status %> > Send </a>
+        .col-sm-3
+          <a class="btn btn-primary" href="/invoices/<%= id %>/download.pdf" > Download </a>
+        .col-sm-3
+          <%= additional_invoice_button %>
+      </tr>
+
+#invoiceUpdateModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
+  .modal-dialog.modal-lg
+
+:javascript
+  var invoices = #{@invoices.to_json};
+  $(document).on('ready page:load', function(){
+    InvoiceFilterInit();
+    loadupdatemodal();
+    load_nested_form_events();
+  });
+
+
+

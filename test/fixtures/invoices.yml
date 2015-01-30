@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  number: 1
+  date: 2014-12-31
+  document_number: 1
+  amount: 1
+  status: MyString
+  customer_id: 1
+  bill_of_lading_id: 1
+
+two:
+  number: 1
+  date: 2014-12-31
+  document_number: 1
+  amount: 1
+  status: MyString
+  customer_id: 1
+  bill_of_lading_id: 1

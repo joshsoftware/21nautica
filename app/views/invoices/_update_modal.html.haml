@@ -1,0 +1,80 @@
+= simple_nested_form_for(invoice, url: url, html: { class: 'form-horizontal', id: 'invoice_form', method: method }, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+  .modal-content
+    .modal-header
+      = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+      - if invoice.is_additional_invoice?
+        %h1.modal-title Additional Invoice
+      - else
+        %h1.modal-title Update Invoice
+
+    .modal-body
+      .row.col-md-12
+        .col-md-6
+          #customer_name
+            = f.label "Customer Name: #{invoice.customer_name}"
+          #bl_number
+            = f.label "BL Number: #{invoice.bl_number}"
+          #invoiced_date
+            = f.label "Invoiced Date: #{invoice.date}"
+          #invoice_quantity
+            = f.label "Number of Equipment: #{invoice.total_containers}"
+
+          - if invoice.is_additional_invoice?
+            #prev_inv_number
+              = f.label "Previous Invoice: #{invoice.previous_invoice.number}/ #{invoice.previous_invoice.amount}"
+          - else
+            #invoice_rate
+              = f.label "Rate Agreed: #{invoice.rate_agreed} "
+        .col-md-6
+          #invoice_amount
+            =f.input :amount, input_html: {style: "color:red;"}
+      .row.col-md-12
+        .col-md-6
+          #invoice_number
+            =f.input :number, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Please Enter Number"}
+        .col-md-6
+          #document_number
+            = f.input :document_number
+      .row.col-md-12
+        .panel.panel-default
+          .panel-heading
+            .panel-title
+              .col-md-3
+                Particular
+              .col-md-3
+                Rate
+              .col-md-2
+                Quantity
+              .col-md-3
+                Subtotal
+              
+            .row.col-md-12#particulars
+
+              = f.fields_for :particulars do |particular|
+                .row.nested_row
+                  .col-md-3.myselect
+                    - if (!particular.object.name.blank? && !(INVOICE_PARTICULARS.include?(particular.object.name)))
+                      = particular.text_field :name, class: "form-control", "data-validation" => "required", "data-validation-error-msg"=> "Please Select One"
+                    -else
+                      = particular.select :name, INVOICE_PARTICULARS.map{|i| [i,i]}, {include_blank: "Select particular"}, required: true, class: "myselect form-control", class: 'form-control', "data-validation" => "required", "data-validation-error-msg"=> "Please Select One"
+                  .col-md-3
+                    = particular.text_field :rate, class: 'rate form-control', "data-validation" => " number required", "data-validation-error-msg"=> "Please Enter Valid Rate"
+                  .col-md-2
+                    = particular.text_field :quantity, readonly: "readonly", class: "quantity form-control"
+                  .col-md-3
+                    = particular.text_field :subtotal, readonly: "readonly", class: "subtotal form-control"
+                  .col-md-1
+                    = particular.link_to_remove class: "btn btn-danger btn-sm" do
+                      %span.glyphicon.glyphicon-remove
+
+            = f.link_to_add :particulars, :data => { :target => "#particulars"}, class: "btn btn-success" do
+              %span.glyphicon.glyphicon-plus Add
+
+
+
+      = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+      = f.submit 'Save', class: 'btn btn-primary'
+
+:javascript
+  containers = "#{invoice.total_containers}"
+  validate_invoice_form()

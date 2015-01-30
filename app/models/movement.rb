@@ -30,6 +30,8 @@ class Movement < ActiveRecord::Base
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
 
   delegate :bl_number, to: :bill_of_lading, allow_nil: true
+  has_many :invoices, as: :invoiceable
+  before_update :assign_w_o_number_to_invoice, if: :w_o_number_changed?
 
   def assignment_of_truck_number
    count = Movement.where(truck_number: truck_number).where.not(status: :container_handed_over_to_KPA).count
@@ -71,6 +73,13 @@ class Movement < ActiveRecord::Base
   auditable only: [:status, :updated_at, :remarks, :vendor_id, :transporter_payment,
     :clearing_agent, :clearing_agent_payment]
 
+  def ready_haulage_export_invoice
+    invoice = Invoice.create(date: Date.current)
+    invoice.customer = self.export_item.export.customer
+    invoice.invoiceable = self
+    invoice.invoice_ready!
+  end
+
   def as_json(options= {})
     super(methods: [:container_number])
   end
@@ -94,6 +103,31 @@ class Movement < ActiveRecord::Base
   def transporter_name=(transporter_name)
     vendor_id = Vendor.where(name: transporter_name).first.try(:id)
     self.vendor_id = vendor_id
+  end
+
+  def equipment_type
+    self.export_item.export.equipment
+  end
+
+  def is_TBL_type?
+    self.movement_type.eql?("TBL")
+  end
+
+  def is_Haulage_type?
+    self.movement_type.eql?("Haulage")
+  end
+
+  def assign_w_o_number_to_invoice
+    if (is_Haulage_type? && self.invoices.present?)
+      invoices.update_all(document_number: w_o_number)
+    else
+      if (self.bill_of_lading.present? && bill_of_lading.invoices.present?)
+        w_o_numbers = self.bill_of_lading.movements.where.not(id: self.id).pluck(:w_o_number).to_a
+        w_o_numbers << self.w_o_number
+        invoices = self.bill_of_lading.invoices
+        invoices.update_all(document_number: w_o_numbers.join(","))
+      end
+    end
   end
 
 end

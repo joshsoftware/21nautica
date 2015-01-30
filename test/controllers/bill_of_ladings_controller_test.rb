@@ -6,6 +6,16 @@ class BillOfLadingsControllerTest < ActionController::TestCase
     sign_in @user
     @bill_of_lading = FactoryGirl.create :bill_of_lading
     @bill_of_lading1 = FactoryGirl.create :bill_of_lading1
+    @movement = FactoryGirl.create :movement
+    @export_item = FactoryGirl.create :export_item
+    @export = FactoryGirl.create :export
+    @customer = FactoryGirl.create :customer
+    @export.customer = @customer
+    @export_item.export = @export
+    @export_item.movement = @movement
+    @movement.bill_of_lading = @bill_of_lading
+    @export.save
+    @movement.save
   end
 
   test "should search Bill of lading" do
