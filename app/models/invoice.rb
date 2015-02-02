@@ -10,6 +10,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :previous_invoice, class_name: "Invoice"
   has_many :particulars
   accepts_nested_attributes_for :particulars, allow_destroy: true
+  after_create :assign_parent_invoice_number, unless: :is_additional_invoice?
 
   aasm column: 'status' do
     state :new, initial: true
@@ -111,4 +112,17 @@ class Invoice < ActiveRecord::Base
       :send_button_status, :total_containers, :update_button_status, 
       :additional_invoice_button])
   end
+
+  def assign_additional_invoice_number
+    pervious_invoice = self.previous_invoice.number
+    additional_invoice = self.previous_invoice.additional_invoices.last
+    self.number = additional_invoice.blank? ? self.previous_invoice.number + "-a" : additional_invoice.number.next
+  end
+
+  def assign_parent_invoice_number
+    date = Date.current.strftime("%m%Y%d")
+    count = Invoice.where(previous_invoice_id: nil).where("created_at > ?", Date.current).count + 1
+    self.update_attributes(number: date + count.to_s)
+  end
+
 end
