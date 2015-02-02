@@ -6,7 +6,7 @@ class BillOfLading < ActiveRecord::Base
   auditable only: [:payment_ocean, :cheque_ocean,
     :payment_clearing, :cheque_clearing, :updated_at]
 
-  after_update :ready_TBL_export_invoice, if: (:is_export_bl? && :invoice_not_present?)
+  after_update :ready_TBL_export_invoice, if: (:invoice_not_present? && :is_export_bl?)
 
   def is_export_bl?
     Import.where(bill_of_lading_id: self.id.to_s).blank?
