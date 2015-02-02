@@ -3,10 +3,12 @@
   = simple_nested_form_for @bl, html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
     .col-md-6
       = f.input :shipping_line, disabled: true
-      = f.input :payment_ocean
+      = f.input :payment_ocean, label: "Ocean Freight"
       = f.input :cheque_ocean, label: "Cheque Number"
-      = f.input :payment_clearing, label: "Clearing Charges" , disabled: @bl.is_export_bl?
-      = f.input :cheque_clearing, label: "Cheque Number" , disabled: @bl.is_export_bl?
+      = f.input :payment_clearing, label: "Port Charges" , disabled: @bl.is_export_bl?
+      = f.input :cheque_clearing, label: "Port Storage" , disabled: @bl.is_export_bl?
+      = f.input :clearing_agent, disabled: true
+      = f.input :agency_fee
       = f.input :remarks
       .form-group
         .col-sm-offset-2.col-sm-2
