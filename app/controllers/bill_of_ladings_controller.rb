@@ -21,6 +21,6 @@ class BillOfLadingsController < ApplicationController
   def bill_of_ladings_params
     params.require(:bill_of_lading).permit(:bl_number, :payment_ocean, :cheque_ocean,
                                            :agency_fee, :payment_clearing,
-                                           :cheque_clearing, :remarks)
+                                           :cheque_clearing, :remarks, :shipping_line_charges)
   end
 end
