@@ -44,16 +44,17 @@ module Expense
     end
 
     def self.add_bl_payment_data(sheet)
-      sheet.add_row ["BL Number", "Type", "Payment Ocean",
-                     "Cheque Ocean", "Payment Clearing",
-                     "Cheque Clearing"]
+      sheet.add_row ["BL Number", "Type", "Shipping Line", "Shipping Line Charges",
+                     "Ocean Freight", "Cheque Number", "Port Charges", "Port Storage",
+                     "Clearing agent", "Agency Fee", "remarks"]
       bills_of_lading = BillOfLading.all
 
       bills_of_lading.each do |bol|
         sheet.add_row [bol.bl_number,
           Import.where(bl_number: bol.bl_number).blank? ? "export" : "import",
-          bol.payment_ocean, bol.cheque_ocean, bol.payment_clearing,
-          bol.cheque_clearing]
+          bol.shipping_line, bol.shipping_line_charges, bol.payment_ocean,
+          bol.cheque_ocean, bol.payment_clearing, bol.cheque_clearing, bol.clearing_agent,
+          bol.agency_fee, bol.remarks]
       end
     end
   end
