@@ -30,4 +30,8 @@ class BillOfLading < ActiveRecord::Base
     invoice.invoice_ready!
   end
 
+  def clearing_agent
+    import.present? ? import.clearing_agent : (movements.blank? ? nil : movements.first.clearing_agent)
+  end
+
 end
