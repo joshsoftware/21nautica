@@ -5,6 +5,12 @@ class InvoicesControllerTest < ActionController::TestCase
     @user = FactoryGirl.create :user
     sign_in @user
     @invoice = FactoryGirl.create :invoice
+    movement = FactoryGirl.create :movement
+    export = FactoryGirl.create :export
+    export_item = FactoryGirl.create :export_item
+    export_item.export = export
+    movement.export_item = export_item
+    @invoice.invoiceable = movement
   end
 
   test "should get index" do
@@ -37,6 +43,24 @@ class InvoicesControllerTest < ActionController::TestCase
   end
 
   test "should create additional invoice" do
+    xhr :post, :additional_invoice,  { invoice: {amount: '200', number: '022015032', 
+      document_number: 'SE-265', particulars_attributes: {'14230755762' => {name: 
+      'Clearing Charges', rate: '200', quantity: '1', subtotal: '200', _destroy: 'false'}}}, 
+      id: @invoice.id}
+    assert_equal 2, Invoice.count
+    assert_equal Invoice.last.previous_invoice, @invoice
+    assert_response :success
+  end
+
+  test "should download invoice in pdf format" do
+    xhr :get, :download, {id: @invoice.id}
+    assert_response :success
+  end
+
+  test "should mail invoice" do
+    @invoice.invoice_ready!
+    xhr :get, :send_invoice, {id: @invoice.id}
+    assert_response :success
   end
 
 end

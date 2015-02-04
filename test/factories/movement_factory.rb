@@ -24,5 +24,6 @@ FactoryGirl.define do
   	booking_number '1'
   	truck_number 't1'
   	status 'loaded'
+  	movement_type 'Haulage'
   end
 end
