@@ -3,8 +3,8 @@ class BillOfLading < ActiveRecord::Base
   has_many :movements
   has_many :invoices, as: :invoiceable
   validates_uniqueness_of :bl_number
-  auditable only: [:payment_ocean, :cheque_ocean,
-    :payment_clearing, :cheque_clearing, :updated_at]
+  auditable only: [:payment_ocean, :cheque_ocean, :payment_clearing,
+    :cheque_clearing, :agency_fee, :shipping_line_charges, :updated_at]
 
   after_update :ready_TBL_export_invoice, if: [:is_export_bl?, :invoice_not_present?]
 
