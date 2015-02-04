@@ -34,4 +34,16 @@ class BillOfLading < ActiveRecord::Base
     import.present? ? import.clearing_agent : (movements.blank? ? nil : movements.first.clearing_agent)
   end
 
+  def customer_name
+    self.movements.first.try(&:customer_name) || (self.import.present? ? self.import.customer.name : nil)
+  end
+
+  def quantity
+    self.import.try(&:quantity) || self.movements.count
+  end
+
+  def equipment_type
+    self.import.try(&:equipment) ||  self.movements.first.try(&:equipment_type)
+  end
+
 end
