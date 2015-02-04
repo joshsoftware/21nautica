@@ -14,4 +14,10 @@
       .form-group
         .col-sm-offset-2.col-sm-2
           = f.submit class: 'btn-primary'
-
+    .col-md-6
+      .col-md-9
+        .panel.panel-default
+          .panel-heading
+            %label Customer Name: #{@bl.customer_name}
+            %br/
+            %label Qty X Equipment:  #{@bl.quantity} X #{@bl.equipment_type}
