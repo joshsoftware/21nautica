@@ -21,6 +21,7 @@ class InvoicesController < ApplicationController
     @invoice = Invoice.new
     assign_previous_invoice(@invoice)
     @invoice.document_number = @invoice.previous_invoice.document_number
+    @invoice.assign_additional_invoice_number
     respond_to do |format|
       format.js{}
     end
