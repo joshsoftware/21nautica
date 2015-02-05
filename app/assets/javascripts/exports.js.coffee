@@ -44,7 +44,7 @@ datatable_initialize = ->
       $(this).html(jQuery.parseJSON(settings.data)[value])  
   })
 
-  $('#exports_table tbody').on('click','#exports_table tr td img',()->
+  $('#exports_table_wrapper').on('click','#exports_table tr td img',()->
     nTr = $(this).parents('tr')[0]
     nTds = this
     id = $(this).parents('tr').attr('id')
