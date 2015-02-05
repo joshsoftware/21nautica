@@ -1,7 +1,12 @@
 class InvoicesController < ApplicationController
   require 'numbers_in_words/duck_punch'
+  respond_to :js, :json, :html
+  
   def index
-    @invoices = Invoice.all
+    offset_val = params[:offset] || 0
+    limit_val = params[:limit] || 10
+    @invoices = Invoice.all.offset(offset_val).limit(limit_val)
+    respond_with(@invoices)
   end
 
   def edit
