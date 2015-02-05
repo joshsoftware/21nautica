@@ -2,7 +2,6 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 datatable_initialize = ->
-  console.log "index"
   row = 0
   id = 0
   movementsTable = $('#movements_index_table').dataTable({
@@ -181,7 +180,6 @@ $(document).ready datatable_initialize
 
 
 datatable_initialize = ->
-  console.log "history"
   row = 0
   id = 0
   movementsTable = $('#movements_history_table').dataTable({

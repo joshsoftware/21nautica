@@ -42,8 +42,6 @@
   $('#import_quantity').on 'blur', (event) ->
     existing_count = $('.fields').size()
     quantity = this.value
-    console.log existing_count
-    console.log quantity
     if quantity > existing_count
       i = 0
       while i < (quantity - existing_count)
@@ -74,12 +72,8 @@
       event.preventDefault()
       
   jQuery ($) ->
-  $(document).on "nested:fieldAdded", (event) ->
-    console.log 'Added event'
-    return
 
   $(document).on "nested:fieldRemoved", (event) ->
-    console.log 'Remove event'
     if $('#import_quantity')[0].value != ""
       $('#import_quantity')[0].value = parseInt($('#import_quantity')[0].value) - 1
     return
