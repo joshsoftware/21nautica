@@ -4,5 +4,5 @@ $('#invoiceUpdateModal .alert').remove();
     $('#invoiceUpdateModal .modal-body').append("<div class='alert alert-danger'>#{msg}</div>");
 - else
   $('#invoiceUpdateModal').modal('hide')
-
-  $('#invoices_index_table').append("<tr invoice_id=#{@invoice.id} class='warning'> <td class='customer'>#{@invoice.customer_name}</td> <td class='number'>#{@invoice.number}</td> <td class='date'>#{@invoice.date}</td> <td class='bl_num'>#{@invoice.bl_number}</td> <td class='document_num'>#{@invoice.document_number}</td>  <td class='amount'>#{@invoice.amount}</td> <td class='status'>#{@invoice.status}</td> <td class='row col-md-4'> <a class='btn btn-primary col-sm-3' id='update_button' href='/invoices/#{@invoice.id}/edit' data-remote='true' style='margin: 0 5px'> Update </a> <a class='btn btn-primary col-sm-2' href='/invoices/#{@invoice.id}/send_invoice' data-remote='true' style='margin: 0 5px' data-disable-with= 'sending...' > Send </a> <a class='btn btn-primary col-sm-3' href='/invoices/#{@invoice.id}/download.pdf' style='margin: 0 5px'>Download</a> <span class='badge col-sm-3' id='additional_inv' > Refs: #{@invoice.previous_invoice.number} </span> </td> <tr>");
+  invoice = [#{raw @invoice.to_json}]
+  st.addData(invoice)

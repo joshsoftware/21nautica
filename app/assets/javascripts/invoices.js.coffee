@@ -77,7 +77,7 @@ stream_table_function = ->
       stream_after: 2
       fetch_data_limit: 10
 
-    st = StreamTable('#invoices_index_table', options, data)
+    window.st = StreamTable('#invoices_index_table', options, data)
 
 
 load_invoice_functions = ->
