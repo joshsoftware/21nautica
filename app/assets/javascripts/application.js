@@ -19,16 +19,8 @@
 //= require jquery-ui
 //= require bootstrap-datepicker/core
 //= require jquery.form-validator
-//= require_tree .
 //= require jquery_nested_form
-
-$(document).ready(function(){
-    $(document).on("page:load", function(){
-        $('.alert').delay(5000).fadeOut("slow", function () { $(this).remove(); })
-        $('[data-behaviour~=datepicker]').datepicker();
-    });
-})
-
+//= require_tree .
 
 function PaymentFilterInit(){
   var FJS = FilterJS(payments, '#payment_search_result', {
