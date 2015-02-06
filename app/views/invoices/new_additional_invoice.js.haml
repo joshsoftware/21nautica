@@ -1,2 +1,3 @@
 $('#invoiceUpdateModal > .modal-dialog').html("#{j(render 'update_modal', invoice: @invoice, url: "/invoices/#{@invoice.previous_invoice.id}/additional-invoice", method: "post")}")
+containers = '#{@invoice.total_containers}';
 $('#invoiceUpdateModal').modal('show');

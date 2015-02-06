@@ -1,2 +1,3 @@
-$('#invoiceUpdateModal > .modal-dialog').html("#{j(render 'update_modal', invoice: @invoice, url: "/invoices/#{@invoice.id}", method: "patch")}")
+$('#invoiceUpdateModal > .modal-dialog').html("#{j(render 'update_modal', invoice: @invoice, url: "/invoices/#{@invoice.id}", method: 'patch')}");
+containers = '#{@invoice.total_containers}';
 $('#invoiceUpdateModal').modal('show');

@@ -23,7 +23,7 @@
     %td.status {{status}}
     %td.row.col-md-4
       .col-sm-3
-        %a.btn.btn-primary{ :href => "/invoices/{{id}}/edit", "data-remote"=> "true", "id" => "update_button", class: "{{update_button_status}}"} Update
+        %a.btn.btn-primary{ :href => "/invoices/{{id}}/edit", "data-remote"=> "true","data-disable-with" => "loading...", "id" => "update_button", class: "{{update_button_status}}"} Update
       .col-sm-2
         %a.btn.btn-primary{ :href => "/invoices/{{ id }}/send_invoice", "data-remote" => "true", "data-disable-with" => "sending...", class: "{{send_button_status }}" } Send
       .col-sm-3
