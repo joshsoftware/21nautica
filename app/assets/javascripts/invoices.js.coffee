@@ -76,6 +76,9 @@ stream_table_function = ->
       data_url: '/invoices.json'
       stream_after: 2
       fetch_data_limit: 10
+      search_box: '#invoices_searchbox'
+      pagination:
+        per_page_select: '#invoices_per_page'
 
     window.st = StreamTable('#invoices_index_table', options, data)
 
