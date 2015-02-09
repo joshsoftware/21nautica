@@ -11,12 +11,11 @@
 // about supported directives.
 //
 //= require jquery.min
+//= require jquery_ujs
 //= require jquery.turbolinks
 //= require bootstrap-sprockets
-//= require jquery_ujs
 //= require turbolinks
 //= require select2
-//= require jquery-ui
 //= require bootstrap-datepicker/core
 //= require jquery.form-validator
 //= require jquery_nested_form

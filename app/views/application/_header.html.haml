@@ -36,16 +36,16 @@
             %li= link_to 'Payments Received', new_received_path
             %li= link_to 'Invoices', invoices_path, "data-no-turbolink" =>true
 
-        %div.navbar-form.navbar-left
-          %form{role: "search", action: "/bill_of_ladings/search"}
-            .form-group
-              %input.form-control{placeholder: "BL Number", type: "text", name: "id"}
-            %button.btn.btn-success{type: "Submit"} BL Payment
-        %div.navbar-form.navbar-left
-          %form{role: "search", action: "/import_expenses/search"}
-            .form-group
-              %input.form-control{placeholder: "Container Number", type: "text", name: "id"}
-            %button.btn.btn-danger{type: "Submit"} Import Expenses
+      %div.navbar-form.navbar-left
+        %form{role: "search", action: "/bill_of_ladings/search"}
+          .form-group
+            %input.form-control{placeholder: "BL Number", type: "text", name: "id"}
+          %button.btn.btn-success{type: "Submit"} BL Payment
+      %div.navbar-form.navbar-left
+        %form{role: "search", action: "/import_expenses/search"}
+          .form-group
+            %input.form-control{placeholder: "Container Number", type: "text", name: "id"}
+          %button.btn.btn-danger{type: "Submit"} Import Expenses
 
 
 
