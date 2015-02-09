@@ -2,13 +2,13 @@
 %table#invoices_index_table.table.table-bordered
   %thead
     %tr.info
-      %th Customer Name
-      %th Invoice Number
-      %th Invoiced Date
-      %th BL Number
-      %th Document Number
+      %th{"data-sort" => "customer_name:asc"} Customer Name
+      %th{"data-sort" => "number"} Invoice Number
+      %th{"data-sort" => "date"} Invoiced Date
+      %th{"data-sort" => "bl_number"} BL Number
+      %th{"data-sort" => "document_number"} Document Number
       %th Invoice Amount
-      %th Status
+      %th{"data-sort" => "status"} Status
       %th Actions
   %tbody
 %script#invoices_search_result_template{:type => "text/html"}

@@ -4,7 +4,6 @@ class Invoice < ActiveRecord::Base
   validates_presence_of :customer
   belongs_to :customer
   belongs_to :invoiceable, polymorphic: true
-  delegate :bl_number, to: :invoiceable, allow_nil: true
   has_many :additional_invoices, class_name: "Invoice", 
     foreign_key: "previous_invoice_id"
   belongs_to :previous_invoice, class_name: "Invoice"
@@ -105,6 +104,10 @@ class Invoice < ActiveRecord::Base
       equipment = movement.export_item.export.equipment
     end
     return pick_up, destination, equipment
+  end
+
+  def bl_number
+    self.invoiceable.try(:bl_number) || ""
   end
 
   def as_json(options={})
