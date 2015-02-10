@@ -107,7 +107,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def bl_number
-    self.invoiceable.try(:bl_number) || ""
+    self.invoiceable.try(:bl_number) || self.legacy_bl || ""
   end
 
   def as_json(options={})
