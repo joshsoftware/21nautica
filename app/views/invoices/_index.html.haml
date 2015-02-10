@@ -21,13 +21,16 @@
     %td.amount {{amount}} 
     %td.status {{status}}
     %td.row.col-md-4
-      .col-sm-3
-        %a.btn.btn-primary{ :href => "/invoices/{{id}}/edit", "data-remote"=> "true","data-disable-with" => "loading...", "id" => "update_button", class: "{{update_button_status}}"} Update
       .col-sm-2
-        %a.btn.btn-primary{ :href => "/invoices/{{ id }}/send_invoice", "data-remote" => "true", "data-disable-with" => "sending...", class: "{{send_button_status }}" } Send
-      .col-sm-3
-        %a.btn.btn-primary{ :href => "/invoices/{{ id }}/download.pdf"} Download
-      .col-sm-3 {{{ additional_invoice_button }}}
+        %a.btn.btn-primary{ "data-toggle" => "tooltip", "title" =>"Update", :href => "/invoices/{{id}}/edit", "data-remote"=> "true","data-disable-with" => "loading...", "id" => "update_button", class: "{{update_button_status}}"}
+          %span.glyphicon.glyphicon-edit
+      .col-sm-2
+        %a.btn.btn-primary{ "data-toggle" => "tooltip", "title" => "Send", :href => "/invoices/{{ id }}/send_invoice", "data-remote" => "true", "data-disable-with" => "sending...", class: "{{send_button_status }}" }
+          %span.glyphicon.glyphicon-send
+      .col-sm-2
+        %a.btn.btn-primary{ "data-toggle" => "tooltip", "title" => "Download", :href => "/invoices/{{ id }}/download.pdf"}
+          %span.glyphicon.glyphicon-download-alt
+      .col-sm-6 {{{ additional_invoice_button }}}
   {{/record}}
 
 #invoiceUpdateModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}

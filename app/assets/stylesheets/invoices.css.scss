@@ -51,3 +51,28 @@
   max-width: 200px;
   height: 34px !important;
 }
+
+#all_invoices {
+  .customer {
+    width: 15%
+  }
+  .number {
+    width: 20%
+  }
+  .date {
+    width: 10%
+  }
+  .bl_num {
+    width: 10%
+  }
+  .document_num {
+    width: 5%
+  }
+  .amount {
+    width: 5%
+  }
+  .status {
+    width: 5%
+  }
+}
+
