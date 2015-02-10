@@ -35,8 +35,14 @@
         %span.badge#additional_inv Refs: {{previous_invoice_number}}
         {{/is_additional_invoice}}
         {{^is_additional_invoice}}
+        {{#is_legacy_bl}}
+        %a.btn.btn-primary.btn-xs#additional_inv.disabled
+          %span.glyphicon.glyphicon-plus
+        {{/is_legacy_bl}}
+        {{^is_legacy_bl}}
         %a.btn.btn-primary.btn-xs#additional_inv{:href => "/invoices/{{id}}/add-additional-invoice", "data-remote" => "true",  "data-toggle" => "tooltip", "title" => "Additional INV"}
           %span.glyphicon.glyphicon-plus
+        {{/is_legacy_bl}}
         {{/is_additional_invoice}}
   {{/record}}
 

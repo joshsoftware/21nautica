@@ -66,6 +66,10 @@ class Invoice < ActiveRecord::Base
     self.invoiceable.is_a?(Movement)
   end
 
+  def is_legacy_bl
+    !self.legacy_bl.nil?
+  end
+
   def total_containers
     #find total number of containers according to invoice type
     if is_import_invoice?
@@ -112,7 +116,7 @@ class Invoice < ActiveRecord::Base
   def as_json(options={})
     super(methods: [:bl_number, :customer_name, :index_row_class, 
       :send_button_status, :total_containers, :update_button_status,
-      :is_additional_invoice, :previous_invoice_number])
+      :is_additional_invoice, :previous_invoice_number, :is_legacy_bl])
   end
 
   def assign_additional_invoice_number
