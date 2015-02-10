@@ -2,13 +2,13 @@
 %div.bg-info
   %input#invoices_searchbox{placeholder: "Search..."}
   = select_tag "invoices_per_page",options_for_select([10,25,50])
-  - if @invoices_type == 'ready&new'
-    = link_to "Sent Invoices", invoices_path('sent'), class: 'btn btn-primary pull-right'
+  - if @invoices_type == 'ready-new'
+    = link_to "Sent Invoices", by_type_invoices_path('sent'), class: 'btn btn-primary pull-right'
   - else
-    = link_to "Ready/New Invoices", invoices_path('ready&new'), class: 'btn btn-primary pull-right'
+    = link_to "Ready/New Invoices", by_type_invoices_path('ready-new'), class: 'btn btn-primary pull-right'
 %br
 %div#all_invoices
-  - if @invoices_type == 'ready&new'
+  - if @invoices_type == 'ready-new'
     = render 'index', table_id: 'invoices_index_table'
   - else
     = render 'index', table_id: 'sent_invoices_table'

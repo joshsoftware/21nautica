@@ -73,7 +73,7 @@ stream_table_function = ->
   if($("#invoices_index_table").length)
     options =
       view: view
-      data_url: '/invoices/ready&new'
+      data_url: '/invoices/ready-new'
       stream_after: 2
       fetch_data_limit: 10
       search_box: '#invoices_searchbox'
