@@ -5,7 +5,10 @@ class InvoicesController < ApplicationController
   def index
     offset_val = params[:offset] || 0
     limit_val = params[:limit] || 10
-    @invoices = Invoice.all.offset(offset_val).limit(limit_val)
+    @invoices_type = params[:invoices_type]
+    @invoices = (@invoices_type == 'not_sent') ?
+      Invoice.where.not(status: 'sent').offset(offset_val).limit(limit_val) :
+      Invoice.where(status: 'sent').offset(offset_val).limit(limit_val)
     respond_with(@invoices)
   end
 

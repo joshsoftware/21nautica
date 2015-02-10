@@ -1,0 +1,10 @@
+- if @invoices_type.eql?('not_sent')
+  $("#load_invoices_button").text('Sent Invoices')
+  $("#load_invoices_button").attr('href','/invoices?invoices_type=sent')
+  $('#all_invoices').html("#{j(render 'index', table_id: 'invoices_index_table')}");
+- else
+  $("#load_invoices_button").text('Ready/New Invoices')
+  $("#load_invoices_button").attr('href','/invoices?invoices_type=not_sent')
+  $('#all_invoices').html("#{j(render 'index', table_id: 'sent_invoices_table')}");
+
+stream_table_function();

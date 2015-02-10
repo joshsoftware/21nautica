@@ -62,7 +62,7 @@ loadupdatemodal = ->
     $('#invoiceUpdateModal .alert').remove()
     $('#invoiceUpdateModal .fields').remove()
 
-stream_table_function = ->
+@stream_table_function = ->
   template = Mustache.compile($.trim($('#invoices_search_result_template').html()))
 
   view = (record, index) ->
@@ -71,17 +71,26 @@ stream_table_function = ->
       index: index
 
   if($("#invoices_index_table").length)
-    options = 
+    options =
       view: view
-      data_url: '/invoices.json'
+      data_url: '/invoices?invoices_type=not_sent'
       stream_after: 2
       fetch_data_limit: 10
       search_box: '#invoices_searchbox'
       pagination:
         per_page_select: '#invoices_per_page'
-
     window.st = StreamTable('#invoices_index_table', options, data)
 
+  if($("#sent_invoices_table").length)
+    options =
+      view: view
+      data_url: '/invoices?invoices_type=sent'
+      stream_after: 2
+      fetch_data_limit: 10
+      search_box: '#invoices_searchbox'
+      pagination:
+        per_page_select: '#invoices_per_page'
+    window.st = StreamTable('#sent_invoices_table', options, data)
 
 load_invoice_functions = ->
   stream_table_function()

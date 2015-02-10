@@ -2,42 +2,7 @@
 %div.bg-info
   %input#invoices_searchbox{placeholder: "Search..."}
   = select_tag "invoices_per_page",options_for_select([10,25,50])
+  = link_to "Sent Invoices", invoices_path(invoices_type: 'sent'), remote: true, class: 'btn btn-primary pull-right', id: 'load_invoices_button'
 %br
-%table#invoices_index_table.table.table-bordered
-  %thead
-    %tr.info
-      %th{"data-sort" => "customer_name:asc"} Customer Name
-      %th{"data-sort" => "number"} Invoice Number
-      %th{"data-sort" => "date"} Invoiced Date
-      %th{"data-sort" => "bl_number"} BL Number
-      %th{"data-sort" => "document_number"} Document Number
-      %th{"data-sort" => "amount:asc:number"} Invoice Amount
-      %th{"data-sort" => "status"} Status
-      %th Actions
-  %tbody
-%script#invoices_search_result_template{:type => "text/html"}
-  {{#record}}
-  %tr{invoice_id: "{{ id }}", class: "{{ index_row_class }}"}
-    %td.customer {{customer_name}}
-    %td.number {{number}}
-    %td.date {{date}}
-    %td.bl_num {{bl_number}} 
-    %td.document_num {{document_number}} 
-    %td.amount {{amount}} 
-    %td.status {{status}}
-    %td.row.col-md-4
-      .col-sm-3
-        %a.btn.btn-primary{ :href => "/invoices/{{id}}/edit", "data-remote"=> "true","data-disable-with" => "loading...", "id" => "update_button", class: "{{update_button_status}}"} Update
-      .col-sm-2
-        %a.btn.btn-primary{ :href => "/invoices/{{ id }}/send_invoice", "data-remote" => "true", "data-disable-with" => "sending...", class: "{{send_button_status }}" } Send
-      .col-sm-3
-        %a.btn.btn-primary{ :href => "/invoices/{{ id }}/download.pdf"} Download
-      .col-sm-3 {{{ additional_invoice_button }}}
-  {{/record}}
-
-#invoiceUpdateModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
-  .modal-dialog.modal-lg
-
-
-:javascript
-  data = #{@invoices.to_json};
+%div#all_invoices
+  = render 'index', table_id: 'invoices_index_table'
