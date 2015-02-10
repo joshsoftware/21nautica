@@ -13,8 +13,14 @@ class InvoicesControllerTest < ActionController::TestCase
     @invoice.invoiceable = movement
   end
 
-  test "should get index" do
-    get :index
+  test "should get sent" do
+    get :index, {type: 'sent'}
+    assert_not_nil assigns(:invoices)
+    assert_response :success
+  end
+
+  test "should get ready and new" do
+    get :index, {type: 'ready-new'}
     assert_not_nil assigns(:invoices)
     assert_response :success
   end
