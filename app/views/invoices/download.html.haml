@@ -22,7 +22,7 @@
           Job Number: #{@invoice.document_number}
         %td{colspan: "2", valign: "top"}
           Inv Number: #{@invoice.number}
-          - if @invoice.is_additional_invoice?
+          - if @invoice.is_additional_invoice
             %br/
             Inv Ref: #{@invoice.previous_invoice.number}
           %br/

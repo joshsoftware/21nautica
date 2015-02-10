@@ -9,7 +9,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :previous_invoice, class_name: "Invoice"
   has_many :particulars
   accepts_nested_attributes_for :particulars, allow_destroy: true
-  after_create :assign_parent_invoice_number, unless: :is_additional_invoice?
+  after_create :assign_parent_invoice_number, unless: :is_additional_invoice
 
   aasm column: 'status' do
     state :new, initial: true
@@ -41,12 +41,11 @@ class Invoice < ActiveRecord::Base
     self.sent? ? "disabled" : ""
   end
 
-  def additional_invoice_button
-    self.previous_invoice.present? ? "<span class=\"badge\" id=\"additional_inv\" > Refs: #{self.previous_invoice.number} </span>" : 
-    "<a class= \"btn btn-primary\" id=\"additional_inv\" href= \"/invoices/#{self.id}/add-additional-invoice\" data-remote=\"true\" > Additional INV </a>"
+  def previous_invoice_number
+    self.previous_invoice.try(:number)
   end
 
-  def is_additional_invoice?
+  def is_additional_invoice
     self.previous_invoice.present?
   end
 
@@ -85,7 +84,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def container_data
-    if (self.is_additional_invoice?)# this is additional invoice
+    if (self.is_additional_invoice)# this is additional invoice
       pick_up, destination, equipment = self.previous_invoice.container_data
     elsif self.is_import_invoice?
       import = self.invoiceable.import
@@ -112,8 +111,8 @@ class Invoice < ActiveRecord::Base
 
   def as_json(options={})
     super(methods: [:bl_number, :customer_name, :index_row_class, 
-      :send_button_status, :total_containers, :update_button_status, 
-      :additional_invoice_button])
+      :send_button_status, :total_containers, :update_button_status,
+      :is_additional_invoice, :previous_invoice_number])
   end
 
   def assign_additional_invoice_number

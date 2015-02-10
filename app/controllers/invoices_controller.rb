@@ -82,7 +82,7 @@ class InvoicesController < ApplicationController
   def collect_pdf_data(invoice)
     @invoice = invoice
     @particulars = @invoice.particulars
-    if (invoice.is_additional_invoice?)# this is additional invoice
+    if (invoice.is_additional_invoice)# this is additional invoice
       invoice_type = "additional_invoice"
       @ref_no = invoice.previous_invoice.number
     elsif invoice.is_import_invoice?

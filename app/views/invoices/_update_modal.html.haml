@@ -2,7 +2,7 @@
   .modal-content
     .modal-header
       = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
-      - if invoice.is_additional_invoice?
+      - if invoice.is_additional_invoice
         %h1.modal-title Additional Invoice
       - else
         %h1.modal-title Update Invoice
@@ -19,7 +19,7 @@
           #invoice_quantity
             = f.label "Number of Equipment: #{invoice.total_containers}"
 
-          - if invoice.is_additional_invoice?
+          - if invoice.is_additional_invoice
             #prev_inv_number
               = f.label "Previous Invoice: #{invoice.previous_invoice.number}/ #{invoice.previous_invoice.amount}"
           - else

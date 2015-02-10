@@ -22,15 +22,22 @@
     %td.status {{status}}
     %td.row.col-md-4
       .col-sm-2
-        %a.btn.btn-primary{ "data-toggle" => "tooltip", "title" =>"Update", :href => "/invoices/{{id}}/edit", "data-remote"=> "true","data-disable-with" => "loading...", "id" => "update_button", class: "{{update_button_status}}"}
+        %a.btn.btn-primary.btn-xs{ "data-toggle" => "tooltip", "title" =>"Update", :href => "/invoices/{{id}}/edit", "data-remote"=> "true","data-disable-with" => "loading...", "id" => "update_button", class: "{{update_button_status}}"}
           %span.glyphicon.glyphicon-edit
       .col-sm-2
-        %a.btn.btn-primary{ "data-toggle" => "tooltip", "title" => "Send", :href => "/invoices/{{ id }}/send_invoice", "data-remote" => "true", "data-disable-with" => "sending...", class: "{{send_button_status }}" }
+        %a.btn.btn-primary.btn-xs{ "data-toggle" => "tooltip", "title" => "Send", :href => "/invoices/{{ id }}/send_invoice", "data-remote" => "true", "data-disable-with" => "sending...", class: "{{send_button_status }}" }
           %span.glyphicon.glyphicon-send
       .col-sm-2
-        %a.btn.btn-primary{ "data-toggle" => "tooltip", "title" => "Download", :href => "/invoices/{{ id }}/download.pdf"}
+        %a.btn.btn-primary.btn-xs{ "data-toggle" => "tooltip", "title" => "Download", :href => "/invoices/{{ id }}/download.pdf"}
           %span.glyphicon.glyphicon-download-alt
-      .col-sm-6 {{{ additional_invoice_button }}}
+      .col-sm-6
+        {{#is_additional_invoice}}
+        %span.badge#additional_inv Refs: {{previous_invoice_number}}
+        {{/is_additional_invoice}}
+        {{^is_additional_invoice}}
+        %a.btn.btn-primary.btn-xs#additional_inv{:href => "/invoices/{{id}}/add-additional-invoice", "data-remote" => "true",  "data-toggle" => "tooltip", "title" => "Additional INV"}
+          %span.glyphicon.glyphicon-plus
+        {{/is_additional_invoice}}
   {{/record}}
 
 #invoiceUpdateModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
