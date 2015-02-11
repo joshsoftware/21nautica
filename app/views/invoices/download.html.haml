@@ -16,8 +16,7 @@
             %p
             Container Number: #{@invoice.container_number}
           %br/
-          - pick_up, destination, equipment  = @invoice.container_data
-          #{equipment} X #{@invoice.total_containers}
+          #{@invoice.equipment_type} X #{@invoice.total_containers}
           %br/
           Job Number: #{@invoice.document_number}
         %td{colspan: "2", valign: "top"}
@@ -30,9 +29,9 @@
           %br/
           BL Number: #{@invoice.bl_number}
           %br/
-          Pick Up Location: #{pick_up}
+          Pick Up Location: #{@invoice.pick_up}
           %br/
-          Destination: #{destination}
+          Destination: #{@invoice.destination}
       %tr
         %td{colspan: "4", height: '20px'}
       %tr

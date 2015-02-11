@@ -46,4 +46,12 @@ class BillOfLading < ActiveRecord::Base
     self.import.try(&:equipment) ||  self.movements.first.try(&:equipment_type)
   end
 
+  def pick_up
+    self.import.try(&:from) ||  self.movements.first.try(&:port_of_loading)
+  end
+
+  def destination
+    self.import.try(&:to) ||  self.movements.first.try(&:port_of_discharge)
+  end
+
 end

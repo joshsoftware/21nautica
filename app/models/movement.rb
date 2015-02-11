@@ -117,6 +117,14 @@ class Movement < ActiveRecord::Base
     self.movement_type.eql?("Haulage")
   end
 
+  def pick_up
+    self.port_of_loading
+  end
+
+  def destination
+    self.port_of_discharge
+  end
+
   def assign_w_o_number_to_invoice
     if (is_Haulage_type? && self.invoices.present?)
       invoices.update_all(document_number: w_o_number)

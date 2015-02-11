@@ -17,7 +17,7 @@
           #invoiced_date
             = f.label "Invoiced Date: #{invoice.date}"
           #invoice_quantity
-            = f.label "Number of Equipment: #{invoice.total_containers}"
+            = f.label "Equipment: #{invoice.equipment_type} X #{invoice.total_containers}"
 
           - if invoice.is_additional_invoice
             #prev_inv_number

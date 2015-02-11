@@ -11,6 +11,10 @@ class Invoice < ActiveRecord::Base
   accepts_nested_attributes_for :particulars, allow_destroy: true
   after_create :assign_parent_invoice_number, unless: :is_additional_invoice
 
+  delegate :equipment_type, to: :invoiceable
+  delegate :pick_up, to: :invoiceable
+  delegate :destination, to: :invoiceable
+
   aasm column: 'status' do
     state :new, initial: true
     state :ready
@@ -85,28 +89,6 @@ class Invoice < ActiveRecord::Base
   def container_number
     # will be only available for haulage type of invoices
     self.invoiceable.container_number if is_Haulage_export_invoice?
-  end
-
-  def container_data
-    if (self.is_additional_invoice)# this is additional invoice
-      pick_up, destination, equipment = self.previous_invoice.container_data
-    elsif self.is_import_invoice?
-      import = self.invoiceable.import
-      pick_up = import.from
-      destination = import.to
-      equipment = import.equipment
-    elsif self.is_Haulage_export_invoice?
-      movement = self.invoiceable
-      pick_up = movement.port_of_loading
-      destination = movement.port_of_discharge
-      equipment = movement.equipment_type
-    elsif self.is_TBL_export_invoice?
-      movement = self.invoiceable.movements.first
-      pick_up = movement.port_of_loading
-      destination = movement.port_of_discharge
-      equipment = movement.export_item.export.equipment
-    end
-    return pick_up, destination, equipment
   end
 
   def bl_number

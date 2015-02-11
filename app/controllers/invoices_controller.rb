@@ -87,7 +87,6 @@ class InvoicesController < ApplicationController
       @ref_no = invoice.previous_invoice.number
     elsif invoice.is_import_invoice?
       invoice_type = "import_invoice"
-      import = invoice.invoiceable.import
     elsif invoice.is_Haulage_export_invoice?
       invoice_type = "Haulage_export_invoice"
     else
