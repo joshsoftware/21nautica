@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150210101518) do
+ActiveRecord::Schema.define(version: 20150211140407) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,8 @@ ActiveRecord::Schema.define(version: 20150210101518) do
     t.string   "agency_fee"
     t.string   "shipping_line_charges"
   end
+
+  add_index "bill_of_ladings", ["bl_number"], name: "index_bill_of_ladings_on_bl_number", using: :btree
 
   create_table "customers", force: true do |t|
     t.string   "name"
