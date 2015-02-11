@@ -10,6 +10,8 @@ namespace :invoices do
         document_number: row['Document Number'], amount: row['Invoice Amount'],
         customer: customer).find_or_create_by(number: row['Invoice Number '])
       if invoice.save
+        p invoice
+        invoice.particulars.destroy_all
         bill_of_lading = BillOfLading.where(bl_number: row['BL Number']).first
         bill_of_lading.blank? ? (invoice.legacy_bl = row['BL Number']) : (invoice.invoiceable = bill_of_lading)
         containers = invoice.total_containers
@@ -17,6 +19,8 @@ namespace :invoices do
           rate: amount.to_i/containers, subtotal: amount)
         particular.invoice = invoice
         particular.save
+        (invoice.previous_invoice = Invoice.where(number: invoice.number.chop).first) if invoice.number[/[A-Za-z]\Z/]
+        invoice.save
         invoice.invoice_ready! unless (invoice.sent? || invoice.ready?)
         invoice.invoice_sent! unless invoice.sent?
       else
@@ -25,4 +29,5 @@ namespace :invoices do
     end
     #File.delete(ENV['filename'])
   end
+
 end
