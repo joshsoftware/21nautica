@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150211144000) do
+ActiveRecord::Schema.define(version: 20150211144116) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,6 +95,8 @@ ActiveRecord::Schema.define(version: 20150211144000) do
     t.datetime "updated_at"
     t.string   "invoice_number"
   end
+
+  add_index "import_expenses", ["import_item_id"], name: "index_import_expenses_on_import_item_id", using: :btree
 
   create_table "import_items", force: true do |t|
     t.string   "container_number"
