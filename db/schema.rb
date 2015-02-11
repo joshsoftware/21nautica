@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150211144958) do
+ActiveRecord::Schema.define(version: 20150211145248) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -145,6 +145,9 @@ ActiveRecord::Schema.define(version: 20150211144958) do
     t.string   "rate_agreed"
     t.string   "weight"
   end
+
+  add_index "imports", ["bill_of_lading_id"], name: "index_imports_on_bill_of_lading_id", using: :btree
+  add_index "imports", ["customer_id"], name: "index_imports_on_customer_id", using: :btree
 
   create_table "invoices", force: true do |t|
     t.string   "number"
