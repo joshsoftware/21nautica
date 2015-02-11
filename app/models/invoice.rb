@@ -11,9 +11,9 @@ class Invoice < ActiveRecord::Base
   accepts_nested_attributes_for :particulars, allow_destroy: true
   after_create :assign_parent_invoice_number, unless: :is_additional_invoice
 
-  delegate :equipment_type, to: :invoiceable
-  delegate :pick_up, to: :invoiceable
-  delegate :destination, to: :invoiceable
+  delegate :equipment_type, to: :invoiceable, allow_nil: true
+  delegate :pick_up, to: :invoiceable, allow_nil: true
+  delegate :destination, to: :invoiceable, allow_nil: true
 
   aasm column: 'status' do
     state :new, initial: true
