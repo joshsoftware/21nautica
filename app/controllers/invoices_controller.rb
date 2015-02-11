@@ -58,7 +58,7 @@ class InvoicesController < ApplicationController
     kit,invoice_type = collect_pdf_data(invoice)
     pdf = kit.to_pdf
     file = kit.to_file("#{Rails.root}/tmp/#{invoice_type}.pdf")
-    UserMailer.mail_invoice(invoice.customer, file).deliver
+    UserMailer.mail_invoice(invoice, file).deliver
     invoice.invoice_sent! unless invoice.sent?
     respond_to do |format|
       format.js {}
