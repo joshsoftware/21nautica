@@ -94,7 +94,7 @@ class Movement < ActiveRecord::Base
   end
 
   def shipping_seal
-    #self.export_item.export.shipping_line
+    self.export_item.export.shipping_line
   end
 
   def transporter_name

@@ -1,5 +1,4 @@
 class MovementsController < ApplicationController
-  #respond_to :js, :json, :html
   def index
     @movements = Movement.where.not(status: "container_handed_over_to_KPA").order(:booking_number)
     @show_update = true
