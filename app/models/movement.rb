@@ -22,6 +22,7 @@
 
 class Movement < ActiveRecord::Base
   include AASM
+  include MovementsHelper
 
   has_one :export_item
   belongs_to :bill_of_lading
@@ -84,9 +85,13 @@ class Movement < ActiveRecord::Base
     self.id
   end
 
+  def status_and_updated_at_date
+    "#{self.status}  \n #{status_updated_at(self).localtime.to_date} "
+  end
+
   def as_json(options= {})
     super(methods: [:DT_RowId, :container_number, :bl_number, :customer_name,
-     :shipping_seal, :transporter_name])
+     :shipping_seal, :transporter_name, :status_and_updated_at_date])
   end
 
   def container_number

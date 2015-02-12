@@ -203,6 +203,7 @@ history_datatable_initialize = ->
                         {"data" : "port_of_discharge"},
                         {"data" : "movement_type"},
                         {"data" : "shipping_seal"},
+                        {"data" : "status_and_updated_at_date"},
                         {"data": "remarks" }
                       ]
                     }).makeEditable({       
@@ -292,7 +293,7 @@ history_datatable_initialize = ->
                             sUpdateURL: "../movements/update"
                             fnOnCellUpdated: (sValue) ->
                               return sValue
-                          }, null, null, null
+                          }, null, null, null, null
                         ]
 
                       })
