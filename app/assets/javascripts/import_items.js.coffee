@@ -52,25 +52,35 @@ datatable_initialize = ->
 
 $(document).ready datatable_initialize
 
-datatable_initialize = ->
+history_datatable_initialize = ->
     ohistoryTable = $('#import_history_table').dataTable({
+                    "sAjaxSource": "/import/history.json",
                     "bJQueryUI": true,
-                    "bFilter": true,
-                    "sPaginationType": "full_numbers",
                     "bAutoWidth": false,
-                    "aoColumns": [{ "sWidth": "10%" }, { "sWidth": "10%" }, { "sWidth": "10%" },
-                    { "sWidth": "10%" }, { "sWidth": "10%" }, { "sWidth": "10%" },
-                    { "sWidth": "10%" }, { "sWidth": "20%" }, { "sWidth": "10%" }]
+                    "deferRender" : true,
+                    "aoColumns": [{ "sWidth": "10%", "data" : "bl_number"},
+                    { "sWidth": "10%", "data" : "container_number" },
+                    { "sWidth": "10%", "data" : "work_order_number" },
+                    { "sWidth": "10%", "data" : "customer_name" },
+                    { "sWidth": "10%", "data" : "equipment_type" },
+                    { "sWidth": "10%", "data" : "delivery_date" },
+                    { "sWidth": "10%", "data" :  "after_delivery_status"}
+                    { "sWidth": "20%", "data" : "context" },
+                    { "sWidth": "10%", "data" : "formatted_close_date" }]
                     }).makeEditable(
                       aoColumns: [
-                                  null,null, null, null,null,
-                                  null,null, null,
-                                  {name: 'close_date', submit: 'okay', tooltip: "yyyy-mm-dd", sUpdateURL:  "import_items/update"
-                                  ,type: 'datepicker2', event: 'click'}
+                                  null, null, null, null, null,
+                                  null, null, null,
+                                  {name: 'close_date', submit: 'okay', tooltip: "yyyy-mm-dd",
+                                  sUpdateURL:  "../import_items/update",
+                                  type: 'datepicker2', event: 'click',
+                                  fnOnCellUpdated: (sValue) ->
+                                    return sValue
+                                  }
                                  ]
                   )
 
-$(document).ready datatable_initialize
+$(document).ready history_datatable_initialize
 
 datatable_initialize = ->
     oemptycontTable = $('#import_empty_containers_table').dataTable({

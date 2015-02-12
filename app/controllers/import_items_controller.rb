@@ -51,7 +51,10 @@ class ImportItemsController < ApplicationController
   end
 
   def history
-    @import_items = ImportItem.where(status: "delivered")
+    respond_to do |format|
+      format.html{}
+      format.json{ render json: {data: ImportItem.where(status: "delivered") } }
+    end
   end
 
   def empty_containers

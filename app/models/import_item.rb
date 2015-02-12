@@ -19,6 +19,7 @@
 class ImportItem < ActiveRecord::Base
   include AASM
   include EspinitaPatch
+  include MovementsHelper
 
   belongs_to :import
   belongs_to :vendor
@@ -101,9 +102,22 @@ class ImportItem < ActiveRecord::Base
     self.import.equipment
   end
 
+  def DT_RowId
+    self.id
+  end
+
+  def formatted_close_date
+    self.close_date.strftime("%Y-%m-%d") unless self.close_date.blank?
+  end
+
+  def delivery_date
+    status_updated_at(self).strftime("%Y-%m-%d") unless status_updated_at(self).blank?
+  end
+
   def as_json(options= {})
-    super(only: [:container_number, :id], methods: [:bl_number, :customer_name, 
-      :work_order_number, :equipment_type])
+    super(only: [:container_number, :id, :after_delivery_status, :context],
+            methods: [:bl_number, :customer_name, :work_order_number, 
+              :equipment_type, :DT_RowId, :formatted_close_date, :delivery_date])
   end
 
   def find_bill_of_lading
