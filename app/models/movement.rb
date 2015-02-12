@@ -81,7 +81,8 @@ class Movement < ActiveRecord::Base
   end
 
   def as_json(options= {})
-    super(methods: [:container_number])
+    super(methods: [:container_number, :bl_number, :customer_name,
+     :shipping_seal, :transporter_name])
   end
 
   def container_number
@@ -93,7 +94,7 @@ class Movement < ActiveRecord::Base
   end
 
   def shipping_seal
-    self.export_item.export.shipping_line
+    #self.export_item.export.shipping_line
   end
 
   def transporter_name

@@ -1,5 +1,5 @@
 class MovementsController < ApplicationController
-
+  #respond_to :js, :json, :html
   def index
     @movements = Movement.where.not(status: "container_handed_over_to_KPA").order(:booking_number)
     @show_update = true
@@ -8,9 +8,15 @@ class MovementsController < ApplicationController
   end
 
   def history
-    @movements = Movement.where(status: "container_handed_over_to_KPA").order(:booking_number)
     @transporters = Vendor.pluck(:name).inject({}) {|h, x| h[x] = x; h }
     @destination_ports = DESTINATION_PORTS.inject({}) {|h, x| h[x] = x; h }
+    respond_to do |format|
+      format.html{}
+      format.json{
+        render json: {data: 
+          Movement.where(status: "container_handed_over_to_KPA").order(:booking_number) } 
+        }
+    end
   end
 
   # JS call.
