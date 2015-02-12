@@ -19,3 +19,7 @@
     %th Movement Type
     %th Shipping Seal
     %th Remarks
+
+:coffeescript
+  @transporters = #{@transporters.to_json}
+  @destination_ports = #{@destination_ports.to_json}

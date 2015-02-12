@@ -80,8 +80,12 @@ class Movement < ActiveRecord::Base
     invoice.invoice_ready!
   end
 
+  def DT_RowId
+    self.id
+  end
+
   def as_json(options= {})
-    super(methods: [:container_number, :bl_number, :customer_name,
+    super(methods: [:DT_RowId, :container_number, :bl_number, :customer_name,
      :shipping_seal, :transporter_name])
   end
 

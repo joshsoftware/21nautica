@@ -182,6 +182,7 @@ $(document).ready datatable_initialize
 history_datatable_initialize = ->
   movementsTable =  $('#movements_history_table').dataTable({
                       "sAjaxSource": "/export/history.json",
+                      "bJQueryUI": true,
                       "deferRender" : true,
                       "columns": [
                         {"data": "w_o_number"},
@@ -204,7 +205,98 @@ history_datatable_initialize = ->
                         {"data" : "shipping_seal"},
                         {"data": "remarks" }
                       ]
-                    })
+                    }).makeEditable({       
+                        aoColumns: [
+                          {
+                            sUpdateURL: "../movements/update"
+                            fnOnCellUpdated: (sValue) ->
+                              return sValue
+                          },
+                          {
+                            sUpdateURL: "../movements/update"
+                            fnOnCellUpdated: (sValue) ->
+                              return sValue
+                          },
+                          {
+                            sUpdateURL: "../movements/update"
+                            fnOnCellUpdated: (sValue) ->
+                              return sValue
+                          }, null, null,
+                          {
+                            sUpdateURL: "../movements/update"
+                            fnOnCellUpdated: (sValue) ->
+                              return sValue
+                          },
+                          {
+                            type: 'select',
+                            event: 'click',
+                            data: JSON.stringify(@transporters),
+                            onblur: 'submit',
+                            sUpdateURL: "../movements/update"
+                            fnOnCellUpdated: (sValue) ->
+                              return sValue
+                          },
+                          {
+                            sUpdateURL: "../movements/update"
+                            fnOnCellUpdated: (sValue) ->
+                              return sValue
+                          },
+                          {
+                            type: 'datepicker2',
+                            event: 'click',
+                            submit: 'okay',
+                            tooltip: "yyyy-mm-dd",
+                            sUpdateURL: "../movements/update"
+                            fnOnCellUpdated: (sValue) ->
+                              return sValue
+                          },
+                          {
+                            sUpdateURL: "../movements/update"
+                            fnOnCellUpdated: (sValue) ->
+                              return sValue
+                          },
+                          {
+                            sUpdateURL: "../movements/update"
+                            fnOnCellUpdated: (sValue) ->
+                              return sValue
+                          },        
+                          {
+                            sUpdateURL: "../movements/update"
+                            fnOnCellUpdated: (sValue) ->
+                              return sValue
+                          },      
+                          {
+                            type: 'datepicker2',
+                            event: 'click',
+                            submit: 'okay',
+                            tooltip: "yyyy-mm-dd",
+                            sUpdateURL: "../movements/update"
+                            fnOnCellUpdated: (sValue) ->
+                              return sValue
+                          },
+                          {
+                            sUpdateURL: "../movements/update"
+                            fnOnCellUpdated: (sValue) ->
+                              return sValue
+                          },
+                          {
+                            sUpdateURL: "../movements/update"
+                            fnOnCellUpdated: (sValue) ->
+                              return sValue
+                          },
+                          {
+                            type: 'select',
+                            event: 'click'
+                            data: JSON.stringify(@destination_ports),
+                            onblur: 'submit',
+                            sUpdateURL: "../movements/update"
+                            fnOnCellUpdated: (sValue) ->
+                              return sValue
+                          }, null, null, null
+                        ]
+
+                      })
+
 
 $(document).ready history_datatable_initialize
 
