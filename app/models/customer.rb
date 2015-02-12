@@ -13,4 +13,5 @@ class Customer < ActiveRecord::Base
   has_many :exports
   has_many :imports
   has_many :invoices
+  has_many :payments
 end

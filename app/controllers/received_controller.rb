@@ -15,9 +15,9 @@ class ReceivedController < ApplicationController
   end
 
   def index
-    customer_id = params[:customer_id]
-    @payments = Received.where(customer_id: customer_id).order(date_of_payment: :desc)
-    @header = Customer.find_by(id: customer_id).try(:name)
+    customer = Customer.where(id: params[:customer_id]).first
+    @payments = customer.payments.order(date_of_payment: :desc)
+    @header = customer.name
     respond_to do |format|
       format.js {}
       format.html {redirect_to :root}
