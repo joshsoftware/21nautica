@@ -30,6 +30,7 @@ class ImportsControllerTest < ActionController::TestCase
     get :index
     assert_not_nil assigns(:imports)
     assert_response :success
+    assert_template layout: "application"
     assert_select 'table tr', :count => 1
   end
 

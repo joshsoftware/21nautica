@@ -23,6 +23,12 @@ require 'test_helper'
 class MovementTest < ActiveSupport::TestCase
   setup do
     @movement1 = FactoryGirl.create :movement
+    @export_item = FactoryGirl.create :export_item
+    @export = FactoryGirl.create :export
+    @customer = FactoryGirl.create :customer
+    @export_item.export = @export
+    @export_item.movement = @movement1
+    @export.customer = @customer
   end
 
   test "should not assign truck which is not free" do

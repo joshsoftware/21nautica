@@ -15,6 +15,7 @@ class CustomersControllerTest < ActionController::TestCase
     xhr :get, :new
     assert_not_nil assigns(:customer)
     assert_response :success
+    assert_template layout: nil
   end
 
 	test "should create customer" do
