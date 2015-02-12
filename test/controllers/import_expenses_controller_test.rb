@@ -51,8 +51,7 @@ class ImportExpensesControllerTest < ActionController::TestCase
      "4"=>{"category"=>"Demurrage", "amount"=>"500", "currency"=>"USD", "invoice_number"=>"", 
      "invoice_date"=>"", "delivery_date"=>"", "id"=>expenses[4]}}}, 
      "import_item_id"=> @import_item2.id
-    
-    assert_equal "600", @import_item2.import_expenses.first.amount
+    assert_equal "600", @import_item2.import_expenses.where(category: "Haulage").first.amount
     assert_redirected_to root_path
   end
 

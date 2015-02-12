@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150210101518) do
+ActiveRecord::Schema.define(version: 20150211150158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,8 @@ ActiveRecord::Schema.define(version: 20150210101518) do
     t.string   "agency_fee"
     t.string   "shipping_line_charges"
   end
+
+  add_index "bill_of_ladings", ["bl_number"], name: "index_bill_of_ladings_on_bl_number", using: :btree
 
   create_table "customers", force: true do |t|
     t.string   "name"
@@ -64,6 +66,8 @@ ActiveRecord::Schema.define(version: 20150210101518) do
     t.date     "date_of_placement"
   end
 
+  add_index "export_items", ["export_id"], name: "index_export_items_on_export_id", using: :btree
+
   create_table "exports", force: true do |t|
     t.string   "equipment"
     t.integer  "quantity"
@@ -77,6 +81,8 @@ ActiveRecord::Schema.define(version: 20150210101518) do
     t.string   "moved"
   end
 
+  add_index "exports", ["customer_id"], name: "index_exports_on_customer_id", using: :btree
+
   create_table "import_expenses", force: true do |t|
     t.integer  "import_item_id"
     t.string   "category"
@@ -89,6 +95,8 @@ ActiveRecord::Schema.define(version: 20150210101518) do
     t.datetime "updated_at"
     t.string   "invoice_number"
   end
+
+  add_index "import_expenses", ["import_item_id"], name: "index_import_expenses_on_import_item_id", using: :btree
 
   create_table "import_items", force: true do |t|
     t.string   "container_number"
@@ -110,6 +118,10 @@ ActiveRecord::Schema.define(version: 20150210101518) do
     t.string   "context"
     t.integer  "vendor_id"
   end
+
+  add_index "import_items", ["container_number"], name: "index_import_items_on_container_number", using: :btree
+  add_index "import_items", ["import_id"], name: "index_import_items_on_import_id", using: :btree
+  add_index "import_items", ["vendor_id"], name: "index_import_items_on_vendor_id", using: :btree
 
   create_table "imports", force: true do |t|
     t.string   "equipment"
@@ -133,6 +145,9 @@ ActiveRecord::Schema.define(version: 20150210101518) do
     t.string   "rate_agreed"
     t.string   "weight"
   end
+
+  add_index "imports", ["bill_of_lading_id"], name: "index_imports_on_bill_of_lading_id", using: :btree
+  add_index "imports", ["customer_id"], name: "index_imports_on_customer_id", using: :btree
 
   create_table "invoices", force: true do |t|
     t.string   "number"
@@ -174,6 +189,9 @@ ActiveRecord::Schema.define(version: 20150210101518) do
     t.integer  "vendor_id"
   end
 
+  add_index "movements", ["bill_of_lading_id"], name: "index_movements_on_bill_of_lading_id", using: :btree
+  add_index "movements", ["vendor_id"], name: "index_movements_on_vendor_id", using: :btree
+
   create_table "particulars", force: true do |t|
     t.integer  "invoice_id"
     t.string   "name"
@@ -183,6 +201,8 @@ ActiveRecord::Schema.define(version: 20150210101518) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "particulars", ["invoice_id"], name: "index_particulars_on_invoice_id", using: :btree
 
   create_table "payments", force: true do |t|
     t.date     "date_of_payment"
@@ -196,6 +216,9 @@ ActiveRecord::Schema.define(version: 20150210101518) do
     t.integer  "customer_id"
     t.integer  "vendor_id"
   end
+
+  add_index "payments", ["customer_id"], name: "index_payments_on_customer_id", using: :btree
+  add_index "payments", ["vendor_id"], name: "index_payments_on_vendor_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
