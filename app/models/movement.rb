@@ -90,8 +90,10 @@ class Movement < ActiveRecord::Base
   end
 
   def as_json(options= {})
-    super(methods: [:DT_RowId, :container_number, :bl_number, :customer_name,
-     :shipping_seal, :transporter_name, :status_and_updated_at_date])
+    super(except: [:port_of_loading, :estimate_delivery, :created_at, :updated_at, 
+      :vendor_id, :status, :custom_seal], methods: [:DT_RowId, :container_number, 
+      :bl_number, :customer_name, :shipping_seal, :transporter_name, 
+      :status_and_updated_at_date])
   end
 
   def container_number
