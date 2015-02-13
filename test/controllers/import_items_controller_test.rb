@@ -45,14 +45,20 @@ class ImportItemsControllerTest < ActionController::TestCase
   end
 
   test "should get history" do
+    get :history
+    assert_template :history
+    assert_response :success
+  end
+
+  test "should get data on json request to history" do
     @import_item1.status = "delivered"
     @import_item2.status = "delivered"
     @import_item2.save!
     @import_item1.save!
-    get :history
+    data = ImportItem.where(status: "delivered").as_json
+    get :history, format: :json
     assert_response :success
-    assert_not_nil assigns(:import_items)
-    assert_select 'table tr' , :count => 2
+    assert_equal JSON.parse(response.body)['data'], data
   end
 
   test "should get empty containers list" do
