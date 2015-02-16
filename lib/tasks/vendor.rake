@@ -24,4 +24,11 @@ namespace "vendor" do
     end
   end
 
+  desc "Add Clearing agent to vendors"
+  task add_clearing_agents: :environment do
+    %W(Panafrica EACL Agility).each do |agent_name|
+      Vendor.create(name: agent_name, vendor_type: "clearing_agent")
+    end
+  end
+
 end
