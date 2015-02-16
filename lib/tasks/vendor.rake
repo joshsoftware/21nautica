@@ -16,4 +16,12 @@ namespace "vendor" do
       item.save!
     end
   end
+
+  desc "Add type-transporter to existing vendors"
+  task add_transporter_type: :environment do
+    Vendor.all.each do |vendor|
+      vendor.update(vendor_type: "transporter")
+    end
+  end
+
 end
