@@ -7,7 +7,7 @@ class ImportExpenseTest < ActiveSupport::TestCase
   setup do
     @import_item1 = FactoryGirl.create :import_item1
     @import = FactoryGirl.create :import
-    @vendor = FactoryGirl.create :vendor
+    @transporter = FactoryGirl.create :vendor
     @import_expense1 = FactoryGirl.create :import_expense1
     @import_expense2 = FactoryGirl.create :import_expense2
     @import_expense3 = FactoryGirl.create :import_expense3
@@ -15,7 +15,7 @@ class ImportExpenseTest < ActiveSupport::TestCase
     @import_expense5 = FactoryGirl.create :import_expense5
     @import_expense1.import_item = @import_item1
     @import_expense5.import_item = @import_item1
-    @import_item1.vendor = @vendor
+    @import_item1.transporter = @transporter
     @import_item1.import = @import
   end
 

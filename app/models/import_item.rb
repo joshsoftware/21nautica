@@ -22,7 +22,7 @@ class ImportItem < ActiveRecord::Base
   include MovementsHelper
 
   belongs_to :import
-  belongs_to :vendor
+  belongs_to :transporter, class_name: "Vendor", foreign_key: "vendor_id"
   has_many :import_expenses, dependent: :destroy
 
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
@@ -86,11 +86,11 @@ class ImportItem < ActiveRecord::Base
   auditable only: [:status, :updated_at, :current_location, :remarks]
 
   def transporter_name
-    self.vendor.try(:name)
+    self.transporter.try(:name)
   end
 
   def transporter_name=(transporter_name)
-    self.vendor = Vendor.where(name: transporter_name).first
+    self.transporter = Vendor.where(name: transporter_name).first
   end
 
   def work_order_number

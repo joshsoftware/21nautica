@@ -26,7 +26,7 @@ class Movement < ActiveRecord::Base
 
   has_one :export_item
   belongs_to :bill_of_lading
-  belongs_to :vendor
+  belongs_to :transporter, class_name: "Vendor", foreign_key: "vendor_id"
   validates :truck_number, presence: true
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
 
@@ -109,11 +109,11 @@ class Movement < ActiveRecord::Base
   end
 
   def transporter_name
-    self.vendor.try(:name)
+    self.transporter.try(:name)
   end
 
   def transporter_name=(transporter_name)
-    self.vendor = Vendor.where(name: transporter_name).first
+    self.transporter = Vendor.where(name: transporter_name).first
   end
 
   def equipment_type
