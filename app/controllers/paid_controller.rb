@@ -1,7 +1,6 @@
 class PaidController < ApplicationController
   def new
     @paid = Paid.new
-    @transporters =  Vendor.pluck(:name,:id).to_h
   end
 
   def create

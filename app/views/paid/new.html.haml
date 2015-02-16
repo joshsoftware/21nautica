@@ -2,7 +2,7 @@
 .row
   = simple_form_for @paid , html: {class: 'form-horizontal'},url: url_for(action: 'create', :controller => 'paid'), method: 'post', defaults: {input_html: {class: 'form-control'}} do |f|
     .col-md-6
-      = f.input :vendor_id, collection: @transporters, as: :select, label: 'Vendor Name' , include_blank: "Select Vendor", 
+      = f.input :vendor_id, collection: get_vendors, as: :select, label: 'Vendor Name' , include_blank: "Select Vendor", 
         input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Please select Vendor Name"}
       = render '/shared/payments' , f: f
   .col-md-6
