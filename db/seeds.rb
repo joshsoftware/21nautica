@@ -5,8 +5,10 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-User.create(email: 'k@gmail.com', password: 'k12345678')
-
 %W(Mansons Farsham Panafrica Crown Panafrica\ Logistics Midland\ Hauliers Blue\ Jay).each do |transporter|
-  Vendor.create!(name: transporter)
+  Vendor.create!(name: transporter, vendor_type: "transporter")
+end
+
+%W(Panafrica EACL Agility).each do |agent_name|
+  Vendor.create(name: agent_name, vendor_type: "clearing_agent")
 end
