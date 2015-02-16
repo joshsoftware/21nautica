@@ -90,8 +90,7 @@ class ImportItem < ActiveRecord::Base
   end
 
   def transporter_name=(transporter_name)
-    vendor_id = Vendor.where(name: transporter_name).first.try(:id)
-    self.vendor_id = vendor_id
+    self.vendor = Vendor.where(name: transporter_name).first
   end
 
   def work_order_number
