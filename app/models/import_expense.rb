@@ -13,7 +13,7 @@ class ImportExpense < ActiveRecord::Base
       when 'ICD'
         return %w(Maina Multiple)
       when 'Final Clearing'
-        return CLEARING_AGENTS
+        return Vendor.clearing_agents.pluck(:name)
       when 'Demurrage'
         return [self.import_item.import.shipping_line]
     end
