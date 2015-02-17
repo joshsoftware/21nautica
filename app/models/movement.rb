@@ -27,6 +27,7 @@ class Movement < ActiveRecord::Base
   has_one :export_item
   belongs_to :bill_of_lading
   belongs_to :transporter, class_name: "Vendor", foreign_key: "vendor_id"
+  belongs_to :c_agent, class_name: "Vendor", foreign_key: "clearing_agent_id"
   validates :truck_number, presence: true
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
 
@@ -147,6 +148,14 @@ class Movement < ActiveRecord::Base
         invoices.update_all(document_number: w_o_numbers.join(","))
       end
     end
+  end
+
+  def clearing_agent
+    self.c_agent.try(:name)
+  end
+
+  def clearing_agent=(clearing_agent)
+    self.c_agent = Vendor.where(name: clearing_agent).first
   end
 
 end
