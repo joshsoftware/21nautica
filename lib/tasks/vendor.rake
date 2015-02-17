@@ -31,4 +31,20 @@ namespace "vendor" do
     end
   end
 
+  desc "Add clearing agent id to each Import"
+  task clearing_agents_to_import: :environment do
+    Import.all.each do |import|
+      import.clearing_agent_id = Vendor.where(name: import.clearing_agent).first.try(:id)
+      import.save!
+    end
+  end
+
+  desc "Add clearing_agent id to each Movement"
+  task clearing_agents_to_movement: :environment do
+    Movement.all.each do |movement|
+      movement.clearing_agent_id = Vendor.where(name: movement.clearing_agent).first.try(:id)
+      movement.save!
+    end
+  end
+
 end
