@@ -27,6 +27,8 @@ class Import < ActiveRecord::Base
   has_many :import_items
   belongs_to :customer
   belongs_to :bill_of_lading
+  belongs_to :c_agent, class_name: "Vendor", foreign_key: "clearing_agent_id"
+
   accepts_nested_attributes_for :import_items
 
   # Hack: I have intentionally not used delegate here, because,
@@ -67,6 +69,14 @@ class Import < ActiveRecord::Base
       transitions from: :container_discharged, to: :ready_to_load
     end
 
+  end
+
+  def clearing_agent
+    self.c_agent.try(:name)
+  end
+
+  def clearing_agent=(clearing_agent)
+    self.c_agent = Vendor.where(name: clearing_agent).first
   end
 
   auditable only: [:status, :updated_at, :remarks]

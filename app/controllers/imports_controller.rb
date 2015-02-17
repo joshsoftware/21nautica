@@ -5,7 +5,7 @@ class ImportsController < ApplicationController
     cust_array = Customer.all.select(:id , :name).to_a
     @customers = cust_array.inject({}) {|h,x| h[x.id] = x.name; h}
     @equipment = EQUIPMENT_TYPE.inject({}) {|h, x| h[x] = x; h}
-    @clearing_agent = CLEARING_AGENTS.inject({}) {|h, x| h[x] = x; h}
+    @clearing_agent = Vendor.clearing_agents.pluck(:name).inject({}) {|h, x| h[x] = x; h}
   end
 
   def new
