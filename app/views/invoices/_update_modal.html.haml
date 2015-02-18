@@ -19,6 +19,9 @@
           #invoice_quantity
             %label Equipment: #{invoice.equipment_type} X #{invoice.total_containers}
 
+          - if (invoice.is_TBL_export_invoice? || invoice.is_Haulage_export_invoice?)
+            %label Port of Discharge: #{invoice.destination}
+
           - if invoice.is_additional_invoice
             #prev_inv_number
               = f.label "Previous Invoice: #{invoice.previous_invoice.number}/ #{invoice.previous_invoice.amount}"
