@@ -98,7 +98,7 @@ class Invoice < ActiveRecord::Base
   def as_json(options={})
     super(methods: [:bl_number, :customer_name, :index_row_class, 
       :send_button_status, :total_containers, :update_button_status,
-      :is_additional_invoice, :previous_invoice_number, :is_legacy_bl])
+      :is_additional_invoice, :previous_invoice_number, :is_legacy_bl, :equipment_type])
   end
 
   def assign_additional_invoice_number

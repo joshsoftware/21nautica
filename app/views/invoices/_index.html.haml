@@ -5,6 +5,8 @@
       %th{"data-sort" => "number"} Invoice Number
       %th{"data-sort" => "date"} Invoiced Date
       %th{"data-sort" => "bl_number"} BL Number
+      %th{"data-sort" => "total_containers"} Quantity
+      %th{"data-sort" => "equipment_type"} Equipment Type
       %th{"data-sort" => "document_number"} Document Number
       %th{"data-sort" => "amount:asc:number"} Invoice Amount
       %th{"data-sort" => "status"} Status
@@ -16,7 +18,9 @@
     %td.customer {{customer_name}}
     %td.number {{number}}
     %td.date {{date}}
-    %td.bl_num {{bl_number}} 
+    %td.bl_num {{bl_number}}
+    %td.qty {{total_containers}}
+    %td.type {{equipment_type}}
     %td.document_num {{document_number}} 
     %td.amount {{amount}} 
     %td.status {{status}}
