@@ -10,7 +10,7 @@ STATUS_CHANGE_DURATION = {arrived_malaba_border: 2,
                           order_released: 2,
                           arrived_port: 3,
                           document_handed: 1}
-CLEARING_AGENTS = %W(Panafrica EACL Agility Paul)
+CLEARING_AGENTS = %W(Panafrica EACL Agility Paul Inland\ Logistics)
 PAYMENT_MODES = %W(Cheque Cash TT)
 INVOICE_PARTICULARS = %w( Ocean\ Freight Clearing\ Charges ICD Demurrage 
 	Empty Final\ Clearing Haulage Forest\ Permits Other)
