@@ -72,6 +72,7 @@
 :coffeescript
   @transporters = #{@transporters.to_json}
   @destination_ports = #{@destination_ports.to_json}
+  @clearing_agent = #{@clearing_agent.to_json}
 
   $('#statusModal').on 'show.bs.modal', (event) ->
     link_tag = $(event.relatedTarget)

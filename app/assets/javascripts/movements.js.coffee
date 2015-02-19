@@ -93,22 +93,19 @@ datatable_initialize = ->
                                   fnOnCellUpdated: (sStatus,sValue,settings) ->
                                     $.post("movements/#{id}/retainStatus")
                                     },
-                        	  {sUpdateURL: (value,settings)->
-                                    row = $(this).parents('tr')[0]
-                                    id = row.id
-                                    $.ajax(
-                                      url:"movements/update",
-                                      type: 'POST'
-                                      data: {id:id,columnName:"Clearing Agent",value:value},
-                                      async: false)
-                                      .done((data) ->
-                                        if (data != value)
-                                          value = data
-                                      )
-                                    return value
-                                  , placeholder:"Click to enter",
-                                  fnOnCellUpdated: (sStatus,sValue,settings) ->
-                                    $.post("movements/#{id}/retainStatus")
+                        	        {       
+                                    type: 'select',
+                                    event: 'click',
+                                    data: JSON.stringify(@clearing_agent),
+                                    onblur: 'submit',
+                                    sUpdateURL: (value,settings)->
+                                       row = $(this).parents('tr')[0]
+                                       id = row.id
+                                       $.post("movements/update",{id:id,columnName:"Clearing Agent",value:value})
+                                       return value
+                                     , placeholder:"Click to enter",
+                                     fnOnCellUpdated: (sStatus,sValue,settings) ->
+                                       $.post("movements/#{id}/retainStatus")
                                     },
                         	  {sUpdateURL: (value,settings)->
                                     row = $(this).parents('tr')[0]
@@ -256,7 +253,11 @@ history_datatable_initialize = ->
                             fnOnCellUpdated: (sValue) ->
                               return sValue
                           },
-                          {
+                          { 
+                            type: 'select',
+                            event: 'click',
+                            data: JSON.stringify(@clearing_agent),
+                            onblur: 'submit',
                             sUpdateURL: "../movements/update"
                             fnOnCellUpdated: (sValue) ->
                               return sValue
