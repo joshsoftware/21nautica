@@ -61,7 +61,7 @@ class ImportItem < ActiveRecord::Base
       transitions from: :under_loading_process, to: :truck_allocated
     end
 
-    event :loaded_out_of_port, :after => :check_for_invoice do
+    event :loaded_out_of_port do
       transitions from: :truck_allocated, to: :loaded_out_of_port
     end
 
@@ -77,7 +77,7 @@ class ImportItem < ActiveRecord::Base
       transitions from: :departed_from_malaba, to: :arrived_at_kampala
     end
 
-    event :truck_released do
+    event :truck_released, :after => :check_for_invoice do
       transitions from: :arrived_at_kampala, to: :delivered
     end
 
@@ -125,15 +125,27 @@ class ImportItem < ActiveRecord::Base
   end
 
   def find_all_containers_status
-    ImportItem.where(import_id: self.import_id).pluck(:status)
+    import_items = ImportItem.where(import_id: self.import_id).pluck(:id)
+    audits = Espinita::Audit.where(auditable_type: "ImportItem", auditable_id: import_items)
+    audits.select do |audit_entry|
+      audit_entry[:audited_changes][:status] == ["truck_allocated", "loaded_out_of_port"]
+    end
+  end
+
+  def first_container_loaded_out_of_port_date
+    import_items = ImportItem.where(import_id: self.import_id)
+    import_items.each do |item|
+      item.audits.select do |audit_entry|
+        audit_entry[:audited_changes][:status] == ["container_discharged", "ready_to_load"]
+      end
+    end
   end
 
   def check_rest_of_the_containers
     bill_of_lading = self.find_bill_of_lading
-    status = self.find_all_containers_status
+    statuses = self.find_all_containers_status
     invoice = bill_of_lading.invoices.where(previous_invoice_id: nil).first
-    invoice.invoice_ready! if
-      (!status.include?("under_loading_process") && invoice.present?)
+    invoice.invoice_ready! if (!statuses.include?("under_loading_process") && invoice.present?)
   end
 
   def check_for_invoice
@@ -141,13 +153,15 @@ class ImportItem < ActiveRecord::Base
     invoice = bill_of_lading.invoices.where(previous_invoice_id: nil).first
     return if (invoice && invoice.status.eql?("ready"))
     if invoice.blank?
-      invoice = Invoice.create(date: Date.current, customer_id: self.import.customer_id)
+      # get date of first loaded item
+      #date = 
+      invoice = Invoice.create(customer_id: self.import.customer_id)
       invoice.invoiceable = bill_of_lading
       invoice.document_number = bill_of_lading.import.work_order_number
       invoice.save
     end
-    status = self.find_all_containers_status
-    invoice.invoice_ready! unless status.include?("under_loading_process")
+    statuses = self.find_all_containers_status
+    invoice.invoice_ready! unless statuses.include?("under_loading_process")
   end
 
 end
