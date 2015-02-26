@@ -131,9 +131,11 @@ class ImportItem < ActiveRecord::Base
   def first_container_loaded_out_of_port_date
     import_items = ImportItem.where(import_id: self.import_id).pluck(:id)
     audits = Espinita::Audit.where(auditable_type: "ImportItem", auditable_id: import_items)
-    audits.select do |audit_entry|
-      audit_entry[:audited_changes][:status] == ["truck_allocated", "loaded_out_of_port"]
+    loading_dates = []
+    audits.each do |audit_entry|
+       loading_dates.push(audit_entry.audited_changes[:updated_at].second) if (audit_entry[:audited_changes][:status] == ["truck_allocated", "loaded_out_of_port"])
     end
+    loading_dates.min
   end
 
   def check_rest_of_the_containers
@@ -148,9 +150,8 @@ class ImportItem < ActiveRecord::Base
     invoice = bill_of_lading.invoices.where(previous_invoice_id: nil).first
     return if (invoice && invoice.status.eql?("ready"))
     if invoice.blank?
-      # get date of first loaded item
-      #date = 
-      invoice = Invoice.create(customer_id: self.import.customer_id)
+      date = self.first_container_loaded_out_of_port_date
+      invoice = Invoice.create(date: date, customer_id: self.import.customer_id)
       invoice.invoiceable = bill_of_lading
       invoice.document_number = bill_of_lading.import.work_order_number
       invoice.save
