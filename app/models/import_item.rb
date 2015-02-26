@@ -125,19 +125,14 @@ class ImportItem < ActiveRecord::Base
   end
 
   def find_all_containers_status
+    import_items = ImportItem.where(import_id: self.import_id).pluck(:status)
+  end
+
+  def first_container_loaded_out_of_port_date
     import_items = ImportItem.where(import_id: self.import_id).pluck(:id)
     audits = Espinita::Audit.where(auditable_type: "ImportItem", auditable_id: import_items)
     audits.select do |audit_entry|
       audit_entry[:audited_changes][:status] == ["truck_allocated", "loaded_out_of_port"]
-    end
-  end
-
-  def first_container_loaded_out_of_port_date
-    import_items = ImportItem.where(import_id: self.import_id)
-    import_items.each do |item|
-      item.audits.select do |audit_entry|
-        audit_entry[:audited_changes][:status] == ["container_discharged", "ready_to_load"]
-      end
     end
   end
 
