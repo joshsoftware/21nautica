@@ -23,7 +23,7 @@
       = f.input :weight, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
       .form-group
         .col-sm-offset-2.col-sm-2
-          = f.submit 'Save', class: 'btn-primary'
+          = f.submit 'Save', class: 'btn-primary', "data-disable-with" => "saving...."
     .col-md-6
 
 
