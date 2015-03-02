@@ -60,6 +60,9 @@
           %b= @invoice.amount.in_words.humanize + " US Dollars Only"
         %td{style: "text-align:center"}
           %b= @invoice.amount.to_s + " USD"
+      %tr{height: "40px"}
+        %td{colspan: "4"}
+          = @invoice.remarks
       %tr
         %td{colspan: "4"}
           E. & O.E.
