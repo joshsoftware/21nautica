@@ -57,7 +57,7 @@ class MovementsController < ApplicationController
       bl = BillOfLading.where(bl_number: movement_update_params[:value]).first
       if bl
         invoice = bl.invoices.where(previous_invoice: nil).first
-        render text: "Invoice has already been sent!! please contact admin" and return if (invoice.present? && invoice.sent?)
+        render text: "Invoice already sent, you’re dead Fred" and return if (invoice.present? && invoice.sent?)
         movement.bill_of_lading = bl
       else
         movement.build_bill_of_lading(bl_number: movement_update_params[:value])
