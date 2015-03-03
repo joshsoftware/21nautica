@@ -17,6 +17,9 @@ class ImportExpenseTest < ActiveSupport::TestCase
     @import_expense5.import_item = @import_item1
     @import_item1.transporter = @transporter
     @import_item1.import = @import
+    %W(Panafrica EACL Agility Paul Inland\ Logistics).each do |agent_name|
+      Vendor.create(name: agent_name, vendor_type: "clearing_agent")
+    end
   end
 
   test "returns collection for name field depending on category" do
