@@ -4,13 +4,13 @@ class MovementsController < ApplicationController
     @show_update = true
     @transporters = Vendor.transporters.pluck(:name).inject({}) {|h, x| h[x] = x; h }
     @destination_ports = DESTINATION_PORTS.inject({}) {|h, x| h[x] = x; h }
-    @clearing_agent = CLEARING_AGENTS.inject({}) {|h, x| h[x] = x; h}
+    @clearing_agent = Vendor.clearing_agents.pluck(:name).inject({}) {|h, x| h[x] = x; h}
   end
 
   def history
     @transporters = Vendor.transporters.pluck(:name).inject({}) {|h, x| h[x] = x; h }
     @destination_ports = DESTINATION_PORTS.inject({}) {|h, x| h[x] = x; h }
-    @clearing_agent = CLEARING_AGENTS.inject({}) {|h, x| h[x] = x; h}
+    @clearing_agent = Vendor.clearing_agents.pluck(:name).inject({}) {|h, x| h[x] = x; h}
     respond_to do |format|
       format.html{}
       format.json{
