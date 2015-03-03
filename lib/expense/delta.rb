@@ -49,7 +49,7 @@ module Expense
         changes.each do |key,value|
           audit_value = (((audits_hash[audit.auditable_type] ||= {}) [audit.auditable_id] ||= 
             {}) [key] ||= "")
-          key.eql?(:vendor_id) ? audit_value.concat("#{Vendor.where(id: value.second).first.try(:name)} \n") : 
+          (key.eql?(:vendor_id) || key.eql?(:clearing_agent_id))  ? audit_value.concat("#{Vendor.where(id: value.second).first.try(:name)} \n") : 
           audit_value.concat("\n #{value.second.to_s}")
         end 
       end
@@ -66,8 +66,8 @@ module Expense
         sheet.add_row [movement.try(:bl_number), movement.try(:container_number), 
           (value[:vendor_id].blank? && !value[:transporter_payment].blank?) ? 
           movement.transporter_name : value[:vendor_id], value[:transporter_payment], 
-          (value[:clearing_agent].blank? && !value[:clearing_agent_payment].blank?) ? 
-          movement.clearing_agent : value[:clearing_agent], value[:clearing_agent_payment]], height: 30
+          (value[:clearing_agent_id].blank? && !value[:clearing_agent_payment].blank?) ? 
+          movement.clearing_agent : value[:clearing_agent_id], value[:clearing_agent_payment]], height: 30
       end unless data.nil?
       sheet.column_widths 20,20,20,20,20,20
     end
