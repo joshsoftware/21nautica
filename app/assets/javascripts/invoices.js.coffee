@@ -70,12 +70,18 @@ stream_table_function = ->
       record: record
       index: index
 
+  callbacks =
+    after_add: ->
+      if count is this.data.length
+        $(".streaming_div").hide()
+
   if($("#invoices_index_table").length)
     options =
       view: view
       data_url: '/invoices/ready-new'
+      callbacks: callbacks
       stream_after: 2
-      fetch_data_limit: 10
+      fetch_data_limit: 100
       search_box: '#invoices_searchbox'
       pagination:
         per_page_select: '#invoices_per_page'
@@ -85,8 +91,9 @@ stream_table_function = ->
     options =
       view: view
       data_url: '/invoices/sent'
+      callbacks: callbacks
       stream_after: 2
-      fetch_data_limit: 10
+      fetch_data_limit: 100
       search_box: '#invoices_searchbox'
       pagination:
         per_page_select: '#invoices_per_page'

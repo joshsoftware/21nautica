@@ -1,15 +1,19 @@
 class InvoicesController < ApplicationController
   require 'numbers_in_words/duck_punch'
-  respond_to :js, :json, :html
-  
+
   def index
     offset_val = params[:offset] || 0
-    limit_val = params[:limit] || 10
+    limit_val = params[:limit] || 100
     @invoices_type = params[:type]
     @invoices = (@invoices_type == 'ready-new') ?
       Invoice.where.not(status: 'sent').offset(offset_val).limit(limit_val) :
       Invoice.where(status: 'sent').offset(offset_val).limit(limit_val)
-    respond_with(@invoices)
+    respond_to do |format|
+      format.html{
+        @invoice_count = ( @invoices_type == 'ready-new') ? 
+          Invoice.where.not(status: 'sent').count : Invoice.where(status: 'sent').count }
+      format.json{ render json: @invoices}
+    end
   end
 
   def edit
@@ -67,7 +71,7 @@ class InvoicesController < ApplicationController
 
   private
   def invoice_params
-    params.require(:invoice).permit(:number, :document_number, :amount, 
+    params.require(:invoice).permit(:number, :document_number, :amount, :remarks,
       particulars_attributes: [:id, :name, :_destroy, :rate, :quantity, :subtotal])
   end
 
