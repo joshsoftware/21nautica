@@ -40,6 +40,12 @@ load_particular_select_and_rate_event = ->
     $(this).closest(".fields").find(".subtotal").val (rate * qty)
     $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
 
+  $(".quantity").change ->
+    qty = $(this).val()
+    rate = $(this).closest(".fields").find(".rate").val()
+    $(this).closest(".fields").find(".subtotal").val (rate * qty)
+    $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
+
 load_nested_form_events = ->
   $(document).on "nested:fieldAdded", (event) ->
     load_particular_select_and_rate_event()
@@ -48,6 +54,8 @@ load_nested_form_events = ->
     $('.fields[style*="display: none;"] .form-control').each ->
       $(this).removeAttr("data-validation")
     $('.fields[style*="display: none;"] .rate').each ->
+      $(this).removeAttr("data-validation")
+    $('.fields[style*="display: none;"] .quantity').each ->
       $(this).removeAttr("data-validation")
 
     $('#invoiceUpdateModal #invoice_amount input').val(calculate_amount)
