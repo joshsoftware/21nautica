@@ -149,7 +149,7 @@ class ImportItem < ActiveRecord::Base
   def check_for_invoice
     bill_of_lading = self.find_bill_of_lading
     invoice = bill_of_lading.invoices.where(previous_invoice_id: nil).first
-    return if (invoice && invoice.status.eql?("ready"))
+    return if (invoice && (invoice.status.eql?("ready") || invoice.status.eql?("sent")) )
     if invoice.blank?
       date = self.first_container_loaded_out_of_port_date
       invoice = Invoice.create(date: date, customer_id: self.import.customer_id)
