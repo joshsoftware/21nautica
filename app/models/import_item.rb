@@ -28,6 +28,7 @@ class ImportItem < ActiveRecord::Base
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
 
   delegate :bl_number, to: :import
+  delegate :clearing_agent, to: :import, allow_nil: true
 
   accepts_nested_attributes_for :import_expenses
 
@@ -116,7 +117,8 @@ class ImportItem < ActiveRecord::Base
   def as_json(options= {})
     super(only: [:container_number, :id, :after_delivery_status, :context],
             methods: [:bl_number, :customer_name, :work_order_number, 
-              :equipment_type, :DT_RowId, :formatted_close_date, :delivery_date])
+              :equipment_type, :DT_RowId, :formatted_close_date, :delivery_date,
+              :transporter_name, :clearing_agent])
   end
 
   def find_bill_of_lading
