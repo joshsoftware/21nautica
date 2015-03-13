@@ -198,8 +198,7 @@ history_datatable_initialize = ->
                       ]
                       "columnDefs": [ {
                         "targets": -1,
-                        "data": {"data": "customer_name"},
-                        "defaultContent": "<button class='details'>Details</button>"
+                        "defaultContent": "<button class='details btn btn-primary'>Details</button>"
                       } ]
                     })
 
