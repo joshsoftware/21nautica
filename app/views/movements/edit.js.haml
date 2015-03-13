@@ -1,2 +1,4 @@
 $('#updateModal > .modal-dialog').html("#{j(render 'update_form', movement: @movement)}");
 $("#updateModal").modal('show');
+$('#movement_transporter_invoice_date').datepicker({format :"yyyy-mm-dd"});
+$('#movement_clearing_agent_invoice_date').datepicker({format :"yyyy-mm-dd"});

@@ -7,11 +7,11 @@
     .modal-body
       =f.input :transporter_name, as: :select, collection: Vendor.transporters.pluck(:name)
       =f.input :transporter_invoice_number
-      =f.input :transporter_invoice_date
+      =f.input :transporter_invoice_date, as: :string
       =f.input :transporter_payment
       =f.input :clearing_agent, as: :select, collection: Vendor.clearing_agents.pluck(:name)
       =f.input :clearing_agent_invoice_number
-      =f.input :clearing_agent_invoice_date
+      =f.input :clearing_agent_invoice_date, as: :string
       =f.input :clearing_agent_payment
 
     .modal-footer
