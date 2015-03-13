@@ -49,7 +49,7 @@ Rails.application.routes.draw do
 
     resource :import_expense, only: [:edit, :update, :destroy]
   end
-  resources :movements, only: [:new, :create, :index ] do
+  resources :movements, only: [:new, :create, :index, :edit] do
     member do
       post 'updateStatus'
       post 'retainStatus'

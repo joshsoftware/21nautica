@@ -1,0 +1,6 @@
+$('#updateModal .alert').remove();
+- if @errors.present?
+  -@errors.each do |msg|
+    $('#updateModal .modal-body').append("<div class='alert alert-danger'>#{msg}</div>");
+- else
+  $('#updateModal').modal('hide')

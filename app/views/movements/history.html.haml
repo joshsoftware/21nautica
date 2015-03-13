@@ -6,22 +6,16 @@
     %th Customer Name
     %th Container Number
     %th Truck Number
-    %th Transporter Name
-    %th Transporter Invoice Number
-    %th Transporter Invoice Date
-    %th Transporter Payment
-    %th Clearing Agent
-    %th Clearing Agent Invoice Number
-    %th Clearing Agent Invoice Date
-    %th Clearing Agent Payment
     %th Vessel Targeted
     %th Port of Discharge
     %th Movement Type
     %th Shipping Seal
     %th Status
     %th Remarks
+    %th Details
+
+#updateModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
+  .modal-dialog
 
 :coffeescript
-  @transporters = #{@transporters.to_json}
   @destination_ports = #{@destination_ports.to_json}
-  @clearing_agent = #{@clearing_agent.to_json}

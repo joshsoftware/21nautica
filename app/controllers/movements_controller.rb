@@ -8,9 +8,7 @@ class MovementsController < ApplicationController
   end
 
   def history
-    @transporters = Vendor.transporters.pluck(:name).inject({}) {|h, x| h[x] = x; h }
     @destination_ports = DESTINATION_PORTS.inject({}) {|h, x| h[x] = x; h }
-    @clearing_agent = Vendor.clearing_agents.pluck(:name).inject({}) {|h, x| h[x] = x; h}
     respond_to do |format|
       format.html{}
       format.json{
@@ -47,33 +45,40 @@ class MovementsController < ApplicationController
     @movement=Movement.new
   end
 
+  def edit
+    @movement = Movement.find(movement_update_params[:id])
+  end
+
   def update
     movement = Movement.find(movement_update_params[:id])
-    attribute = movement_update_params[:columnName].downcase.gsub(' ', '_').to_sym
-
-    # Special processing for bl_number
-    if attribute == :bl_number
-      # If no BL of this value, then create one.
-      bl = BillOfLading.where(bl_number: movement_update_params[:value]).first
-      if bl
-        invoice = bl.invoices.where(previous_invoice: nil).first
-        render text: "Invoice already sent, you’re dead Fred" and return if (invoice.present? && invoice.sent?)
-        movement.bill_of_lading = bl
+    if params.has_key?(:columnName)
+      attribute = movement_update_params[:columnName].downcase.gsub(' ', '_').to_sym
+      # Special processing for bl_number
+      if attribute == :bl_number
+        # If no BL of this value, then create one.
+        bl = BillOfLading.where(bl_number: movement_update_params[:value]).first
+        if bl
+          invoice = bl.invoices.where(previous_invoice: nil).first
+          render text: "Invoice already sent, you’re dead Fred" and return if (invoice.present? && invoice.sent?)
+          movement.bill_of_lading = bl
+        else
+          movement.build_bill_of_lading(bl_number: movement_update_params[:value])
+        end
+        # update the movement
+        if movement.save
+          render text: movement_update_params[:value]
+        else
+          render movement.errors.full_messages
+        end
       else
-        movement.build_bill_of_lading(bl_number: movement_update_params[:value])
-      end
-      # update the movement
-      if movement.save
-        render text: movement_update_params[:value]
-      else
-        render movement.errors.full_messages
+        if movement.update(attribute => movement_update_params[:value])
+          render text: movement_update_params[:value]
+        else
+          render text: movement.errors.full_messages
+        end
       end
     else
-      if movement.update(attribute => movement_update_params[:value])
-        render text: movement_update_params[:value]
-      else
-        render text: movement.errors.full_messages
-      end
+      @errors = movement.errors.full_messages unless movement.update_attributes(movement_params)
     end
   end
 
@@ -98,7 +103,10 @@ class MovementsController < ApplicationController
   def movement_params
     params.permit(:export_item_id, :id)
     params.require(:movement).permit(:booking_number, :truck_number, :vessel_targeted,
-                   :remarks, :status, :port_of_discharge, :movement_type, :transporter_name)
+                   :remarks, :status, :port_of_discharge, :movement_type, :transporter_name,
+                   :transporter_invoice_number, :transporter_invoice_date, :transporter_payment,
+                   :clearing_agent, :clearing_agent_invoice_number, :clearing_agent_invoice_date,
+                   :clearing_agent_payment)
   end
 
 end
