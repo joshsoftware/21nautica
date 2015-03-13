@@ -36,8 +36,7 @@ class UserMailer < ActionMailer::Base
     attachment_name = File.basename attachment
     attachments[attachment_name] = File.read(attachment)
     subject = "#{invoice.customer_name} // #{invoice.bl_number} // #{invoice.number} // #{invoice.amount}"
-    mail(to: "kaushik@21nautica.com, rajan@21nautica.com, \
-      accounts@21nautica.com, docs-ug@21nautica.com, docs@21nautica.com", subject: subject)
+    mail(to: invoice.customer.emails , subject: subject)
     File.delete(attachment)
   end
 

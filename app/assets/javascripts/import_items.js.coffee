@@ -60,17 +60,19 @@ history_datatable_initialize = ->
                     "deferRender" : true,
                     "aoColumns": [{ "sWidth": "10%", "data" : "bl_number"},
                     { "sWidth": "10%", "data" : "container_number" },
-                    { "sWidth": "10%", "data" : "work_order_number" },
+                    { "sWidth": "5%", "data" : "work_order_number" },
                     { "sWidth": "10%", "data" : "customer_name" },
-                    { "sWidth": "10%", "data" : "equipment_type" },
+                    { "sWidth": "5%", "data" : "clearing_agent" },
+                    { "sWidth": "5%", "data" : "transporter_name" },
+                    { "sWidth": "5%", "data" : "equipment_type" },
                     { "sWidth": "10%", "data" : "delivery_date" },
                     { "sWidth": "10%", "data" :  "after_delivery_status"}
                     { "sWidth": "20%", "data" : "context" },
                     { "sWidth": "10%", "data" : "formatted_close_date" }]
                     }).makeEditable(
                       aoColumns: [
-                                  null, null, null, null, null,
-                                  null, null, null,
+                                  null, null, null, null, null, null, 
+                                  null, null, null, null,
                                   {name: 'close_date', submit: 'okay', tooltip: "yyyy-mm-dd",
                                   sUpdateURL:  "../import_items/update",
                                   type: 'datepicker2', event: 'click',
