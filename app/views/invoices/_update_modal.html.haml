@@ -9,25 +9,35 @@
 
     .modal-body
       .row.col-md-12
-        .col-md-6
-          #customer_name
-            = f.label "Customer Name: #{invoice.customer_name}"
-          #bl_number
-            = f.label "BL Number: #{invoice.bl_number}"
-          #invoiced_date
-            = f.label "Invoiced Date: #{invoice.date}"
-          #invoice_quantity
-            %label Equipment: #{invoice.equipment_type} X #{invoice.total_containers}
+        .col-md-3
+          .panel.panel-warning
+            .panel-heading
+              #customer_name
+                %label Customer Name: #{invoice.customer_name}
+              #invoiced_date
+                %label Invoiced Date: #{invoice.date}
+              #invoice_quantity
+                %label Equipment: #{invoice.equipment_type} X #{invoice.total_containers}
 
-          - if (invoice.is_TBL_export_invoice? || invoice.is_Haulage_export_invoice?)
-            %label Port of Discharge: #{invoice.destination}
+              - if (invoice.is_TBL_export_invoice? || invoice.is_Haulage_export_invoice?)
+                %label Port of Discharge: #{invoice.destination}
 
-          - if invoice.is_additional_invoice
-            #prev_inv_number
-              = f.label "Previous Invoice: #{invoice.previous_invoice.number}/ #{invoice.previous_invoice.amount}"
-          - else
-            #invoice_rate
-              = f.label "Rate Agreed: #{invoice.rate_agreed} "
+              - if invoice.is_additional_invoice
+                #prev_inv_number
+                  %label Previous Invoice: #{invoice.previous_invoice.number}/ #{invoice.previous_invoice.amount}
+              - else
+                #invoice_rate
+                  %label Rate Agreed: #{invoice.rate_agreed}
+
+        .col-md-3
+          - unless invoice.bl_number.blank?
+            .panel.panel-warning
+              .panel-heading
+                %label BL Number: #{invoice.bl_number}
+                %label Shipping Line Charges: #{invoice.invoiceable.try(:shipping_line_charges)}
+                %label Ocean Freight: #{invoice.invoiceable.try(:payment_ocean)}
+                %label Port Charges: #{invoice.invoiceable.try(:payment_clearing)}
+                %label Port Storage: #{invoice.invoiceable.try(:cheque_clearing)}
         .col-md-6
           #invoice_amount
             =f.input :amount, input_html: {style: "color:red;"}
