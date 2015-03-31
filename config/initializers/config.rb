@@ -12,5 +12,5 @@ STATUS_CHANGE_DURATION = {arrived_malaba_border: 2,
                           document_handed: 1}
 PAYMENT_MODES = %W(Cheque Cash TT)
 INVOICE_PARTICULARS = %w( Ocean\ Freight Clearing\ Charges ICD Demurrage 
-	Empty Final\ Clearing Haulage Forest\ Permits Other)
+	Empty Final\ Clearing Haulage Forest\ Permits Port\ Storage Other)
 
