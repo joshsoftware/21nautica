@@ -17,7 +17,8 @@ class UserMailerTest < ActionMailer::TestCase
     email = UserMailer.welcome_message_import(@import).deliver
     assert !ActionMailer::Base.deliveries.empty?
     assert_equal ['kaushik@21nautica.com'], email.from
-    assert_equal ['cust1@gmail.com'], email.to
+    assert_equal ["cust1@gmail.com", "accounts@21nautica.com", "kaushik@21nautica.com",
+        "sachin@21nautica.com", "docs@21nautica.com", "docs-ug@21nautica.com", "ops-ug@21nautica.com"], email.to
     assert_equal "Your new order", email.subject
   end
 
@@ -33,7 +34,8 @@ class UserMailerTest < ActionMailer::TestCase
     time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
     assert !ActionMailer::Base.deliveries.empty?
     assert_equal ['kaushik@21nautica.com'], email.from
-    assert_equal ['cust1@gmail.com'], email.to
+    assert_equal ["cust1@gmail.com", "accounts@21nautica.com", "kaushik@21nautica.com",
+        "sachin@21nautica.com", "docs@21nautica.com", "docs-ug@21nautica.com", "ops-ug@21nautica.com"], email.to
     assert_equal "Customer Update Cust1", email.subject
   end
 
@@ -49,7 +51,8 @@ class UserMailerTest < ActionMailer::TestCase
     time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
     assert !ActionMailer::Base.deliveries.empty?
     assert_equal ['kaushik@21nautica.com'], email.from
-    assert_equal ['cust1@gmail.com'], email.to
+    assert_equal ["cust1@gmail.com", "accounts@21nautica.com", "kaushik@21nautica.com",
+        "sachin@21nautica.com", "docs@21nautica.com", "docs-ug@21nautica.com", "ops-ug@21nautica.com"], email.to
     assert_equal "Customer Update Cust1", email.subject
   end
 
