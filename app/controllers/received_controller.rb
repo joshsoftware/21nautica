@@ -16,7 +16,7 @@ class ReceivedController < ApplicationController
 
   def index
     customer = Customer.where(id: params[:customer_id]).first
-    @payments = customer.payments.order(date_of_payment: :desc)
+    @payments = customer.ledgers.order(date: :asc)
     @header = customer.name
     respond_to do |format|
       format.js {}

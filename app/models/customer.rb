@@ -14,6 +14,7 @@ class Customer < ActiveRecord::Base
   has_many :imports
   has_many :invoices
   has_many :payments
+  has_many :ledgers
 
   before_create :assign_emails
 

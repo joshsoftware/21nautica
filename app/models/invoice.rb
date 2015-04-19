@@ -8,6 +8,9 @@ class Invoice < ActiveRecord::Base
     foreign_key: "previous_invoice_id"
   belongs_to :previous_invoice, class_name: "Invoice"
   has_many :particulars
+
+  has_one :ledger, as: :voucher
+
   accepts_nested_attributes_for :particulars, allow_destroy: true
   after_create :assign_parent_invoice_number, unless: :is_additional_invoice
 
@@ -25,7 +28,8 @@ class Invoice < ActiveRecord::Base
     end
 
     event :invoice_sent do
-      transitions from: :ready, to: :sent
+      transitions from: :ready, to: :sent, after_enter: :update_ledger
+
     end
   end 
 
@@ -113,4 +117,9 @@ class Invoice < ActiveRecord::Base
     self.update_attributes(number: date + count.to_s)
   end
 
+  # Only when the invoice is sent to the customer, we need to update the ledger. This is 
+  # required for the running accounts!
+  def update_ledger
+    self.create_ledger(amount: self.amount, customer: self.customer, date: self.date, received: 0)
+  end
 end

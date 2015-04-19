@@ -7,13 +7,24 @@
     %th Date
     %th Reference
     %th Amount (USD)
+    %th Received (USD)
 
   %tbody#payment_search_result
     %script#payment_search_result_template{:type => "text/html"}
       %tr
-        %td <%= date_of_payment %>
-        %td <%= reference %>
-        %td <%= amount %>
+        %td <%= date %>
+        %td.voucher_type <%= voucher_type %>
+        %td.amount <%= amount %>
+        %td.received <%= received %>
+#payment_details_result
+  %h4
+    Invoice Total:
+    %span.total 0
+    USD
+  %h4
+    Outstanding Balance:
+    %span.balance 0
+    USD
 
 :javascript
   payments = #{@payments.to_json}

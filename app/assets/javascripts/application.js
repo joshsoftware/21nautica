@@ -21,9 +21,46 @@
 //= require jquery_nested_form
 //= require_tree .
 
+var callbacks = {
+  beforeRecordRender: function(record) {
+    if(record.voucher_type == "Payment") {
+      record.amount = -record.amount
+    }
+  },
+  afterFilter: function(result) {
+    // formatting the rows
+    $("#payment_search_result td.voucher_type").each(function() {
+      if( $(this).html() == "Payment") { 
+        $(this).parent().addClass("text-danger")
+      }
+      else {
+        recv = $(this).parent().children("td.received")
+        amount = $(this).parent().children("td.amount")
+        if(recv == amount) {
+          $(this).parent().addClass("success")
+        }
+      }
+    })
+
+    // Consolidated results
+    var balance = 0
+    var total = 0
+    for (i in result) {
+      balance = balance + result[i].amount
+      if(result[i].voucher_type == "Invoice") {
+        total = total + result[i].amount
+      }
+    }
+
+    $("#payment_details_result .total").html(total)
+    $("#payment_details_result .balance").html(balance)
+  }
+}
+
 function PaymentFilterInit(){
   var FJS = FilterJS(payments, '#payment_search_result', {
     template: '#payment_search_result_template',
+    callbacks: callbacks,
     search: {}
   });
   FJS.addCriteria({field: 'date_of_payment', ele: '#filter_by_days_select', type: 'range'});
