@@ -63,5 +63,5 @@ function PaymentFilterInit(){
     callbacks: callbacks,
     search: {}
   });
-  FJS.addCriteria({field: 'date_of_payment', ele: '#filter_by_days_select', type: 'range'});
+  FJS.addCriteria({field: 'date', ele: '#filter_by_days_select', type: 'range'});
 }
