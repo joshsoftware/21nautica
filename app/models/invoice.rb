@@ -27,9 +27,8 @@ class Invoice < ActiveRecord::Base
       transitions from: :new, to: :ready
     end
 
-    event :invoice_sent do
-      transitions from: :ready, to: :sent, after_enter: :update_ledger
-
+    event :invoice_sent, after: :update_ledger do
+      transitions from: :ready, to: :sent
     end
   end 
 
