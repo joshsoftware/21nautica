@@ -95,11 +95,15 @@ class Invoice < ActiveRecord::Base
   end
 
   def bl_number
-    self.invoiceable.try(:bl_number) || self.legacy_bl || ""
+    self.invoiceable.try(:bl_number) || self.legacy_bl
+  end
+
+  def bl_or_container_number
+    self.bl_number || self.container_number || ""
   end
 
   def as_json(options={})
-    super(methods: [:bl_number, :customer_name, :index_row_class, 
+    super(methods: [:bl_or_container_number, :customer_name, :index_row_class, 
       :send_button_status, :total_containers, :update_button_status,
       :is_additional_invoice, :previous_invoice_number, :is_legacy_bl, :equipment_type])
   end
