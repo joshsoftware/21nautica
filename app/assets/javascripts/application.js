@@ -34,8 +34,9 @@ var callbacks = {
         $(this).parent().addClass("text-danger")
       }
       else {
-        recv = $(this).parent().children("td.received")
-        amount = $(this).parent().children("td.amount")
+        recv = $(this).parent().children("td.received").html()
+        amount = $(this).parent().children("td.amount").html()
+        console.log(recv, amount)
         if(recv == amount) {
           $(this).parent().addClass("success")
         }

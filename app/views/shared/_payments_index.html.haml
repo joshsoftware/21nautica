@@ -5,7 +5,9 @@
         class: "form-control")
   %tr.info
     %th Date
-    %th Reference
+    %th Type
+    %th Reference / Invoice No.
+    %th Bill of Lading
     %th Amount (USD)
     %th Received (USD)
 
@@ -14,11 +16,13 @@
       %tr
         %td <%= date %>
         %td.voucher_type <%= voucher_type %>
+        %td <%= invoice_number %>
+        %td <%= bl_number %>
         %td.amount <%= amount %>
         %td.received <%= received %>
 
 :javascript
-  payments = #{@payments.to_json}
+  payments = #{@payments}
   if (payments != 0) {
     PaymentFilterInit();
   }
