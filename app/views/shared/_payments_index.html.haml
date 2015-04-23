@@ -16,15 +16,6 @@
         %td.voucher_type <%= voucher_type %>
         %td.amount <%= amount %>
         %td.received <%= received %>
-#payment_details_result
-  %h4
-    Invoice Total:
-    %span.total 0
-    USD
-  %h4
-    Outstanding Balance:
-    %span.balance 0
-    USD
 
 :javascript
   payments = #{@payments.to_json}

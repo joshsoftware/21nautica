@@ -7,6 +7,15 @@
       = render '/shared/payments' , f: f
   .col-md-6
     %div#received_details_table.scroll-table
+    #payment_details_result
+      %h4
+        Invoice Total:
+        %span.total 0
+        USD
+      %h4
+        Outstanding Balance:
+        %span.balance 0
+        USD
 
 :javascript
   window.validate_form = function(){
