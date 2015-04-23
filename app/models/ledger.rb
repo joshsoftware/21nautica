@@ -7,8 +7,8 @@ class Ledger < ActiveRecord::Base
   end
 
   def bl_number
-    return self.voucher.invoiceable.bl_number if self.voucher_type == "Invoice"
-    ""
+    # older imported invoices may not have a bl_number!
+    return self.voucher.invoiceable.try(:bl_number) if self.voucher_type == "Invoice"
   end
 
   def invoice_number
