@@ -14,10 +14,16 @@ class ReceivedController < ApplicationController
     end
   end
 
+  def show
+    c = Customer.find(params[:id])
+    data = Report::RunningAccount.create(c)
+    send_data data, filename: "#{Date.today}-#{c.name.gsub(' ', '_')}.csv", type: "text/csv"
+  end
+
   def index
     customer = Customer.where(id: params[:customer_id]).first
     @payments = customer.ledgers.order(date: :desc).to_json
-    @header = customer.name
+    @header = customer
     respond_to do |format|
       format.js {}
       format.html {redirect_to :root}

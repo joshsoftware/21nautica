@@ -1,8 +1,10 @@
 %table.table.table-hover.table-bordered#payment_details_table
-  %h4.col-sm-4= @header
-  %div.col-sm-4
+  %h4.col-sm-5= @header.name
+  %div.col-sm-3
     = select_tag(:filter_by_days_select, options_for_select(get_date_range(controller_name)), 
         class: "form-control")
+  %div.col-sm-1
+    %a.glyphicon.glyphicon-download-alt{href: "#{received_path(@header.id)}"}
   %tr.info
     %th Date
     %th Type
