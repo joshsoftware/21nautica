@@ -44,17 +44,19 @@ var callbacks = {
     })
 
     // Consolidated results
-    var balance = 0
-    var total = 0
+    var received = 0
+    var invoiced = 0
     for (i in result) {
-      balance = balance + result[i].amount
       if(result[i].voucher_type == "Invoice") {
-        total = total + result[i].amount
+        invoiced = invoiced + result[i].amount
+      }
+      else { // Payment
+        received = received + result[i].amount
       }
     }
 
-    $("#payment_details_result .total").html(total)
-    $("#payment_details_result .balance").html(balance)
+    $("#payment_details_result .invoiced").html(invoiced)
+    $("#payment_details_result .received").html(-received)
   }
 }
 
