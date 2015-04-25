@@ -23,8 +23,16 @@ module Report
       end
     end
 
-    def self.create_all
-      # create report for all customers.
+    def self.outstanding
+      CSV.generate do |f|
+        f << [ "Customer Name", "Total", "( < 30 days)", "30-60 days", "60-90 days", "90-120 days", "( > 120 days)" ]
+        Customer.all.each do |c|
+          data = create(c)
+          str = CSV.parse(data)[-1][1..-1]
+          total = str.inject(0) {|s, i| s + i.to_i }
+          f << [ c.name, total] + str
+        end
+      end
     end
 
     def self.sum(outstanding, total, ledger)

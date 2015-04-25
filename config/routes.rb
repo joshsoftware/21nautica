@@ -57,7 +57,11 @@ Rails.application.routes.draw do
   end
   resources :imports, only: [:new, :create]
   resources :paid, only: [:new, :create, :index]
-  resources :received, only: [:new, :show, :create, :index]
+  resources :received, only: [:new, :show, :create, :index] do
+    collection do
+      get :outstanding
+    end
+  end
   resources :invoices, only: [:edit, :update] do
     collection do
       get ':type', to: :index, as: :by_type

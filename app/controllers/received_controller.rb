@@ -14,6 +14,11 @@ class ReceivedController < ApplicationController
     end
   end
 
+  def outstanding
+    data = Report::RunningAccount.outstanding
+    send_data data, filename: "#{Date.today}-outstanding.csv", type: "text/csv"
+  end
+
   def show
     c = Customer.find(params[:id])
     data = Report::RunningAccount.create(c)

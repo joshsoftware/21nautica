@@ -2,7 +2,7 @@ class Received < Payment
   belongs_to :customer
   validates_presence_of :customer_id
 
-  has_one :ledger, as: :voucher
+  has_one :ledger, as: :voucher, dependent: :destroy
 
   after_create do |record|
     record.update_ledger

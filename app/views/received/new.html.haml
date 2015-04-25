@@ -1,4 +1,6 @@
-%h3 Payments Received
+%h3 
+  Payments Received 
+  %a.glyphicon.glyphicon-download-alt{href: "#{outstanding_received_index_path}"} Outstanding
 .row
   = simple_form_for @received , html: {class: 'form-horizontal'},url: url_for(action: 'create', :controller => 'received'), method: 'post', defaults: {input_html: {class: 'form-control'}} do |f|
     .col-md-4
