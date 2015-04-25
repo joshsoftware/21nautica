@@ -8,6 +8,7 @@ module ApplicationHelper
   	  ["Last 30 days", (current_date - 30.days).to_s + "," + end_date], 
   	  ["30 - 60 days",  (current_date - 60.days).to_s + "," + (current_date - 30.days).to_s], 
   	  ["60 - 90 days", (current_date - 90.days).to_s + "," + (current_date - 60.days).to_s ],
-  	  ["More than 90 days", start_date + "," + (current_date - 90.days).to_s]]
+  	  ["90 - 120 days", (current_date - 120.days).to_s + "," + (current_date - 90.days).to_s ],
+  	  ["More than 120 days", start_date + "," + (current_date - 120.days).to_s]]
   end
 end
