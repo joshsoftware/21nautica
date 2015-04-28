@@ -2,13 +2,13 @@ class MovementsController < ApplicationController
   def index
     @movements = Movement.where.not(status: "container_handed_over_to_KPA").order(:booking_number)
     @show_update = true
-    @transporters = Vendor.transporters.pluck(:name).inject({}) {|h, x| h[x] = x; h }
-    @destination_ports = DESTINATION_PORTS.inject({}) {|h, x| h[x] = x; h }
-    @clearing_agent = Vendor.clearing_agents.pluck(:name).inject({}) {|h, x| h[x] = x; h}
+    @transporters = Vendor.transporters.order(:name).pluck(:name).inject({}) {|h, x| h[x] = x; h }
+    @destination_ports = DESTINATION_PORTS.sort.inject({}) {|h, x| h[x] = x; h }
+    @clearing_agent = Vendor.clearing_agents.order(:name).pluck(:name).inject({}) {|h, x| h[x] = x; h}
   end
 
   def history
-    @destination_ports = DESTINATION_PORTS.inject({}) {|h, x| h[x] = x; h }
+    @destination_ports = DESTINATION_PORTS.sort.inject({}) {|h, x| h[x] = x; h }
     respond_to do |format|
       format.html{}
       format.json{

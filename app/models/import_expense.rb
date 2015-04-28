@@ -9,11 +9,11 @@ class ImportExpense < ActiveRecord::Base
       when 'Haulage'
         return [self.import_item.transporter_name]
       when 'Empty'
-        return Vendor.transporters.pluck(:name)
+        return Vendor.transporters.order(:name).pluck(:name)
       when 'ICD'
         return %w(Maina Multiple)
       when 'Final Clearing'
-        return Vendor.clearing_agents.pluck(:name)
+        return Vendor.clearing_agents.order(:name).pluck(:name)
       when 'Demurrage'
         return [self.import_item.import.shipping_line]
     end

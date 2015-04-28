@@ -1,7 +1,7 @@
 class ReceivedController < ApplicationController
   def new
     @received = Received.new
-    @customers =  Customer.pluck(:name,:id).to_h
+    @customers =  Customer.order(:name).pluck(:name,:id).to_h
   end
 
   def create

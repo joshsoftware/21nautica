@@ -26,7 +26,7 @@ class ExportsController < ApplicationController
 
   def new
     @export = Export.new
-    @customers = Customer.all
+    @customers = Customer.order(:name)
   end
 
   def create 
