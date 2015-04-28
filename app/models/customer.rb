@@ -18,6 +18,8 @@ class Customer < ActiveRecord::Base
 
   before_create :assign_emails
 
+  validates_uniqueness_of :name, case_sensitive: false
+
   def assign_emails
     self.emails = self.emails + ", accounts@21nautica.com, kaushik@21nautica.com, sachin@21nautica.com, docs@21nautica.com, docs-ug@21nautica.com, ops-ug@21nautica.com"
   end

@@ -6,8 +6,7 @@ class CustomersController < ApplicationController
 
   def create
     customer = Customer.new(customer_params)
-    customer.save
-    @customers = Customer.all.to_a
+    customer.save ? @customers = Customer.all.to_a : @errors = customer.errors.full_messages
     render 'new'
   end
 

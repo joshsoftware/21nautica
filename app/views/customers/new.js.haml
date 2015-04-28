@@ -7,8 +7,11 @@
       validate_form();
     })
 - else
-  $('.flash_messages').html('#{escape_javascript(render :partial => 'flash_message')}');
-  $("[data-for='customerSelect']").html('#{escape_javascript(render '/shared/customer', customers: @customers, model: params[:model])}');
-  $('.alert').delay(5000).fadeOut("slow", function () { $(this).remove(); });
-  $("[data-for='multiselect']").select2();
-  $("[data-is='newCustomerModal']").modal('hide');
+  $('.modal-user .alert').remove();
+  - if @errors.present?
+    -@errors.each do |msg|
+      $('.modal-user .modal-body').append("<div class='alert alert-danger'>#{msg}</div>");
+  - else
+    $("[data-for='customerSelect']").html('#{escape_javascript(render '/shared/customer', customers: @customers, model: params[:model])}');
+    $("[data-for='multiselect']").select2();
+    $("[data-is='newCustomerModal']").modal('hide');
