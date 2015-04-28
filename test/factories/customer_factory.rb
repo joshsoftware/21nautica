@@ -1,7 +1,7 @@
 FactoryGirl.define do
 
 	factory :customer do
-		name 'Cust1'
+		name { Faker::Name.name }
 		emails 'cust1@gmail.com'
 	end
 end

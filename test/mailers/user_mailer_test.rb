@@ -36,7 +36,7 @@ class UserMailerTest < ActionMailer::TestCase
     assert_equal ['kaushik@21nautica.com'], email.from
     assert_equal ["cust1@gmail.com", "accounts@21nautica.com", "kaushik@21nautica.com",
         "sachin@21nautica.com", "docs@21nautica.com", "docs-ug@21nautica.com", "ops-ug@21nautica.com"], email.to
-    assert_equal "Customer Update Cust1", email.subject
+    assert_equal "Customer Update #{@import.customer.name}", email.subject
   end
 
   test "test Export report mail" do
@@ -53,7 +53,7 @@ class UserMailerTest < ActionMailer::TestCase
     assert_equal ['kaushik@21nautica.com'], email.from
     assert_equal ["cust1@gmail.com", "accounts@21nautica.com", "kaushik@21nautica.com",
         "sachin@21nautica.com", "docs@21nautica.com", "docs-ug@21nautica.com", "ops-ug@21nautica.com"], email.to
-    assert_equal "Customer Update Cust1", email.subject
+    assert_equal "Customer Update #{@import.customer.name}", email.subject
   end
 
 end

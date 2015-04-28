@@ -28,7 +28,7 @@ class ImportExpenseTest < ActiveSupport::TestCase
     #              "Panafrica Logistics", "Midland Hauliers", 
     #              "Blue Jay"], @import_expense2.get_collection
     assert_equal ['Maina','Multiple'], @import_expense3.get_collection
-    assert_equal ["Panafrica", "EACL", "Agility", "Paul", "Inland Logistics"], @import_expense4.get_collection
+    assert_equal ["Agility", "EACL", "Inland Logistics", "Panafrica", "Paul"], @import_expense4.get_collection
     assert_equal ["Evergreen"], @import_expense5.get_collection
   end
 

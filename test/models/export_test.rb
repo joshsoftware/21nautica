@@ -38,7 +38,7 @@ class ExportTest < ActiveSupport::TestCase
     export1 = FactoryGirl.create :export
     customer = FactoryGirl.create :customer
     export1.customer = customer
-    assert_equal export1.customer_name, 'Cust1'
+    assert_equal export1.customer_name, customer.name
   end
 
 end

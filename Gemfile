@@ -83,6 +83,7 @@ group :test do
   gem 'database_cleaner'
   gem 'factory_girl_rails'
   gem 'simplecov'
+  gem 'faker', '~> 1.4.3'
   gem "codeclimate-test-reporter", require: nil
 end
 gem 'mocha'
