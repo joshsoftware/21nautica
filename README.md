@@ -23,7 +23,7 @@ Minitest is used for testing. Run test cases using `rake test`.
 
   steps:
     - Comment out `assign_parent_invoice_number` callback of invoice.
-    - Get database credentials using `$ heroku pg:credentials --app app_name` and copy them to config/database.yml
+    - Get database credentials using `$ heroku pg:credentials DATABASE --app app_name` and copy them to config/database.yml
     - execute `rake invoices:add_older filename='<csv file path>'`
     - checkout both config/database.yml and app/models/invoice.rb
 
