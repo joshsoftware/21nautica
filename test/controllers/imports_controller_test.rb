@@ -21,7 +21,8 @@ class ImportsControllerTest < ActionController::TestCase
     assert_difference('Import.count') do
       post :create, import: {bl_number: 'BL2', to: "momabasa", from: "k", customer_id: @customer.id,
         shipping_line: "Maersk", estimate_arrival: "06-10-2014", equipment: "20GP",
-        quantity: "1", description: "tfy", import_items_attributes: {"1410153969411" => {container_number: "1"}}}
+        quantity: "1", description: "tfy", rate_agreed: 2000, weight: 30,
+        import_items_attributes: {"1410153969411" => {container_number: "1"}}}
     end
     assert_redirected_to imports_path
   end

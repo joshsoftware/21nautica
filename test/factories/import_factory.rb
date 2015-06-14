@@ -28,6 +28,8 @@ FactoryGirl.define do
     equipment        '20GP'
     quantity				  3
     remarks 'remark1'
+    rate_agreed 3000
+    weight 30
     association				:customer
   end
 end

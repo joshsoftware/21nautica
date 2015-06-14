@@ -26,7 +26,7 @@ class ImportTest < ActiveSupport::TestCase
   end
 
   test "Bl number must be unique" do
-    import2 = Import.new
+    import2 = Import.new(to: 'a', from: 'b', weight: 3, rate_agreed: 3000)
     import2.bl_number = 'BL1'
     assert_not import2.save
     assert import2.errors.messages[:bl_number].include?(
