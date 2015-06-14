@@ -29,6 +29,8 @@ class Import < ActiveRecord::Base
   belongs_to :bill_of_lading
   belongs_to :c_agent, class_name: "Vendor", foreign_key: "clearing_agent_id"
 
+  validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number
+
   accepts_nested_attributes_for :import_items
 
   # Hack: I have intentionally not used delegate here, because,
