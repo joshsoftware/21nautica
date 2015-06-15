@@ -56,6 +56,7 @@
   @clearing_agent = #{@clearing_agent.to_json}
 
   $('#statusModal').on 'show.bs.modal', (event) ->
+    $('#statusModal .alert').remove()
     link_tag = $(event.relatedTarget)
     id = link_tag.attr('data-import-id')
 

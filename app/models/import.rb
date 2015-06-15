@@ -68,9 +68,13 @@ class Import < ActiveRecord::Base
     end
 
     event :ready_to_load do
-      transitions from: :container_discharged, to: :ready_to_load
+      transitions from: :container_discharged, to: :ready_to_load, guard: :is_work_order_assigned
     end
 
+  end
+
+  def is_work_order_assigned
+    !work_order_number.blank?
   end
 
   def clearing_agent

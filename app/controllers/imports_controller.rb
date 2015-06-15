@@ -39,7 +39,16 @@ class ImportsController < ApplicationController
     @import = Import.find(params[:id])
     @import.remarks = import_params[:remarks]
     status = import_params[:status].downcase.gsub(' ', '_')
-    status != @import.status ? @import.send("#{status}!".to_sym) : @import.save
+    if status != @import.status 
+      begin
+        @import.send("#{status}!".to_sym)
+      rescue
+        @import.errors[:work_order_number] = "first enter work order number"
+        @errors = @import.errors.messages.values.flatten
+      end
+    else
+      @import.save
+    end
   end
 
   def retainStatus
