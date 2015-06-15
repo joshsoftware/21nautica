@@ -1,0 +1,55 @@
+%div#received_receipt
+  %br
+  %table#invoicetable.invoice{style: "border-collapse: collapse; border: 1px solid black"}
+    %thead
+      %th{style: "text-align:center; border: 1px solid black "}
+        %center
+          %img{src: "file://#{Rails.root}/public/images/21nautica.jpg"}
+
+    %tbody
+      %tr{style: "text-align:right"}
+        %td
+          %br
+          Receipt Number: #{@received}
+          
+      %tr
+        %td
+          %br
+          Customer Name: #{@received.customer.name}
+      
+      %tr
+        %td
+          %br
+          Amount: #{@received.amount}
+
+      %tr
+        %td
+          %br
+          Amount In Words:
+
+      %tr
+        %td
+          %br
+          Mode: #{@received.mode_of_payment}
+      
+      %tr
+        %td
+          %br
+          Reference Number: #{@received.reference}
+
+      %tr
+        %td
+          %br
+          %br
+          ** Please note that all payments are subject to Realization
+      
+      %tr{style: "text-align:center; border: 1px solid black "}
+        %td
+          %b This is a computerized reciept
+          %br
+          Thank you for your Payment!
+          %br
+          %br
+          %b Agent Address : First Floor, Nakawa House, Portbell Road, Kampala. Phone : +256 757527576
+
+
