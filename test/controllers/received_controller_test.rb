@@ -3,6 +3,7 @@ require 'test_helper'
 class ReceivedControllerTest < ActionController::TestCase
   setup do
     @user = FactoryGirl.create :user
+    @customer = FactoryGirl.create :customer
     sign_in @user
   end
 
@@ -14,7 +15,7 @@ class ReceivedControllerTest < ActionController::TestCase
 
   test "should create received payment" do
     assert_difference('Received.count') do
-      post :create, received: {customer_id: 1, amount: 400}
+      post :create, received: {customer_id: @customer.id, amount: 400}
     end
     assert_response :redirect
   end

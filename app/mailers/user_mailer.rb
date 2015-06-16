@@ -40,4 +40,12 @@ class UserMailer < ActionMailer::Base
     File.delete(attachment)
   end
 
+  def payment_received_receipt(email_ids, attachment)
+    attachment_name = File.basename attachment
+    attachments[attachment_name] = File.read(attachment)
+    subject = "Thank you for your payment"
+    mail(to: email_ids , subject: subject)
+    File.delete(attachment)
+  end
+
 end

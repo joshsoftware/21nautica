@@ -10,7 +10,7 @@
       %tr{style: "text-align:right"}
         %td
           %br
-          Receipt Number: #{@received}
+          Receipt Number: #{@receipt_number}
           
       %tr
         %td
@@ -25,7 +25,7 @@
       %tr
         %td
           %br
-          Amount In Words:
+          Amount In Words: #{@received.amount.in_words.humanize} US Dollars Only
 
       %tr
         %td

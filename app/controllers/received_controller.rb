@@ -1,4 +1,5 @@
 class ReceivedController < ApplicationController
+  require 'numbers_in_words/duck_punch'
   def new
     @received = Received.new
     @customers =  Customer.order(:name).pluck(:name,:id).to_h
@@ -8,6 +9,8 @@ class ReceivedController < ApplicationController
     @received = Received.new(paid_params)
     if @received.save
       flash[:notice] = "Payment entry saved sucessfully"
+      receipt = generate_receipt
+      UserMailer.payment_received_receipt(@received.customer.emails, receipt).deliver()
       redirect_to :root
     else
       render 'new'
@@ -40,6 +43,16 @@ class ReceivedController < ApplicationController
   def paid_params
     params.require(:received).permit(:date_of_payment, :amount, 
       :mode_of_payment, :reference, :remarks, :customer_id)
+  end
+
+  def generate_receipt
+    date = Date.current.strftime("%y%d%m")
+    count = Received.where("created_at > ?", Date.current).count
+    @receipt_number = date + count.to_s
+    html = render_to_string(:action => 'receipt.html.haml', :layout=> false)
+    kit = PDFKit.new(html)
+    pdf = kit.to_pdf
+    file = kit.to_file("#{Rails.root}/tmp/payment_receipt_#{@receipt_number}.pdf")
   end
 
 end
