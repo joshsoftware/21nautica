@@ -105,7 +105,7 @@ class Invoice < ActiveRecord::Base
   def as_json(options={})
     super(methods: [:bl_or_container_number, :customer_name, :index_row_class, 
       :send_button_status, :total_containers, :update_button_status,
-      :is_additional_invoice, :previous_invoice_number, :is_legacy_bl, :equipment_type])
+      :is_additional_invoice, :previous_invoice_number, :is_legacy_bl, :equipment_type, :formatted_date])
   end
 
   def assign_additional_invoice_number
@@ -124,5 +124,9 @@ class Invoice < ActiveRecord::Base
   # required for the running accounts!
   def update_ledger
     self.create_ledger(amount: self.amount, customer: self.customer, date: self.date, received: 0)
+  end
+
+  def formatted_date
+    date.try(:strftime, "%d-%m-%Y")
   end
 end
