@@ -115,7 +115,7 @@ class ImportItem < ActiveRecord::Base
   end
 
   def as_json(options= {})
-    super(only: [:container_number, :id, :after_delivery_status, :context],
+    super(only: [:container_number, :id, :after_delivery_status, :context, :truck_number],
             methods: [:bl_number, :customer_name, :work_order_number, 
               :equipment_type, :DT_RowId, :formatted_close_date, :delivery_date,
               :transporter_name, :clearing_agent])
