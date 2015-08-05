@@ -6,9 +6,10 @@
       %div{data: {for: 'customerSelect'}}
         = render '/shared/customer', customers: @customers, model: 'import'
 
-      = f.input :to, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
 
-      = f.input :from, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+      = f.input :from, collection: PORTS.keys, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}, label: "Source"
+
+      = f.input :to, collection: [], input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}, label: "Destination"
 
       = f.input :shipping_line, collection: SHIPPING_LINE, as: :select, label: 'Shipping line', include_blank: false
 
@@ -39,6 +40,9 @@
 
 
 :coffeescript
+  
+  window.ports = #{PORTS.to_json}
+
   $('#import_quantity').on 'blur', (event) ->
     existing_count = $('.fields').size()
     quantity = this.value
