@@ -26,7 +26,7 @@
             .status_updated_at
               = status_updated_at(item).to_date
             .status.text.capatilize
-              = item.status.humanize
+              = item.status.titleize
           %button.btn.btn-small.btn-primary{'data-importitem-id' => "#{item.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => item.status + ',' + item.aasm.events.join(','), 'data-truck-number' => "#{item.truck_number}",'truck-number-alloted'=> :false} Update
         %td.remarks.h5
           = item.remarks
