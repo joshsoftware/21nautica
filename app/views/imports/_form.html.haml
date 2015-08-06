@@ -2,14 +2,14 @@
   = simple_nested_form_for @import , html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
     .col-md-6
       = f.input :bl_number, label: 'BL- Number', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
-      
+
       %div{data: {for: 'customerSelect'}}
         = render '/shared/customer', customers: @customers, model: 'import'
 
 
-      = f.input :from, collection: PORTS.keys, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}, label: "Source"
+      = f.input :from, collection: PORTS.keys, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
 
-      = f.input :to, collection: [], input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}, label: "Destination"
+      = f.input :to, collection: [], input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
 
       = f.input :shipping_line, collection: SHIPPING_LINE, as: :select, label: 'Shipping line', include_blank: false
 
@@ -28,19 +28,19 @@
     .col-md-6
 
 
-      %div.scrollable-menu      
+      %div.scrollable-menu
 
         = f.fields_for :import_items, html: {class: 'number'} do |items_form|
-      
+
           = items_form.input :container_number, label: "Container", input_html: {class: 'form-control'}
-          
+
         = f.link_to_add "", :import_items
 
 
 
 
 :coffeescript
-  
+
   window.ports = #{PORTS.to_json}
 
   $('#import_quantity').on 'blur', (event) ->
@@ -70,11 +70,11 @@
         i++
     else
       alert('Container count not matching with quantity')
-      event.preventDefault()   
+      event.preventDefault()
     if Object.keys(container_hash).length < $('.fields').size()
       alert('Duplicate container numbers!!')
       event.preventDefault()
-      
+
   jQuery ($) ->
 
   $(document).on "nested:fieldRemoved", (event) ->
