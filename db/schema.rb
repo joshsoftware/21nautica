@@ -11,10 +11,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150418093313) do
+ActiveRecord::Schema.define(version: 20150807103120) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "bill_items", force: true do |t|
+    t.integer  "serial_number"
+    t.string   "item_type"
+    t.integer  "bill_id"
+    t.datetime "bill_date"
+    t.integer  "vendor_id"
+    t.string   "item_for",      default: "bl"
+    t.text     "item_number"
+    t.text     "charge_for"
+    t.integer  "quantity"
+    t.float    "rate"
+    t.float    "line_amount"
+    t.integer  "activity_id"
+    t.string   "activity_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "bill_items", ["activity_id", "activity_type"], name: "index_bill_items_on_activity_id_and_activity_type", using: :btree
 
   create_table "bill_of_ladings", force: true do |t|
     t.string   "bl_number"
@@ -30,6 +50,19 @@ ActiveRecord::Schema.define(version: 20150418093313) do
   end
 
   add_index "bill_of_ladings", ["bl_number"], name: "index_bill_of_ladings_on_bl_number", using: :btree
+
+  create_table "bills", force: true do |t|
+    t.text     "bill_number"
+    t.datetime "bill_date"
+    t.integer  "vendor_id"
+    t.float    "value"
+    t.text     "remark"
+    t.integer  "created_by_id"
+    t.datetime "created_on"
+    t.integer  "approved_by_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "customers", force: true do |t|
     t.string   "name"
@@ -178,6 +211,13 @@ ActiveRecord::Schema.define(version: 20150418093313) do
     t.datetime "updated_at"
   end
 
+  create_table "locations", force: true do |t|
+    t.string   "name"
+    t.string   "location_type", default: "port"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "movements", force: true do |t|
     t.string   "booking_number"
     t.string   "truck_number"
@@ -235,6 +275,22 @@ ActiveRecord::Schema.define(version: 20150418093313) do
 
   add_index "payments", ["customer_id"], name: "index_payments_on_customer_id", using: :btree
   add_index "payments", ["vendor_id"], name: "index_payments_on_vendor_id", using: :btree
+
+  create_table "route_states", force: true do |t|
+    t.integer  "serial_number"
+    t.string   "name"
+    t.integer  "route_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "routes", force: true do |t|
+    t.integer  "from_id"
+    t.integer  "to_id"
+    t.string   "route_type", default: "import"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false

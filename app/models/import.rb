@@ -25,6 +25,7 @@ class Import < ActiveRecord::Base
   include EspinitaPatch
 
   has_many :import_items
+  has_many :bill_items, as: :activity
   belongs_to :customer
   belongs_to :bill_of_lading
   belongs_to :c_agent, class_name: "Vendor", foreign_key: "clearing_agent_id"

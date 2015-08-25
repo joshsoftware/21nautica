@@ -15,3 +15,10 @@ PAYMENT_MODES = %W(Cheque Cash TT)
 INVOICE_PARTICULARS = %w( Ocean\ Freight Clearing\ Charges ICD Demurrage 
 	Empty Final\ Clearing Haulage Forest\ Permits Port\ Storage Other)
 PORTS = {"Dar Es Salaam" => ["Kigali"], "Mombasa" => ["Kampala"]}
+CHARGES = {"transporter" => ["Haulage", "Empty Return", "Truck Detention", "Local Shunting"],
+           "icd" => ["ICD Charges"],
+           "clearing_agent" => ["Ocean Freight", "Container Demurrage",
+                                "Port Charges", "Shipping Line Charges",
+                                "Port Storage", "VAT", "Final Clearing",
+                                "Others", "Agency Fee"],
+           "shipping_line" => ["Ocean Freight", "Container Demurrage"]}
