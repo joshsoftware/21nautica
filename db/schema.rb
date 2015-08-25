@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150807103120) do
+ActiveRecord::Schema.define(version: 20150824142516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,9 +20,9 @@ ActiveRecord::Schema.define(version: 20150807103120) do
     t.integer  "serial_number"
     t.string   "item_type"
     t.integer  "bill_id"
-    t.datetime "bill_date"
+    t.date     "bill_date"
     t.integer  "vendor_id"
-    t.string   "item_for",      default: "bl"
+    t.string   "item_for"
     t.text     "item_number"
     t.text     "charge_for"
     t.integer  "quantity"
@@ -53,12 +53,11 @@ ActiveRecord::Schema.define(version: 20150807103120) do
 
   create_table "bills", force: true do |t|
     t.text     "bill_number"
-    t.datetime "bill_date"
+    t.date     "bill_date"
     t.integer  "vendor_id"
     t.float    "value"
     t.text     "remark"
     t.integer  "created_by_id"
-    t.datetime "created_on"
     t.integer  "approved_by_id"
     t.datetime "created_at"
     t.datetime "updated_at"
