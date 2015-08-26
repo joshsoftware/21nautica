@@ -18,7 +18,7 @@
         %td= image_tag 'plus.png'
         %td.ro_number= export.release_order_number
         %td.customer= export.customer_name
-        %td= export.shipping_line
+        %td= export.shipping_line.try(:name)
         %td.equipment= export.equipment
         %td= export.quantity
         %td.placed= export.placed

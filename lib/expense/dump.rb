@@ -52,7 +52,7 @@ module Expense
       bills_of_lading.each do |bol|
         sheet.add_row [bol.bl_number,
           Import.where(bl_number: bol.bl_number).blank? ? "export" : "import",
-          bol.shipping_line, bol.shipping_line_charges, bol.payment_ocean,
+          bol.shipping_line.try(:name), bol.shipping_line_charges, bol.payment_ocean,
           bol.cheque_ocean, bol.payment_clearing, bol.cheque_clearing, bol.clearing_agent,
           bol.agency_fee, bol.remarks]
       end

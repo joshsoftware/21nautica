@@ -4,7 +4,7 @@
     = render '/shared/customer', customers: @customers, model: 'export'
   = f.input :equipment, collection: EQUIPMENT_TYPE, as: :select, label: 'Equipment', include_blank: false  
   = f.input :quantity,input_html: {:"data-validation" => "number", :"data-validation-error-msg" => "Quantity Should be a valid Positive Number."}
-  = f.input :shipping_line, collection: SHIPPING_LINE, as: :select, label: 'Shipping line', include_blank: false 
+  = f.input :shipping_line_id, collection: get_shipping_line_vendors, as: :select, label: 'Shipping line', include_blank: false 
   = f.input :release_order_number, label: 'R/O Number',input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "R/O number is mandatory."}
   .form-group
     .col-sm-offset-2.col-sm-2

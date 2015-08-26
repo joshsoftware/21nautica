@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150824142516) do
+ActiveRecord::Schema.define(version: 20150825141617) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,13 +104,14 @@ ActiveRecord::Schema.define(version: 20150824142516) do
     t.string   "equipment"
     t.integer  "quantity"
     t.string   "export_type"
-    t.string   "shipping_line"
+    t.string   "shipping_line_name"
     t.integer  "placed"
     t.string   "release_order_number"
     t.integer  "customer_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "moved"
+    t.integer  "shipping_line_id"
   end
 
   add_index "exports", ["customer_id"], name: "index_exports_on_customer_id", using: :btree
@@ -169,7 +170,7 @@ ActiveRecord::Schema.define(version: 20150824142516) do
     t.integer  "customer_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "shipping_line"
+    t.string   "shipping_line_name"
     t.string   "work_order_number"
     t.string   "remarks"
     t.string   "clearing_agent"
@@ -177,6 +178,7 @@ ActiveRecord::Schema.define(version: 20150824142516) do
     t.string   "rate_agreed"
     t.string   "weight"
     t.integer  "clearing_agent_id"
+    t.integer  "shipping_line_id"
   end
 
   add_index "imports", ["bill_of_lading_id"], name: "index_imports_on_bill_of_lading_id", using: :btree
@@ -206,13 +208,6 @@ ActiveRecord::Schema.define(version: 20150824142516) do
     t.integer  "amount"
     t.integer  "received"
     t.date     "date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "locations", force: true do |t|
-    t.string   "name"
-    t.string   "location_type", default: "port"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -274,22 +269,6 @@ ActiveRecord::Schema.define(version: 20150824142516) do
 
   add_index "payments", ["customer_id"], name: "index_payments_on_customer_id", using: :btree
   add_index "payments", ["vendor_id"], name: "index_payments_on_vendor_id", using: :btree
-
-  create_table "route_states", force: true do |t|
-    t.integer  "serial_number"
-    t.string   "name"
-    t.integer  "route_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "routes", force: true do |t|
-    t.integer  "from_id"
-    t.integer  "to_id"
-    t.string   "route_type", default: "import"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false

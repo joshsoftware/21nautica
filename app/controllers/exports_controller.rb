@@ -43,7 +43,7 @@ class ExportsController < ApplicationController
 
   private
   def export_params
-    params.require(:export).permit(:export_type, :equipment, :quantity, :shipping_line, :release_order_number, :customer_id)
+    params.require(:export).permit(:export_type, :equipment, :quantity, :release_order_number, :customer_id, :shipping_line_id)
   end
 
   def export_update_params

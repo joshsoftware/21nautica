@@ -18,6 +18,8 @@ class Export < ActiveRecord::Base
   belongs_to :customer
   has_many :export_items, dependent: :destroy
   has_many :bill_items, as: :activity
+  belongs_to :shipping_line, class_name: "Vendor"
+
   validates_presence_of :quantity
   validates_uniqueness_of :release_order_number,message: "Duplicate R/O Number not allowed!"
   def customer_name

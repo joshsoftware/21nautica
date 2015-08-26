@@ -11,7 +11,7 @@
 
       = f.input :to, collection: [], input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
 
-      = f.input :shipping_line, collection: SHIPPING_LINE, as: :select, label: 'Shipping line', include_blank: false
+      = f.input :shipping_line_id, collection: get_shipping_line_vendors, as: :select, label: 'Shipping line', include_blank: false
 
       = f.input :estimate_arrival, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}}
 

@@ -11,4 +11,10 @@ module ApplicationHelper
   	  ["90 - 120 days", (current_date - 120.days).to_s + "," + (current_date - 90.days).to_s ],
   	  ["More than 120 days", start_date + "," + (current_date - 120.days).to_s]]
   end
+
+  def get_shipping_line_vendors
+    vendor = Vendor.where(vendor_type: 'shipping_line')
+    vendor.map { | vendor | [vendor.name, vendor.id] }
+  end
+
 end

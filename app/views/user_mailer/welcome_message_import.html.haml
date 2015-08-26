@@ -26,7 +26,7 @@
           %tr  
             %td 
               %strong Shipping Line:
-            %td= @import.shipping_line
+            %td= @import.shipping_line.try(:name)
           %tr  
             %td 
               %strong ETA:

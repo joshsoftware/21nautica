@@ -72,7 +72,7 @@ module Report
             sheet.add_row [movement.truck_number, movement.booking_number,
                      movement.vessel_targeted, movement.port_of_loading,
                      movement.port_of_discharge, item.container, export.equipment,
-                     item.weight, export.shipping_line, movement.shipping_seal,
+                     item.weight, export.shipping_line.try(:name), movement.shipping_seal,
                      movement.custom_seal, h["loaded"], h["under_customs_clearance"],
                      h["enroute_mombasa"],
                      h["arranging_shipping_order_and_vessel_nomination"],
@@ -96,7 +96,7 @@ module Report
           sheet.add_row [item.date_of_placement.to_date.strftime("%d-%b-%Y"),
                     export.release_order_number,
                     item.container.nil? ? "TBA" : item.container,
-                    item.location, export.shipping_line,
+                    item.location, export.shipping_line.try(:name),
                     (DateTime.now- item.date_of_placement).to_i],style: center
         end
       end

@@ -24,11 +24,12 @@ class Import < ActiveRecord::Base
   include AASM
   include EspinitaPatch
 
-  has_many :import_items
+  has_many :import_items, :dependent => :destroy
   has_many :bill_items, as: :activity
   belongs_to :customer
   belongs_to :bill_of_lading
   belongs_to :c_agent, class_name: "Vendor", foreign_key: "clearing_agent_id"
+  belongs_to :shipping_line, class_name: "Vendor"
 
   validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number
 

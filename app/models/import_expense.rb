@@ -15,7 +15,7 @@ class ImportExpense < ActiveRecord::Base
       when 'Final Clearing'
         return Vendor.clearing_agents.order(:name).pluck(:name)
       when 'Demurrage'
-        return [self.import_item.import.shipping_line]
+        return [self.import_item.import.shipping_line.try(:name)]
     end
   end
 
