@@ -8,6 +8,7 @@ class ImportExpenseTest < ActiveSupport::TestCase
     @import_item1 = FactoryGirl.create :import_item1
     @import = FactoryGirl.create :import
     @transporter = FactoryGirl.create :vendor
+    @shipping_line = FactoryGirl.create :vendor, name: 'CMA CGM', vendor_type: 'shipping_line' 
     @import_expense1 = FactoryGirl.create :import_expense1
     @import_expense2 = FactoryGirl.create :import_expense2
     @import_expense3 = FactoryGirl.create :import_expense3
@@ -17,6 +18,7 @@ class ImportExpenseTest < ActiveSupport::TestCase
     @import_expense5.import_item = @import_item1
     @import_item1.transporter = @transporter
     @import_item1.import = @import
+    @import.shipping_line = @shipping_line
     %W(Panafrica EACL Agility Paul Inland\ Logistics).each do |agent_name|
       Vendor.create(name: agent_name, vendor_type: "clearing_agent")
     end
@@ -29,7 +31,7 @@ class ImportExpenseTest < ActiveSupport::TestCase
     #              "Blue Jay"], @import_expense2.get_collection
     assert_equal ['Maina','Multiple'], @import_expense3.get_collection
     assert_equal ["Agility", "EACL", "Inland Logistics", "Panafrica", "Paul"], @import_expense4.get_collection
-    assert_equal ["Evergreen"], @import_expense5.get_collection
+    assert_equal ["CMA CGM"], @import_expense5.get_collection
   end
 
 

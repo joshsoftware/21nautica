@@ -85,6 +85,7 @@ group :test do
   gem 'simplecov'
   gem 'faker', '~> 1.4.3'
   gem "codeclimate-test-reporter", require: nil
+  gem 'minitest-debugger', '~> 1.0.3'
 end
 gem 'mocha'
 

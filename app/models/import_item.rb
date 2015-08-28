@@ -23,6 +23,7 @@ class ImportItem < ActiveRecord::Base
 
   belongs_to :import
   belongs_to :transporter, class_name: "Vendor", foreign_key: "vendor_id"
+  belongs_to :icd, class_name: "Vendor"
   has_many :import_expenses, dependent: :destroy
 
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"

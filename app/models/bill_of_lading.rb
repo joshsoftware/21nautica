@@ -13,7 +13,7 @@ class BillOfLading < ActiveRecord::Base
   end
 
   def shipping_line
-    self.import.try(&:shipping_line) || self.movements.first.try(&:shipping_seal)
+    self.import.try(&:shipping_line).try(:name) || self.movements.first.try(&:shipping_seal)
   end
 
   def invoice_not_present?

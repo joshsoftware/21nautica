@@ -21,7 +21,6 @@ FactoryGirl.define do
     quantity  '20'
     release_order_number '12345678'
     export_type 'TBL'
-    shipping_line 'CGM Maersk'
   end
 end
 

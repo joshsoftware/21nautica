@@ -2,10 +2,14 @@ require 'test_helper'
 
 class BillOfLadingTest < ActiveSupport::TestCase
   setup do
+    @import = FactoryGirl.create :import
+    @shipping_line = FactoryGirl.create :vendor, name: 'CGM Maersk', vendor_type: 'shipping_line'
   	@movement = FactoryGirl.create :movement
     @export = FactoryGirl.create :export
     @export_item = FactoryGirl.create :export_item
-  	@bill_of_lading = FactoryGirl.create :bill_of_lading
+  	@bill_of_lading = FactoryGirl.create :bill_of_lading, bl_number: 'BL1'
+    @bill_of_lading.import = @import
+    @import.shipping_line = @shipping_line
   	@movement.bill_of_lading = @bill_of_lading
   	@export_item.export = @export
   	@export_item.movement = @movement
@@ -13,7 +17,7 @@ class BillOfLadingTest < ActiveSupport::TestCase
   end
 
   test "should return true if bill_of_lading is of export type" do
-    assert_equal true, @bill_of_lading.is_export_bl?
+    assert_equal false, @bill_of_lading.is_export_bl?
   end
 
   test "should return shipping_line depending on associated object" do
