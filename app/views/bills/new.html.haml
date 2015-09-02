@@ -1,0 +1,12 @@
+%h3 New Vendor Invoice
+%br
+= render 'form'
+
+:javascript
+  window.validate_form = function(){
+    $.validate({
+      form: '#new_bill',
+      scrollToTopOnError : false // Set this property to true if you have a long form
+    }); 
+  }
+  validate_form();

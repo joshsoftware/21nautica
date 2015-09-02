@@ -1,0 +1,30 @@
+#bill_item tbody{
+  .item_type {
+    width: 185px !important;
+  }
+  .item_for {
+    width: 195px !important;
+  }
+  .item_number {
+    width: 195px !important;
+  }
+  .item {
+    width: 200px !important;
+  }
+  .number {
+    width: 195px !important;
+  }
+  .quantity { 
+    width: 150px !important;
+  }
+  .rate { 
+    width: 150px !important;
+  }
+  .line_amount { 
+    width: 150px !important;
+  }
+
+  .price {
+    text-align: right !important;
+  }
+}

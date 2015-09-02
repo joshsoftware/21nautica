@@ -1,0 +1,27 @@
+//Vendor is Transpoter
+if("#{@vendor.try(:vendor_type)}" == 'transporter')
+{
+//$("#item_for option[value='bl']").remove()
+$('#item_for').append($('<option>', {value: 'container', text: 'Container'}, '</option>'));
+}
+
+//Vendor is Clearing Agent 
+if("#{@vendor.try(:vendor_type)}" == 'clearing_agent')
+{
+$('#item_for').append($('<option>', {value: 'bl', text: 'BL'}, '</option>'));
+$('#item_for').append($('<option>', {value: 'container', text: 'Container'}, '</option>'));
+}
+
+//Vendor is ICD 
+if("#{@vendor.try(:vendor_type)}" == 'icd')
+{
+$('#item_for').append($('<option>', {value: 'bl', text: 'BL'}, '</option>'));
+$('#item_for').append($('<option>', {value: 'container', text: 'Container'}, '</option>'));
+}
+
+//Vendor is Shipping Line 
+if("#{@vendor.try(:vendor_type)}" == 'shipping_line')
+{
+$('#item_for').append($('<option>', {value: 'bl', text: 'BL'}, '</option>'));
+$('#item_for').append($('<option>', {value: 'container', text: 'Container'}, '</option>'));
+}

@@ -1,0 +1,26 @@
+.well
+  %table.table#bill_item
+    %thead
+      %tr
+        %th Item Type
+        %th BL/Container
+        %th Number
+        %th Item
+        %th Quantity
+        %th Rate
+        %th Total
+        %th
+    %tbody
+      = f.simple_fields_for :bill_items, @bill.bill_items, wrapper: false do |bill_item|
+        %tr.fields
+          %td.item_type= bill_item.input :item_type, collection: ['Import', 'Export'], label: false, include_blank: false, wrapper: :vertical_form, input_html: {id: 'item_type'}
+          %td.item_for= bill_item.input :item_for, collection: [], label: false, wrapper: :vertical_form, include_blank: 'Select', input_html: {id: 'item_for', "data-validation" => "required", :"data-validation-error-msg" => "Please Select"} 
+          %td.item_number= bill_item.input :item_number, label: false, as: :select, collection: [], wrapper: :vertical_form, input_html: {id: 'item_number'}
+          %td.item= bill_item.input :charge_for, label: false, as: :select, collection: [], wrapper: :vertical_form
+          %td.quantity= bill_item.input :quantity, label: false, wrapper: :vertical_form, input_html: { id: 'quantity', class: 'price form-control' }
+          %td.rate= bill_item.input :rate, label: false, wrapper: :vertical_form, input_html: { class: 'price form-control' }
+          %td.line_amount= bill_item.input :line_amount, label: false, wrapper: :vertical_form, input_html: { class: 'price form-control' }
+          %td
+            = bill_item.link_to_remove method: :delete, class: 'delete pull-left' do
+              %span.glyphicon.glyphicon-remove
+  = f.link_to_add 'Add', :bill_items, id: 'add_bill_items', class: 'btn btn-primary', "data-target" => '#bill_item', disabled: true 
