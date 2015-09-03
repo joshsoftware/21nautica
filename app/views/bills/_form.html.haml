@@ -8,7 +8,7 @@
     .col-md-4
       = f.input :bill_date, as: :string, input_html: {class: 'form-control date', data: {behaviour: 'datepicker'}, "data-validation" =>"date", "data-validation-format" => "dd-mm-yyyy", "data-validation-error-msg" => "Please enter bill date", value: f.object.bill_date.try(:strftime, "%d-%m-%Y")}
     .col-md-4
-      = f.input :value, label: 'Invoice Value'
+      = f.input :value, label: 'Invoice Value', input_html: {class: 'required checkTotal form-control', "data-validation" => "checkTotal" }
   .row
     = render partial: 'bill_items', locals: { f:f, bill: @bill }
 

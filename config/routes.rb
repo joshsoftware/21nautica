@@ -4,7 +4,7 @@ Rails.application.routes.draw do
     collection do
       match :get_container, via: :get 
       match :get_number, via: :get 
-      match :get_vendor_charges, via: :get
+      match :load_vendor_charges, via: :get
     end
   end
 

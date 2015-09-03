@@ -1,0 +1,4 @@
+- @vendor.each_key do |key|
+  - CHARGES["#{key}"].each do |charge|
+    $('tr:last-child #vendor_charges').append($('<option>', { value: "#{charge}", text: "#{charge}" }, '</option>'))
+

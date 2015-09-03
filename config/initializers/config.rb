@@ -22,3 +22,12 @@ CHARGES = {"transporter" => ["Haulage", "Empty Return", "Truck Detention", "Loca
                                 "Port Storage", "VAT", "Final Clearing",
                                 "Others", "Agency Fee"],
            "shipping_line" => ["Ocean Freight", "Container Demurrage"]}
+
+#ITEM_FOR = { 'transporter' => ['bl' => 'BL'] , 'icd' => ['container' => 'Container'], 
+             #'clearing_agent' => ['bl' => 'BL'], 'shipping_line' => ['bl' => 'bl'] }
+
+ITEM_FOR = { 'transporter'=> ['container'] , 'icd'=> ['container'] , 'shipping_line'=> ['bl'], 'clearing_agent'=> ['bl']}
+#TRANSPORTER = { 'container' => 'Container' }
+#ICD = { 'container' => 'Container' }
+#CLEARING_AGENT =  { 'bl' => 'BL' }
+#SHIPPING_LINE =  { 'bl' => 'BL' }

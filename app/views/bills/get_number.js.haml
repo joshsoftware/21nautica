@@ -1,2 +1,2 @@
-- @vendor_type.each do |type|  
-  $('#item_number').append($('<option>', {value: "#{type.container_number}", text: "#{type.container_number}"}, '</option>'))
+- @vendor_type.uniq.each do |type|  
+  $('tr:last-child #item_number').append($('<option>', {value: "#{type.container_number}", text: "#{type.container_number}"}, '</option>'))

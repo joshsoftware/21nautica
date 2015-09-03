@@ -8,26 +8,31 @@ class BillsController < ApplicationController
     @bill = Bill.new
   end
 
-  # Get the Charges of Vendor 
-  def get_vendor_charges 
-    p '##############'
-    p params
+  # load the Charges of Vendor 
+  def load_vendor_charges 
+    @vendor = {}
+    vendor = Vendor.find_by(name: params[:vendor_name]).vendor_type.split(',')
+    vendor.each do |type|
+      @vendor.merge!(CHARGES.select { |k,v| k.include? type })
+    end
   end
 
   # check whether its Container/BL
   def get_container
-    @vendor = Vendor.find_by(name: params[:vendor_name])
+    @vendor = {}
+    vendor = Vendor.find_by(name: params[:vendor_name]).vendor_type.split(',')
+    vendor.each do |type|
+      @vendor.merge!(ITEM_FOR.select { |k,v| k.include? type})
+    end
   end
 
   # Get the Item Number 
   def get_number
-
     if params[:item_type] == 'Import'
       get_import_item_number(params[:vendor_id]) #******* Get Container Number
     else
       get_export_item_number(params[:vendor_id])
     end
-
   end
 
   private
@@ -36,16 +41,17 @@ class BillsController < ApplicationController
   end
 
   def get_import_item_number(vendor_id)
+    @vendor_type = []
     vendor_type = Vendor.find(vendor_id).vendor_type.split(',')
     vendor_type.each do |type|
       if type == 'transporter'
-        @vendor_type = get_transporter_form_import_item(vendor_id)
+        @vendor_type.concat(get_transporter_form_import_item(vendor_id))
       elsif type == 'clearing_agent'
-        @vendor_type = get_clearing_line_from_import(vendor_id)
+        @vendor_type.concat(get_clearing_line_from_import(vendor_id))
       elsif type == 'shipping_line'
-        @vendor_type = get_shipping_line_from_import(vendor_id)
+        @vendor_type.concat(get_shipping_line_from_import(vendor_id))
       else
-        @vendor_type = get_icd_from_import_item(vendor_id)
+        @vendor_type.concat(get_icd_from_import_item(vendor_id))
       end
     end
   end
