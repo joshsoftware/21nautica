@@ -1,9 +1,16 @@
+
+.bill_vendor_name_id {
+  width: 195px !important;
+}
 #bill_item tbody{
   .type {
-    width: 185px !important;
+    width: 215px !important;
   }
   .for {
-    width: 215px !important;
+    width: 155px !important;
+  }
+  .item_for {
+    width: 190px !important;
   }
   .item_number {
     width: 190px !important;
@@ -11,11 +18,14 @@
   .vendor_charges {
     width: 250px !important;
   }
+  .line_amount {
+    width: 115px !important;
+  }
   //.number {
   //  width: 195px !important;
   //}
   .price_unit {
-    width: 175px !important;
+    width: 165px !important;
   }
   .numeric {
     text-align: right !important;

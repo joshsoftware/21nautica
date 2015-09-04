@@ -13,13 +13,13 @@
     %tbody
       = f.simple_fields_for :bill_items, @bill.bill_items, wrapper: false do |bill_item|
         %tr.fields
-          %td.type= bill_item.input :item_type, collection: ['Import', 'Export'], label: false, include_blank: false, wrapper: :vertical_form, input_html: {id: 'item_type'}
-          %td.for= bill_item.input :item_for, collection: [], label: false, wrapper: :vertical_form, include_blank: 'Select', input_html: {id: 'item_for', "data-validation" => "required", :"data-validation-error-msg" => "Please Select"} 
-          %td.number= bill_item.input :item_number, label: false, as: :select, collection: [], wrapper: :vertical_form, input_html: {id: 'item_number', class: 'item_number'}
-          %td.item= bill_item.input :charge_for, label: false, as: :select, collection: [], wrapper: :vertical_form, input_html: { id: 'vendor_charges', "data-validation" => "required", :"data-validation-error-msg" => "Please Select Charges", class: 'vendor_charges'}
-          %td.price_unit= bill_item.input :quantity, label: false, wrapper: :vertical_form, input_html: { class: 'quantity change_item_price form-control quantity' }
-          %td.price_unit= bill_item.input :rate, label: false, wrapper: :vertical_form, input_html: { class: 'rate change_item_price  form-control' }
-          %td.price_unit= bill_item.input :line_amount, label: false, readonly: true, wrapper: :vertical_form, input_html: { class: 'line_amount form-control' }
+          %td.type= bill_item.input :item_type, collection: ['Import', 'Export'], label: false, include_blank: false, wrapper: :vertical_form, input_html: {class: 'item_type'}
+          %td.for= bill_item.input :item_for, collection: [], label: false, wrapper: :vertical_form, include_blank: 'Select', input_html: {id: 'item_for', "data-validation" => "required", :"data-validation-error-msg" => "Please Select", class: 'item_for'} 
+          %td.number= bill_item.input :item_number, label: false, as: :select, collection: [], wrapper: :vertical_form, input_html: {id: 'item_number', class: 'item_number select2 '}
+          %td.item= bill_item.input :charge_for, label: false, as: :select, collection: [], wrapper: :vertical_form, input_html: { id: 'vendor_charges', "data-validation" => "required", :"data-validation-error-msg" => "Please Select Charges", class: 'vendor_charges select2'}
+          %td.price_unit= bill_item.input :quantity, label: false, wrapper: :vertical_form, input_html: { class: 'quantity change_item_price' }
+          %td.price_unit= bill_item.input :rate, label: false, wrapper: :vertical_form, input_html: { class: 'rate change_item_price' }
+          %td.price_unit= bill_item.input :line_amount, label: false, readonly: true, wrapper: :vertical_form, input_html: { class: 'line_amount' }
           %td
             = bill_item.link_to_remove method: :delete, class: 'delete pull-left' do
               %span.glyphicon.glyphicon-remove

@@ -1,7 +1,7 @@
 = simple_nested_form_for @bill, html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}}, wrapper: :horizontal_form do |f|
   .row
     .col-md-4
-      = f.input :vendor_id, as: :select, label: 'Vendor Name', collection: get_vendor, include_blank: 'Select Vendor', input_html: { "data-validation" => "required", "data-validation-error-msg"=> "Please Select"} 
+      = f.input :vendor_id, as: :select, label: 'Vendor Name', collection: get_vendor, include_blank: 'Select Vendor', input_html: { "data-validation" => "required", "data-validation-error-msg"=> "Please Select", class: 'select2 bill_vendor_name_id'} 
   .row
     .col-md-4
       = f.input :bill_number, as: :string, label: 'Invoice Number'
