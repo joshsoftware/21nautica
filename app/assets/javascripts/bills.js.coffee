@@ -53,7 +53,6 @@ $(document).ready ->
         #******* Get Container Number
         $.get('/bills/get_number', { vendor_id: vendor_id, item_type: item_type, item_for: item_for } )
       else
-        alert('bl')
         #******* Get bl Number
         $.get('/bills/get_number', { vendor_id: vendor_id, item_type: item_type, item_for: item_for } )
 
