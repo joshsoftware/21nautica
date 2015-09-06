@@ -11,7 +11,7 @@
         %th Total
         %th
     %tbody
-      = f.simple_fields_for :bill_items, @bill.bill_items, wrapper: false do |bill_item|
+      = f.simple_fields_for :bill_items, @bill.bill_items.build, wrapper: false do |bill_item|
         %tr.fields
           %td.type= bill_item.input :item_type, collection: ['Import', 'Export'], label: false, include_blank: false, wrapper: :vertical_form, input_html: {class: 'item_type'}
           %td.for= bill_item.input :item_for, collection: [], label: false, wrapper: :vertical_form, include_blank: 'Select', input_html: {id: 'item_for', "data-validation" => "required", :"data-validation-error-msg" => "Please Select", class: 'item_for'} 

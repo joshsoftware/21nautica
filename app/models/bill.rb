@@ -21,7 +21,7 @@ class Bill < ActiveRecord::Base
   accepts_nested_attributes_for :bill_items
 
   validates_uniqueness_of :bill_number, scope: [:bill_number, :bill_date, :vendor_id]
-  validates_presence_of :bill_number, :bill_date, :vendor_id, :value, :created_by, :created_on
+  validates_presence_of :bill_number, :bill_date, :vendor_id, :value, :created_by
   validates_associated :vendor
 
 end

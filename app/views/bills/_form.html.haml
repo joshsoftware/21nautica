@@ -1,7 +1,7 @@
 = simple_nested_form_for @bill, html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}}, wrapper: :horizontal_form do |f|
   .row
     .col-md-4
-      = f.input :vendor_id, as: :select, label: 'Vendor Name', collection: get_vendor, include_blank: 'Select Vendor', input_html: { "data-validation" => "required", "data-validation-error-msg"=> "Please Select", class: 'select2 bill_vendor_name_id'} 
+      = f.input :vendor_id, as: :select, label: 'Vendor Name', collection: get_vendor, include_blank: 'Select Vendor', input_html: { "data-validation" => "required", "data-validation-error-msg"=> "Please Select", class: 'select2 bill_vendor_name_id'}, disabled: !@bill.new_record? 
   .row
     .col-md-4
       = f.input :bill_number, as: :string, label: 'Invoice Number', input_html: { "data-validation" => "required", "data-validation-error-msg"=> "Please Select Invoice Number" }
@@ -9,6 +9,8 @@
       = f.input :bill_date, as: :string, label: 'Invoice Date', input_html: {class: 'form-control date', data: {behaviour: 'datepicker'}, "data-validation" =>"date", "data-validation-format" => "dd-mm-yyyy", "data-validation-error-msg" => "Please enter bill date", value: f.object.bill_date.try(:strftime, "%d-%m-%Y")}
     .col-md-4
       = f.input :value, label: 'Invoice Value', input_html: {class: 'required checkTotal form-control', "data-validation" => "checkTotal" }
+      = f.hidden_field :created_by_id, value: current_user.id
+      = f.hidden_field :approved_by_id, value: current_user.id
   .row
     = render partial: 'bill_items', locals: { f:f, bill: @bill }
 

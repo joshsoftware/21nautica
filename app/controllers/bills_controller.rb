@@ -1,11 +1,32 @@
 class BillsController < ApplicationController
   before_action :authenticate_user!
+  before_action :get_the_bill_id, only: [:edit, :update]
 
   def index
   end
 
   def new
     @bill = Bill.new
+  end
+
+  def create
+    @bill = Bill.new(bills_params)
+    if @bill.save
+      redirect_to bills_path
+    else
+      render 'new'
+    end
+  end
+
+  def edit
+  end
+
+  def update
+    if @bill.update(bills_params)
+      redirect_to bills_path
+    else
+      render 'edit'
+    end
   end
 
   # load the Charges of Vendor 
@@ -36,6 +57,17 @@ class BillsController < ApplicationController
   end
 
   private
+
+  def get_the_bill_id
+    @bill = Bill.find(params[:id])
+  end
+
+  def bills_params
+    params.require(:bill).permit(:vendor_id, :bill_number, :bill_date, :value, :created_by_id, :approved_by_id, :created_on, :remark,
+                                  bill_items_attributes: [:id, :vendor_id, :bill_id, :item_type, :item_for, :item_number, :charge_for,
+                                                          :quantity, :rate, :line_amount, :activity_type, :activity_id, :_destroy] 
+                                )
+  end
 
   def get_export_item_number(vendor_id)
   end
