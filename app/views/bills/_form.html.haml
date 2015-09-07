@@ -8,7 +8,7 @@
     .col-md-4
       = f.input :bill_date, as: :string, label: 'Invoice Date', input_html: {class: 'form-control date', data: {behaviour: 'datepicker'}, "data-validation" =>"date", "data-validation-format" => "dd-mm-yyyy", "data-validation-error-msg" => "Please enter bill date", value: f.object.bill_date.try(:strftime, "%d-%m-%Y")}
     .col-md-4
-      = f.input :value, label: 'Invoice Value', input_html: {class: 'required form-control' }
+      = f.input :value, label: 'Invoice Value', input_html: {class: 'required form-control checkTotal', "data-validation"=>"checkTotal" }
       = f.hidden_field :created_by_id, value: current_user.id
       = f.hidden_field :approved_by_id, value: current_user.id
   .row

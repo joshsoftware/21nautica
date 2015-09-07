@@ -1,5 +1,7 @@
 $(document).ready ->
 
+  $('select.select_manage').select2()
+
   #***** Initialize the dataTable
   $('#bills').dataTable({
                         "bJQueryUI": true
@@ -19,13 +21,7 @@ $(document).ready ->
       $('#add_bill_items').removeAttr('disabled')
 
   $(document).on 'nested:fieldAdded', (event) ->
-    field = event.field
-    item_number = field.find('.item_number')
-    item_number.select2()
-
-    field = event.field
-    vendor_charges = field.find('.vendor_charges')
-    vendor_charges.select2()
+    $('select.select_manage').select2()
 
     vendor_name = $('#bill_vendor_id :selected').text()
     if vendor_name
@@ -94,5 +90,23 @@ $(document).ready ->
     total_price = (quantity * rate).toFixed(2)
     $parent.find('.line_amount').val(total_price)
 
+  $('body').on 'focusout', '.quantity', ->
+    $parent = $(this).closest('.fields')
+    quantity = $parent.find('.quantity').val()
+    rate = $parent.find('.rate').val()
+    total_price = (quantity * rate).toFixed(2)
+    $parent.find('.line_amount').val(total_price)
+
   #*********** validator for custom messages
+
+  $.formUtils.addValidator
+    name: 'checkTotal'
+    validatorFunction: (value, $el, config, language, $form) ->
+      amount = 0
+      $('.fields .line_amount').each (index) ->
+        line_amount = $(this).val()
+        amount = amount + parseFloat(line_amount)
+      return amount == parseFloat($('.checkTotal').val())
+    errorMessage: 'Amount not Match'
+    errorMessageKey: 'Amount not Matching'
 

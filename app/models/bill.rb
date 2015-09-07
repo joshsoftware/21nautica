@@ -24,6 +24,7 @@ class Bill < ActiveRecord::Base
   validates_presence_of :bill_number, :vendor_id, :bill_date, :value, :created_by
 
   before_validation :assigns_bill_items
+  #before_save :assigns_activity_type
 
   private 
   
@@ -31,6 +32,12 @@ class Bill < ActiveRecord::Base
     self.bill_items.each do |bill_item|
       bill_item.update_attribute(:bill_date, self.bill_date)
       bill_item.update_attribute(:vendor_id, self.vendor_id)
+    end
+  end
+
+  def assigns_activity_type
+    self.bill_items.each do |bill_item|
+      vendor_id = Vendor.find self.vendor_id
     end
   end
 
