@@ -3,10 +3,12 @@ class BillsController < ApplicationController
   before_action :get_the_bill_id, only: [:edit, :update]
 
   def index
+    @bills = Bill.order(created_at: :desc)
   end
 
   def new
     @bill = Bill.new
+    @bill.bill_items.build
   end
 
   def create

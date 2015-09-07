@@ -1,6 +1,16 @@
 $(document).ready ->
 
+  #***** Initialize the dataTable
+  $('#bills').dataTable({
+                        "bJQueryUI": true
+                        "bFilter": true,
+                        "sPaginationType": "full_numbers"
+                       })
+  #***********************************
+
   $('#bill_vendor_id').select2()
+  $('#bill_item tbody tr:first').hide()
+
   $('body').on 'change', '#bill_vendor_id', ->
     if $('#bill_vendor_id').val() == ''
       $('#add_bill_items').prop('disabled', true)
@@ -85,17 +95,4 @@ $(document).ready ->
     $parent.find('.line_amount').val(total_price)
 
   #*********** validator for custom messages
-  jQuery.validator.classRuleSettings.checkTotal = { checkTotal: true };
-
-  jQuery.validator.addMethod 'checkTotal', ((value) ->
-    alert('value')
-    total_price = 0
-    $('#bill_item .fields:visible').each (index) ->
-      quantity = $('.fields').find('.quantity').val()
-      rate = $('.fields').find('.rate').val()
-      total_price = total_price + (quantity * rate).toFixed(2)
-      console.log total_price
-
-    return $('#bill_value') == total_price
-  ), 'Amount not match for Line Amount!'
 

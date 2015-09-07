@@ -29,4 +29,5 @@
 - @vendor.each do |key,value|
   - if value.uniq
     - item_for = value[0].capitalize
-    $('tr:last-child #item_for').append($('<option>', { value: "#{value[0]}", text: "#{item_for}" }, '</option>'))
+    //$('tr:last-child #item_for').append($('<option>', { value: "#{value[0]}", text: "#{item_for}" }, '</option>'))
+    $('tr:last-child .item_for').append($('<option>', { value: "#{value[0]}", text: "#{item_for}" }, '</option>'))

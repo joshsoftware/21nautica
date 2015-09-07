@@ -25,7 +25,9 @@ class BillItem < ActiveRecord::Base
   belongs_to :vendor
   belongs_to :activity, polymorphic: true
 
-  validates_presence_of :bill_id, :bill_date, :vendor_id, :charge_for, :quantity, :rate, :line_amount
+  validates_presence_of :bill_date, :vendor_id, :charge_for, :quantity, :rate, :line_amount
+  validates_associated :bill
   validates :item_for, inclusion: {in: %w(bl container)}
   validates :item_type, inclusion: {in: %w(Import Export)}
+
 end
