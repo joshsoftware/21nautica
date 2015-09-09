@@ -21,6 +21,9 @@ class BillsController < ApplicationController
   end
 
   def edit
+   vendor = Vendor.find @bill.vendor_id 
+   @charges = CHARGES[vendor.vendor_type]
+   @item_for = ITEM_FOR[vendor.vendor_type]
   end
 
   def update
@@ -31,23 +34,50 @@ class BillsController < ApplicationController
     end
   end
 
+  def validate_of_uniquness_format
+    p params
+    p params[:vendor_id]
+    p params[:invoice_no]
+    validate = Bill.where(vendor_id: params[:vendor_id], bill_number: params[:invoice_no]).present?
+    render json: { validate: validate }
+  end
+
+  # Validate the Item Number 
+  def validate_item_number
+    case params[:item_type] 
+    when 'Import'
+      if params[:item_for] == 'bl'
+        result = Import.where(clearing_agent_id: params[:vendor_id], bl_number: params[:item_number].strip).present? || 
+          Import.where(shipping_line_id: params[:vendor_id], bl_number: params[:item_number].strip).present?
+         #'get bl numbers from Import for clearing agent and shipping agent using vendor id'
+      else
+        result = ImportItem.where(vendor_id: params[:vendor_id], container_number: params[:item_number]).present? || 
+          ImportItem.where(icd_id: params[:vendor_id], container_number: params[:item_number]).present?
+        #'get container numbers from Impot_item for vendor id and icd id using vendor id'
+      end
+    when 'Export'
+      if params[:item_for] == 'bl'
+        #bill_of_lading = BillOfLading.find_by bl_number: params[:item_number]
+        #result = (Movement.where(vendor_id: params[:vendor_id], bill_of_lading_id: bill_of_lading.id).uniq.present? if bill_of_lading)|| false 
+        #'get uniq(bl) numbers from movement for  using vendor id'
+      else
+        #'get container numbers from Impot_item for vendor using vendor id'
+      end
+    else
+    end
+
+    render json: { result: result }
+  end
+
   # load the Charges of Vendor 
-  def load_vendor_charges 
+  def load_vendor_charges() 
     @vendor = {}
-    vendor = Vendor.find_by(name: params[:vendor_name]).vendor_type.split(',')
+    vendor = Vendor.find(params[:vendor_id]).vendor_type.split(',')
     vendor.each do |type|
       @vendor.merge!(CHARGES.select { |k,v| k.include? type })
     end
   end
 
-  # check whether its Container/BL
-  def get_container
-    @vendor = {}
-    vendor = Vendor.find_by(name: params[:vendor_name]).vendor_type.split(',')
-    vendor.each do |type|
-      @vendor.merge!(ITEM_FOR.select { |k,v| k.include? type})
-    end
-  end
 
   # Get the Item Number 
   def get_number
@@ -69,9 +99,6 @@ class BillsController < ApplicationController
                                   bill_items_attributes: [:id, :vendor_id, :bill_id, :item_type, :item_for, :item_number, :charge_for,
                                                           :quantity, :rate, :line_amount, :activity_type, :activity_id, :_destroy] 
                                 )
-  end
-
-  def get_export_item_number(vendor_id)
   end
 
   def get_import_item_number(vendor_id, item_for)

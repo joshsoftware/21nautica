@@ -24,7 +24,7 @@ class Bill < ActiveRecord::Base
   validates_presence_of :bill_number, :vendor_id, :bill_date, :value, :created_by
 
   before_validation :assigns_bill_items
-  #before_save :assigns_activity_type
+  before_validation :assign_activity
 
   private 
   
@@ -35,10 +35,8 @@ class Bill < ActiveRecord::Base
     end
   end
 
-  def assigns_activity_type
-    self.bill_items.each do |bill_item|
-      vendor_id = Vendor.find self.vendor_id
-    end
+  def assign_activity
+    ### Activity Import/Export Needs to Added
   end
 
 end

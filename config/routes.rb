@@ -5,6 +5,8 @@ Rails.application.routes.draw do
       match :get_container, via: :get 
       match :get_number, via: :get 
       match :load_vendor_charges, via: :get
+      match :validate_item_number, via: :get
+      match :validate_of_uniquness_format, via: :get
     end
   end
 

@@ -4,7 +4,8 @@
 
 %table.table#bills
   %thead
-    %th Bill Number 
+    %th.hide
+    %th Bill Number
     %th Bill Date
     %th Vendor 
     %th Value
@@ -15,7 +16,8 @@
   %tbody
     - @bills.each do |bill|
       %tr
-        %td= bill.bill_number 
+        %td.hide= bill.created_by
+        %td= bill.bill_number
         %td= bill.bill_date
         %td= bill.vendor.try(:name)
         %td= bill.value

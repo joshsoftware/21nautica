@@ -1,3 +1,14 @@
 %h3 New Vendor Invoice
 %br
 = render 'form'
+
+:javascript
+  var item_for = #{raw ITEM_FOR.to_json}
+  var charges = #{raw CHARGES.to_json }
+  window.validate_form = function(){
+    $.validate({
+      form: '#vendor_invoice',
+      scrollToTopOnError : false // Set this property to true if you have a long form
+    }); 
+  }
+  validate_form();

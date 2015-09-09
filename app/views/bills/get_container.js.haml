@@ -1,33 +1,4 @@
-//Vendor is Transpoter
-//if("#{@vendor.try(:vendor_type)}" == 'transporter')
-//{
-//$("#item_for option[value='bl']").remove()
-//$('tr:last-child #item_for').append($('<option>', {value: 'container', text: 'Container'}, '</option>'));
-//}
-
-//Vendor is Clearing Agent 
-//if("#{@vendor.try(:vendor_type)}" == 'clearing_agent')
-//{
-//$('tr:last-child #item_for').append($('<option>', {value: 'bl', text: 'BL'}, '</option>'));
-//$('tr:last-child #item_for').append($('<option>', {value: 'container', text: 'Container'}, '</option>'));
-//}
-
-//Vendor is ICD 
-//if("#{@vendor.try(:vendor_type)}" == 'icd')
-//{
-//$('tr:last-child #item_for').append($('<option>', {value: 'bl', text: 'BL'}, '</option>'));
-//$('tr:last-child #item_for').append($('<option>', {value: 'container', text: 'Container'}, '</option>'));
-//}
-
-//Vendor is Shipping Line 
-//if("#{@vendor.try(:vendor_type)}" == 'shipping_line')
-//{
-//$('tr:last-child #item_for').append($('<option>', {value: 'bl', text: 'BL'}, '</option>'));
-//$('tr:last-child #item_for').append($('<option>', {value: 'container', text: 'Container'}, '</option>'));
-//}
-
-- @vendor.each do |key,value|
+-# @vendor.each do |key,value|
   - if value.uniq
-    - item_for = value[0].capitalize
-    //$('tr:last-child #item_for').append($('<option>', { value: "#{value[0]}", text: "#{item_for}" }, '</option>'))
-    $('tr:last-child .item_for').append($('<option>', { value: "#{value[0]}", text: "#{item_for}" }, '</option>'))
+    - item_for = value[0]
+    $('.item_for').closest('tr').find('.item_number').append($('<option>', { value: "#{value[0]}", text: "#{item_for}" }, '</option>'))
