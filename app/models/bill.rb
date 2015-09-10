@@ -18,7 +18,7 @@ class Bill < ActiveRecord::Base
   belongs_to :vendor
   has_many :bill_items
 
-  accepts_nested_attributes_for :bill_items
+  accepts_nested_attributes_for :bill_items, allow_destroy: true
 
   validates_uniqueness_of :bill_number, scope: [:bill_number, :bill_date, :vendor_id]
   validates_presence_of :bill_number, :vendor_id, :bill_date, :value, :created_by
