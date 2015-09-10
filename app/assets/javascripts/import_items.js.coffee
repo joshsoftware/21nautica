@@ -2,6 +2,10 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
+$(document).on 'change', '#destination_item', ->
+  destination_item =  $('#destination_item option:selected').text()
+  this.form.submit()
+
 datatable_initialize = ->
   row = 0
   id = 0

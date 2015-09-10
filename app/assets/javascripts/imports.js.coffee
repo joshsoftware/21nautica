@@ -7,6 +7,10 @@ $(document).on "page:load ready", ->
     format :"dd-mm-yyyy")
   return
 
+$(document).on 'change', '#destination', ->
+  destination = $('#destination option:selected').text()
+  this.form.submit()
+
 $(document).on 'change', '#import_from', ->
   $el = $("#import_to")
   optionSelected = $(this).find("option:selected").text()
@@ -114,6 +118,8 @@ datatable_initialize = ->
                                   },
                                   null, null,null
                                  ]
-                  )
+            
+                                 )
 
 $(document).ready datatable_initialize
+

@@ -1,3 +1,8 @@
+.destination_filter.pull-right
+  = form_tag imports_path, method: :get do |f|  
+    = label_tag 'List Destination '
+    = select_tag 'destination', options_for_select( ["Kampala", "Kigali"], params[:destination] || 'Kampala' ) 
+
 %table.table{id: 'imports_table'}
   %thead
     %th Customer Name
@@ -69,4 +74,4 @@
     $('#statusModal form').attr('action', "/imports/" + id + "/updateStatus")
 
   $('#statusModal').on 'hide.bs.modal', (event) ->
-    $("#imports_table tr td.updateStatus .updateStatus").show()
+  $("#imports_table tr td.updateStatus .updateStatus").show

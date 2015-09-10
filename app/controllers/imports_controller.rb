@@ -1,7 +1,8 @@
 class ImportsController < ApplicationController
 
   def index
-    @imports = Import.where.not(status: "ready_to_load")
+    param =  params[:destination] if params[:destination].present?
+    @imports = Import.where.not(status: "ready_to_load").where(to: param || 'Kampala')
     cust_array = Customer.all.select(:id , :name).to_a
     @customers = cust_array.inject({}) {|h,x| h[x.id] = x.name; h}
     @equipment = EQUIPMENT_TYPE.inject({}) {|h, x| h[x] = x; h}
