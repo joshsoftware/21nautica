@@ -75,7 +75,8 @@ $(document).ready ->
       vendor_type = $('#bill_vendor_id :selected').data('type').split(',')
       $.each vendor_type, (index, value) ->
         vendor = item_for[value]
-        event.field.find('.item_for').append($('<option>', { value: vendor, text: vendor }, '</option>'))
+        if !event.field.find(".item_for option[value='" + vendor + "']").length
+          event.field.find('.item_for').append($('<option>', { value: vendor, text: vendor }, '</option>'))
 
   $('body').on 'change', '.item_for', ->
     $item_for =  $(this)
