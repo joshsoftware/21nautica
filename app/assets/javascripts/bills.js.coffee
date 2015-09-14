@@ -3,6 +3,12 @@ $(document).ready ->
   $('select.select_manage').select2()
   $('#bill_vendor_id').select2()
 
+  #***** Check if the form has any error then prevent the Form 
+  $('body').on 'click', '#billsave', (event)->
+    if $('#billsave').closest('form').find('.has-error:visible').length > 0
+      return false
+      #event.preventDefault()
+
   #*********** Turbolinks for document ready
   $(document).on 'ready page:load', (event) ->
     vendor_id = $('#bill_vendor_id').val()
@@ -49,12 +55,13 @@ $(document).ready ->
  
   #### uniqueness format
   validate_uniquness_of_vendor_invno_invdate = ->
+    bill_id = $('#bill_id').val()
     vendor_id = $('#bill_vendor_id').val()
     invoice_no = $('#bill_bill_number').val()
     invoice_date = $('#date_restrict').val()
 
     if vendor_id && invoice_no && invoice_date
-        $.get('/bills/validate_of_uniquness_format', {vendor_id: vendor_id, invoice_no: invoice_no, invoice_date: invoice_date }).done (data) ->
+        $.get('/bills/validate_of_uniquness_format', {bill_id: bill_id, vendor_id: vendor_id, invoice_no: invoice_no, invoice_date: invoice_date }).done (data) ->
           if data.validate is true
             if $('#bill_bill_number').parent('div').children('span').length > 0
             else
@@ -86,7 +93,8 @@ $(document).ready ->
       $.each vendor_type, (index, value) ->
         charges_associated_vendor = charges[value]
         $.each charges_associated_vendor, (index, value) ->
-          $item_for.closest('tr').find('.vendor_charges').append($('<option>', {value: value, text: value},'</option>'))
+          if !$item_for.closest('tr').find(".vendor_charges option[value='" + value + "']").length
+            $item_for.closest('tr').find('.vendor_charges').append($('<option>', {value: value, text: value},'</option>'))
 
   $(document).on 'nested:fieldAdded', (event) ->
     $('select.select_manage').select2()
@@ -116,7 +124,7 @@ $(document).ready ->
     # ******** Reinitialize the Row 
     $(this).closest('tr').find('.item_for').val('')
     $(this).closest('tr').find('.item_number').val('')
-    $(this).closest('tr').find('.vendor_charges').select2('val', 'All')
+    #$(this).closest('tr').find('.vendor_charges').select2('val', 'All')
     $(this).closest('tr').find('.quantity').val('')
     $(this).closest('tr').find('.rate').val('')
     $(this).closest('tr').find('.line_amount').val('')
@@ -124,12 +132,14 @@ $(document).ready ->
   $('body').on 'change','.item_for', ->
     # ******** Reinitialize the Row (Except Item type) 
     $(this).closest('tr').find('.item_number').val('')
-    $(this).closest('tr').find('.vendor_charges').select2('val', 'All')
+    $(this).closest('tr').find('.vendor_charges').val('')
+    #$(this).closest('tr').find('.vendor_charges').select2('val', 'All')
     $(this).closest('tr').find('.quantity').val('')
     $(this).closest('tr').find('.rate').val('')
     $(this).closest('tr').find('.line_amount').val('')
     if $(this).closest('tr').find('.item_for').val() == ''
       $(this).closest('tr').find('.item_number option').remove()
+      $(this).closest('tr').find('.vendor_charges option').remove()
     else
       vendor_id = $('#bill_vendor_id').val()
       item_type = $(this).closest('tr').find('.item_type').val() ## Import OR Export

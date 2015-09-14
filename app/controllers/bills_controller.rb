@@ -35,8 +35,13 @@ class BillsController < ApplicationController
   end
 
   def validate_of_uniquness_format
-    invoice_date = Date.parse params[:invoice_date]
-    validate = Bill.where(vendor_id: params[:vendor_id], bill_number: params[:invoice_no]).present?
+    if params[:bill_id] == ''
+      # validate only for new Record 
+      invoice_date = Date.parse params[:invoice_date]
+      validate = Bill.where(vendor_id: params[:vendor_id], bill_number: params[:invoice_no], bill_date: invoice_date).present?
+    else
+      # do nothing
+    end
     render json: { validate: validate }
   end
 
