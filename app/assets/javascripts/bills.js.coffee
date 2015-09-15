@@ -1,6 +1,5 @@
 $(document).ready ->
 
-  $('select.select_manage').select2()
   $('#bill_vendor_id').select2()
 
   #***** Check if the form has any error then prevent the Form 
@@ -36,7 +35,7 @@ $(document).ready ->
 
   if $('#bill_vendor_id').val() == ''
     $('#add_bill_items').addClass('disabled', true)
-    $('#bill_item tbody tr:first').remove()
+    #$('#bill_item tbody tr:first').remove()
 
   check_if_vendor_present = ->
       if $('#bill_vendor_id').val() != ''
@@ -90,11 +89,30 @@ $(document).ready ->
     vendor_id = $('#bill_vendor_id').val()
     if vendor_id
       vendor_type = $('#bill_vendor_id :selected').data('type').split(',')
+      charges_associated_vendor = []
       $.each vendor_type, (index, value) ->
-        charges_associated_vendor = charges[value]
-        $.each charges_associated_vendor, (index, value) ->
-          if !$item_for.closest('tr').find(".vendor_charges option[value='" + value + "']").length
-            $item_for.closest('tr').find('.vendor_charges').append($('<option>', {value: value, text: value},'</option>'))
+        charges_associated_vendor = $.merge(charges_associated_vendor, charges[value])
+      item_for = $item_for.closest('tr').find('.item_for :selected').text()
+      vendor_charges_classification = charges_classification[item_for]
+      vendor_charges_classification = $(charges_associated_vendor).filter(vendor_charges_classification)
+      $item_for.closest('tr').find('.vendor_charges option').remove()
+      $.each vendor_charges_classification, (index, value) ->
+        if !$item_for.closest('tr').find(".vendor_charges option[value='" + value + "']").length
+          $item_for.closest('tr').find('.vendor_charges').append($('<option>', {value: value, text: value},'</option>'))
+    $(this).closest('tr').find('.item_number').val('')
+    $(this).closest('tr').find('.vendor_charges').val('')
+    $(this).closest('tr').find('.quantity').val('')
+    $(this).closest('tr').find('.rate').val('')
+    $(this).closest('tr').find('.line_amount').val('')
+    if $(this).closest('tr').find('.item_for').val() == ''
+      $(this).closest('tr').find('.item_number').val('') 
+      $(this).closest('tr').find('.vendor_charges option').remove()
+    else
+      if item_for == 'container'
+        $item_for.closest('tr').find('.quantity').val(1)
+        $item_for.closest('tr').find('.quantity').prop('readonly', true)
+      else
+        $item_for.closest('tr').find('.quantity').prop('readonly', false)
 
   $(document).on 'nested:fieldAdded', (event) ->
     $('select.select_manage').select2()
@@ -128,26 +146,6 @@ $(document).ready ->
     $(this).closest('tr').find('.quantity').val('')
     $(this).closest('tr').find('.rate').val('')
     $(this).closest('tr').find('.line_amount').val('')
-
-  $('body').on 'change','.item_for', ->
-    # ******** Reinitialize the Row (Except Item type) 
-    $(this).closest('tr').find('.item_number').val('')
-    $(this).closest('tr').find('.vendor_charges').val('')
-    #$(this).closest('tr').find('.vendor_charges').select2('val', 'All')
-    $(this).closest('tr').find('.quantity').val('')
-    $(this).closest('tr').find('.rate').val('')
-    $(this).closest('tr').find('.line_amount').val('')
-    if $(this).closest('tr').find('.item_for').val() == ''
-      $(this).closest('tr').find('.item_number option').remove()
-      $(this).closest('tr').find('.vendor_charges option').remove()
-    else
-      vendor_id = $('#bill_vendor_id').val()
-      item_type = $(this).closest('tr').find('.item_type').val() ## Import OR Export
-      item_for =  $(this).closest('tr').find('.item_for').val() ## container OR bl
-      if item_for == 'container'
-        $(this).closest('tr').find('.item_number option').remove()
-        $('.quantity').val(1)
-        $('.quantity').prop('readonly', true)
 
   #********** Checking for same container number, can not accept the same item twice
   #$('body').on 'select2-close', '.vendor_charges', ->

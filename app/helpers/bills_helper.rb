@@ -5,19 +5,11 @@ module BillsHelper
   end
 
   def item_for
-    if @bill.new_record?
-      []
-    else
-      @item_for
-    end
+    @bill.new_record? ? [] : @item_for  
   end
 
-  def charges_vendors 
-    if @bill.new_record?
-      []
-    else
-      @charges
-    end
+  def charges_vendors(bill_item) 
+    @bill.new_record? ? [] : (@charges & CHARGES_CLASSIFICATION[bill_item.item_for].to_a)
   end
 
 end

@@ -11,12 +11,12 @@
         %th Total
         %th
     %tbody
-      = f.simple_fields_for :bill_items, @bill.bill_items, wrapper: false do |bill_item|
+      = f.simple_fields_for :bill_items, @bill.bill_items , wrapper: false do |bill_item|
         %tr.fields{id: "#{bill_item.object.id}"}
           %td.type= bill_item.input :item_type, collection: ['Import', 'Export'], label: false, include_blank: false, wrapper: :vertical_form, input_html: {class: 'item_type'}
-          %td.for= bill_item.input :item_for, collection: item_for , label: false, wrapper: :vertical_form, include_blank: 'Select', input_html: {id: 'item_for', "data-validation" => "required", :"data-validation-error-msg" => "Please Select", class: 'item_for'} 
+          %td.for= bill_item.input :item_for, collection: item_for, label: false, wrapper: :vertical_form, include_blank: 'Select', input_html: {id: 'item_for', "data-validation" => "required", :"data-validation-error-msg" => "Please Select", class: 'item_for'} 
           %td.number= bill_item.input :item_number, as: :string, label: false, wrapper: :vertical_form, input_html: {id: 'item_number', class: 'item_number select_manage '}
-          %td.item= bill_item.input :charge_for, label: false, collection: charges_vendors, include_blank: 'Select', wrapper: :vertical_form, input_html: { id: 'vendor_charges', "data-validation" => "required", "data-validation-error-msg" => "Please Select Charges", class: 'vendor_charges'}
+          %td.item= bill_item.input :charge_for, label: false, collection: charges_vendors(bill_item.object), include_blank: 'Select', wrapper: :vertical_form, input_html: { id: 'vendor_charges', "data-validation" => "required", "data-validation-error-msg" => "Please Select Charges", class: 'vendor_charges'}
           %td.price_unit= bill_item.input :quantity, label: false, wrapper: :vertical_form, input_html: { class: 'quantity change_item_price' }
           %td.price_unit= bill_item.input :rate, label: false, wrapper: :vertical_form, input_html: { class: 'rate change_item_price' }
           %td.price_unit= bill_item.input :line_amount, label: false, readonly: true, wrapper: :vertical_form, input_html: { class: 'line_amount' }

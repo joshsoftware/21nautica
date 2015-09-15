@@ -5,6 +5,7 @@
 :javascript
   var item_for = #{raw ITEM_FOR.to_json}
   var charges = #{raw CHARGES.to_json }
+  var charges_classification = #{ CHARGES_CLASSIFICATION.to_json }
   window.validate_form = function(){
     $.validate({
       form: '#vendor_invoice',

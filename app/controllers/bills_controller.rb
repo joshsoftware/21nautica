@@ -8,7 +8,6 @@ class BillsController < ApplicationController
 
   def new
     @bill = Bill.new
-    @bill.bill_items.build
   end
 
   def create
@@ -21,9 +20,15 @@ class BillsController < ApplicationController
   end
 
   def edit
-   vendor = Vendor.find @bill.vendor_id 
-   @charges = CHARGES[vendor.vendor_type]
-   @item_for = ITEM_FOR[vendor.vendor_type]
+    vendor = Vendor.find(@bill.vendor_id).vendor_type.split(',')
+    @charges = []
+    @item_for = []
+    vendor.each do |v_type| 
+      @charges << CHARGES[v_type]
+      @item_for << ITEM_FOR[v_type]
+    end
+    @charges.flatten!
+    @item_for.flatten!
   end
 
   def update
@@ -60,8 +65,6 @@ class BillsController < ApplicationController
       end
     when 'Export'
       if params[:item_for] == 'bl'
-        #bill_of_lading = BillOfLading.find_by bl_number: params[:item_number]
-        #result = (Movement.where(vendor_id: params[:vendor_id], bill_of_lading_id: bill_of_lading.id).uniq.present? if bill_of_lading)|| false 
         #'get uniq(bl) numbers from movement for  using vendor id'
       else
         #'get container numbers from Impot_item for vendor using vendor id'
