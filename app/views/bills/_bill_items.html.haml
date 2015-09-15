@@ -23,4 +23,6 @@
           %td
             = bill_item.link_to_remove method: :delete, class: 'delete pull-left' do
               %span.glyphicon.glyphicon-remove
+          %td= bill_item.input :activity_id, as: :hidden, wrapper: :vertical_form, input_html: { class: 'activity_id'}
+          %td= bill_item.input :activity_type, as: :hidden, wrapper: :vertical_form, input_html: { class: 'activity_type'} 
   = f.link_to_add 'Add', :bill_items, id: 'add_bill_items', class: 'btn btn-primary', "data-target" => '#bill_item'

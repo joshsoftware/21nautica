@@ -24,7 +24,6 @@ class Bill < ActiveRecord::Base
   validates_presence_of :bill_number, :vendor_id, :bill_date, :value, :created_by
 
   before_validation :assigns_bill_items
-  before_validation :assign_activity
 
   private 
   
@@ -33,10 +32,6 @@ class Bill < ActiveRecord::Base
       bill_item.update_attribute(:bill_date, self.bill_date)
       bill_item.update_attribute(:vendor_id, self.vendor_id)
     end
-  end
-
-  def assign_activity
-    ### Activity Import/Export Needs to Added
   end
 
 end

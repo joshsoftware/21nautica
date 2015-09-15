@@ -55,12 +55,12 @@ class BillsController < ApplicationController
     case params[:item_type] 
     when 'Import'
       if params[:item_for] == 'bl'
-        result = Import.where(clearing_agent_id: params[:vendor_id], bl_number: params[:item_number].strip).present? || 
-          Import.where(shipping_line_id: params[:vendor_id], bl_number: params[:item_number].strip).present?
+        result = Import.where(clearing_agent_id: params[:vendor_id], bl_number: params[:item_number].strip).first.try(:id) || 
+          Import.where(shipping_line_id: params[:vendor_id], bl_number: params[:item_number].strip).first.try(:id)
          #'get bl numbers from Import for clearing agent and shipping agent using vendor id'
       else
-        result = ImportItem.where(vendor_id: params[:vendor_id], container_number: params[:item_number]).present? || 
-          ImportItem.where(icd_id: params[:vendor_id], container_number: params[:item_number]).present?
+        result = ImportItem.where(vendor_id: params[:vendor_id], container_number: params[:item_number]).first.try(:import_id) || 
+          ImportItem.where(icd_id: params[:vendor_id], container_number: params[:item_number]).first.try(:import_id)
         #'get container numbers from Impot_item for vendor id and icd id using vendor id'
       end
     when 'Export'

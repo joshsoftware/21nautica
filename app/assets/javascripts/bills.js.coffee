@@ -121,6 +121,7 @@ $(document).ready ->
   #********* Validate Item Number
   $('body').on 'focusout','.item_number', ->
     current_row_item_number = $(this).closest('tr').find('.item_number')
+    current_row = $(this).closest('tr')
     vendor_id = $('#bill_vendor_id').val()
     item_type = $(this).closest('tr').find('.item_type').val()
     item_for = $(this).closest('tr').find('.item_for').val()
@@ -128,7 +129,7 @@ $(document).ready ->
 
     $.get('/bills/validate_item_number', {vendor_id: vendor_id, item_type: item_type, item_for: item_for, item_number: item_number
                                          }).done (data) ->
-      if data.result is false
+      if data.result is null
         if current_row_item_number.parent('div').children('span').length > 0
         else
           current_row_item_number.parent('div').addClass('has-error')
@@ -136,7 +137,9 @@ $(document).ready ->
       else
         current_row_item_number.parent('div').removeClass('has-error')
         current_row_item_number.parent('div').find('span').remove()
-
+        type = current_row.find('.item_type').val()
+        current_row.find('.activity_id').val(data.result)
+        current_row.find('.activity_type').val(type)
 
   $('body').on 'change', '.item_type', -> #Import OR EXPORT
     # ******** Reinitialize the Row 
