@@ -76,8 +76,19 @@ class BillsController < ApplicationController
       end
     when 'Export'
       if params[:item_for] == 'bl'
-        #'get uniq(bl) numbers from movement for  using vendor id'
+        vendor_type = Vendor.find(params[:vendor_id]).vendor_type.split(',') 
+        vendor_type.each do |v_type|
+          if v_type == 'clearing_agent' || v_type == 'shipping_line'
+            result = Movement.where(clearing_agent_id: params[:vendor_id], 
+                           bl_number: params[:item_number].strip).first.try(:export_item).try(:export).try(:id) #||
+        #Movement.where(vendor_id: params[:vendor_id], 
+                       #bl_number: params[:item_number].strip).first.try(:export_item).try(:export).try(:id)
+          end
+
+        end
+        #'get uniq(bl) numbers from movement for using vendor id'
       else
+        #result = ExportItem.where()
         #'get container numbers from Impot_item for vendor using vendor id'
       end
     else

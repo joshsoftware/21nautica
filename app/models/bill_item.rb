@@ -38,6 +38,13 @@ class BillItem < ActiveRecord::Base
 
   validate :bl_check_total_quantity
 
+  before_save :assigns_bill_items
+
+  def assigns_bill_items
+    self.bill_date = self.bill.bill_date
+    self.vendor_id = self.bill.vendor_id
+  end
+
   def bl_check_total_quantity
     case self.item_type
     when 'Import'

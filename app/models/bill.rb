@@ -24,13 +24,4 @@ class Bill < ActiveRecord::Base
   validates_uniqueness_of :bill_number, scope: [:bill_number, :bill_date, :vendor_id]
   validates_presence_of :bill_number, :vendor_id, :bill_date, :value, :created_by
 
-  after_save :assigns_bill_items
-
-  def assigns_bill_items
-    self.bill_items.each do |bill_item|
-      bill_item.update_attribute(:bill_date, self.bill_date)
-      bill_item.update_attribute(:vendor_id, self.vendor_id)
-    end
-  end
-
 end
