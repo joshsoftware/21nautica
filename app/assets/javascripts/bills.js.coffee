@@ -4,7 +4,8 @@ $(document).ready ->
 
   #***** Check if the form has any error then prevent the Form 
   $('body').on 'click', '#billsave', (event)->
-    if $('#billsave').closest('form').find('.has-error:visible').length > 0
+    #if $('#billsave').closest('form').find('.has-error:visible').length > 0
+    if $('#billsave').closest('form').find('span.form-error:visible').length > 0
       return false
       #event.preventDefault()
 

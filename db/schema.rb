@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150828065644) do
+ActiveRecord::Schema.define(version: 20150915093022) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -237,6 +237,7 @@ ActiveRecord::Schema.define(version: 20150828065644) do
     t.string   "clearing_agent_invoice_number"
     t.integer  "vendor_id"
     t.integer  "clearing_agent_id"
+    t.string   "bl_number"
   end
 
   add_index "movements", ["bill_of_lading_id"], name: "index_movements_on_bill_of_lading_id", using: :btree

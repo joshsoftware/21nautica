@@ -7,19 +7,24 @@ class BillsController < ApplicationController
   end
 
   def new
+    @charges = []
+    @item_for = []
     @bill = Bill.new
   end
 
   def create
     @bill = Bill.new(bills_params)
     if @bill.save
+      flash[:notice] = "Bill created sucessfully"
       redirect_to bills_path
     else
+      #flash[:alert] = @bill.errors.full_messages 
+      load_collection
       render 'new'
     end
   end
 
-  def edit
+  def load_collection
     vendor = Vendor.find(@bill.vendor_id).vendor_type.split(',')
     @charges = []
     @item_for = []
@@ -31,10 +36,16 @@ class BillsController < ApplicationController
     @item_for.flatten!
   end
 
+  def edit
+    load_collection
+  end
+
   def update
     if @bill.update(bills_params)
       redirect_to bills_path
     else
+      load_collection
+      #flash[:alert] = @bill.errors.full_messages 
       render 'edit'
     end
   end
@@ -75,15 +86,6 @@ class BillsController < ApplicationController
     render json: { result: result }
   end
 
-  # load the Charges of Vendor 
-  def load_vendor_charges() 
-    @vendor = {}
-    vendor = Vendor.find(params[:vendor_id]).vendor_type.split(',')
-    vendor.each do |type|
-      @vendor.merge!(CHARGES.select { |k,v| k.include? type })
-    end
-  end
-
   private
 
   def get_the_bill_id
@@ -91,7 +93,7 @@ class BillsController < ApplicationController
   end
 
   def bills_params
-    params.require(:bill).permit(:vendor_id, :bill_number, :bill_date, :value, :created_by_id, :approved_by_id, :created_on, :remark,
+    params.require(:bill).permit(:id, :vendor_id, :bill_number, :bill_date, :value, :created_by_id, :approved_by_id, :created_on, :remark,
                                   bill_items_attributes: [:id, :vendor_id, :bill_id, :item_type, :item_for, :item_number, :charge_for,
                                                           :quantity, :rate, :line_amount, :activity_type, :activity_id, :_destroy] 
                                 )
