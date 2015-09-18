@@ -48,14 +48,14 @@ class BillItem < ActiveRecord::Base
   def bl_check_total_quantity
     case self.item_type
     when 'Import'
-      if self.item_for == 'bl'
-        import_qty = self.activity.quantity
-        billed_qty = BillItem.where(activity_id: self.activity_id, charge_for: self.charge_for).sum(:quantity)
-        self.errors.add(:quantity, "must be less than import") if import_qty < (billed_qty + self.quantity)
-      else
+      if self.item_for == 'container'
         #container
-        #
+        self.errors.add(:charge_for, "Container already charged") if BillItem.where(activity_id: self.activity_id, 
+                                                                     charge_for: self.charge_for, item_number: self.item_number).exists?
       end
+      import_qty = self.activity.quantity
+      billed_qty = BillItem.where(activity_id: self.activity_id, charge_for: self.charge_for).sum(:quantity)
+      self.errors.add(:quantity, "Total charged qty exceeds import qty") if import_qty < (billed_qty + self.quantity)
     end
   end
 

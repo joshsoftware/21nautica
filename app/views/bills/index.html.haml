@@ -16,7 +16,7 @@
   %tbody
     - @bills.each do |bill|
       %tr
-        %td.hide= bill.created_by
+        %td.hide= bill.created_at
         %td= bill.bill_number
         %td= bill.bill_date
         %td= bill.vendor.try(:name)

@@ -1,7 +1,7 @@
 module BillsHelper
 
   def get_vendor
-    Vendor.all.map {|vendor| [ vendor.name, vendor.id, {"data-type" => vendor.vendor_type}] }
+    Vendor.all.order(name: :asc).map {|vendor| [ vendor.name, vendor.id, {"data-type" => vendor.vendor_type}] }
   end
 
   def item_for

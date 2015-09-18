@@ -72,7 +72,7 @@ class BillsController < ApplicationController
       else
         result = ImportItem.where(vendor_id: params[:vendor_id], container_number: params[:item_number]).first.try(:import_id)
         unless result
-          is_only_icd = Vendor.find(params[:vendor_id]).vendor_type.eql? 'icd'
+          is_only_icd = Vendor.find(params[:vendor_id]).vendor_type.include? 'icd'
           result = ImportItem.where(container_number: params[:item_number]).first.try(:import_id) if is_only_icd
         end
       end
