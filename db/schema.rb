@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150915093022) do
+ActiveRecord::Schema.define(version: 20150918070126) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -150,7 +150,6 @@ ActiveRecord::Schema.define(version: 20150915093022) do
     t.string   "after_delivery_status"
     t.string   "context"
     t.integer  "vendor_id"
-    t.integer  "icd_id"
   end
 
   add_index "import_items", ["container_number"], name: "index_import_items_on_container_number", using: :btree
