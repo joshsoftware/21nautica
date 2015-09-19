@@ -63,12 +63,12 @@ class BillsController < ApplicationController
 
   # Validate the Item Number 
   def validate_item_number
+    result = nil
     case params[:item_type] 
     when 'Import'
       if params[:item_for] == 'bl'
         result = Import.where(clearing_agent_id: params[:vendor_id], bl_number: params[:item_number].strip).first.try(:id) || 
           Import.where(shipping_line_id: params[:vendor_id], bl_number: params[:item_number].strip).first.try(:id)
-         #'get bl numbers from Import for clearing agent and shipping agent using vendor id'
       else
         result = ImportItem.where(vendor_id: params[:vendor_id], container_number: params[:item_number]).first.try(:import_id)
         unless result
@@ -80,27 +80,29 @@ class BillsController < ApplicationController
       if params[:item_for] == 'bl'
         vendor_type = Vendor.find(params[:vendor_id]).vendor_type.split(',') 
         vendor_type.each do |v_type|
-          if v_type == 'clearing_agent' || v_type == 'shipping_line'
+          if v_type == 'clearing_agent' 
             result = Movement.where(clearing_agent_id: params[:vendor_id], 
-                           bl_number: params[:item_number].strip).first.try(:export_item).try(:export).try(:id) #||
+                           bl_number: params[:item_number].strip).first.try(:export_item).try(:export).try(:id)
+          elsif v_type == 'shipping_line'
+            export = Movement.where(bl_number: params[:item_number].strip).first.try(:export_item).try(:export)
+            if export && export.shipping_line_id == params[:vendor_id]
+              result = export.id
+            end
           end
         end
-        #'get uniq(bl) numbers from movement for using vendor id'
       else
-        #result = ExportItem.where()
-        #'get container numbers from Impot_item for vendor using vendor id'
+        vendor_type = Vendor.find(params[:vendor_id]).vendor_type.split(',') 
+        vendor_type.each do |v_type|
+          if v_type == 'transporter' 
+            movements = Movement.where(vendor_id: params[:vendor_id]).pluck(:id)
+            result = ExportItem.where('container = ? and movement_id IN(?)', params[:item_number], movements).first.try(:export).try(:id)
+          end
+        end
       end
     else
     end
 
     render json: { result: result }
-  end
-
-  def validate_icd_number
-    container = ImportItem.where(container_number: params[:item_number]).first
-    charged_for = !BillItem.where(item_number: params[:item_number], charge_for: 'ICD Charges').present?
-    charge_for_container = container && charged_for ? container.import_id : nil
-    render json: { result: charge_for_container }
   end
 
   private
