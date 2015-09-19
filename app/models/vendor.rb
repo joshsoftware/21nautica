@@ -2,6 +2,7 @@ class Vendor < ActiveRecord::Base
   has_many :payments
   has_many :bills
   has_many :bill_items
+  has_many :debit_notes
   validate :check_vendor_type
   scope :transporters, -> { where(vendor_type: 'transporter') }
   scope :clearing_agents, -> { where(vendor_type: 'clearing_agent') }

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150918070126) do
+ActiveRecord::Schema.define(version: 20150919043617) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,18 @@ ActiveRecord::Schema.define(version: 20150918070126) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "debit_notes", force: true do |t|
+    t.string   "reason"
+    t.float    "amount"
+    t.integer  "bill_id"
+    t.integer  "vendor_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "debit_notes", ["bill_id"], name: "index_debit_notes_on_bill_id", using: :btree
+  add_index "debit_notes", ["vendor_id"], name: "index_debit_notes_on_vendor_id", using: :btree
 
   create_table "espinita_audits", force: true do |t|
     t.integer  "auditable_id"

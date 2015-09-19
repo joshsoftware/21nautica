@@ -1,0 +1,18 @@
+.well
+  %table.table#debit_note
+    %thead
+      %tr
+        %th Vendor 
+        %th Amount 
+        %th Reason
+        %th
+    %tbody
+      = f.simple_fields_for :debit_notes, @bill.debit_notes, wrapper: false do |debit_note|
+        %tr
+          %td.vendor= debit_note.input :vendor_id, collection: get_vendor, label: false, wrapper: :vertical_form, include_blank: 'Select', input_html: {id: 'vendor_id', "data-validation" => "required", :"data-validation-error-msg" => "Please Select", class: 'select_manage debit_note_vendor'} 
+          %td.amount= debit_note.input :amount, label: false, wrapper: :vertical_form, input_html: {id: 'amount', class: 'amount_debit_note' }
+          %td.reason= debit_note.input :reason, label: false, wrapper: :vertical_form, input_html: { id: 'reason', "data-validation" => "required", "data-validation-error-msg" => "Please enter the reason", class: 'reason'}
+          %td
+            = debit_note.link_to_remove method: :delete, class: 'delete pull-left' do
+              %span.glyphicon.glyphicon-remove
+  = f.link_to_add 'Add', :debit_notes, id: 'add_debit_notes', class: 'btn btn-primary', "data-target" => '#debit_note'

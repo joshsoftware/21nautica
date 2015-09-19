@@ -17,8 +17,11 @@ class Bill < ActiveRecord::Base
   belongs_to :approved_by, class_name: 'User'
   belongs_to :vendor
   has_many :bill_items
+  has_many :debit_notes
 
   accepts_nested_attributes_for :bill_items, allow_destroy: true
+  accepts_nested_attributes_for :debit_notes, allow_destroy: true
+
   validates_associated :bill_items
 
   validates_uniqueness_of :bill_number, scope: [:bill_number, :bill_date, :vendor_id]

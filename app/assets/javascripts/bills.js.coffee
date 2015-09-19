@@ -1,6 +1,7 @@
 $(document).ready ->
 
   $('#bill_vendor_id').select2()
+  $('.select_manage').select2()
 
   #***** Check if the form has any error then prevent the Form 
   $('body').on 'click', '#billsave', (event)->
@@ -36,16 +37,20 @@ $(document).ready ->
 
   if $('#bill_vendor_id').val() == ''
     $('#add_bill_items').addClass('disabled', true)
+    $('#add_debit_notes').addClass('disabled', true)
     #$('#bill_item tbody tr:first').remove()
 
   check_if_vendor_present = ->
       if $('#bill_vendor_id').val() != ''
         $('#add_bill_items').removeClass('disabled')
+        $('#add_debit_notes').removeClass('disabled')
         $('#bill_item tbody tr').remove()
+        $('#debit_note tbody tr').remove()
         validate_uniquness_of_vendor_invno_invdate()
       else
         $('#bill_item tbody tr').remove()
         $('#add_bill_items').addClass('disabled', true)
+        $('#add_debit_notes').addClass('disabled', true)
 
   $('body').on 'focusout', '#bill_bill_number', ->
     validate_uniquness_of_vendor_invno_invdate()

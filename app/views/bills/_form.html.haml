@@ -21,6 +21,8 @@
     .col-md-4
       = f.input :value, label: 'Invoice Total Value', input_html: {class: 'required form-control checkTotal', "data-validation"=>"checkTotal" }
   .row
+    = render partial: 'debit_notes', locals: { f:f, bill: @bill }
+  .row
     .col-md-6
     .col-md-6
       = f.submit 'Save', class: 'btn btn-primary', id: 'billsave'
