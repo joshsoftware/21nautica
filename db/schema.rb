@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150919043617) do
+ActiveRecord::Schema.define(version: 20150921110342) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -311,6 +311,19 @@ ActiveRecord::Schema.define(version: 20150919043617) do
   add_index "users", ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
   add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "vendor_ledgers", force: true do |t|
+    t.integer  "vendor_id"
+    t.integer  "voucher_id"
+    t.string   "voucher_type"
+    t.float    "amount"
+    t.string   "paid"
+    t.date     "bill_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "vendor_ledgers", ["vendor_id"], name: "index_vendor_ledgers_on_vendor_id", using: :btree
 
   create_table "vendors", force: true do |t|
     t.string   "name"

@@ -18,6 +18,7 @@ class Bill < ActiveRecord::Base
   belongs_to :vendor
   has_many :bill_items
   has_many :debit_notes
+  has_one :vendor_ledger, as: :voucher
 
   accepts_nested_attributes_for :bill_items, allow_destroy: true
   accepts_nested_attributes_for :debit_notes, allow_destroy: true
@@ -27,4 +28,15 @@ class Bill < ActiveRecord::Base
   validates_uniqueness_of :bill_number, scope: [:bill_number, :bill_date, :vendor_id]
   validates_presence_of :bill_number, :vendor_id, :bill_date, :value, :created_by
 
+  after_save :set_bill_vendor_ledger
+
+  def set_bill_vendor_ledger
+    if self.vendor_ledger.nil?
+      self.create_vendor_ledger(vendor_id: vendor_id, amount: value, bill_date: bill_date)    
+    else
+      vendor_ledger.update_attribute(:vendor_id, vendor_id)
+      vendor_ledger.update_attribute(:bill_date, bill_date)
+      vendor_ledger.update_attribute(:amount, value)
+    end
+  end
 end
