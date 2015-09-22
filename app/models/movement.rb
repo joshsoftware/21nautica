@@ -87,7 +87,7 @@ class Movement < ActiveRecord::Base
   end
 
   def status_and_updated_at_date
-    "#{self.status}  \n #{status_updated_at(self).localtime.to_date} "
+    "#{self.status}  \n #{status_updated_at(self).try(:localtime).try(:to_date)} "
   end
 
   def as_json(options= {})
