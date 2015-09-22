@@ -67,13 +67,17 @@ class BillsController < ApplicationController
     case params[:item_type] 
     when 'Import'
       if params[:item_for] == 'bl'
-        result = Import.where(clearing_agent_id: params[:vendor_id], bl_number: params[:item_number].strip).first.try(:id) || 
-          Import.where(shipping_line_id: params[:vendor_id], bl_number: params[:item_number].strip).first.try(:id)
+        result = Import.where('lower(bl_number) = ?', params[:item_number].strip.downcase
+                             ).where(clearing_agent_id: params[:vendor_id]).first.try(:id) || 
+                 Import.where('lower(bl_number) = ?', params[:item_number].strip.downcase
+                             ).where(shipping_line_id: params[:vendor_id]).first.try(:id)
       else
-        result = ImportItem.where(vendor_id: params[:vendor_id], container_number: params[:item_number]).first.try(:import_id)
+        result = ImportItem.where('lower(container_number) = ? ', params[:item_number].strip.downcase
+                                 ).where(vendor_id: params[:vendor_id]).first.try(:import_id)
         unless result
           is_only_icd = Vendor.find(params[:vendor_id]).vendor_type.include? 'icd'
-          result = ImportItem.where(container_number: params[:item_number]).first.try(:import_id) if is_only_icd
+          result = ImportItem.where('lower(container_number) = ?', params[:item_number].strip.downcase
+                                   ).first.try(:import_id) if is_only_icd
         end
       end
     when 'Export'
@@ -81,10 +85,10 @@ class BillsController < ApplicationController
         vendor_type = Vendor.find(params[:vendor_id]).vendor_type.split(',') 
         vendor_type.each do |v_type|
           if v_type == 'clearing_agent' 
-            result = Movement.where(clearing_agent_id: params[:vendor_id], 
-                           bl_number: params[:item_number].strip).first.try(:export_item).try(:export).try(:id)
+            result = Movement.where('lower(bl_number) = ?', params[:item_number].strip.downcase
+                     ).where(clearing_agent_id: params[:vendor_id]).first.try(:export_item).try(:export).try(:id)
           elsif v_type == 'shipping_line'
-            export = Movement.where(bl_number: params[:item_number].strip).first.try(:export_item).try(:export)
+            export = Movement.where('lower(bl_number) = ?', params[:item_number].strip.downcase).first.try(:export_item).try(:export)
             if export && export.shipping_line_id == params[:vendor_id]
               result = export.id
             end
