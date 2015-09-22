@@ -30,6 +30,7 @@ class Import < ActiveRecord::Base
   belongs_to :bill_of_lading
   belongs_to :c_agent, class_name: "Vendor", foreign_key: "clearing_agent_id"
   belongs_to :shipping_line, class_name: "Vendor"
+  before_save :strip_container_number_bl_number
 
   validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number
 
@@ -40,6 +41,13 @@ class Import < ActiveRecord::Base
   # the `render :new` call. :allow_nil would not work, as we actually lose the bl_number then!
   def bl_number
     self.bill_of_lading.try(:bl_number) ? self.bill_of_lading.bl_number : self.attributes["bl_number"]
+  end
+
+  def strip_container_number_bl_number
+    self.bl_number.strip!
+    self.import_items.each do |import_item|
+      import_item.container_number.strip!
+    end
   end
 
   before_create do |record|
