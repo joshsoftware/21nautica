@@ -38,7 +38,6 @@ $(document).ready ->
   if $('#bill_vendor_id').val() == ''
     $('#add_bill_items').addClass('disabled', true)
     $('#add_debit_notes').addClass('disabled', true)
-    #$('#bill_item tbody tr:first').remove()
 
   check_if_vendor_present = ->
       if $('#bill_vendor_id').val() != ''
