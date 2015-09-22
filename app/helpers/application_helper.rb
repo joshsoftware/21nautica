@@ -13,7 +13,7 @@ module ApplicationHelper
   end
 
   def get_shipping_line_vendors
-    vendor = Vendor.where(vendor_type: 'shipping_line')
+    vendor = Vendor.shipping_lines
     vendor.map { | vendor | [vendor.name, vendor.id] }
   end
 

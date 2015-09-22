@@ -4,8 +4,9 @@ class Vendor < ActiveRecord::Base
   has_many :bill_items
   has_many :debit_notes
   validate :check_vendor_type
-  scope :transporters, -> { where('vendor_type like ?', "%transporter%") }
-  scope :clearing_agents, -> { where(vendor_type: 'clearing_agent') }
+  scope :transporters, -> { where('vendor_type like ?', "%transporter%").order(:name) }
+  scope :clearing_agents, -> { where('vendor_type like ?', "%clearing_agent%").order(:name) }
+  scope :shipping_lines, -> { where('vendor_type like ?', "%shipping_line%").order(:name) }
 
   private
   def check_vendor_type
