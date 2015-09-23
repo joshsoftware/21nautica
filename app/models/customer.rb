@@ -21,7 +21,7 @@ class Customer < ActiveRecord::Base
   validates_uniqueness_of :name, case_sensitive: false, message: "Customer with same name already exists"
 
   def assign_emails
-    self.emails = self.emails + ", accounts@21nautica.com, kaushik@21nautica.com, sachin@21nautica.com, docs@21nautica.com, docs-ug@21nautica.com, ops-ug@21nautica.com, chetan@21nautica.com"
+    self.emails = self.emails + ", accounts@21nautica.com, kaushik@21nautica.com, sachin@21nautica.com, docs@21nautica.com, docs-ug@21nautica.com, ops-ug@21nautica.com, chetan@21nautica.com, ops@21nautica.com "
   end
 
 end
