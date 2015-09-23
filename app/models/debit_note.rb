@@ -14,6 +14,7 @@ class DebitNote < ActiveRecord::Base
   has_one :vendor_ledger, as: :voucher
 
   validates_presence_of :amount, :reason
+  validates_associated :vendor
 
   after_save :set_vendor_ledger
 

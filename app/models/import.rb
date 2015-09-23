@@ -33,6 +33,7 @@ class Import < ActiveRecord::Base
   before_save :strip_container_number_bl_number
 
   validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number
+  validates_uniqueness_of :bl_number
 
   accepts_nested_attributes_for :import_items
 

@@ -5,7 +5,6 @@ $(document).ready ->
 
   #***** Check if the form has any error then prevent the Form 
   $('body').on 'click', '#billsave', (event)->
-    #if $('#billsave').closest('form').find('.has-error:visible').length > 0
     if $('#billsave').closest('form').find('span.form-error:visible').length > 0
       return false
       #event.preventDefault()
@@ -156,7 +155,6 @@ $(document).ready ->
     $(this).closest('tr').find('.line_amount').val('')
 
   #********** Checking for same container number, can not accept the same item twice
-  #$('body').on 'select2-close', '.vendor_charges', ->
   $('body').on 'change', '.vendor_charges', ->
     vendor_container = []
     current_tr = $(this).closest('tr')
@@ -193,6 +191,28 @@ $(document).ready ->
     rate = $parent.find('.rate').val()
     total_price = (quantity * rate).toFixed(2)
     $parent.find('.line_amount').val(total_price)
+
+  #************* validate number for debit note
+
+  $('body').on 'focusout', '.debit_note_number', ->
+    current_row_number = $(this).closest('tr').find('.debit_note_number')
+    debit_note_type = $(this).closest('tr').find('.debit_note_for').val()
+    debit_note_number = $(this).closest('tr').find('.debit_note_number').val()
+
+    if debit_note_type
+      $.get('/bills/validate_debit_note_number', {
+        debit_note_type: debit_note_type, debit_note_number: debit_note_number
+      }).done (data) ->
+        if data.result is false
+          if current_row_number.parent('div').children('span').length > 0
+          else
+            current_row_number.parent('div').addClass('has-error')
+            current_row_number.parent('div').append("<span class='help-block form-error'> Bl or Container not found </span>")
+        else
+          current_row_number.parent('div').removeClass('has-error')
+          current_row_number.parent('div').find('span').remove()
+
+  #**************************************
 
   #*********** validator for custom messages
 
