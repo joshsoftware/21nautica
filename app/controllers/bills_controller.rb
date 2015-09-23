@@ -131,7 +131,7 @@ class BillsController < ApplicationController
     params.require(:bill).permit(:id, :vendor_id, :bill_number, :bill_date, :value, :created_by_id, :approved_by_id, :created_on, :remark,
                                   bill_items_attributes: [:id, :vendor_id, :bill_id, :item_type, :item_for, :item_number, :charge_for,
                                                           :quantity, :rate, :line_amount, :activity_type, :activity_id, :_destroy],
-                                  debit_notes_attributes: [:id, :vendor_id, :bill_id, :reason, :amount, :_destroy]
+                                  debit_notes_attributes: [:id, :vendor_id, :bill_id, :debit_note_for, :number, :reason, :amount, :_destroy]
                                 )
   end
 
