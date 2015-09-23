@@ -109,6 +109,18 @@ class BillsController < ApplicationController
     render json: { result: result }
   end
 
+  def validate_debit_note_number
+    if params[:debit_note_type] == 'container'
+      result = ImportItem.where('lower(container_number) = ?', params[:debit_note_number].strip.downcase).present? ||
+        ExportItem.where('lower(container) = ?', params[:debit_note_number].strip.downcase).present?
+    else
+      result = Import.where('lower(bl_number) = ?', params[:debit_note_number].strip.downcase).present? ||
+        Movement.where('lower(bl_number) = ?', params[:debit_note_number].strip.downcase).present?
+    end
+
+    render json: { result: result }
+  end
+
   private
 
   def get_the_bill_id

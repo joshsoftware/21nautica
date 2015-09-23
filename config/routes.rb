@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       match :load_vendor_charges, via: :get
       match :validate_item_number, via: :get
       match :validate_of_uniquness_format, via: :get
+      match :validate_debit_note_number, via: :get
     end
   end
 

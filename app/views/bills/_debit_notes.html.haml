@@ -3,6 +3,8 @@
     %thead
       %tr
         %th Vendor 
+        %th BL/Container
+        %th Number
         %th Amount 
         %th Reason
         %th
@@ -10,7 +12,9 @@
       = f.simple_fields_for :debit_notes, @bill.debit_notes, wrapper: false do |debit_note|
         %tr.fields
           %td.vendor= debit_note.input :vendor_id, collection: get_vendor, label: false, wrapper: :vertical_form, include_blank: 'Select', input_html: {id: 'vendor_id', "data-validation" => "required", :"data-validation-error-msg" => "Please Select", class: 'select_manage debit_note_vendor'} 
-          %td.amount= debit_note.input :amount, label: false, wrapper: :vertical_form, input_html: {id: 'amount', class: 'amount_debit_note', "data-validation" => "required", :"data-validation-error-msg" => "Please enter the amount" }
+          %td.note_for= debit_note.input :debit_note_for, collection: ['bl', 'container'], label: false, wrapper: :vertical_form, include_blank: 'Select', input_html: {id: 'note_for', "data-validation" => "required", :"data-validation-error-msg" => "Please Select", class: 'debit_note_for'} 
+          %td.debit_number= debit_note.input :number, as: :string, label: false, wrapper: :vertical_form, input_html: {id: 'number', "data-validation" => "required", :"data-validation-error-msg" => "Enter the Number", class: 'debit_note_number'} 
+          %td.amount= debit_note.input :amount, label: false, wrapper: :vertical_form, input_html: {id: 'amount', class: 'amount_debit_note', "data-validation" => "required", :"data-validation-error-msg" => "Enter the amount" }
           %td.reason= debit_note.input :reason, label: false, wrapper: :vertical_form, input_html: { id: 'reason', "data-validation" => "required", "data-validation-error-msg" => "Please enter the reason", class: 'reason'}
           %td
             = debit_note.link_to_remove method: :delete, class: 'delete pull-left' do
