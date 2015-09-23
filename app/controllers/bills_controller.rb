@@ -14,7 +14,7 @@ class BillsController < ApplicationController
 
   def create
     @bill = Bill.new(bills_params)
-    if @bill.save
+    if @bill.save && @bill.bill_items.any? 
       flash[:notice] = "Bill created sucessfully"
       redirect_to bills_path
     else
@@ -41,7 +41,7 @@ class BillsController < ApplicationController
   end
 
   def update
-    if @bill.update(bills_params)
+    if @bill.update(bills_params) && @bill.bill_items.any?
       redirect_to bills_path
     else
       load_collection

@@ -27,7 +27,9 @@ class ImportItem < ActiveRecord::Base
   has_many :import_expenses, dependent: :destroy
 
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
-
+  validates_presence_of :container_number
+  validates_uniqueness_of :container_number
+ 
   delegate :bl_number, to: :import
   delegate :clearing_agent, to: :import, allow_nil: true
 

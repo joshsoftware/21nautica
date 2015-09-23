@@ -22,6 +22,7 @@ class ExportItem < ActiveRecord::Base
   validates :date_of_placement, format: { with: /\d{4}-\d{1,2}-\d{1,2}/, on: :update }
   validate :date_of_placement_cannot_be_in_future
   validate :assignment_of_container, if: "container.present? && container_changed?"
+  validates_uniqueness_of :container
 
   def assignment_of_container
     count=0
