@@ -54,13 +54,14 @@ class BillItem < ActiveRecord::Base
                                       charge_for: self.charge_for, item_number: self.item_number).where.not(id: self.id).exists?
       end
       import_qty = self.activity.quantity
-      billed_qty = BillItem.where(activity_id: self.activity_id, charge_for: self.charge_for, activity_type: 'Import').where.not(id, self.id).sum(:quantity)
+      billed_qty = BillItem.where(activity_id: self.activity_id, charge_for: self.charge_for, activity_type: 'Import').where.not(id: self.id).sum(:quantity)
       self.errors.add(:quantity, "Total charged qty exceeds Import BL qty") if import_qty < (billed_qty + self.quantity)
     when 'Export'
+      binding.pry
       if self.item_for == 'container'
         #container
         self.errors.add(:charge_for, "Container already charged") if BillItem.where(activity_id: self.activity_id, activity_type: 'Export', 
-                                      charge_for: self.charge_for, item_number: self.item_number).where('id !=?', self.id).exists?
+                                      charge_for: self.charge_for, item_number: self.item_number).where.not(id: self.id).exists?
       end
       export_qty = self.item_for == 'container' ?  1  : Movement.where(bl_number: self.item_number).count
       billed_qty = BillItem.where(activity_id: self.activity_id, charge_for: self.charge_for, activity_type: 'Export').where.not(id: self.id).sum(:quantity)
