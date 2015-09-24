@@ -29,6 +29,13 @@ class Bill < ActiveRecord::Base
   validates_presence_of :bill_number, :vendor_id, :bill_date, :value, :created_by
 
   after_save :set_bill_vendor_ledger
+  before_save :set_vendor_ledger_date, if: :bill_date_changed?
+
+  def set_vendor_ledger_date
+    self.debit_notes.each do |debit_note|
+      debit_note.vendor_ledger.update_attribute(:date, self.bill_date)
+    end
+  end
 
   def set_bill_vendor_ledger
     self.vendor_ledger.nil? ? self.create_vendor_ledger(vendor_id: vendor_id, amount: value, date: bill_date) : 
