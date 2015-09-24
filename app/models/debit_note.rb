@@ -19,8 +19,8 @@ class DebitNote < ActiveRecord::Base
   after_save :set_vendor_ledger
 
   def set_vendor_ledger
-    self.vendor_ledger.nil? ? self.create_vendor_ledger(vendor_id: vendor_id, amount: amount, bill_date: self.bill.bill_date) : 
-      vendor_ledger.update_attributes(vendor_id: vendor_id, bill_date: self.bill.bill_date, amount: amount)
+    self.vendor_ledger.nil? ? self.create_vendor_ledger(vendor_id: vendor_id, amount: amount, date: self.bill.bill_date) : 
+      vendor_ledger.update_attributes(vendor_id: vendor_id, date: self.bill.bill_date, amount: amount)
   end
 
 end

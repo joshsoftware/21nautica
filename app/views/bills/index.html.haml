@@ -9,7 +9,7 @@
     %th Bill Date
     %th Vendor 
     %th Value
-    %th Remarks
+    %th.remark Remarks
     %th Created By
     %th Approved By
     %th Action
@@ -21,7 +21,7 @@
         %td= bill.bill_date
         %td= bill.vendor.try(:name)
         %td= bill.value
-        %td= bill.remark
+        %td.remark= bill.remark
         %td= bill.created_by.try(:email)
         %td= bill.approved_by.try(:email)
         %td= link_to 'Edit', edit_bill_path(bill), class: 'btn btn-primary' 

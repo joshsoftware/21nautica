@@ -31,7 +31,7 @@ class Bill < ActiveRecord::Base
   after_save :set_bill_vendor_ledger
 
   def set_bill_vendor_ledger
-    self.vendor_ledger.nil? ? self.create_vendor_ledger(vendor_id: vendor_id, amount: value, bill_date: bill_date) : 
-      vendor_ledger.update_attributes(vendor_id: vendor_id, bill_date: bill_date, amount: value)
+    self.vendor_ledger.nil? ? self.create_vendor_ledger(vendor_id: vendor_id, amount: value, date: bill_date) : 
+      vendor_ledger.update_attributes(vendor_id: vendor_id, date: bill_date, amount: value)
   end
 end

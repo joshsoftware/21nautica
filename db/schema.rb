@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150923062117) do
+ActiveRecord::Schema.define(version: 20150924063546) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -320,7 +320,7 @@ ActiveRecord::Schema.define(version: 20150923062117) do
     t.string   "voucher_type"
     t.float    "amount"
     t.string   "paid"
-    t.date     "bill_date"
+    t.date     "date"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
