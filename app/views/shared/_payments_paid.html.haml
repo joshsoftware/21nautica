@@ -10,20 +10,16 @@
     %th Type
     %th Reference / Invoice No.
     %th Amount (USD)
-    %th Invoice
     %th Payment (USD)
-    %th Closing Balance
 
   %tbody#payment_search_result
     %script#payment_search_result_template{:type => "text/html"}
       %tr
         %td <%= date %>
         %td.voucher_type <%= voucher_type %>
-        %td
+        %td <%= bill_number %>
         %td.amount <%= amount %>
-        %td
         %td <%= paid %>
-        %td
 
 :javascript
   payments = #{@payments}

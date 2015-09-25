@@ -29,8 +29,17 @@ window.PaidFilterInit = ->
     type: 'range'
   return
 
-callbacks = 
+callbacks =
   beforeRecordRender: (record) ->
-    if record.voucher_type == 'Bill'
-      record.amount = record.amount
+    if record.voucher_type == 'Payment'
+      record.amount = -record.amount
+    else if record.voucher_type == 'DebitNote'
+      record.amount = -record.amount
     return
+  afterFilter: (result) ->
+    # formatting the rows
+    $('#payment_search_result td.voucher_type').each ->
+      if $(this).html() == 'Payment'
+        $(this).parent().addClass 'text-danger'
+      return
+

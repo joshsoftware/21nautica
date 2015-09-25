@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150924063546) do
+ActiveRecord::Schema.define(version: 20150925133233) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -319,10 +319,10 @@ ActiveRecord::Schema.define(version: 20150924063546) do
     t.integer  "voucher_id"
     t.string   "voucher_type"
     t.float    "amount"
-    t.string   "paid"
     t.date     "date"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.float    "paid"
   end
 
   add_index "vendor_ledgers", ["vendor_id"], name: "index_vendor_ledgers_on_vendor_id", using: :btree
