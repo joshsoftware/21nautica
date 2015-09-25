@@ -3,6 +3,7 @@ class Vendor < ActiveRecord::Base
   has_many :bills
   has_many :bill_items
   has_many :debit_notes
+  has_many :vendor_ledgers
   validate :check_vendor_type
   scope :transporters, -> { where('vendor_type like ?', "%transporter%").order(:name) }
   scope :clearing_agents, -> { where('vendor_type like ?', "%clearing_agent%").order(:name) }

@@ -1,0 +1,33 @@
+%table.table.table-hover.table-bordered#payment_paid_details_table
+  %h4.col-sm-5= @header.name
+  %div.col-sm-3
+    = select_tag(:filter_by_days_select, options_for_select(get_date_range(controller_name)), 
+        class: "form-control")
+  %div.col-sm-1
+    //%a.glyphicon.glyphicon-download-alt{href: "#{received_path(@header.id)}"} Download
+  %tr.info
+    %th Date
+    %th Type
+    %th Reference / Invoice No.
+    %th Amount (USD)
+    %th Invoice
+    %th Payment (USD)
+    %th Closing Balance
+
+  %tbody#payment_search_result
+    %script#payment_search_result_template{:type => "text/html"}
+      %tr
+        %td <%= date %>
+        %td.voucher_type <%= voucher_type %>
+        %td
+        %td.amount <%= amount %>
+        %td
+        %td <%= paid %>
+        %td
+
+:javascript
+  payments = #{@payments}
+  if (payments != 0) {
+    PaidFilterInit();
+  }
+  

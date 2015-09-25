@@ -15,8 +15,8 @@ class PaidController < ApplicationController
 
   def index
     vendor = Vendor.where(id: params[:vendor_id]).first
-    @payments = vendor.payments.order(date_of_payment: :desc)
-    @header = vendor.name
+    @payments = vendor.vendor_ledgers.order(date: :desc).to_json
+    @header = vendor
     respond_to do |format|
       format.js {}
       format.html {redirect_to :root}

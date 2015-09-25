@@ -17,3 +17,20 @@ $(document).on "page:load ready", ->
     format :"dd-mm-yyyy")
   $("#paid_payment_date").datepicker('setDate', new Date())
   return
+
+window.PaidFilterInit = ->
+  FJS = FilterJS(payments, '#payment_search_result',
+    template: '#payment_search_result_template'
+    callbacks: callbacks
+    search: {})
+  FJS.addCriteria
+    field: 'date'
+    ele: '#filter_by_days_select'
+    type: 'range'
+  return
+
+callbacks = 
+  beforeRecordRender: (record) ->
+    if record.voucher_type == 'Bill'
+      record.amount = record.amount
+    return
