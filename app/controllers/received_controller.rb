@@ -18,13 +18,13 @@ class ReceivedController < ApplicationController
   end
 
   def outstanding
-    data = Report::RunningAccount.outstanding
+    data = Report::RunningAccount.outstanding('customer')
     send_data data, filename: "#{Date.today}-outstanding.csv", type: "text/csv"
   end
 
   def show
     c = Customer.find(params[:id])
-    data = Report::RunningAccount.create(c)
+    data = Report::RunningAccount.create(c, 'customer')
     send_data data, filename: "#{Date.today}-#{c.name.gsub(' ', '_')}.csv", type: "text/csv"
   end
 

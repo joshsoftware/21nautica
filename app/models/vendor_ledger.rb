@@ -12,7 +12,7 @@ class VendorLedger < ActiveRecord::Base
     elsif voucher_type == 'DebitNote'
       self.voucher.try(:bill).try(:bill_number)
     else
-      self.voucher.try(:reference)
+      "#{self.voucher.try(:mode_of_payment)}-#{self.voucher.try(:reference)}"
     end
   end
 

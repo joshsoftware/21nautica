@@ -67,7 +67,7 @@ Rails.application.routes.draw do
     end
   end
   resources :imports, only: [:new, :create]
-  resources :paid, only: [:new, :create, :index]
+  resources :paid, only: [:new, :show, :create, :index]
   resources :received, only: [:new, :show, :create, :index] do
     collection do
       get :outstanding

@@ -31,15 +31,26 @@ window.PaidFilterInit = ->
 
 callbacks =
   beforeRecordRender: (record) ->
-    if record.voucher_type == 'Payment'
-      record.amount = -record.amount
-    else if record.voucher_type == 'DebitNote'
+    if record.voucher_type == 'Payment' || record.voucher_type == 'DebitNote'
       record.amount = -record.amount
     return
   afterFilter: (result) ->
     # formatting the rows
     $('#payment_search_result td.voucher_type').each ->
-      if $(this).html() == 'Payment'
+      if $(this).html() == 'Payment' || $(this).html() == 'DebitNote'
         $(this).parent().addClass 'text-danger'
       return
+
+    paid = 0
+    vendor_invoiced = 0
+    for i of result
+      if result[i].voucher_type == 'DebitNote' || result[i].voucher_type  == 'Payment'
+        #Payment
+        paid = paid + result[i].amount
+      else
+        #vendor_invoice
+        vendor_invoiced = vendor_invoiced + result[i].amount
+
+    $('#payment_paid_details_result .vendor_invoice').html(vendor_invoiced)
+    $('#payment_paid_details_result .paid').html(-paid)
 

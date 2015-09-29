@@ -1,4 +1,6 @@
-%h3 Payments Made
+%h3
+  Payments Made
+  //%a.glyphicon.glyphicon-download-alt{href: "#"} Outstanding
 .row
   = simple_form_for @paid , html: {class: 'form-horizontal'},url: url_for(action: 'create', :controller => 'paid'), method: 'post', defaults: {input_html: {class: 'form-control'}} do |f|
     .col-md-4
@@ -7,6 +9,15 @@
       = render '/shared/payments' , f: f
   .col-md-8
     %div#paid_details_table.scroll-table
+    #payment_paid_details_result
+      %h4
+        Vendor Invoiced:
+        %span.vendor_invoice 0
+        USD
+      %h4
+        Paid:
+        %span.paid 0
+        USD
 
 :javascript
   window.validate_form = function(){

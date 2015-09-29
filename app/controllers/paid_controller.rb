@@ -13,6 +13,12 @@ class PaidController < ApplicationController
     end
   end
 
+  def show
+    v = Vendor.find(params[:id])
+    data = Report::RunningAccount.create(v, 'vendor')
+    send_data data, filename: "#{Date.today}-#{v.name.gsub(' ', '_')}.csv", type: "text/csv"
+  end
+
   def index
     vendor = Vendor.where(id: params[:vendor_id]).first
     @payments = vendor.vendor_ledgers.order(date: :desc).to_json

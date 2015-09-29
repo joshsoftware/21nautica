@@ -9,6 +9,7 @@
     .col-md-4
       = f.input :bill_date, as: :string, label: 'Invoice Date', input_html: {id: 'date_restrict', class: 'form-control', "data-validation" =>"required", "data-validation-error-msg" => "Please enter bill date", value: f.object.bill_date.try(:strftime, "%d-%m-%Y")}
     .col-md-4
+      = f.input :currency, collection: CURRENCY, label: 'Currency', include_blank: false
       = f.hidden_field :created_by_id, value: current_user.id
       = f.hidden_field :approved_by_id, value: current_user.id
   .row
