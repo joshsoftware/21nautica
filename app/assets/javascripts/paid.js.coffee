@@ -35,10 +35,14 @@ callbacks =
       record.amount = -record.amount
     return
   afterFilter: (result) ->
-    # formatting the rows
     $('#payment_search_result td.voucher_type').each ->
       if $(this).html() == 'Payment' || $(this).html() == 'DebitNote'
         $(this).parent().addClass 'text-danger'
+      else
+        paid = $(this).parent().children('td.paid').html()
+        amount = $(this).parent().children('td.amount').html()
+        if paid == amount
+          $(this).parent().addClass 'success'
       return
 
     paid = 0

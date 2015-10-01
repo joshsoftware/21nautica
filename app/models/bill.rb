@@ -28,17 +28,24 @@ class Bill < ActiveRecord::Base
   validates_uniqueness_of :bill_number, scope: [:bill_number, :bill_date, :vendor_id]
   validates_presence_of :bill_number, :vendor_id, :bill_date, :value, :created_by
 
-  after_save :set_bill_vendor_ledger
-  before_save :set_vendor_ledger_date, if: :bill_date_changed?
+  after_save :create_bill_vendor_ledger
+  after_save :set_vendor_ledger_date, if: [:bill_date_changed?, :currency_changed?]
+  after_save :set_debit_note_currency
+
+  def set_debit_note_currency
+    self.debit_notes.each do |debit_note|
+      debit_note.update_attribute(:currency, currency)
+    end 
+  end
 
   def set_vendor_ledger_date
     self.debit_notes.each do |debit_note|
-      debit_note.vendor_ledger.update_attribute(:date, self.bill_date)
+      debit_note.vendor_ledger.update_attributes(date: self.bill_date, currency: self.currency)
     end
   end
 
-  def set_bill_vendor_ledger
-    self.vendor_ledger.nil? ? self.create_vendor_ledger(vendor_id: vendor_id, amount: value, date: bill_date) : 
-      vendor_ledger.update_attributes(vendor_id: vendor_id, date: bill_date, amount: value)
+  def create_bill_vendor_ledger
+    self.vendor_ledger.nil? ? self.create_vendor_ledger(vendor_id: vendor_id, amount: value, date: bill_date, currency: currency) : 
+      vendor_ledger.update_attributes(vendor_id: vendor_id, date: bill_date, amount: value, currency: currency)
   end
 end

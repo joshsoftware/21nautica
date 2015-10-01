@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150929055643) do
+ActiveRecord::Schema.define(version: 20150930122344) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,6 +80,7 @@ ActiveRecord::Schema.define(version: 20150929055643) do
     t.datetime "updated_at"
     t.text     "number"
     t.string   "debit_note_for"
+    t.string   "currency"
   end
 
   add_index "debit_notes", ["bill_id"], name: "index_debit_notes_on_bill_id", using: :btree
@@ -281,6 +282,7 @@ ActiveRecord::Schema.define(version: 20150929055643) do
     t.datetime "updated_at"
     t.integer  "customer_id"
     t.integer  "vendor_id"
+    t.string   "currency"
   end
 
   add_index "payments", ["customer_id"], name: "index_payments_on_customer_id", using: :btree
@@ -323,7 +325,8 @@ ActiveRecord::Schema.define(version: 20150929055643) do
     t.date     "date"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.float    "paid"
+    t.float    "paid",         default: 0.0
+    t.string   "currency"
   end
 
   add_index "vendor_ledgers", ["vendor_id"], name: "index_vendor_ledgers_on_vendor_id", using: :btree

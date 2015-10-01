@@ -6,6 +6,7 @@
     .col-md-4
       = f.input :vendor_id, collection: get_vendors, as: :select, label: 'Vendor Name' , include_blank: "Select Vendor", 
         input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Please select Vendor Name"}
+      = f.input :currency, collection: CURRENCY, include_blank: false
       = render '/shared/payments' , f: f
   .col-md-8
     %div#paid_details_table.scroll-table
