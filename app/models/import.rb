@@ -45,9 +45,9 @@ class Import < ActiveRecord::Base
   end
 
   def strip_container_number_bl_number
-    self.bl_number.strip!
+    self.bl_number = self.bl_number.strip
     self.import_items.each do |import_item|
-      import_item.container_number.strip!
+      import_item.container_number = import_item.container_number.strip
     end
   end
 

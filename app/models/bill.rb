@@ -31,6 +31,7 @@ class Bill < ActiveRecord::Base
   after_save :create_bill_vendor_ledger
   after_save :set_vendor_ledger_date, if: [:bill_date_changed?, :currency_changed?]
   after_save :set_debit_note_currency
+  after_save :update_ledger
 
   def set_debit_note_currency
     self.debit_notes.each do |debit_note|
@@ -48,4 +49,30 @@ class Bill < ActiveRecord::Base
     self.vendor_ledger.nil? ? self.create_vendor_ledger(vendor_id: vendor_id, amount: value, date: bill_date, currency: currency) : 
       vendor_ledger.update_attributes(vendor_id: vendor_id, date: bill_date, amount: value, currency: currency)
   end
+
+
+  def update_ledger
+
+    bill = VendorLedger.where(voucher_type: "Payment", vendor: self.vendor, currency: self.currency).where("amount > paid").order(date: :asc,id: :asc)
+
+    money = self.value
+    bill.each do |payment|
+      return if money == 0
+
+      if money - (payment.amount - payment.paid) > 0
+
+        money -= payment.amount - payment.paid
+        vendor_ledger.update_attribute(:paid, (payment.amount - payment.paid))
+        payment.paid = payment.amount
+      else
+
+        payment.paid = payment.paid + money
+        vendor_ledger.update_attribute(:paid, self.value)
+        money = 0
+      end
+      
+      payment.save
+    end
+  end
+
 end

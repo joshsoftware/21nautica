@@ -56,13 +56,13 @@ class MovementsController < ApplicationController
       # Special processing for bl_number
       if attribute == :bl_number
         # If no BL of this value, then create one.
-        bl = BillOfLading.where(bl_number: movement_update_params[:value]).first
+        bl = BillOfLading.where(bl_number: movement_update_params[:value].strip).first
         if bl
           invoice = bl.invoices.where(previous_invoice: nil).first
           render text: "Invoice already sent, you’re dead Fred" and return if (invoice.present? && invoice.sent?)
           movement.bill_of_lading = bl
         else
-          movement.build_bill_of_lading(bl_number: movement_update_params[:value])
+          movement.build_bill_of_lading(bl_number: movement_update_params[:value].strip)
         end
         # update the movement
         if movement.save

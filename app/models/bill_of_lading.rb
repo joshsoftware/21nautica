@@ -3,6 +3,7 @@ class BillOfLading < ActiveRecord::Base
   has_many :movements
   has_many :invoices, as: :invoiceable
   validates_uniqueness_of :bl_number
+  before_save :strip_the_bl_number
   auditable only: [:payment_ocean, :cheque_ocean, :payment_clearing,
     :cheque_clearing, :agency_fee, :shipping_line_charges, :updated_at]
 
@@ -10,6 +11,10 @@ class BillOfLading < ActiveRecord::Base
 
   def is_export_bl?
     Import.where(bill_of_lading_id: self.id.to_s).blank?
+  end
+
+  def strip_the_bl_number
+    self.bl_number = self.bl_number.strip
   end
 
   def shipping_line

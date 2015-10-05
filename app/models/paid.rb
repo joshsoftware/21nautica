@@ -19,7 +19,7 @@ class Paid < Payment
 
       if money - (payment.amount - payment.paid) > 0
 
-        money -= (payment.amount - payment.paid)
+        money -= payment.amount - payment.paid
         self.vendor_ledger.update_attribute(:paid, (payment.amount - payment.paid))
         payment.paid = payment.amount
       else
