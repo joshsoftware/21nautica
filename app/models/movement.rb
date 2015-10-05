@@ -30,7 +30,6 @@ class Movement < ActiveRecord::Base
   belongs_to :c_agent, class_name: "Vendor", foreign_key: "clearing_agent_id"
   validates :truck_number, presence: true
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
-  before_save :strip_bl_number
 
   delegate :bl_number, to: :bill_of_lading, allow_nil: true
   has_many :invoices, as: :invoiceable
@@ -41,10 +40,6 @@ class Movement < ActiveRecord::Base
    if count > 0 && truck_number != nil
      errors.add(:truck_number," #{truck_number} is not free !")
    end
-  end
-
-  def strip_bl_number
-    self.bl_number = self.bl_number.strip
   end
 
   aasm column: 'status' do

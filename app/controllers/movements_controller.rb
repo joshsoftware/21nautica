@@ -56,6 +56,8 @@ class MovementsController < ApplicationController
       # Special processing for bl_number
       if attribute == :bl_number
         # If no BL of this value, then create one.
+        bl_number = params[:value].strip
+        movement.update_attribute(:bl_number, bl_number)
         bl = BillOfLading.where(bl_number: movement_update_params[:value].strip).first
         if bl
           invoice = bl.invoices.where(previous_invoice: nil).first
