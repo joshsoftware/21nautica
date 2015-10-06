@@ -56,18 +56,22 @@ class Bill < ActiveRecord::Base
     bill = VendorLedger.where(voucher_type: "Payment", vendor: self.vendor, currency: self.currency).where("amount > paid").order(date: :asc,id: :asc)
 
     money = self.value
+    adjusted_ledger_amt = 0
     bill.each do |payment|
       return if money == 0
 
       if money - (payment.amount - payment.paid) > 0
 
         money -= payment.amount - payment.paid
-        vendor_ledger.update_attribute(:paid, (payment.amount - payment.paid))
-        payment.paid = payment.amount
+        adjusted_amt = payment.amount - payment.paid
+        adjusted_ledger_amt += payment.amount - payment.paid 
+        payment.update_attribute(:paid, (payment.paid + adjusted_amt))
+        self.vendor_ledger.update_attribute(:paid, adjusted_ledger_amt)
       else
 
         payment.paid = payment.paid + money
-        vendor_ledger.update_attribute(:paid, self.value)
+        payment.update_attribute(:paid, payment.paid)
+        self.vendor_ledger.update_attribute(:paid, self.value)
         money = 0
       end
       
