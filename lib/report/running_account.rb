@@ -23,10 +23,10 @@ module Report
           end
         else
           f << ['Date', 'Type', 'Invoice No.', 'Amount', 'Payment']
-          ledgers.each do |l|
-            f << [ l.date.to_s, l.voucher_type, l.bill_number, l.amount, l.paid ]
-            sum(outstanding, total, l, 'vendor')
-          end
+          #ledgers.each do |l|
+          #  f << [ l.date.to_s, l.voucher_type, l.bill_number, l.amount, l.paid ]
+          #  sum(outstanding, total, l, 'vendor')
+          #end
         end
 
         # Update outstanding and totals
@@ -39,12 +39,14 @@ module Report
 
     def self.outstanding(klass)
       CSV.generate do |f|
-        f << [ "Customer Name", "Total", "( < 30 days)", "30-60 days", "60-90 days", "90-120 days", "( > 120 days)" ]
+        f << [ "Customer Name", "Total Invoice", "Total Payment", "Total", "( < 30 days)", "30-60 days", "60-90 days", "90-120 days", "( > 120 days)" ]
         Customer.all.each do |c|
           data = create(c, klass)
           str = CSV.parse(data)[-1][1..-1]
           total = str.inject(0) {|s, i| s + i.to_i }
-          f << [ c.name, total] + str
+          total_invoiced = c.ledgers.where(voucher_type: "Invoice").sum(:amount)
+          total_received = c.ledgers.where(voucher_type: "Payment").sum(:amount)
+          f << [ c.name, total_invoiced , total_received, total ] + str
         end
       end
     end
