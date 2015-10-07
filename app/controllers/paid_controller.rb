@@ -13,6 +13,11 @@ class PaidController < ApplicationController
     end
   end
 
+  def outstanding
+    data = Report::RunningAccount.outstanding('vendor')
+    send_data data, filename: "#{Date.today}-outstanding.csv", type: "text/csv"
+  end
+
   def show
     v = Vendor.find(params[:id])
     data = Report::RunningAccount.create(v, 'vendor')

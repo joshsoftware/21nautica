@@ -22,11 +22,11 @@ module Report
             sum(outstanding, total, l, 'customer')
           end
         else
-          f << ['Date', 'Type', 'Invoice No.', 'Amount', 'Payment']
-          #ledgers.each do |l|
-          #  f << [ l.date.to_s, l.voucher_type, l.bill_number, l.amount, l.paid ]
-          #  sum(outstanding, total, l, 'vendor')
-          #end
+          f << ['Date', 'Type', 'Invoice No.', 'Amount', 'Adjusted']
+          ledgers.each do |l|
+            f << [ l.date.to_s, l.voucher_type, l.bill_number, l.amount, l.paid ]
+            sum(outstanding, total, l, 'vendor')
+          end
         end
 
         # Update outstanding and totals
@@ -39,14 +39,26 @@ module Report
 
     def self.outstanding(klass)
       CSV.generate do |f|
-        f << [ "Customer Name", "Total Invoice", "Total Payment", "Total", "( < 30 days)", "30-60 days", "60-90 days", "90-120 days", "( > 120 days)" ]
-        Customer.all.each do |c|
-          data = create(c, klass)
-          str = CSV.parse(data)[-1][1..-1]
-          total = str.inject(0) {|s, i| s + i.to_i }
-          total_invoiced = c.ledgers.where(voucher_type: "Invoice").sum(:amount)
-          total_received = c.ledgers.where(voucher_type: "Payment").sum(:amount)
-          f << [ c.name, total_invoiced , total_received, total ] + str
+        if klass == 'customer'
+          f << [ "Customer Name", "Total Invoice", "Total Payment", "Total", "( < 30 days)", "30-60 days", "60-90 days", "90-120 days", "( > 120 days)" ]
+          Customer.all.each do |c|
+            data = create(c, klass)
+            str = CSV.parse(data)[-1][1..-1]
+            total = str.inject(0) {|s, i| s + i.to_i }
+            total_invoiced = c.ledgers.where(voucher_type: "Invoice").sum(:amount)
+            total_received = c.ledgers.where(voucher_type: "Payment").sum(:amount)
+            f << [ c.name, total_invoiced , total_received, total ] + str
+          end
+        else
+          f << [ "Vendor Name", "Total Invoice", "Total Payment", "Total", "( < 30 days)", "30-60 days", "60-90 days", "90-120 days", "( > 120 days)" ]
+          Vendor.all.each do |v|
+            data = create(v, klass)
+            str = CSV.parse(data)[-1][1..-1]
+            total = str.inject(0) {|s, i| s + i.to_i }
+            total_invoiced = v.vendor_ledgers.where(voucher_type: "Bill").sum(:amount)
+            total_received = v.vendor_ledgers.where(voucher_type: "Payment").sum(:amount)
+            f << [ v.name, total_invoiced , total_received, total ] + str
+          end
         end
       end
     end
@@ -72,6 +84,10 @@ module Report
         end
       else
         #Vendor
+        if ledger.voucher_type == 'Bill'
+          total[key] += ledger.amount
+          outstanding[key] += (ledger.amount - ledger.paid)
+        end
       end
     end
   end

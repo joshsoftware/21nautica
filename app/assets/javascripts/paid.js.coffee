@@ -47,6 +47,7 @@ callbacks =
 
     paid = 0
     vendor_invoiced = 0
+    #adjusted = 0
     for i of result
       if result[i].voucher_type == 'DebitNote' || result[i].voucher_type  == 'Payment'
         #Payment
@@ -54,7 +55,9 @@ callbacks =
       else
         #vendor_invoice
         vendor_invoiced = vendor_invoiced + result[i].amount
-    outstanding =  vendor_invoiced + (paid)
+        #adjusted += result[i].paid
+    
+    #outstanding =  vendor_invoiced - adjusted
     $('#payment_paid_details_result .vendor_invoice').html(vendor_invoiced)
     $('#payment_paid_details_result .paid').html(-paid)
     $('#payment_paid_details_result .outstanding').html(outstanding)
