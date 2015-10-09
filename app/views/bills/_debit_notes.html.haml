@@ -11,7 +11,7 @@
     %tbody
       = f.simple_fields_for :debit_notes, @bill.debit_notes, wrapper: false do |debit_note|
         %tr.fields
-          %td.vendor= debit_note.input :vendor_id, collection: get_vendor, label: false, wrapper: :vertical_form, include_blank: 'Select', input_html: {id: 'vendor_id', class: 'select_manage debit_note_vendor'} 
+          %td.vendor= debit_note.input :vendor_id, collection: get_vendor_with_type, label: false, wrapper: :vertical_form, include_blank: 'Select', input_html: {id: 'vendor_id', class: 'select_manage debit_note_vendor'} 
           %td.note_for= debit_note.input :debit_note_for, collection: ['bl', 'container'], label: false, wrapper: :vertical_form, include_blank: false, input_html: {id: 'note_for', class: 'debit_note_for'} 
           %td.debit_number= debit_note.input :number, as: :string, label: false, wrapper: :vertical_form, input_html: {id: 'number', class: 'debit_note_number'} 
           %td.amount= debit_note.input :amount, label: false, wrapper: :vertical_form, input_html: { id: 'amount', class: 'amount_debit_note' }

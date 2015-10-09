@@ -12,7 +12,8 @@ class Vendor < ActiveRecord::Base
   private
   def check_vendor_type
     vendor_type.split(',').each do|v|
-      errors.add(:vendor_type, 'Invalid vendor type') unless ['transporter', 'clearing_agent', 'shipping_line', 'icd'].include? v
+      errors.add(:vendor_type, 'Invalid vendor type') unless ['transporter', 'clearing_agent', 'shipping_line', 
+                                                              'icd', 'final_clearing_agent'].include? v
     end
   end
 end
