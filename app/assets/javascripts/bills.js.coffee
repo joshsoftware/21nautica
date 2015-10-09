@@ -24,6 +24,21 @@ $(document).ready ->
     endDate: '+0d'
     format: 'dd-mm-yyyy'
 
+  #******************* Date Validation format
+  $('body').on 'focusout', '#date_restrict', ->
+    date_restrict = $(this).parent('div')
+    chkdate = $('#date_restrict').val()
+    if chkdate
+      if(!chkdate.match(/^(0[1-9]|[12][0-9]|3[01])[\- \/.](?:(0[1-9]|1[012])[\- \/.](19|20)[0-9]{2})$/))
+        unless $(this).parent('div').children('span').length > 0
+          $('#date_restrict').parent('div').removeClass('has-success')  if date_restrict.hasClass('has-success')
+          $('#date_restrict').parent('div').addClass('has-error')
+          $('#date_restrict').parent('div').append("<span class='help-block form-error'> Date Format must be Valid(dd-mm-yyyy) </span>")
+      else
+        $('#date_restrict').parent('div').removeClass('has-error')
+        $('#date_restrict').parent('div').find('span').remove()
+  #******************* 
+  
   #***** Initialize the dataTable
   $('#bills').dataTable(
                       {
