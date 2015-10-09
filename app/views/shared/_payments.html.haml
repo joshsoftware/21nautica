@@ -1,4 +1,4 @@
-= f.input :date_of_payment, as: :string, input_html: { class: 'form-control date', id: "#{controller_name}_payment_date"}
+= f.input :date_of_payment, as: :string, input_html: { class: 'form-control date date_validation', id: "#{controller_name}_payment_date"}
 
 = f.input :amount, input_html: {:"data-validation" => "number required", :min => 0, :"data-validation-error-msg" => "Quantity Should be a valid Positive Number."}
 
@@ -10,4 +10,4 @@
 
 .form-group
   .col-sm-offset-2.col-sm-2
-    = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving...."
+    = f.submit 'Save', class: 'btn btn-primary payments'

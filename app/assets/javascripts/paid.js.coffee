@@ -11,11 +11,30 @@ show_paid_index_table = ->
       data:
         vendor_id: vendor_id
 
-$(document).on "page:load ready", ->
+validate_date = ->
+    date_restrict = $(this).parent('div')
+    chkdate = $('.date_validation').val()
+    if chkdate
+      if(!chkdate.match(/^(0[1-9]|[12][0-9]|3[01])[\- \/.](?:(0[1-9]|1[012])[\- \/.](19|20)[0-9]{2})$/))
+        unless $(this).parent('div').children('span').length > 0
+          date_restrict.removeClass('has-success')  if date_restrict.hasClass('has-success')
+          date_restrict.addClass('has-error')
+          date_restrict.append("<span class='help-block form-error'> Date Format must be Valid(dd-mm-yyyy) </span>")
+      else
+        date_restrict.removeClass('has-error')
+        date_restrict.find('span').remove()
+
+validation_of_form_data = ->
+    if $('.payments').closest('form').find('span.form-error:visible').length > 0
+      return false
+
+$(document).on "ready", ->
   $("#paid_vendor_id" ).change(show_paid_index_table)
   $("#paid_payment_date").datepicker(
     format :"dd-mm-yyyy")
   $("#paid_payment_date").datepicker('setDate', new Date())
+  $('.date_validation').focusout(validate_date)
+  $('.payments').click(validation_of_form_data)
   return
 
 window.PaidFilterInit = ->
@@ -57,7 +76,7 @@ callbacks =
         vendor_invoiced = vendor_invoiced + result[i].amount
         #adjusted += result[i].paid
     
-    #outstanding =  vendor_invoiced - adjusted
+    outstanding =  vendor_invoiced + paid
     $('#payment_paid_details_result .vendor_invoice').html(vendor_invoiced)
     $('#payment_paid_details_result .paid').html(-paid)
     $('#payment_paid_details_result .outstanding').html(outstanding)
