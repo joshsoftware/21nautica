@@ -20,7 +20,8 @@
       = f.input :remark 
     .col-md-2
     .col-md-4
-      = f.input :value, label: 'Invoice Total Value', input_html: {class: 'required form-control checkTotal', "data-validation"=>"checkTotal" }
+      = f.input :value, label: 'Invoice Total Value', input_html: {class: 'required form-control checkTotal', "data-validation"=>"checkTotal" },
+        disabled: !@bill.new_record?
   .row
     %h3 Debit Note
     = render partial: 'debit_notes', locals: { f:f, bill: @bill }
