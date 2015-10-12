@@ -77,7 +77,7 @@ callbacks =
         #adjusted += result[i].paid
     
     outstanding =  (vendor_invoiced + paid).toFixed(2)
-    $('#payment_paid_details_result .vendor_invoice').html(vendor_invoiced)
-    $('#payment_paid_details_result .paid').html(-paid)
+    $('#payment_paid_details_result .vendor_invoice').html(vendor_invoiced.toFixed(2))
+    $('#payment_paid_details_result .paid').html(-paid.toFixed(2))
     $('#payment_paid_details_result .outstanding').html(outstanding)
 
