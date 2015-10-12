@@ -28,7 +28,7 @@ validation_of_form_data = ->
     if $('.payments').closest('form').find('span.form-error:visible').length > 0
       return false
 
-$(document).on "ready", ->
+$(document).on "page:load ready", ->
   $("#paid_vendor_id" ).change(show_paid_index_table)
   $("#paid_payment_date").datepicker(
     format :"dd-mm-yyyy")
