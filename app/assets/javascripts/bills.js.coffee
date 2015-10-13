@@ -3,8 +3,23 @@ $(document).ready ->
   $('#bill_vendor_id').select2()
   $('.select_manage').select2()
 
+  check_Total = ->
+    amount = 0
+    $('.fields .line_amount:visible').each (index) ->
+      amount = amount + parseFloat($(this).val())
+    unless amount is parseFloat($('.inv_value').val())
+      unless $('.inv_value').parent('div').children('span').length > 0
+        $('.inv_value').parent('div').removeClass('has-success')
+        $('.inv_value').parent('div').addClass('has-error')
+        $('.inv_value').parent('div').append("<span class='help-block form-error'> Amount not Match </span>")
+    else
+      $('.inv_value').parent('div').removeClass('has-error')
+      $('.inv_value').parent('div').find('span').remove()
+
+    return amount == parseFloat($('.inv_value').val())
   #***** Check if the form has any error then prevent the Form 
   $('body').on 'click', '#billsave', (event)->
+    check_Total()
     if $('#billsave').closest('form').find('span.form-error:visible').length > 0
       return false
       #event.preventDefault()
@@ -237,7 +252,7 @@ $(document).ready ->
       amount = 0
       $('.fields .line_amount:visible').each (index) ->
         amount = amount + parseFloat($(this).val())
-      return amount == parseFloat($('.checkTotal').val())
+      return amount == parseFloat($('.inv_value').val())
     errorMessage: 'Amount not Match'
     errorMessageKey: 'Amount not Matching'
 
