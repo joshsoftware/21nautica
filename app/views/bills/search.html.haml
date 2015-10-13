@@ -1,0 +1,59 @@
+= simple_form_for :bill,  url: bills_search_path, wrapper: 'horizontal_form' do |f|
+  .well
+    .row
+      .col-md-3
+        %label Item Type(Import/Export)
+      .col-md-5
+        = label_tag 'import', 'Import'
+        = radio_button_tag 'item_type', 'Import', true 
+        = label_tag 'import', 'Export'
+        = radio_button_tag 'item_type', 'Export', params[:item_type].eql?('Export')
+
+    .row
+      .col-md-3
+        %label Item For(Bl/Container)
+      .col-md-5
+        = label_tag 'import', 'Container'
+        = radio_button_tag 'item_for', 'container', true
+        = label_tag 'bl', 'Bl'
+        = radio_button_tag 'item_for', 'bl', params[:item_for].eql?('bl') 
+
+    .row
+      .col-md-3
+        %label Number
+      .col-md-5
+        = text_field_tag 'number', params[:number]
+      - if @bill_items.any?
+        %h3 
+          Total
+          = params[:item_type]
+          Quantity
+          = @quantity
+
+  = submit_tag 'Search', class: 'btn btn-primary'
+
+%table.table.table-stripped
+  %thead
+    %th Vendor Name 
+    %th Invoice number 
+    %th Date
+    %th Item
+    %th Quantity
+    %th Rate 
+    %th Amount 
+
+  %tbody
+    - if @bill_items.count != 0
+      - @bill_items.each do |bill_item|
+        %tr
+          %td= bill_item.vendor.name
+          %td= bill_item.bill.bill_number
+          %td= bill_item.bill.bill_date
+          %td= bill_item.charge_for
+          %td= bill_item.quantity
+          %td= bill_item.rate
+          %td= bill_item.line_amount
+    - else
+      %h2 No Item found
+
+

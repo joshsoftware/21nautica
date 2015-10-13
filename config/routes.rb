@@ -11,6 +11,8 @@ Rails.application.routes.draw do
     end
   end
 
+  match 'search_bills' => 'bills#search', as: 'bills_search', via: [:get, :post] 
+
   devise_for :users, :skip => [:registrations]
   as :user do
     get 'users/edit' => 'devise/registrations#edit', :as => 'edit_user_registration'

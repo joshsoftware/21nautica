@@ -95,6 +95,35 @@ class BillsController < ApplicationController
     render json: { result: result }
   end
 
+  def search
+    number = params[:number]
+    if params[:number]
+      @bill_items = BillItem.where(item_type: params[:item_type], item_for: params[:item_for]).where('lower(item_number) = ?', params[:number].downcase).order(charge_for: :asc)
+
+      if @bill_items.any?
+        if params[:item_type] == 'Import'
+          #*********** IMPORT *******
+          @quantity = BillItem.where(item_type: params[:item_type], item_for: params[:item_for]).where('lower(item_number) = ?', params[:number].downcase).order(charge_for: :asc).first.activity.quantity
+
+        else
+          #*********** EXPORT ********
+          if params[:item_for] == 'container'
+            #****** for container 
+            bl_number = ExportItem.where('lower(container) = ?', params[:number].downcase).first.try(:movement).try(:bl_number)
+            @quantity = Movement.where(bl_number: bl_number).count
+          else
+            #****** for BL
+            @quantity = Movement.where(bl_number: params[:number]).count
+          end
+        end
+      end
+
+    else
+      @bill_items = BillItem.where(item_type: params[:item_type], item_for: params[:item_for]).where('lower(item_number) = ?', number).order(charge_for: :asc)
+    end
+
+  end
+
   private
 
   def get_the_bill_id
