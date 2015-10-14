@@ -1,2 +1,5 @@
-row = $("#invoices_index_table tr[invoice_id= '" + #{@invoice.id} + "']");
-$(row).remove();
+- if @error.present?
+  alert("#{@error}");
+- else
+  row = $("#invoices_index_table tr[invoice_id= '" + #{@invoice.id} + "']");
+  $(row).remove();

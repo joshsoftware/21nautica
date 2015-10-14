@@ -59,11 +59,15 @@ class InvoicesController < ApplicationController
 
   def send_invoice
     invoice = Invoice.find(params[:id])
-    kit,invoice_type = collect_pdf_data(invoice)
-    pdf = kit.to_pdf
-    file = kit.to_file("#{Rails.root}/tmp/#{invoice_type}.pdf")
-    UserMailer.mail_invoice(invoice, file).deliver
-    invoice.invoice_sent! unless invoice.sent?
+    if invoice.amount > 0
+      kit,invoice_type = collect_pdf_data(invoice)
+      pdf = kit.to_pdf
+      file = kit.to_file("#{Rails.root}/tmp/#{invoice_type}.pdf")
+      UserMailer.mail_invoice(invoice, file).deliver
+      invoice.invoice_sent! unless invoice.sent?
+    else
+      @error = 'cannot send invoice with value 0'
+    end
     respond_to do |format|
       format.js {}
     end
