@@ -29,6 +29,7 @@ class BillItem < ActiveRecord::Base
   #bill_date & vendor_id asssign after save bill
 
   validates :charge_for, presence: true, allow_blank: false 
+  validates :rate, :numericality => { :greater_than => 0 }
 
   #validates_associated :bill
   #if validation is not comment it results into infinite loop

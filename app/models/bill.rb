@@ -18,7 +18,7 @@ class Bill < ActiveRecord::Base
   belongs_to :vendor
   has_many :bill_items, dependent: :destroy
   has_many :debit_notes
-  has_one :vendor_ledger, as: :voucher
+  has_one :vendor_ledger, as: :voucher, dependent: :destroy
 
   accepts_nested_attributes_for :bill_items, allow_destroy: true
   accepts_nested_attributes_for :debit_notes, allow_destroy: true
@@ -27,10 +27,18 @@ class Bill < ActiveRecord::Base
 
   validates_uniqueness_of :bill_number, scope: [:bill_number, :bill_date, :vendor_id]
   validates_presence_of :bill_number, :vendor_id, :bill_date, :value, :created_by
+  validates :value, :numericality => { :greater_than => 0 }
 
+  validate :check_any_bill_items?
   after_save :create_bill_vendor_ledger
   after_save :set_vendor_ledger_date, if: [:bill_date_changed?, :currency_changed?]
   after_save :set_debit_note_currency
+
+  def check_any_bill_items?
+    if self.bill_items.map(&:valid?) and self.bill_items.blank? 
+      self.errors.add :base , 'cannot create invoice without line items'
+    end
+  end
 
   def set_debit_note_currency
     self.debit_notes.each do |debit_note|
