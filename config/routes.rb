@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     end
   end
 
+  resources 'vendors'
   match 'search_bills' => 'bills#search', as: 'bills_search', via: [:get, :post] 
 
   devise_for :users, :skip => [:registrations]

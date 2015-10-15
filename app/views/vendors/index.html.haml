@@ -1,0 +1,15 @@
+= link_to "Add New Vendor", new_vendor_path, class: 'btn btn-primary pull-right'
+%br
+%br
+
+%table.table#vendors_table
+  %thead
+    %th Name 
+    %th Type
+    %th Action
+  %tbody
+    - @vendors.each do |vendor|
+      %tr
+        %td= vendor.name 
+        %td= vendor.vendor_type 
+        %td= link_to 'Edit', edit_vendor_path(vendor), class: 'btn btn-primary' 

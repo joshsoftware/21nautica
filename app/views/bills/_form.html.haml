@@ -1,3 +1,6 @@
+- unless @bill.errors[:base].blank?
+  .alert.alert-danger= @bill.errors[:base].join(',')
+
 = simple_nested_form_for @bill, html: {class: 'form-horizontal', id: 'vendor_invoice'}, defaults: {input_html: {class: 'form-control'}}, wrapper: :horizontal_form do |f|
   .row
     .col-md-4
