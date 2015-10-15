@@ -102,26 +102,43 @@ class BillsController < ApplicationController
 
       if @bill_items.any?
         if params[:item_type] == 'Import'
-          #*********** IMPORT *******
-          @quantity = BillItem.where(item_type: params[:item_type], item_for: params[:item_for]).where('lower(item_number) = ?', params[:number].downcase).order(charge_for: :asc).first.activity.quantity
-
+          get_import_qunatity(params[:item_type], params[:item_for], params[:number])
         else
           #*********** EXPORT ********
-          if params[:item_for] == 'container'
-            #****** for container 
-            bl_number = ExportItem.where('lower(container) = ?', params[:number].downcase).first.try(:movement).try(:bl_number)
-            @quantity = Movement.where(bl_number: bl_number).count
-          else
-            #****** for BL
-            @quantity = Movement.where(bl_number: params[:number]).count
-          end
+          get_export_qunatity(params[:item_type], params[:item_for], params[:number])
         end
       end
-
     else
       @bill_items = BillItem.where(item_type: params[:item_type], item_for: params[:item_for]).where('lower(item_number) = ?', number).order(charge_for: :asc)
     end
+  end
 
+  def get_import_qunatity(item_type, item_for, number)
+    query = BillItem.where(item_type: item_type, item_for: item_for).where('lower(item_number) = ?', number.downcase).first
+    @quantity = query.activity.quantity
+    activity_id = query.activity_id
+    if item_for == 'bl'
+      @invoice_for_bl = BillItem.where(activity_id: activity_id, activity_type: 'Import', item_for: "container")
+      @sum_of_bl = BillItem.where(activity_id: activity_id, activity_type: 'Import').sum(:line_amount) 
+    else
+      @sum_of_bl = BillItem.where('lower(item_number) = ? and activity_type = ?', number.downcase, 'Import').sum(:line_amount) 
+    end
+  end
+
+  def get_export_qunatity(item_type, item_for, number)
+    if item_for == 'container'
+      bl_number = ExportItem.where('lower(container) = ?', number.downcase).first.try(:movement).try(:bl_number)
+      @quantity = Movement.where(bl_number: bl_number).count
+    else
+      @quantity = Movement.where(bl_number: number).count
+    end
+    activity_id = BillItem.where(item_type: item_type, item_for: item_for).where('lower(item_number) = ?', number.downcase).first.activity_id
+    if item_for == 'bl'
+      @invoice_for_bl = BillItem.where(activity_id: activity_id, activity_type: 'Export', item_for: 'container')
+      @sum_of_bl = BillItem.where(activity_id: activity_id, activity_type: 'Export').sum(:line_amount) 
+    else
+      @sum_of_bl = BillItem.where('lower(item_number) = ? and activity_type = ?', number.downcase, 'Export').sum(:line_amount) 
+    end
   end
 
   private

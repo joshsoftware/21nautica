@@ -21,16 +21,24 @@
     .row
       .col-md-3
         %label Number
-      .col-md-5
-        = text_field_tag 'number', params[:number]
+      .col-md-2
+        = text_field_tag 'number', params[:number], class: 'form-control'
+      .col-md-4
+        = submit_tag 'Search', class: 'btn btn-primary'
+    .row
+      .col-md-4
       - if @bill_items.any?
-        %h3 
-          Total
-          = params[:item_type]
-          Quantity
-          = @quantity
+        .col-md-4
+          %h5 
+            %b
+              Total Invoice value 
+              = number_with_precision(@sum_of_bl, precision: 2)
+        .col-md-4
+          %h5 
+            %b
+              Containers in related BL
+              = @quantity
 
-  = submit_tag 'Search', class: 'btn btn-primary'
 
 %table.table.table-stripped
   %thead
@@ -51,9 +59,31 @@
           %td= bill_item.bill.bill_date
           %td= bill_item.charge_for
           %td= bill_item.quantity
-          %td= bill_item.rate
-          %td= bill_item.line_amount
+          %td= number_with_precision(bill_item.rate, precision: 2)
+          %td= number_with_precision(bill_item.line_amount, precision: 2)
     - else
       %h2 No Item found
 
+- if @invoice_for_bl
+  - if @invoice_for_bl.count != 0
+    %h3 Invoice Details for BL related Containers
+    %table.table.table-stripped
+      %thead
+        %th Vendor Name 
+        %th Number 
+        %th Charge for 
+        %th Quantity
+        %th Rate 
+        %th Amount 
 
+      %tbody
+        - @invoice_for_bl.each do |inv_bl|
+          %tr
+            %td= inv_bl.vendor.name
+            %td= inv_bl.item_number
+            %td= inv_bl.charge_for
+            %td= inv_bl.quantity
+            %td= number_with_precision(inv_bl.rate, precision: 2)
+            %td= number_with_precision(inv_bl.line_amount, precision: 2)
+  -# else
+    %h3 No container found for bl
