@@ -26,18 +26,26 @@
       .col-md-4
         = submit_tag 'Search', class: 'btn btn-primary'
     .row
-      .col-md-4
       - if @bill_items.any?
         .col-md-4
           %h5 
             %b
-              Total Invoice value 
+              Total Vendor Invoice value: 
               = number_with_precision(@sum_of_bl, precision: 2)
         .col-md-4
           %h5 
             %b
-              Containers in related BL
+              Containers in related BL:
               = @quantity
+              - if @equipment_type
+                x
+                = @equipment_type
+        .col-md-4
+          - if @sum_of_customer_invoice
+            %h5 
+              %b
+                Total Customer Invoice value: 
+                = number_with_precision(@sum_of_customer_invoice, precision: 2)
 
 
 %table.table.table-stripped
@@ -45,7 +53,7 @@
     %th Vendor Name 
     %th Invoice number 
     %th Date
-    %th Item
+    %th Charge for
     %th Quantity
     %th Rate 
     %th Amount 
@@ -70,6 +78,8 @@
     %table.table.table-stripped
       %thead
         %th Vendor Name 
+        %th Invoice number 
+        %th Date
         %th Number 
         %th Charge for 
         %th Quantity
@@ -80,10 +90,31 @@
         - @invoice_for_bl.each do |inv_bl|
           %tr
             %td= inv_bl.vendor.name
+            %td= inv_bl.bill.bill_number
+            %td= inv_bl.bill.bill_date
             %td= inv_bl.item_number
             %td= inv_bl.charge_for
             %td= inv_bl.quantity
             %td= number_with_precision(inv_bl.rate, precision: 2)
             %td= number_with_precision(inv_bl.line_amount, precision: 2)
-  -# else
-    %h3 No container found for bl
+
+
+- if @bl_number_invoices 
+  - if @bl_number_invoices.count != 0
+    %h3 Customer Invoice for BL 
+    %table.table.table-stripped
+      %thead
+        %th Customer Name
+        %th Invoice Number 
+        %th Date
+        %th Status
+        %th Invoice Amount 
+
+      %tbody
+        - @bl_number_invoices.each do |bl_inv|
+          %tr
+            %td= bl_inv.customer_name
+            %td= bl_inv.number 
+            %td= bl_inv.date
+            %td= bl_inv.status
+            %td= bl_inv.amount 
