@@ -13,7 +13,7 @@ class VendorLedger < ActiveRecord::Base
   end
 
   def as_json(options={})
-    super(only: [:voucher_type, :amount, :paid, :date], methods: [:bill_number])
+    super(only: [:voucher_type, :amount, :paid, :date, :currency], methods: [:bill_number])
   end
 
   def bill_number
