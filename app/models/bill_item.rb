@@ -64,7 +64,7 @@ class BillItem < ActiveRecord::Base
                                       charge_for: self.charge_for, item_number: self.item_number).where.not(id: self.id).exists?
       end
       if self.item_for == 'container'
-        bl_number = ExportItem.where(container: self.item_number).first.movement.bl_number
+        bl_number = ExportItem.where('lower(container) = ?', self.item_number).first.movement.bl_number
         if self.activity.export_type == 'TBL' and bl_number.nil?
           self.errors.add(:item_number, "BL not assigned, cannot create bill") 
           return
