@@ -52,7 +52,7 @@ class BillItem < ActiveRecord::Base
       if self.item_for == 'container'
         #container
         self.errors.add(:charge_for, "Container already charged") if BillItem.where(activity_id: self.activity_id, activity_type: 'Import', 
-                                      charge_for: self.charge_for, item_number: self.item_number).where.not(id: self.id).exists?
+                                      charge_for: self.charge_for).where("lower(item_number) = ?", self.item_number.downcase).where.not(id: self.id).exists?
       end
       import_qty = self.activity.quantity
       billed_qty = BillItem.where(activity_id: self.activity_id, charge_for: self.charge_for, activity_type: 'Import').where.not(id: self.id).sum(:quantity)
@@ -61,10 +61,10 @@ class BillItem < ActiveRecord::Base
       if self.item_for == 'container'
         #container
         self.errors.add(:charge_for, "Container already charged") if BillItem.where(activity_id: self.activity_id, activity_type: 'Export', 
-                                      charge_for: self.charge_for, item_number: self.item_number).where.not(id: self.id).exists?
+                        charge_for: self.charge_for).where("lower(item_number) = ?", self.item_number.downcase).where.not(id: self.id).exists?
       end
       if self.item_for == 'container'
-        bl_number = ExportItem.where('lower(container) = ?', self.item_number).first.movement.bl_number
+        bl_number = ExportItem.where("lower(container) = ?", self.item_number.downcase).first.movement.bl_number
         if self.activity.export_type == 'TBL' and bl_number.nil?
           self.errors.add(:item_number, "BL not assigned, cannot create bill") 
           return
