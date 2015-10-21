@@ -1,0 +1,19 @@
+= link_to "Add New User", new_user_path, class: 'btn btn-primary pull-right'
+%br
+%br
+
+%table.table#users_table
+  %thead
+    %th Name 
+    %th Email
+    %th Is Active
+    %th Role 
+    %th Action 
+  %tbody
+    - @users.each do |user|
+      %tr
+        %td= user.name 
+        %td= user.email
+        %td= user.is_active
+        %td= user.role
+        %td= link_to 'Edit', edit_user_path(user), class: 'btn btn-primary' 

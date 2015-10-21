@@ -1,0 +1,17 @@
+.col-md-12
+  = simple_form_for @user, html: {class: 'form-horizontal' }, wrapper: :horizontal_form,  defaults: {input_html: {class: 'form-control'}} do |f|
+    .well
+      .row
+        .col-md-6
+          = f.input :name
+          = f.input :email
+          = f.input :is_active, label: 'Is Active', collection: ['true', 'false']
+          = f.input :role, label: 'Role', collection: ROLE, include_blank: false 
+      .row
+        .col-md-6
+          = f.input :password, placeholder: 'Minimum 8 characters' 
+          = f.input :password_confirmation, placeholder: 'Minimum 8 characters' 
+      .row
+        .col-md-6
+          = f.submit 'Save', class: 'btn btn-primary', id: 'user_save'
+          = link_to 'Cancel', users_path, class: 'btn btn-primary'
