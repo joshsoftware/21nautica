@@ -1,0 +1,19 @@
+- if @bl_number_invoices 
+  - if @bl_number_invoices.count != 0
+    %h3 Customer Invoice for BL 
+    %table.table.table-stripped
+      %thead
+        %th Customer Name
+        %th Invoice Number 
+        %th Date
+        %th Status
+        %th Invoice Amount 
+
+      %tbody
+        - @bl_number_invoices.each do |bl_inv|
+          %tr
+            %td= bl_inv.customer_name
+            %td= bl_inv.number 
+            %td= bl_inv.date
+            %td= bl_inv.status
+            %td= number_with_precision(bl_inv.amount, precision: 2)

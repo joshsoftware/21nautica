@@ -1,0 +1,25 @@
+- if @invoice_for_bl
+  - if @invoice_for_bl.count != 0
+    %h3 Invoice Details for BL related Containers
+    %table.table.table-stripped
+      %thead
+        %th Vendor Name 
+        %th Invoice number 
+        %th Date
+        %th Number 
+        %th Charge for 
+        %th Quantity
+        %th Rate 
+        %th Amount 
+
+      %tbody
+        - @invoice_for_bl.each do |inv_bl|
+          %tr
+            %td= inv_bl.vendor.name
+            %td= inv_bl.bill.bill_number
+            %td= inv_bl.bill.bill_date
+            %td= inv_bl.item_number
+            %td= inv_bl.charge_for
+            %td= inv_bl.quantity
+            %td= number_with_precision(inv_bl.rate, precision: 2)
+            %td= number_with_precision(inv_bl.line_amount, precision: 2)
