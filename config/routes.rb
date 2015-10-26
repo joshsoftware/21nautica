@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   end
 
   resources 'vendors'
-  match 'search_bills' => 'bills#search', as: 'bills_search', via: [:get, :post, :delete] 
+  match 'search_bills' => 'bills#search', as: 'bills_search', via: [:get, :post] 
   match '/paid/delete/Bill/:id' => 'bills#delete_ledger', via: [:get, :post, :delete] 
   match '/paid/delete/DebitNote/:id' => 'debit_notes#delete_ledger', via: [:get, :post, :delete] 
   match '/paid/delete/Payment/:id' => 'paid#delete_ledger', via: [:get, :post, :delete] 
