@@ -26,7 +26,7 @@
         %td <%= currency  %>
         %td.amount <%= amount %>
         %td.paid <%= paid %>
-        <td> <a href= delete/<%=  delete_bill_or_ledger %> data-confirm="Please Readjusted Payments again" data-method="delete" > Delete <a></td>
+        <td> <a href= delete/<%=  delete_bill_or_ledger %> data-confirm="This will readjust Payments again" data-method="delete" > Delete <a></td>
 
 :javascript
   payments = #{@payments}
