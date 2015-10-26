@@ -158,6 +158,16 @@ class BillsController < ApplicationController
     end
   end
 
+  # Deleting the bill and readjust the vendor ledger 
+  #
+  def delete_ledger
+    bill = Bill.find(params[:id])
+    vendor_id = bill.vendor_id
+    bill.destroy
+
+    redirect_to readjust_path(vendor_id)
+  end
+
   private
 
   def get_the_bill_id

@@ -17,7 +17,7 @@ class Bill < ActiveRecord::Base
   belongs_to :approved_by, class_name: 'User'
   belongs_to :vendor
   has_many :bill_items, dependent: :destroy
-  has_many :debit_notes
+  has_many :debit_notes, dependent: :destroy
   has_one :vendor_ledger, as: :voucher, dependent: :destroy
 
   accepts_nested_attributes_for :bill_items, allow_destroy: true

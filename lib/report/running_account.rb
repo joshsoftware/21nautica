@@ -22,9 +22,9 @@ module Report
             sum(outstanding, total, l, 'customer')
           end
         else
-          f << ['Date', 'Type', 'Invoice No.', 'Amount', 'Adjusted']
+          f << ['Date', 'Type', 'Invoice No.', 'Currency','Amount', 'Adjusted']
           ledgers.each do |l|
-            f << [ l.date.to_s, l.voucher_type, l.bill_number, l.amount, l.paid ]
+            f << [ l.date.to_s, l.voucher_type, l.bill_number, l.currency, l.amount, l.paid ]
             sum(outstanding, total, l, 'vendor')
           end
         end
@@ -56,8 +56,8 @@ module Report
             str = CSV.parse(data)[-1][1..-1]
             total = str.inject(0) {|s, i| s + i.to_i }
             total_invoiced = v.vendor_ledgers.where(voucher_type: "Bill").sum(:amount)
-            total_received = v.vendor_ledgers.where(voucher_type: "Payment").sum(:amount)
-            f << [ v.name, total_invoiced , total_received, total ] + str
+            total_paid = v.vendor_ledgers.where(voucher_type: ["Payment", "DebitNote"]).sum(:amount)
+            f << [ v.name, total_invoiced , total_paid, total ] + str
           end
         end
       end
@@ -86,7 +86,7 @@ module Report
         #Vendor
         if ledger.voucher_type == 'Bill'
           total[key] += ledger.amount
-          outstanding[key] += (ledger.amount - ledger.paid)
+          outstanding[key] += (ledger.amount - ledger.paid.to_f)
         end
       end
     end

@@ -13,7 +13,17 @@ class VendorLedger < ActiveRecord::Base
   end
 
   def as_json(options={})
-    super(only: [:voucher_type, :amount, :paid, :date, :currency], methods: [:bill_number])
+    super(only: [:voucher_type, :amount, :paid, :date, :currency, :id], methods: [:bill_number, :delete_bill_or_ledger])
+  end
+
+  def delete_bill_or_ledger
+    if self.voucher_type == 'Bill'
+      "#{self.voucher_type}/#{self.voucher.id}"
+    elsif voucher_type == 'DebitNote'
+      "#{self.voucher_type}/#{self.voucher.id}"
+    else
+      "#{self.voucher_type}/#{self.voucher.id}"
+    end
   end
 
   def bill_number

@@ -13,6 +13,39 @@ class PaidController < ApplicationController
     end
   end
 
+  # Deleting the payments and readjust the vendor ledger 
+  #
+  def delete_ledger
+    paid = Paid.find(params[:id])
+    vendor_id = paid.vendor_id
+    paid.destroy
+
+    redirect_to readjust_path(vendor_id)
+  end
+
+  def readjust
+    vendor = Vendor.find(params[:id])
+    
+    VendorLedger.where(vendor_id: vendor).destroy_all
+
+
+    vendor.debit_notes.each do |debit_note|
+      debit_note_vendor_ledger = debit_note.create_vendor_ledger(vendor_id: debit_note.vendor_id, date: debit_note.bill.bill_date, 
+                                                                 amount: debit_note.amount, currency: debit_note.bill.currency)
+    end
+
+    vendor.payments.each do |payment|
+      payment_vendor_ledger = payment.create_vendor_ledger(amount: payment.amount, vendor: payment.vendor, 
+                                                           date: payment.date_of_payment, currency: payment.currency)
+    end
+
+    vendor.bills.each do |bill|
+      bill_vendor_ledger = bill.create_vendor_ledger(amount: bill.value, vendor_id: bill.vendor_id, date: bill.bill_date, currency: bill.try(:currency))
+    end
+
+    redirect_to new_paid_path
+  end
+
   def outstanding
     data = Report::RunningAccount.outstanding('vendor')
     send_data data, filename: "#{Date.today}-outstanding.csv", type: "text/csv"
