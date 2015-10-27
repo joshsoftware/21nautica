@@ -73,6 +73,14 @@ class InvoicesController < ApplicationController
     end
   end
 
+  def delete_ledger
+    invoice = Invoice.find(params[:id])
+    customer_id = invoice.customer_id
+    invoice.destroy
+
+    redirect_to readjust_customer_path(customer_id)
+  end
+
   private
   def invoice_params
     params.require(:invoice).permit(:number, :document_number, :amount, :remarks,

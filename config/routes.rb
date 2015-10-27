@@ -13,12 +13,18 @@ Rails.application.routes.draw do
 
   resources 'vendors'
   match 'search_bills' => 'bills#search', as: 'bills_search', via: [:get, :post] 
-  match '/paid/delete/Bill/:id' => 'bills#delete_ledger', via: [:get, :post, :delete] 
-  match '/paid/delete/DebitNote/:id' => 'debit_notes#delete_ledger', via: [:get, :post, :delete] 
-  match '/paid/delete/Payment/:id' => 'paid#delete_ledger', via: [:get, :post, :delete] 
+  #  readjustment payment made
+  match '/paid/delete/Bill/:id' => 'bills#delete_ledger', via: [:delete] 
+  match '/paid/delete/DebitNote/:id' => 'debit_notes#delete_ledger', via: [:delete] 
+  match '/paid/delete/Payment/:id' => 'paid#delete_ledger', via: [:delete] 
+
+  # readjustment payment received
+  match '/received/delete/Invoice/:id' => 'invoices#delete_ledger', via: [:delete]
+  match '/received/delete/Payment/:id' => 'received#delete_ledger', via: [:delete]
 
   # readjust payments
   match '/payments/readjust/:id' => 'paid#readjust', as: :readjust, via: [:get]
+  match '/payments/readjust/customer/:id' => 'received#readjust', as: :readjust_customer, via: [:get]
 
   resources :users, only: [:new, :index, :create, :update, :edit]
 
