@@ -7,7 +7,7 @@ class Invoice < ActiveRecord::Base
   has_many :additional_invoices, class_name: "Invoice", 
     foreign_key: "previous_invoice_id"
   belongs_to :previous_invoice, class_name: "Invoice"
-  has_many :particulars
+  has_many :particulars, dependent: :destroy
 
   has_one :ledger, as: :voucher
 

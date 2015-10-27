@@ -7,7 +7,8 @@
     %a.glyphicon.glyphicon-download-alt{href: "#{paid_path(@header.id)}"} Download
   %div.col-sm-1
   %div.col-sm-3
-    = link_to 'Readjust Payments', readjust_path(@header.id)
+    = link_to 'Readjust Payments', readjust_path(@header.id), class: 'readjust_tooltip', :data => {:toggle => 'tooltip' }, 
+      'data-placement' => 'down', 'title' => " Readjust if you delete any invoice or Payments"
   %tr.info
     %th Date
     %th Type
@@ -33,4 +34,5 @@
   if (payments != 0) {
     PaidFilterInit();
   }
-  
+
+  $('.readjust_tooltip').tooltip();
