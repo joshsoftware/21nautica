@@ -14,7 +14,7 @@ class BillOfLading < ActiveRecord::Base
   end
 
   def strip_the_bl_number
-    self.bl_number = self.bl_number.strip
+    self.bl_number.strip!
   end
 
   def shipping_line
@@ -26,12 +26,11 @@ class BillOfLading < ActiveRecord::Base
   end
 
   def ready_TBL_export_invoice
-    invoice_date = self.movements.minimum(:created_at)
-    customer = self.movements.first.export_item.export.customer
-    invoice = Invoice.create(date: invoice_date)
-    invoice.invoiceable = self
-    invoice.customer = customer
-    invoice.document_number = self.movements.pluck(:w_o_number).join(",")
+    invoice = self.invoices.build(
+        date: self.movements.minimum(:created_at),
+        customer: self.movements.first.export_item.export.customer,
+        document_number: self.movements.pluck(:w_o_number).join(",")
+    )
     invoice.invoice_ready!
   end
 
