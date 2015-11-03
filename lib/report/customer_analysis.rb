@@ -1,22 +1,23 @@
 module Report
   class CustomerAnalysis
 
-    def calculate_margin(customer) 
+    def calculate_margin(customer, invoices, month) 
       package = Axlsx::Package.new
       workbook = package.workbook
 
-      workbook.add_worksheet(name: "#{customer.name}") do |sheet|
-        add_data(sheet, customer)
+      workbook.add_worksheet(name: "#{customer.name}(#{month}) ") do |sheet|
+        add_data(sheet, customer, invoices)
       end
       package.use_shared_strings = true
 
-      package.serialize("#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}.xlsx")
+      package.serialize("#{Rails.root}/tmp/margin_analysis_#{customer.name.tr(" ", "_")}.xlsx")
     end
 
-    def add_data(sheet, customer)
+    def add_data(sheet, customer, invoices)
+
       sheet.add_row ['Date', 'BL Number', 'W/o Num', 'Quantity', 'EQ', 'AF', 'SLC', 'PC', 'PS', 'OF', 'CD', 'FC', 
-                     'Haulage', 'ER', 'TDC', 'LS', 'ICD', 'Others','INV', 'Invoice Amount', 'Margins']
-      invoices = customer.invoices
+                     'Haulage', 'ER', 'TDC', 'LS', 'ICD', 'BCE','Others', 'Total Exp','INV', 'Invoice Amount', 'Margins']
+      #invoices = customer.invoices
 
       invoices.each do |invoice|
         invoiceable = invoice.invoiceable   #BillOfLading OR Movement Object
@@ -34,18 +35,15 @@ module Report
           work_order_num  = get_work_order_number(invoice)
           quantity        = bill_of_lading.quantity
           equipment_type  = bill_of_lading.equipment_type                             #equipment_type
-          charges         = get_charges(activity_id)
+          charges, total_exp = get_charges(activity_id)
           inv             = invoice.number
           inv_amount      = invoice.amount 
-          margins         = invoice.amount - ( charges['agency_fee'] + charges['shipping_line'] + charges['port_charges'] + 
-                          charges['port_storage'] + charges['ocean_freight'] + charges['cont_demurrage'] + charges['final_clearing'] + 
-                          charges['haulage'] + charges['empty_return'] + charges['truck_detention'] + charges['local_shunting'] +
-                          charges['icd_charges'] + charges['others'] ) 
+          margins         = invoice.amount - total_exp 
     
           sheet.add_row [date, bl_number, work_order_num, quantity, equipment_type, 
-            charges['agency_fee'], charges['shipping_line'], charges['port_charges'], charges['port_storage'], charges['ocean_freight'],
-            charges['cont_demurrage'], charges['final_clearing'], charges['haulage'], charges['empty_return'], charges['truck_detention'],
-            charges['local_shunting'], charges['icd_charges'], charges['others'], inv, inv_amount, margins] 
+            charges['Agency Fee'], charges['Shipping Line Charges'], charges['Port Charges'], charges['Port Storage'], charges['Ocean Freight'],
+            charges['Container Demurrage'], charges['Final Clearing'], charges['Haulage'], charges['Empty Return'], charges['Truck Detention'],
+            charges['Local Shunting'], charges['ICD Charges'], charges['Border Clearing Expense'], charges['Other charges'], total_exp, inv, inv_amount, margins] 
         end
       end
       sheet
@@ -53,14 +51,13 @@ module Report
 
     def get_charges(activity_id)
       charges = {}
-      { 'agency_fee' => 'Agency Fee', 'shipping_line' => 'Shipping Line Charges', 'port_charges' => 'Port Charges', 
-        'port_storage' => 'Port Storage', 'ocean_freight' =>'Ocean Freight', 'cont_demurrage' => 'Container Demurrage',
-        'final_clearing'=> 'Final Clearing', 'haulage' => 'Haulage', 'empty_return' => 'Empty Return', 'truck_detention' => 'Truck Detention',
-        'local_shunting' => 'Local Shunting', 'icd_charges' => 'ICD Charges', 'others' => 'Others' }.each do |k, value|
-
-        charges[k] = BillItem.where(activity_id: activity_id, charge_for: value).sum(:line_amount)
+      total_exp = 0
+      CHARGES.values.flatten.uniq.each do |charge|
+        line_amount = BillItem.where(activity_id: activity_id, charge_for: charge).sum(:line_amount)
+        charges[charge] = line_amount
+        total_exp += line_amount
       end
-      charges
+      return charges, total_exp
     end
 
     def get_work_order_number(invoice)

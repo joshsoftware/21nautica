@@ -1,0 +1,16 @@
+%h3 Customer Margin Report
+= form_tag customer_margin_analysis_path, :id => 'analysis_form', wrapper: 'horizontal_form' do |f|
+  .well
+    .row
+      .col-md-3
+        = label_tag 'customer_name', 'Customer'
+      .col-md-3
+        = select_tag :customer, options_from_collection_for_select(@customer, "id", "name"), class: 'form-control select_manage ', id: 'customer_analysis', prompt: 'Please select'
+    %br
+    .row
+      .col-md-3
+        = label_tag 'month', 'Month'
+      .col-md-2
+        = text_field_tag 'month', '', class: 'form-control' 
+      .col-md-2
+        = submit_tag 'Export', class: 'btn btn-primary', id: 'export_margin_report' 

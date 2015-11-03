@@ -26,6 +26,11 @@ Rails.application.routes.draw do
   match '/payments/readjust/:id' => 'paid#readjust', as: :readjust, via: [:get]
   match '/payments/readjust/customer/:id' => 'received#readjust', as: :readjust_customer, via: [:get]
 
+  # customer analysis
+  match '/customer/analysis' => 'customers#analysis_report', as: :customer_analysis, via: [:get]
+  match '/customer/analysis_margin_report' => 'customers#margin_analysis_report', as: :customer_margin_analysis, via: [:post, :get]
+
+
   resources :users, only: [:new, :index, :create, :update, :edit]
 
   devise_for :users, :skip => [:registrations]
