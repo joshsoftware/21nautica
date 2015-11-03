@@ -5,12 +5,12 @@ module Report
       package = Axlsx::Package.new
       workbook = package.workbook
 
-      workbook.add_worksheet(name: "#{customer.name}(#{month}) ") do |sheet|
+      workbook.add_worksheet(name: "#{customer.name}") do |sheet|
         add_data(sheet, customer, invoices)
       end
       package.use_shared_strings = true
 
-      package.serialize("#{Rails.root}/tmp/margin_analysis_#{customer.name.tr(" ", "_")}.xlsx")
+      package.serialize("#{Rails.root}/tmp/margin_analysis_#{customer.name.tr(" ", "_")}(#{month}).xlsx")
     end
 
     def add_data(sheet, customer, invoices)
@@ -35,7 +35,11 @@ module Report
           work_order_num  = get_work_order_number(invoice)
           quantity        = bill_of_lading.quantity
           equipment_type  = bill_of_lading.equipment_type                             #equipment_type
-          charges, total_exp = get_charges(activity_id)
+          if invoice.previous_invoice.present?
+            charges, total_exp = get_charges(nil)
+          else
+            charges, total_exp = get_charges(activity_id)
+          end
           inv             = invoice.number
           inv_amount      = invoice.amount 
           margins         = invoice.amount - total_exp 

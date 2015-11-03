@@ -21,9 +21,9 @@ class CustomersController < ApplicationController
     invoices = Invoice.where(customer_id: customer_id, date: selected_month.beginning_of_day..selected_month.end_of_month)
 
     Report::CustomerAnalysis.new.calculate_margin(customer, invoices, month)
-    file_path = "#{Rails.root}/tmp/margin_analysis_#{customer.name.tr(' ', '_')}.xlsx"
+    file_path = "#{Rails.root}/tmp/margin_analysis_#{customer.name.tr(' ', '_')}(#{month}).xlsx"
     File.open(file_path, 'r') do |f|
-      send_data f.read, filename: "margin_analysis_#{customer.name.tr(' ', '_')}.xlsx", type: "application/xlsx"#, disposition: 'download'
+      send_data f.read, filename: "margin_analysis_#{customer.name.tr(' ', '_')}(#{month}).xlsx", type: "application/xlsx"#, disposition: 'download'
     end
     File.delete(file_path)
 
