@@ -5,7 +5,7 @@
       .col-md-3
         = label_tag 'customer_name', 'Customer'
       .col-md-3
-        = select_tag :customer, options_from_collection_for_select(@customer, "id", "name"), class: 'form-control select_manage ', id: 'customer_analysis', prompt: 'Please select'
+        = select_tag :customer_id, options_for_select(@customers), class: 'form-control select_manage ', id: 'customer_analysis', prompt: 'Please select'
     %br
     .row
       .col-md-3

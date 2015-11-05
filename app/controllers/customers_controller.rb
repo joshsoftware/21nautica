@@ -10,21 +10,24 @@ class CustomersController < ApplicationController
   end
 
   def analysis_report
-    @customer = Customer.all.order(name: :asc)
+    @customers = Customer.all.order(name: :asc).collect{ |c| [c.name, c.id] }.unshift(['All Customers', 'all'])
   end
 
   def margin_analysis_report
-    customer_id = params[:customer]
+    all_customers = params[:customer_id].eql?('all') 
+    customers =  all_customers ? 'all' : params[:customer_id]
     month = Date::MONTHNAMES[Date.strptime(params[:month], '%m-%Y').month]
-    customer = Customer.find customer_id
     selected_month = Date.strptime(params[:month], '%m-%Y')
-    invoices = Invoice.where(customer_id: customer_id, date: selected_month.beginning_of_day..selected_month.end_of_month)
+    
+    #set the Worksheet name
+    worksheet_name = "margin report - #{month} "
+    Report::CustomerAnalysis.new.calculate_margin(customers, month, selected_month, worksheet_name)
 
-    Report::CustomerAnalysis.new.calculate_margin(customer, invoices, month)
-    file_path = "#{Rails.root}/tmp/margin_analysis_#{customer.name.tr(' ', '_')}(#{month}).xlsx"
+    file_path = "#{Rails.root}/tmp/#{worksheet_name}#{selected_month.strftime("%Y")}.xlsx"
     File.open(file_path, 'r') do |f|
-      send_data f.read, filename: "margin_analysis_#{customer.name.tr(' ', '_')}(#{month}).xlsx", type: "application/xlsx"#, disposition: 'download'
+      send_data f.read, filename: "#{worksheet_name}#{selected_month.strftime("%Y")}.xlsx", type: 'application/xlsx' 
     end
+
     File.delete(file_path)
 
   end
