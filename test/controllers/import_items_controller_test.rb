@@ -24,7 +24,7 @@ class ImportItemsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:import_items)
-    assert_select 'table tr' , :count => 1
+    assert_select 'table.table' , :count => 1
   end
 
   test "should update import item status" do

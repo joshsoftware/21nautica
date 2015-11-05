@@ -68,8 +68,6 @@ group :development do
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
-  gem 'pry'
-  gem 'pry-nav'
 end
 # Use unicorn as the app server
 # gem 'unicorn'
@@ -87,6 +85,12 @@ group :test do
   gem 'faker', '~> 1.4.3'
   gem "codeclimate-test-reporter", require: nil
 end
+
+group :test, :development do 
+  gem 'pry'
+  gem 'pry-nav'
+end
+
 gem 'mocha'
 
 group :production, :staging do

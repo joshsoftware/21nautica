@@ -27,11 +27,11 @@ class ImportTest < ActiveSupport::TestCase
 
   test "Bl number must be unique" do
     import1 = Import.new(to: 'a', from: 'b', weight: 3, rate_agreed: 1200)
-    import1.bl_number = 'BL1'
+    import1.bl_number = 'BL_NUMBER1'
     assert import1.save
 
     import2 = Import.new(to: 'a', from: 'b', weight: 3, rate_agreed: 3000)
-    import2.bl_number = 'BL1'
+    import2.bl_number = 'BL_NUMBER1'
     assert_not import2.save
     assert import2.errors.messages[:bl_number].include?(
                       'has already been taken')

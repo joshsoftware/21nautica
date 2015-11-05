@@ -19,14 +19,14 @@ FactoryGirl.define do
     container '1'
     location  'test location1'
     date_of_placement Date.today  
-    :export
+    #:export
   end
 
   factory :export_item1, class: "ExportItem" do
     container '2'
     location  'test location2'
     date_of_placement Date.yesterday  
-    :export
+    #:export
   end
   
 end

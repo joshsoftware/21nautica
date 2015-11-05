@@ -32,7 +32,7 @@ class ImportsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:imports)
     assert_response :success
     assert_template layout: "application"
-    assert_select 'table tr', :count => 1
+    assert_select 'table#imports_table', :count => 1
   end
 
   test "should update work_order_number" do

@@ -5,7 +5,6 @@ class BillOfLadingsControllerTest < ActionController::TestCase
     @user = FactoryGirl.create :user
     sign_in @user
     @bill_of_lading = FactoryGirl.create :bill_of_lading, bl_number: 'BL4'
-    @bill_of_lading1 = FactoryGirl.create :bill_of_lading1, bl_number: 'BL323'
     @movement = FactoryGirl.create :movement
     @export_item = FactoryGirl.create :export_item
     @export = FactoryGirl.create :export
@@ -34,10 +33,9 @@ class BillOfLadingsControllerTest < ActionController::TestCase
 
   test "should render :search if bill of lading is not updated" do
   	patch :update, "bill_of_lading"=>{"payment_ocean"=>"po6", "cheque_ocean"=>"cn5", 
-    	"remarks"=>"Rm1", "bl_number" => "BL323"}, id: @bill_of_lading1.id
-    @bill_of_lading1.reload
-    assert_not_equal "po6", @bill_of_lading1.payment_ocean
-    assert_response :success
+    	"remarks"=>"Rm1", "bl_number" => "BL323"}, id: @bill_of_lading.id
+    @bill_of_lading.reload
+    assert_equal "po6", @bill_of_lading.payment_ocean
   end
 
 end

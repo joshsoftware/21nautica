@@ -33,7 +33,9 @@ class ExportItemTest < ActiveSupport::TestCase
     @movement.status = "container_handed_over_to_KPA"
     @movement.save!
     export_item2 = ExportItem.new
-    export_item2.container = '1'
+    export_item2.container = 'A1'
+    export_item2.date_of_placement = Date.today
+    export_item2.movement_id = @movement.id
     assert export_item2.save
   end
 
