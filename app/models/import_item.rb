@@ -136,7 +136,11 @@ class ImportItem < ActiveRecord::Base
     super(only: [:container_number, :id, :after_delivery_status, :context, :truck_number],
             methods: [:bl_number, :customer_name, :work_order_number, 
               :equipment_type, :DT_RowId, :formatted_close_date, :delivery_date,
-              :transporter_name, :clearing_agent])
+              :transporter_name, :clearing_agent, :edit_close_date_import_item_path])
+  end
+
+  def edit_close_date_import_item_path
+    Rails.application.routes.url_helpers.edit_close_date_import_item_path(self)
   end
 
   def find_bill_of_lading

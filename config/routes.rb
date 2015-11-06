@@ -30,7 +30,6 @@ Rails.application.routes.draw do
   match '/customer/analysis' => 'customers#analysis_report', as: :customer_analysis, via: [:get]
   match '/customer/analysis_margin_report' => 'customers#margin_analysis_report', as: :customer_margin_analysis, via: [:post, :get]
 
-
   resources :users, only: [:new, :index, :create, :update, :edit]
 
   devise_for :users, :skip => [:registrations]
@@ -79,6 +78,8 @@ Rails.application.routes.draw do
     member do
       post 'updateStatus'
       post 'updateContext'
+      get 'edit-close-date'
+      post 'update-close-date'
     end
 
     resource :import_expense, only: [:edit, :update, :destroy]

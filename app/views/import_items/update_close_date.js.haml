@@ -1,0 +1,5 @@
+- formatted_close_date = @import_item.close_date.try(:strftime, '%Y-%m-%d')
+$('#import_item_edit_history').modal('hide');
+import_item_close_date = $("#import_history_table tbody tr[data-link=" + #{@import_item.id} + "]");
+import_item_close_date.find('.close_date').text("#{formatted_close_date}")
+

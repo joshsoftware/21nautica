@@ -1,4 +1,26 @@
-%table.table{id: 'import_history_table'}
+.row.streaming_div
+  .col-md-1
+    %h4 streaming...
+  .col-md-2
+    %h4
+    = image_tag("streaming.gif", class: "progress")
+.row
+  .col-md-5
+    .col-md-5
+      %input#table-search.form-control{:placeholder => "Search here...", :type => "text"}
+
+    .col-sm-3
+      %select.st_per_page.form-control
+        %option{:value => "10"}
+          10  
+        %option{:value => "20"}
+          20  
+        %option{:value => "30"}
+          30  
+        %option{:value => "50"}
+          50  
+
+%table.table#import_history_table.table-striped
   %thead
     %th BL Number
     %th Container Number
@@ -12,3 +34,30 @@
     %th After Delivery Status
     %th Context
     %th Close Date
+    %th Action
+  %tbody
+
+%script#import_history_template.table.table-striped{:type => 'text/html'}
+  {{record}}
+  %tr{"data-link" => "{{record.id}}" }
+    %td {{record.bl_number}}
+    %td {{record.container_number}}
+    %td {{record.work_order_number}}
+    %td {{record.truck_number}}
+    %td {{record.customer_name}}
+    %td {{record.clearing_agent}}
+    %td {{record.transporter_name}}
+    %td {{record.equipment_type}}
+    %td {{record.delivery_date}}
+    %td {{record.after_delivery_status}}
+    %td {{record.context}}
+    %td.close_date {{record.formatted_close_date}}
+    %td= link_to "Edit", '{{record.edit_close_date_import_item_path}}', data: {id: '{{record.id}}' }, class: 'btn btn-primary',remote: true #, id: 'history_edit' 
+
+#import_item_edit_history.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+
+:javascript
+  var import_items = #{@import_items.to_json}
+  var count = #{@count}
+  load_history_stream()

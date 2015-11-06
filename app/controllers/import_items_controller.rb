@@ -52,10 +52,23 @@ class ImportItemsController < ApplicationController
   end
 
   def history
+    @import_items = ImportItem.where(status: "delivered").order(updated_at: :asc).limit(params[:limit] || 100).offset(params[:offset] || 0)
+    @count = ImportItem.where(status: 'delivered').count
     respond_to do |format|
       format.html{}
-      format.json{ render json: {data: ImportItem.where(status: "delivered") } }
+      format.json { render json: @import_items }
+      #format.json{ render json: {data: ImportItem.where(status: "delivered") } }
     end
+  end
+
+  def edit_close_date
+    @import_item = ImportItem.find(params[:id])
+    @import = @import_item.import
+  end
+
+  def update_close_date
+    @import_item = ImportItem.find(params[:id]) 
+    @import_item.update_attributes(close_date: params[:close_date])
   end
 
   def empty_containers

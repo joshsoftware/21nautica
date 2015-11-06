@@ -87,7 +87,7 @@ history_datatable_initialize = ->
                                  ]
                   )
 
-$(document).ready history_datatable_initialize
+#$(document).ready history_datatable_initialize
 
 datatable_initialize = ->
     oemptycontTable = $('#import_empty_containers_table').dataTable({
@@ -104,3 +104,39 @@ datatable_initialize = ->
                                  ]
                   )
 $(document).ready datatable_initialize
+
+
+window.load_history_stream = ->
+
+  callbacks =
+    after_add: ->
+      if count is this.data.length
+        $(".streaming_div").hide()
+
+
+  template = $.trim($('#import_history_template').html())
+  Mustache.parse template
+
+  view = (record, index) ->
+    Mustache.render template,
+      record: record
+      index: index
+
+  options = {
+
+    view: view
+    data_url: '/import/history.json'
+    stream_after: 2
+    fetch_data_limit: 100
+    callbacks: callbacks
+    pagination:{
+      span: 5,
+      next_text: 'Next &rarr;',
+      prev_text: '&larr; Previous',
+      container_class: 'text-center',
+      per_page_select: true,
+      per_page_class: 'hide'
+    },
+    search_box: '#table-search'
+  }
+  StreamTable('#import_history_table', options, import_items)

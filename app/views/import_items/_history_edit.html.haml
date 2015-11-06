@@ -1,0 +1,47 @@
+= simple_form_for @import_item, url: update_close_date_import_item_path, method: :post, remote: true do |f| 
+  .modal-content
+    .modal-header
+      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+      %h3#myModalLabel Update Closed Date 
+    .modal-body
+      .row
+        .col-md-4
+          = label_tag :bl_number, 'Bl Number'
+        .col-md-6
+          = text_field_tag :bl_number, @import.bl_number, class: 'form-control', disabled: 'true'
+      %br
+      .row
+        .col-md-4
+          = label_tag :container_number, 'Container Number'
+        .col-md-6
+          = text_field_tag :container_number, @import_item.container_number, class: 'form-control', disabled: 'true'
+      %br
+      .row
+        .col-md-4
+          = label_tag :truck_number, 'Truck Number'
+        .col-md-6
+          = text_field_tag :truck_number, @import_item.truck_number, class: 'form-control', disabled: 'true'
+      %br
+      .row
+        .col-md-4
+          = label_tag :customer_name, 'Customer Name'
+        .col-md-6
+          = text_field_tag :customer_name, @import.customer.name, class: 'form-control', disabled: 'true'
+      %br
+      .row
+        .col-md-4
+          = label_tag :close_date
+        .col-md-6
+          - close_date = @import_item.close_date.strftime("%Y-%m-%d") unless @import_item.close_date.blank?
+          = text_field_tag :close_date, close_date, class: 'form-control closed_date_datepicker' 
+        .col-md-2
+          = hidden_field_tag 'id', @import_item.id
+      %br
+    .modal-footer
+      = submit_tag 'Submit', class: 'btn btn-primary'
+      = link_to 'Cancel',"#", class: 'btn btn-primary', 'data-dismiss' => 'modal'
+
+:javascript
+  $('.closed_date_datepicker').datepicker({
+    format: 'yyyy/mm/dd'
+  });
