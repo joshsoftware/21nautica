@@ -112,6 +112,12 @@ window.load_history_stream = ->
     after_add: ->
       if count is this.data.length
         $(".streaming_div").hide()
+      if $.trim($('#table-search').val()) isnt ''
+        total_records = this.last_search_result.length
+      else
+        total_records = parseInt($('#records_found').text()) || 0
+        total_records += this.data.length
+      $('#records_found').text("Result found " + total_records)
 
 
   template = $.trim($('#import_history_template').html())
@@ -139,4 +145,15 @@ window.load_history_stream = ->
     },
     search_box: '#table-search'
   }
-  StreamTable('#import_history_table', options, import_items)
+
+  $('#import_history_table').stream_table(options, import_items)
+
+
+
+$(document).ready ->
+
+  $('body').on 'keyup', '#table-search', ->
+    str = $('#import_history_table').data('st')
+    result = str.last_search_result.length
+    $('#records_found').text('Result found ' + result)
+
