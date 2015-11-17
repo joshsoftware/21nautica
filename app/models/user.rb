@@ -5,4 +5,8 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   validates :email, :password, presence: true
+
+  def is?(role)
+    self.role == role
+  end
 end

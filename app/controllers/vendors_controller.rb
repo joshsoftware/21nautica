@@ -2,6 +2,7 @@ class VendorsController < ApplicationController
   before_action :authenticate_user!
   before_action :get_vendors_type, except: [:index]
   before_action :get_vendor_id, only: [:edit, :update]
+  load_and_authorize_resource
 
   def index
     @vendors = Vendor.all

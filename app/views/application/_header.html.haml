@@ -38,14 +38,15 @@
             %li= link_to 'Vendor Invoices', bills_path
             %li= link_to 'Payments Made', new_paid_path
             %li= link_to 'BL/Container Search', bills_search_path 
-        %li.dropdown
-          = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
-            Admin 
-            %span.caret
-          %ul.dropdown-menu
-            %li= link_to 'List Vendors', vendors_path 
-            %li= link_to 'Report', customer_analysis_path 
-            /%li= link_to 'List Users', users_path 
+        - if user_signed_in? && current_user.is?('Admin')
+          %li.dropdown
+            = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
+              Admin 
+              %span.caret
+            %ul.dropdown-menu
+              %li= link_to 'List Vendors', vendors_path 
+              %li= link_to 'Report', customer_analysis_path 
+              %li= link_to 'List Users', users_path 
       -#%div.navbar-form.navbar-left
         %form{role: "search", action: "/bill_of_ladings/search"}
           .form-group

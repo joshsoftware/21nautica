@@ -11,6 +11,7 @@ class CustomersController < ApplicationController
 
   def analysis_report
     @customers = Customer.all.order(name: :asc).collect{ |c| [c.name, c.id] }.unshift(['All Customers', 'all'])
+    authorize! :analysis_report, Customer 
   end
 
   def margin_analysis_report
@@ -30,6 +31,7 @@ class CustomersController < ApplicationController
 
     File.delete(file_path)
 
+    #authorize! :margin_analysis_report, Customer 
   end
 
   private
