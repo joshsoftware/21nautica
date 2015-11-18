@@ -63,7 +63,7 @@
       - @bill_items.each do |bill_item|
         %tr
           %td= bill_item.vendor.name
-          %td= bill_item.bill.bill_number
+          %td= link_to bill_item.bill.bill_number, edit_bill_path(bill_item.bill_id), target: '_blank' 
           %td= bill_item.bill.bill_date
           %td= bill_item.charge_for
           %td= bill_item.quantity

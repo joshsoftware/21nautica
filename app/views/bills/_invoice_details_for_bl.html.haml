@@ -16,7 +16,7 @@
         - @invoice_for_bl.each do |inv_bl|
           %tr
             %td= inv_bl.vendor.name
-            %td= inv_bl.bill.bill_number
+            %td= link_to inv_bl.bill.bill_number, edit_bill_path(inv_bl.bill_id), target: '_blank'
             %td= inv_bl.bill.bill_date
             %td= inv_bl.item_number
             %td= inv_bl.charge_for
