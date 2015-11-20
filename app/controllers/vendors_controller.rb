@@ -44,8 +44,8 @@ class VendorsController < ApplicationController
 
   def vendor_params
     if params
-      vendor_type = params[:vendor][:vendor_type] 
-      vendor_type = vendor_type.reject(&:empty?).map { |vendor| vendor }.join(',')
+      types = params[:vendor][:vendor_type] 
+      vendor_type = types.split(',').flatten.reject(&:empty?).map { |vendor| vendor }.join(',')
       params[:vendor][:vendor_type] = vendor_type
     end
     params.require(:vendor).permit(:name, :vendor_type)
