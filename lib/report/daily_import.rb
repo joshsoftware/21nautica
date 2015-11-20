@@ -14,19 +14,21 @@ module Report
           :border => {:style => :thin, :color => "00" }, sz: 10
 
         # 2 worksheets in the workbook
-        {'In Transit' => nil, 'History' => 'delivered'}.each do |name, status|
+        {'In Transit' => nil, 'History' => 'delivered', 'Summary' => nil}.each do |name, status|
           workbook.add_worksheet(name: name) do |sheet|
-            add_data(customer, sheet, center, heading, status)
-            sheet.column_widths nil,nil,nil,nil,nil,nil,30,30,
-                                  25,25,25,25,30,33,30,25
-
+            if name == 'Summary'
+              add_summary_data(customer, sheet, center, heading, status)
+            else
+              add_data(customer, sheet, center, heading, status)
+              sheet.column_widths nil,nil,nil,nil,nil,nil,30,30,
+                                    25,25,25,25,30,33,30,25
+            end
             sheet.sheet_view.pane do |pane|
               pane.state = :frozen
               pane.y_split = 1
               pane.x_split = 2
               pane.active_pane = :bottom_right
             end
-
           end
         end
       end
@@ -36,6 +38,26 @@ module Report
 
     end
 
+    def add_summary_data(customer, sheet, center, heading, status)
+      sheet.add_row ['BL Number', 'Goods Description', 'ETA', 'Equipment x Qty', 'Last Status Update', 'Remarks'],
+                    style: heading, height: 40
+
+      customer.imports.each do |import|
+        import.update_attribute(:is_all_container_delivered, true) if import.import_items.where.not(status: 'delivered').count == 0
+      end
+      #import_items = ImportItem.where.not(status: 'delivered').select('import_id').uniq
+      Import.where(customer: customer, is_all_container_delivered: false).each do |import|
+          bl_number = import.bl_number
+          goods_description = import.description
+          estimate_arrival = import.estimate_arrival.nil? ? "" : import.estimate_arrival.to_date.strftime("%d-%b-%Y") 
+          equipment_quantity = "#{import.equipment} " '*' " #{import.quantity}"
+          last_status_update = import.status
+          remarks = import.remarks
+
+          sheet.add_row [bl_number, goods_description, estimate_arrival, equipment_quantity, last_status_update, remarks], style: center, 
+                                                                                        widths: [:igonre, :auto], height: 40
+      end
+    end
 
     def add_data(customer, sheet, center, heading, status)
       sheet.add_row ["BL Number", "Container Number", "Size",

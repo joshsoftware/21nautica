@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151020115152) do
+ActiveRecord::Schema.define(version: 20151120121828) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -195,6 +195,7 @@ ActiveRecord::Schema.define(version: 20151020115152) do
     t.string   "weight"
     t.integer  "clearing_agent_id"
     t.integer  "shipping_line_id"
+    t.boolean  "is_all_container_delivered", default: false
   end
 
   add_index "imports", ["bill_of_lading_id"], name: "index_imports_on_bill_of_lading_id", using: :btree
