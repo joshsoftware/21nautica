@@ -19,8 +19,8 @@
 #
 
 FactoryGirl.define do
-  factory :import do
-    sequence(:bl_number) { |bl_number| "BL#{bl_number}"}		   
+  factory :import do |import|
+    sequence(:bl_number) { |bl_number| "BL_#{bl_number}"}		   
     to        		   'location 2'
     from      		   'location 1'
     estimate_arrival '10-10-2014'

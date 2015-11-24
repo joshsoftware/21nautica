@@ -13,4 +13,8 @@ FactoryGirl.define do
   	container_number	'c3'
   end
 
+  factory :import_item, class: "ImportItem" do
+  	sequence(:container_number) { |con| "container_number_#{con}" }
+  end
+
 end

@@ -19,7 +19,7 @@ class ImportsControllerTest < ActionController::TestCase
 
   test "should create new import" do
     assert_difference('Import.count') do
-      post :create, import: {bl_number: 'BL2', to: "momabasa", from: "k", customer_id: @customer.id,
+      post :create, import: {bl_number: 'BL_123_123', to: "momabasa", from: "k", customer_id: @customer.id,
         estimate_arrival: "06-10-2014", equipment: "20GP",
         quantity: "1", description: "tfy", rate_agreed: 2000, weight: 30,
         import_items_attributes: {"1410153969411" => {container_number: "con1"}}}

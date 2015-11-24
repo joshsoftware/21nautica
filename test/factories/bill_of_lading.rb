@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :bill_of_lading do
-  	sequence(:bl_number) { |number| "BL2#{number}" }
+  	sequence(:bl_number) { |number| "BL2#{number}_abc#{number}" }
     association :import
   end
 
