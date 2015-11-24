@@ -1,14 +1,6 @@
 class UserMailer < ActionMailer::Base
   default from: "Kaushik Somanathan<kaushik@21nautica.com>"
 
-  def send_analysis_report(customer)
-    @customer = customer
-    analysis_report = Report::CustomerAnalysis.new.calculate_margin(@customer)
-    attachments["Analysis_#{customer.name.tr(" ", "_")}.xlsx"] = File.read("#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}.xlsx")
-    mail(to: @customer.emails, subject: "Customer Analysis Report")
-    File.delete("#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}.xlsx")
-  end
-
   def mail_report(customer,type)
     @customer = customer
     time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
