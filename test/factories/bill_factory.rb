@@ -11,7 +11,7 @@ FactoryGirl.define do
     association :vendor
 
     after :build do |bill, evaluator| 
-      bill.bill_items << FactoryGirl.build_list(:bill_item, 1, bill: nil)
+      bill.bill_items << FactoryGirl.build_list(:bill_item, 1, bill: bill)
     end
     #FactoryGirl.create(:bill_ite)
 =begin
