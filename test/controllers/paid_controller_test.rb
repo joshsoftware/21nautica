@@ -27,7 +27,7 @@ class PaidControllerTest < ActionController::TestCase
     assert_response :redirect
   end
 
-  test 'it should redirect to index' do
+  test 'it should get index' do
     xhr :get, :index, {vendor_id: @vendor.id}
     assert_not_nil assigns(@payment)
     assert_response :success
