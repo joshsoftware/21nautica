@@ -4,7 +4,7 @@ class UserMailerTest < ActionMailer::TestCase
   setup do
     @import = FactoryGirl.create :import
     @export = FactoryGirl.create :export
-    @customer = FactoryGirl.create :customer
+    @customer = FactoryGirl.create :customer, emails: 'cust1@gmail.com'
     @export_item = FactoryGirl.create :export_item
     @export_item1 = FactoryGirl.create :export_item1
     @import_item1 = FactoryGirl.create :import_item1

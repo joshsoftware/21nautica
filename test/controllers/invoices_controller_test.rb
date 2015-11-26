@@ -53,7 +53,7 @@ class InvoicesControllerTest < ActionController::TestCase
       document_number: 'SE-265', particulars_attributes: {'14230755762' => {name: 
       'Clearing Charges', rate: '200', quantity: '1', subtotal: '200', _destroy: 'false'}}}, 
       id: @invoice.id}
-    assert_equal 2, Invoice.count
+    assert_equal 1, @invoice.additional_invoices.count
     assert_equal Invoice.last.previous_invoice, @invoice
     assert_response :success
   end
