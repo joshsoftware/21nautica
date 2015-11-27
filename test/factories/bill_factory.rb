@@ -13,18 +13,17 @@ FactoryGirl.define do
     after :build do |bill, evaluator| 
       bill.bill_items << FactoryGirl.build_list(:bill_item, 1, bill: bill)
     end
-    #FactoryGirl.create(:bill_ite)
-=begin
-  transient do 
-    bill_item 1
-  end
 
-   factory :bill_with_bill_items do
-     after(:build) do |bill, evaluator|
-       create_list(:bill_item, evaluator.bill_item, bill: bill)
-     end
-   end
-=end
+
+    transient do
+      debit_notes_count 1
+    end
+
+    factory :bill_with_debit_note do
+      after(:create) do |bill, evaluator|
+        create_list(:debit_note, evaluator.debit_notes_count, bill: bill)
+      end
+    end
 
 	end
 end

@@ -17,7 +17,7 @@ class ReceivedControllerTest < ActionController::TestCase
     assert_difference('Received.count') do
       post :create, received: {customer_id: @customer.id, amount: 400, date_of_payment: "2014-10-02"}
     end
-    assert_response :redirect
+    assert_redirected_to new_received_path
   end
 
   test "should not save received payment without amount" do
