@@ -35,6 +35,23 @@ class Movement < ActiveRecord::Base
   has_many :invoices, as: :invoiceable
   before_update :assign_w_o_number_to_invoice, if: :w_o_number_changed?
 
+  def ready_TBL_export_invoice
+    invoice = self.bill_of_lading.invoices.build(
+        date: self.bill_of_lading.movements.minimum(:created_at),
+        customer: self.bill_of_lading.movements.first.export_item.export.customer,
+        document_number: self.bill_of_lading.movements.pluck(:w_o_number).join(",")
+    )
+    invoice.invoice_ready!
+  end
+
+  def is_export_bl?
+    Import.where(bill_of_lading_id: self.bill_of_lading_id.to_s).blank?
+  end
+
+  def invoice_not_present?
+    self.bill_of_lading.invoices.blank?
+  end
+
   def assignment_of_truck_number
    count = Movement.where(truck_number: truck_number).where.not(status: :container_handed_over_to_KPA).count
    if count > 0 && truck_number != nil
@@ -66,14 +83,19 @@ class Movement < ActiveRecord::Base
       transitions from: :arranging_shipping_order_and_vessel_nomination, to: :arrived_port
     end
 
-    event :document_handed do
-      transitions from: :arrived_port, to: :container_handed_over_to_KPA
+    event :document_handed, :after => :ready_TBL_export_invoice do
+      transitions from: :arrived_port, to: :container_handed_over_to_KPA, :guards => [:bl_number_required?]
     end
 
   end
 
   auditable only: [:status, :updated_at, :remarks, :vendor_id, :transporter_payment,
     :clearing_agent, :clearing_agent_payment, :clearing_agent_id]
+
+  def bl_number_required?
+    self.errors.add_on_blank(:bl_number) 
+    !self.errors.present?
+  end
 
   def ready_haulage_export_invoice
     invoice = Invoice.create(date: Date.current)

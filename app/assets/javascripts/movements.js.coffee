@@ -224,11 +224,7 @@ history_datatable_initialize = ->
                             fnOnCellUpdated: (sValue) ->
                               return sValue
                           },
-                          {
-                            sUpdateURL: "../movements/update"
-                            fnOnCellUpdated: (sValue) ->
-                              return sValue
-                          }, null, null,
+                          null, null, null,
                           {
                             sUpdateURL: "../movements/update"
                             fnOnCellUpdated: (sValue) ->

@@ -42,7 +42,7 @@
               = element.status.humanize
               %br
           -if @show_update
-            %button.btn.btn-small.btn-primary{'data-movement-id' => "#{element.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => element.status + ',' + element.aasm.events.join(','), 'data-truck-number' => element.truck_number, 'data-container-number' => element.container_number,'data-vessel-targeted' => element.vessel_targeted ,'data-booking-number'=> element.booking_number} Update
+            %button.btn.btn-small.btn-primary{'data-movement-id' => "#{element.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => element.status + ',' + element.aasm.events.join(','), 'data-bl-number' => "#{element.bl_number}",'data-truck-number' => element.truck_number, 'data-container-number' => element.container_number,'data-vessel-targeted' => element.vessel_targeted ,'data-booking-number'=> element.booking_number} Update
         %th.remarks.h5
           = element.remarks
 #statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
@@ -92,4 +92,6 @@
     $('#statusModal form').attr('action', "/movements/" + id + "/updateStatus")
 
   $('#statusModal').on 'hide.bs.modal', (event) ->
+    $('#statusModal .modal-body .alert-danger').remove()
     $("#movements_index_table tr td.updateStatus .updateStatus").show()
+

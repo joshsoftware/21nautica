@@ -1,13 +1,16 @@
-$('#statusModal').modal('hide')
-- if @movement.status == "container_handed_over_to_KPA"
-	oTable = $("#movements_index_table").dataTable()
-	oTable.fnDeleteRow("tr##{@movement.id}")
+- if @error
+  $('#statusModal .modal-body').append('<div class= "alert alert-danger"> Enter the BL Number first</div>')
 - else
-	$("#movements_index_table tr##{@movement.id} td.updateStatus button").attr('data-states', "#{@movement.status},#{@movement.aasm.events.join(',')}")
-	$("#movements_index_table tr##{@movement.id} td.updateStatus .updateStatus .status").text("#{@movement.status.humanize}")
-	- updated_at = status_updated_at(@movement).localtime
-	$("#movements_index_table tr##{@movement.id} td.updateStatus .updateStatus .status_updated_at").text("#{updated_at.to_date.to_formatted_s}")
-	$("#movements_index_table tr##{@movement.id}").attr('class',"#{"danger" if alert(updated_at, @movement)}")
-	$("#movements_index_table tr##{@movement.id} .remarks").text("#{@movement.remarks}")
-	$("#movements_index_table tr##{@movement.id} td.booking_number").text("#{@movement.booking_number}")
-	$("#movements_index_table tr##{@movement.id} td.vessel_targeted").text("#{@movement.vessel_targeted}")
+  $('#statusModal').modal('hide')
+  - if @movement.status == "container_handed_over_to_KPA"
+    oTable = $("#movements_index_table").dataTable()
+    oTable.fnDeleteRow("tr##{@movement.id}")
+  - else
+    $("#movements_index_table tr##{@movement.id} td.updateStatus button").attr('data-states', "#{@movement.status},#{@movement.aasm.events.join(',')}")
+    $("#movements_index_table tr##{@movement.id} td.updateStatus .updateStatus .status").text("#{@movement.status.humanize}")
+    - updated_at = status_updated_at(@movement).localtime
+    $("#movements_index_table tr##{@movement.id} td.updateStatus .updateStatus .status_updated_at").text("#{updated_at.to_date.to_formatted_s}")
+    $("#movements_index_table tr##{@movement.id}").attr('class',"#{"danger" if alert(updated_at, @movement)}")
+    $("#movements_index_table tr##{@movement.id} .remarks").text("#{@movement.remarks}")
+    $("#movements_index_table tr##{@movement.id} td.booking_number").text("#{@movement.booking_number}")
+    $("#movements_index_table tr##{@movement.id} td.vessel_targeted").text("#{@movement.vessel_targeted}")

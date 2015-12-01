@@ -90,8 +90,13 @@ class MovementsController < ApplicationController
     @movement.booking_number = movement_params[:booking_number]
     @movement.vessel_targeted = movement_params[:vessel_targeted]
     status = movement_params[:status].downcase.gsub(' ', '_')
-    status != @movement.status ? @movement.send("#{status}!".to_sym) : @movement.save
+    begin
+      status != @movement.status ? @movement.send("#{status}!".to_sym) : @movement.save
+    rescue
+      @error = @movement.errors
+    end
   end
+
   def retainStatus
     @movement = Movement.find(params[:id])
   end
