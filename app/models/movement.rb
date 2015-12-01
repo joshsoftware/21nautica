@@ -44,9 +44,15 @@ class Movement < ActiveRecord::Base
     invoice.invoice_ready!
   end
 
-  def is_export_bl?
-    Import.where(bill_of_lading_id: self.bill_of_lading_id.to_s).blank?
+  def TBL_type_invoice
+    if invoice_not_present? && self.movement_type == 'TBL' 
+      ready_TBL_export_invoice
+    end
   end
+
+  #def is_export_bl?
+  #  Import.where(bill_of_lading_id: self.bill_of_lading_id.to_s).blank?
+  #end
 
   def invoice_not_present?
     self.bill_of_lading.invoices.blank?
@@ -83,7 +89,7 @@ class Movement < ActiveRecord::Base
       transitions from: :arranging_shipping_order_and_vessel_nomination, to: :arrived_port
     end
 
-    event :document_handed, :after => :ready_TBL_export_invoice do
+    event :document_handed, :after => :TBL_type_invoice do
       transitions from: :arrived_port, to: :container_handed_over_to_KPA, :guards => [:bl_number_required?]
     end
 
