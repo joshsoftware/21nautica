@@ -82,14 +82,16 @@ class MovementsControllerTest < ActionController::TestCase
     assert_response :success
     assert_select 'table tr', :count => 1
 
-    assert_raises(AASM::InvalidTransition) do
-      xhr :post, :updateStatus, movement: {status: "document_handed", "remarks"=>"okay"}, id: @movement.id
-    end
     xhr :post, :updateStatus, movement: {status: "arrived_malaba_border", "remarks"=>"okay"}, id: @movement.id
     xhr :post, :updateStatus, movement: {status: "crossed_malaba_border", "remarks"=>"okay"}, id: @movement.id
     xhr :post, :updateStatus, movement: {status: "order_released", "remarks"=>"okay"}, id: @movement.id
     xhr :post, :updateStatus, movement: {status: "arrived_port", "remarks"=>"okay"}, id: @movement.id
+    @movement.reload
+    assert_equal 'arrived_port', @movement.status
+    
     xhr :post, :updateStatus, movement: {status: "document_handed", "remarks"=>"okay"}, id: @movement.id
+    assert_not_nil assigns(:error)
+    assert_not_equal @movement.status, 'container_handed_over_to_KPA'
 
     assert_template :updateStatus
     assert_select 'table tr', :count => 0
