@@ -1,5 +1,14 @@
 $(document).ready ->
 
+  #***** Initialize the dataTable
+  $('#customers_table').dataTable(
+                      {
+                        "order": [[0, 'asc' ]],
+                        "bJQueryUI": true
+                        "bFilter": true
+                        "sPaginationType": "full_numbers"
+                       })
+
   $('#month').datepicker
     format: 'mm-yyyy'
     viewMode: 'months'

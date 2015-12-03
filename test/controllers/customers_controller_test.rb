@@ -2,7 +2,7 @@ require 'test_helper'
 
 class CustomersControllerTest < ActionController::TestCase
   setup do
-  	@user = FactoryGirl.create :user
+  	@user = FactoryGirl.create :user, role: 'Admin'
     sign_in @user
     @movement = FactoryGirl.create :movement
     @export = FactoryGirl.create :export

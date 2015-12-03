@@ -1,17 +1,50 @@
 class CustomersController < ApplicationController
+  before_action :authenticate_user!
+  load_and_authorize_resource
+
+  def index
+    @customers = Customer.all.order(name: :asc)
+  end
+
   def new
     @customer = Customer.new
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def create
     customer = Customer.new(customer_params)
-    customer.save ? @customers = Customer.order(:name).to_a : @errors = customer.errors.messages.values.flatten
-    render 'new'
+    if request.xhr?
+      customer.save ? @customers = Customer.order(:name).to_a : @errors = customer.errors.messages.values.flatten
+      render 'new'
+    else
+      if customer.save
+        flash[:notice] = 'Customer created successfully'
+        redirect_to customers_path
+      else
+        render 'new'
+      end
+    end
   end
 
   def analysis_report
     @customers = Customer.all.order(name: :asc).collect{ |c| [c.name, c.id] }.unshift(['All Customers', 'all'])
     authorize! :analysis_report, Customer 
+  end
+
+  def edit
+    @customer = Customer.find(params[:id])
+  end
+
+  def update
+    @customer = Customer.find(params[:id])
+    if @customer.update(customer_params)
+      redirect_to customers_path
+    else
+      render 'edit'
+    end
   end
 
   def margin_analysis_report

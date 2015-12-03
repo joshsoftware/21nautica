@@ -1,0 +1,10 @@
+%h3 Edit Customer 
+= render 'new_customer_form'
+
+:javascript
+  window.validate_form = function(){
+    $.validate({
+      form: '#add_new_customer'
+    });
+  }
+  validate_form();

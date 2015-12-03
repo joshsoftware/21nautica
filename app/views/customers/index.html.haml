@@ -1,0 +1,15 @@
+= link_to "Add New Customer", new_customer_path, class: 'btn btn-primary pull-right'
+%br
+%br
+
+%table.table#customers_table
+  %thead
+    %th Name 
+    %th Emails
+    %th Action
+  %tbody
+    - @customers.each do |customer|
+      %tr
+        %td= customer.name 
+        %td= customer.emails
+        %td= link_to 'Edit', edit_customer_path(customer), class: 'btn btn-primary'

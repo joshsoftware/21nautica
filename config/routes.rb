@@ -67,7 +67,8 @@ Rails.application.routes.draw do
 
   resources :exports, only: [:new, :create, :index]
   resources :export_items, only: [:new, :create]
-  resources :customers, only: [:new, :create]
+  resources :customers, only: [:new, :create, :index, :edit, :update]
+  #post 'customers/create_new_customer' => 'customers#create_new_customer', as: :create_new_customer
   resources :imports, only: [:new ,:create ,:index] do
     member do
       post 'updateStatus'
