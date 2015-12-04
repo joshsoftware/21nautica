@@ -6,12 +6,7 @@
         = f.input :name, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Name is required."}
     .row
       .col-md-6
-        = f.input :emails, hint: 'enter comma seperated emails'
-        -# if @customer.new_record?
-          = f.input :emails, hint: 'enter comma seperated emails', input_html:{:"data-validation" => "email", :"data-validation-error-msg" => "Email is not in proper format"}
-        -# else
-          = f.input :emails, hint: 'enter comma seperated emails', input_html: {class: 'email_validate_for_customer form-control'}
-
+        = f.input :emails, as: :text, hint: 'enter comma seperated emails'
     .row
       .col-md-6
         = f.submit 'Save', class: 'btn btn-primary', id: 'customer_save'

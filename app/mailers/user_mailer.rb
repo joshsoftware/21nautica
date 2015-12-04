@@ -3,6 +3,8 @@ class UserMailer < ActionMailer::Base
 
   def mail_report(customer,type)
     @customer = customer
+    emails = customer.add_default_emails_to_customer(@customer)
+    @customer.emails = emails
     time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
     if type == 'export'
       daily_report =Report::Daily.new
@@ -21,7 +23,9 @@ class UserMailer < ActionMailer::Base
   def welcome_message_import(import)
     @import = import
     customer = Customer.find(@import.customer_id)
-    mail(to: customer.emails,subject: "Your new order")
+    emails = customer.add_default_emails_to_customer(customer)
+    customer.emails = emails
+    mail(to: customer.emails,subject: "Your new order") 
   end
 
   def mail_expense_report(type)
@@ -36,14 +40,18 @@ class UserMailer < ActionMailer::Base
     attachment_name = File.basename attachment
     attachments[attachment_name] = File.read(attachment)
     subject = "Invoice // #{invoice.customer_name} // #{invoice.bl_number} // #{invoice.number}"
-    mail(to: (invoice.customer.emails + ", accounts@21nautica.com") , subject: subject)
+    emails = invoice.customer.add_default_emails_to_customer(invoice.customer)
+    invoice.customer.emails = emails
+    mail(to: invoice.customer.emails , subject: subject)
     File.delete(attachment)
   end
 
-  def payment_received_receipt(email_ids, attachment)
+  def payment_received_receipt(customer, attachment)
     attachment_name = File.basename attachment
     attachments[attachment_name] = File.read(attachment)
-    mail(to: (email_ids + ", accounts@21nautica.com"), subject: "Thank you for your payment")
+    emails = customer.add_default_emails_to_customer(customer)
+    customer.emails = emails
+    mail(to: customer.emails , subject: "Thank you for your payment")
     File.delete(attachment)
   end
 

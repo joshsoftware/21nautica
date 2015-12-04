@@ -10,7 +10,8 @@ class ReceivedController < ApplicationController
     if @received.save
       flash[:notice] = "Payment entry saved sucessfully"
       receipt = generate_receipt
-      UserMailer.payment_received_receipt(@received.customer.emails, receipt).deliver()
+      #UserMailer.payment_received_receipt(@received.customer.emails, receipt).deliver()
+      UserMailer.payment_received_receipt(@received.customer, receipt).deliver()
       redirect_to new_received_path
     else
       render 'new'

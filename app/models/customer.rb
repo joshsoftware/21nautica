@@ -20,10 +20,10 @@ class Customer < ActiveRecord::Base
 
   validates_format_of :emails, with: /\A^((\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*)*([,])*|\s)*$\z/, on: :update
 
-  before_create :assign_emails
 
-  def assign_emails
-    self.emails = self.emails + ", accounts@21nautica.com, kaushik@21nautica.com, sachin@21nautica.com, docs@21nautica.com, docs-ug@21nautica.com, ops-ug@21nautica.com, chetan@21nautica.com, ops@21nautica.com "
+  def add_default_emails_to_customer(customer)
+    customer.emails = customer.emails + ", #{EMAILS_DEFAULTS}" 
+    customer.emails.split(/,/).uniq.join(',')
   end
 
 end
