@@ -7,7 +7,7 @@ class Vendor < ActiveRecord::Base
 
   validates_presence_of :name, :vendor_type
 
-  #validate :check_vendor_type
+  validate :check_vendor_type
   scope :transporters, -> { where('vendor_type like ?', "%transporter%").order(:name) }
   scope :clearing_agents, -> { where('vendor_type like ?', "%clearing_agent%").order(:name) }
   scope :shipping_lines, -> { where('vendor_type like ?', "%shipping_line%").order(:name) }
