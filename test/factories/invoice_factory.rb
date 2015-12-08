@@ -7,7 +7,11 @@ FactoryGirl.define do
   end
 
   factory :invoice_ledger, class: 'Ledger' do
+    customer
     association :voucher, factory: :invoice
+    amount 1000
+    received 0
+    date '2015-08-26' 
   end
 
 end
