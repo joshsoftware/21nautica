@@ -29,7 +29,6 @@ class ReceivedControllerTest < ActionController::TestCase
 
   test 'it should get index' do
     xhr :get, :index, {customer_id: @customer.id}
-    assert_not_nil assigns(@payment)
     assert_response :success
   end
 

@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class LedgerTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  setup do
+    #@invoice = FactoryGirl.create :invoice, status: 'sent'
+  end
 end
