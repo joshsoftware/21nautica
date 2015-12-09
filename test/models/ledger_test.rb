@@ -5,6 +5,22 @@ class LedgerTest < ActiveSupport::TestCase
     @inv_ledger = FactoryGirl.create(:invoice_ledger)
   end
 
+  test 'should return the invoice number' do
+    invoice = FactoryGirl.create(:invoice)
+    ledger  = invoice.ledger
+    assert_equal ledger.voucher.number, invoice.number
+  end
+  
+  test 'should return the reference' do
+    ledger  = FactoryGirl.create(:received_ledger)
+    payment = ledger.voucher
+    assert payment.reference
+  end
+
+  test 'should return the bl number' do
+    assert @inv_ledger.voucher.invoiceable.bl_number
+  end
+
   test 'should update the ledger if invoice made' do
     assert_equal 'Invoice', @inv_ledger.voucher_type
     assert_equal 1000, @inv_ledger.amount

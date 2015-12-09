@@ -4,6 +4,7 @@ FactoryGirl.define do
     customer
     number 'invoice'
     ledger { FactoryGirl.create(:ledger_with_invoice) } 
+    association :invoiceable, factory: :bill_of_lading
   end
 
   factory :invoice_ledger, class: 'Ledger' do
