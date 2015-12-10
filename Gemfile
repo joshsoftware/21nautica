@@ -53,7 +53,6 @@ gem 'bootstrap-datepicker-rails'
 gem 'axlsx'
 
 gem 'devise'
-gem 'devise_invitable'
 gem 'pdfkit', '~> 0.6.2'
 gem 'numbers_in_words'
 gem 'cancancan', '~> 1.10'

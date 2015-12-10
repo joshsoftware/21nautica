@@ -76,9 +76,6 @@ GEM
       responders
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
-    devise_invitable (1.4.0)
-      actionmailer (>= 3.2.6, < 5)
-      devise (>= 3.2.0)
     docile (1.1.5)
     erubis (2.7.0)
     execjs (2.2.2)
@@ -255,7 +252,6 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   database_cleaner
   devise
-  devise_invitable
   espinita!
   factory_girl_rails
   faker (~> 1.4.3)
