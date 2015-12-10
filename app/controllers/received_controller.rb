@@ -55,13 +55,15 @@ class ReceivedController < ApplicationController
     # Add all invoice ledgers first
     customer.invoices.sent.each do |inv|
       inv.create_ledger(amount: inv.amount, customer: inv.customer, date: inv.date, received: 0)
-      inv.update_ledger
+      #inv.update_ledger
+      #inv.update_ledger_if_invoice_made
     end
 
     # Add all received ledgers
     customer.payments.each do |payment|
       payment.create_ledger(amount: payment.amount, customer: payment.customer, date: payment.date_of_payment)
-      payment.update_ledger
+      #payment.update_ledger
+      #payment.update_ledger_if_payment_made
     end
 
     redirect_to new_received_path

@@ -39,7 +39,7 @@ class PaidController < ApplicationController
                                                            date: payment.date_of_payment, currency: payment.currency)
     end
 
-    vendor.bills.each do |bill|
+    vendor.bills.order(bill_date: :asc).each do |bill|
       bill_vendor_ledger = bill.create_vendor_ledger(amount: bill.value, vendor_id: bill.vendor_id, date: bill.bill_date, currency: bill.try(:currency))
     end
 
