@@ -8,6 +8,7 @@
         
         .modal-body
           = f.input :name, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Name is required."}
+          = f.input :sales_rep_name, label: 'Manage By', collection: SALES_REP_NAMES, include_blank: false, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Sales Representative is required."}
           = f.input :emails, as: :text, hint: 'enter comma seperated emails', input_html:{:"data-validation" => "email", :"data-validation-error-msg" => "Email is not in proper format"}
           = hidden_field_tag 'model', nil, data: {is: 'modelName'}
         

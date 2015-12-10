@@ -6,6 +6,9 @@
         = f.input :name, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Name is required."}
     .row
       .col-md-6
+        = f.input :sales_rep_name, label: 'Manage By', collection: SALES_REP_NAMES, include_blank: false, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Sales Representative is required."}
+    .row
+      .col-md-6
         = f.input :emails, as: :text, hint: 'enter comma seperated emails'
     .row
       .col-md-6

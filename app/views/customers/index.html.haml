@@ -5,11 +5,13 @@
 %table.table#customers_table
   %thead
     %th Name 
+    %th Sales Representative Name
     %th Emails
     %th Action
   %tbody
     - @customers.each do |customer|
       %tr
         %td= customer.name 
+        %td= customer.sales_rep_name
         %td= customer.emails
         %td= link_to 'Edit', edit_customer_path(customer), class: 'btn btn-primary'
