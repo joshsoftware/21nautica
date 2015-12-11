@@ -43,7 +43,6 @@ class PaidControllerTest < ActionController::TestCase
 
   test 'should get the show' do
     get :show, id: @vendor.id 
-    ### send_data 
   end
   
   test 'should get the outstanding' do
