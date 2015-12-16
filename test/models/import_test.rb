@@ -36,4 +36,19 @@ class ImportTest < ActiveSupport::TestCase
     assert import2.errors.messages[:bl_number].include?(
                       'has already been taken')
   end
+
+  test 'should set the clearing agent' do
+    clearing_agent = FactoryGirl.create(:vendor)
+    @import.clearing_agent_id = clearing_agent.id
+    assert_equal @import.clearing_agent, clearing_agent.name
+  end
+
+  test 'must assigned work order number before ready to load' do
+    @import.status = 'copy_documents_received' 
+    @import.original_documents_received!
+    @import.container_discharged!
+    assert_raises(AASM::InvalidTransition) do
+      @import.ready_to_load!
+    end
+  end
 end

@@ -57,6 +57,10 @@ class BillsControllerTest < ActionController::TestCase
     assert_equal 1000, @bill.value
   end
 
+  test 'should delete the ledger' do
+    get :delete_ledger, id: @bill
+    assert_redirected_to readjust_path(@bill.vendor_id)
+  end
 
   def bill_attr
     @vendor = FactoryGirl.create :vendor  

@@ -8,4 +8,13 @@ FactoryGirl.define do
     remarks 'test'
     association :vendor
   end
+
+  factory :paid_ledger, class: 'VendorLedger' do
+    vendor
+    association :voucher, factory: :paid
+    date '2015-08-27' 
+    amount 500
+    paid 0
+    currency 'USD'
+  end
 end
