@@ -53,7 +53,7 @@ class ReceivedController < ApplicationController
     # Remove all legders for this customer
     Ledger.where(customer: customer).destroy_all
     # Add all invoice ledgers first
-    customer.invoices.sent.each do |inv|
+    customer.invoices.order(date: :asc).sent.each do |inv|
       inv.create_ledger(amount: inv.amount, customer: inv.customer, date: inv.date, received: 0)
       #inv.update_ledger
       #inv.update_ledger_if_invoice_made
