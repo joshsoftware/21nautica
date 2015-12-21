@@ -6,7 +6,7 @@ namespace :ledgers do
     # Remove all legders for this customer
     Ledger.where(customer: customer).destroy_all
     # Add all invoice ledgers first
-    customer.invoices.sent.each do |inv|
+    customer.invoices.order(date: :asc).sent.each do |inv|
       inv.create_ledger(amount: inv.amount, customer: inv.customer, date: inv.date, received: 0)
       #p inv.inspect
       #inv.update_ledger
