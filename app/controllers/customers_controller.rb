@@ -1,6 +1,6 @@
 class CustomersController < ApplicationController
   before_action :authenticate_user!
-  load_and_authorize_resource
+  load_and_authorize_resource :only => [:analysis_report, :margin_analysis_report]
 
   def index
     @customers = Customer.all.order(name: :asc)
