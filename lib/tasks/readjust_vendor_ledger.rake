@@ -25,6 +25,7 @@ namespace :vendor_ledgers do
   desc "Recreate Ledgers for ALL vendors"
   task recreate_all: :environment do
     Vendor.all.each do |v|
+      Rake::Task["vendor_ledgers:recreate"].reenable
       Rake::Task["vendor_ledgers:recreate"].invoke(v.id)
     end
   end
