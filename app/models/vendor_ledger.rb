@@ -38,54 +38,31 @@ class VendorLedger < ActiveRecord::Base
 
   def update_ledger_for_bill
     ledgers = VendorLedger.where(voucher_type: ["Payment", 'DebitNote'], vendor: self.vendor, currency: self.currency).where("amount > paid").order(date: :asc,id: :asc)
-
-    money = self.amount
-    adjusted_ledger_amt = 0
-  
-    ledgers.each do |ledger|
-      return if money == 0
-
-      if money - (ledger.amount - ledger.paid) > 0
-
-        money -= ledger.amount - ledger.paid
-        adjusted_amt = ledger.amount - ledger.paid
-
-        adjusted_ledger_amt += ledger.amount - ledger.paid 
-        ledger.update_columns(paid: (ledger.paid + adjusted_amt))
-
-        self.update_columns(paid: adjusted_ledger_amt)
-      else
-
-        ledger_paid = ledger.paid + money
-        ledger.update_columns(paid: ledger_paid)
-
-        self.update_columns(paid: self.amount)
-        money = 0
-      end
-    end
+    adjust_ledger(ledgers)
   end
 
   def update_ledger_for_payment
     ledgers = VendorLedger.where(voucher_type: "Bill", vendor: self.vendor, currency: self.currency).where("amount > paid").order(date: :asc,id: :asc)
+    adjust_ledger(ledgers)
+  end
 
+  def adjust_ledger(unpaid)
     money = self.amount
-    ledgers.each do |ledger|
-      return if money == 0
 
-      if money - (ledger.amount - ledger.paid) > 0
+    unpaid.each do |inv|
+      # return if money got over.
+       pending_amt = inv.amount - inv.paid 
+       if money > pending_amt
+         money -= pending_amt
+         inv.update_columns(paid: (inv.paid + pending_amt))
 
-        money -= ledger.amount - ledger.paid
-        self.update_attributes(paid: (ledger.amount - ledger.paid))
-        ledger.update_columns(paid: ledger.amount)
-        #ledger.paid = ledger.amount
-      else
-
-        ledger_paid = ledger.paid + money
-        ledger.update_columns(paid: ledger_paid)
-        self.update_attributes(paid: self.amount)
-        money = 0
-      end
-
+       else
+         inv.paid = inv.paid + money
+         inv.update_attribute(:paid, inv.paid)
+         money = 0
+       end
+       break if money == 0
     end
+    self.update_attribute(:paid, self.amount - money)
   end
 end

@@ -24,7 +24,6 @@ class Ledger < ActiveRecord::Base
 
   def adjust_ledger(unpaid)
     money = self.amount
-    adjusted_ledger_amt = 0
 
     unpaid.each do |inv|
       # return if money got over.
@@ -32,11 +31,6 @@ class Ledger < ActiveRecord::Base
        if money > pending_amt
          money -= pending_amt
          inv.update_columns(received: (inv.received + pending_amt))
-
-         #adjusted_ledger_amt += inv.amount - inv.received
-
-         #self.update_columns(received: adjusted_ledger_amt)
-         #inv.received = inv.amount
        else
          inv.received = inv.received + money
          inv.update_attribute(:received, inv.received)
