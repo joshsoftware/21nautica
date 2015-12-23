@@ -39,7 +39,7 @@ class PaidController < ApplicationController
     end
 
     vendor.bills.order(bill_date: :asc).each do |bill|
-      bill.create_vendor_ledger(amount: bill.value, vendor_id: bill.vendor_id, date: bill.bill_date, currency: bill.currency)
+      bill.create_vendor_ledger(amount: bill.value, vendor_id: bill.vendor_id, date: bill.bill_date, currency: bill.try(:currency))
     end
 
     redirect_to new_paid_path

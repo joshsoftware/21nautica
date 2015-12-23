@@ -9,15 +9,11 @@ namespace :ledgers do
     # Add all invoice ledgers first
     customer.invoices.order(date: :asc).sent.each do |inv|
       inv.create_ledger(amount: inv.amount, customer: inv.customer, date: inv.date, received: 0)
-      #p inv.inspect
-      #inv.update_ledger
     end
 
     # Add all received ledgers
-    customer.payments.each do |recv|
+    customer.payments.order(date_of_payment: :asc).each do |recv|
       recv.create_ledger(amount: recv.amount, customer: recv.customer, date: recv.date_of_payment)
-      #p recv.inspect
-      #recv.update_ledger
     end
   end
 
