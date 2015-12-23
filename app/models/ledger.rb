@@ -13,60 +13,38 @@ class Ledger < ActiveRecord::Base
   end
 
   def update_ledger_if_payment_made
-    #unpaid = Ledger.where(voucher_type: "Payment", customer: self.customer).where("received < amount").order(date: :asc)
     unpaid = Ledger.where(voucher_type: "Invoice", customer: self.customer).where("received < amount").order(date: :asc)
-    money = self.amount
-    adjusted_ledger_amt = 0
-
-    unpaid.each do |inv|
-      # return if money got over.
-      return if money == 0
-      
-       if money - (inv.amount - inv.received) > 0
-         money -= inv.amount - inv.received
-         adjusted_amt = inv.amount - inv.received
-
-         adjusted_ledger_amt += inv.amount - inv.received
-         inv.update_columns(received: (inv.received + adjusted_amt))
-
-         self.update_columns(received: adjusted_ledger_amt)
-         #inv.received = inv.amount
-       else
-         inv.received = inv.received + money
-         self.update_attribute(:received, inv.received)
-         money = 0
-       end
-
-       inv.save
-    end
+    adjust_ledger(unpaid)
   end
 
   def update_ledger_if_invoice_made
     unpaid = Ledger.where(voucher_type: "Payment", customer: self.customer).where("received < amount").order(date: :asc)
-    #unpaid = Ledger.where(voucher_type: "Invoice", customer: self.customer).where("received < amount").order(date: :asc)
+    adjust_ledger(unpaid)
+  end
 
+  def adjust_ledger(unpaid)
     money = self.amount
     adjusted_ledger_amt = 0
+
     unpaid.each do |inv|
       # return if money got over.
-      return if money == 0
+       pending_amt = inv.amount - inv.received 
+       if money > pending_amt
+         money -= pending_amt
+         inv.update_columns(received: (inv.received + pending_amt))
 
-       if money - (inv.amount - inv.received) > 0
-         money -= inv.amount - inv.received
-         adjusted_amt = inv.amount - inv.received
-         adjusted_ledger_amt += inv.amount - inv.received
-         inv.update_columns(received: (inv.received + adjusted_amt))
+         #adjusted_ledger_amt += inv.amount - inv.received
 
-         self.update_columns(received: adjusted_ledger_amt)
+         #self.update_columns(received: adjusted_ledger_amt)
+         #inv.received = inv.amount
        else
-         inv_received = inv.received + money
-         inv.update_columns(received: inv_received)
-         self.update_attributes(received: self.amount)
+         inv.received = inv.received + money
+         inv.update_attribute(:received, inv.received)
          money = 0
        end
-
-       inv.save
+       break if money == 0
     end
+    self.update_attribute(:received, self.amount - money)
   end
 
   def as_json(options={})
