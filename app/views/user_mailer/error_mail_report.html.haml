@@ -1,0 +1,5 @@
+%h2 Error while running rake task.
+%h1 Customer name is #{@customer.name}.
+%h3= @exception.message
+- @exception.backtrace.each do |error|
+  %p= error

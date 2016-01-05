@@ -16,8 +16,14 @@ class UserMailer < ActionMailer::Base
       attachments["Import_#{customer.name.tr(" ", "_")}_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/Imports_#{customer.name.tr(" ", "_")}_#{time}.xlsx")
     end
     mail(to: @customer.emails, subject: "Customer Update #{customer.name}")
-    type == 'export' ? File.delete("#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}_#{time}.xlsx"): 
+    type == 'export' ? File.delete("#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}_#{time}.xlsx"):
       File.delete("#{Rails.root}/tmp/Imports_#{customer.name.tr(" ", "_")}_#{time}.xlsx")
+  end
+
+  def error_mail_report(customer, e)
+    @customer = customer
+    @exception = e
+    mail(to: "paritoshbotre@joshsoftware.com", subject: "Error Report")
   end
 
   def welcome_message_import(import)
@@ -25,7 +31,7 @@ class UserMailer < ActionMailer::Base
     customer = Customer.find(@import.customer_id)
     emails = customer.add_default_emails_to_customer(customer)
     customer.emails = emails
-    mail(to: customer.emails,subject: "Your new order") 
+    mail(to: customer.emails,subject: "Your new order")
   end
 
   def mail_expense_report(type)

@@ -22,7 +22,11 @@ module Report
       end
       customers = customers.uniq
       customers.each do |customer|
-        UserMailer.mail_report(customer,'import').deliver
+        begin
+          UserMailer.mail_report(customer,'import').deliver
+        rescue Exception => e
+          UserMailer.error_mail_report(customer, e).deliver
+        end
       end
     end
   end
