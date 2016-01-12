@@ -6,7 +6,7 @@ CURRENCY = %w(USD UGX)
 EQUIPMENT_TYPE = %W(20GP 40GP 40OT 40FR 20OT)
 ROLE = %W(Admin Staff)
 SALES_REP_NAMES = ['Paritosh', 'Some Abcd', 'Some PQR'] 
-EMAILS_DEFAULTS = 'accounts@21nautica.com, kaushik@21nautica.com, sachin@21nautica.com, docs@21nautica.com, docs-ug@21nautica.com, ops-ug@21nautica.com, chetan@21nautica.com, ops@21nautica.com ' 
+EMAILS_DEFAULTS = 'accounts@21nautica.com, kaushik@21nautica.com, docs@21nautica.com, docs-ug@21nautica.com, ops-ug@21nautica.com, chetan@21nautica.com, ops@21nautica.com ' 
 #SHIPPING_LINE = %W(CMA\ CGM Maersk  Evergreen Safmarine PIL Emirates MSC COSCO 
 #  NYK\ line WECLINES)
 # Time in Days
