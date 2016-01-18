@@ -16,7 +16,7 @@
     %th Currency
     %th Amount
     %th Adjusted 
-    - if can? :new, Paid
+    -# if can? :new, Paid
       %th Action
 
   %tbody#payment_search_result
@@ -28,7 +28,7 @@
         %td <%= currency  %>
         %td.amount <%= amount %>
         %td.paid <%= paid %>
-        - if can? :delete_ledger, [Paid, Bill]
+        -# if can? :delete_ledger, [Paid, Bill]
           <td> <a href= delete/<%=  delete_bill_or_ledger %> data-confirm="This will readjust Payments again" data-method="delete" > Delete <a></td>
 
 :javascript
