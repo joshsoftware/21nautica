@@ -99,7 +99,7 @@ class BillsController < ApplicationController
     number = params[:number]
     if params[:number]
       @bill_items = BillItem.where(item_type: params[:item_type], item_for: params[:item_for]).where('lower(item_number) = ?', params[:number].downcase).order(charge_for: :asc)
-      get_customer_invoices(number)
+      get_customer_invoices(number, params[:item_for])
 
       if @bill_items.any?
         if params[:item_type] == 'Import'
@@ -114,9 +114,11 @@ class BillsController < ApplicationController
     end
   end
 
-  def get_customer_invoices(number)
-    @bl_number_invoices = BillOfLading.where('lower(bl_number) = ?', number.downcase).first.invoices
-    @sum_of_customer_invoice = @bl_number_invoices.sum(:amount) 
+  def get_customer_invoices(number, item_for)
+    if item_for == 'bl'
+      @bl_number_invoices = BillOfLading.where('lower(bl_number) = ?', number.downcase).first.invoices
+      @sum_of_customer_invoice = @bl_number_invoices.sum(:amount)
+    end
   end
 
   def get_import_qunatity(item_type, item_for, number)
