@@ -99,6 +99,7 @@ class BillsController < ApplicationController
     number = params[:number]
     if params[:number]
       @bill_items = BillItem.where(item_type: params[:item_type], item_for: params[:item_for]).where('lower(item_number) = ?', params[:number].downcase).order(charge_for: :asc)
+      get_customer_invoices(number)
 
       if @bill_items.any?
         if params[:item_type] == 'Import'
@@ -113,6 +114,11 @@ class BillsController < ApplicationController
     end
   end
 
+  def get_customer_invoices(number)
+    @bl_number_invoices = BillOfLading.where('lower(bl_number) = ?', number.downcase).first.invoices
+    @sum_of_customer_invoice = @bl_number_invoices.sum(:amount) 
+  end
+
   def get_import_qunatity(item_type, item_for, number)
     query = BillItem.where(item_type: item_type, item_for: item_for).where('lower(item_number) = ?', number.downcase).first
     @quantity = query.activity.quantity
@@ -121,8 +127,6 @@ class BillsController < ApplicationController
       @equipment_type = BillOfLading.where('lower(bl_number) = ?', number.downcase).first.equipment_type
       @invoice_for_bl = BillItem.where(activity_id: activity_id, activity_type: 'Import', item_for: "container")
       @sum_of_bl = BillItem.where(activity_id: activity_id, activity_type: 'Import').sum(:line_amount) 
-      @bl_number_invoices = BillOfLading.where('lower(bl_number) = ?', number.downcase).first.invoices
-      @sum_of_customer_invoice = @bl_number_invoices.sum(:amount) 
       @debit_notes = query.bill.debit_notes
       @debit_notes_sum = @debit_notes.sum(:amount)
     else
@@ -153,8 +157,6 @@ class BillsController < ApplicationController
       sum_of_bl = BillItem.where('lower(item_number) = ? and activity_id = ? and activity_type = ? and item_for = ?', 
                                         number.downcase, activity_id, 'Export', 'bl').sum(:line_amount)
       @sum_of_bl = sum_of_container + sum_of_bl
-      @bl_number_invoices = BillOfLading.where('lower(bl_number) = ?', number.downcase).first.invoices
-      @sum_of_customer_invoice = @bl_number_invoices.sum(:amount) 
     end
   end
 

@@ -40,12 +40,12 @@
               - if @equipment_type
                 x
                 = @equipment_type
-        .col-md-4
-          - if @sum_of_customer_invoice
-            %h5 
-              %b
-                Total Customer Invoice value: 
-                = number_with_precision(@sum_of_customer_invoice, precision: 2)
+      .col-md-4
+        - if @sum_of_customer_invoice
+          %h5
+            %b
+              Total Customer Invoice value:
+              = number_with_precision(@sum_of_customer_invoice, precision: 2)
 
 
 %table.table.table-stripped
