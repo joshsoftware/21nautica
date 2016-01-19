@@ -116,8 +116,9 @@ class BillsController < ApplicationController
 
   def get_customer_invoices(number, item_for)
     if item_for == 'bl'
-      @bl_number_invoices = BillOfLading.where('lower(bl_number) = ?', number.downcase).first.invoices
-      @sum_of_customer_invoice = @bl_number_invoices.sum(:amount)
+      bl = BillOfLading.where('lower(bl_number) = ?', number.downcase).first
+      @bl_number_invoices = bl.invoices unless bl.nil?
+      @sum_of_customer_invoice = @bl_number_invoices.sum(:amount) unless @bl_number_invoices.nil?
     end
   end
 
