@@ -16,7 +16,7 @@
     %th Bill of Lading
     %th Amount (USD)
     %th Received (USD)
-    -# if can? :new, Received 
+    - if can? :new, Received
       %th Action
 
   %tbody#payment_search_result
@@ -28,7 +28,7 @@
         %td <%= bl_number %>
         %td.amount <%= amount %>
         %td.received <%= received %>
-        -# if can? :delete_ledger, [Received, Invoice]
+        - if can? :delete_ledger, [Received, Invoice]
           <td> <a href= delete/<%=  delete_invoice_or_payment %> data-confirm="This will readjust Payments again" data-method="delete" > Delete <a></td>
 
 :javascript
