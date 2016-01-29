@@ -52,10 +52,11 @@ class CustomersController < ApplicationController
     customers =  all_customers ? 'all' : params[:customer_id]
     month = Date::MONTHNAMES[Date.strptime(params[:month], '%m-%Y').month]
     selected_month = Date.strptime(params[:month], '%m-%Y')
-    
+    ugx_currency = params[:ugx_currency].present? ? params[:ugx_currency].to_f : 3200.to_f
+     
     #set the Worksheet name
     worksheet_name = "margin report - #{month} "
-    Report::CustomerAnalysis.new.calculate_margin(customers, month, selected_month, worksheet_name)
+    Report::CustomerAnalysis.new.calculate_margin(customers, month, selected_month, worksheet_name, ugx_currency)
 
     file_path = "#{Rails.root}/tmp/#{worksheet_name}#{selected_month.strftime("%Y")}.xlsx"
     File.open(file_path, 'r') do |f|

@@ -12,5 +12,11 @@
         = label_tag 'month', 'Month'
       .col-md-2
         = text_field_tag 'month', '', class: 'form-control' 
+    %br
+    .row
+      .col-md-3
+        = label_tag 'ugx_currency', 'UGX Currency Rate'
+      .col-md-2
+        = text_field_tag :ugx_currency, '', placeholder: 'Default is 3200', class: 'form-control' 
       .col-md-2
         = submit_tag 'Export', class: 'btn btn-primary', id: 'export_margin_report' 

@@ -1,7 +1,7 @@
 module Report
   class CustomerAnalysis
 
-    def calculate_margin(customers, month, selected_month, worksheet_name) 
+    def calculate_margin(customers, month, selected_month, worksheet_name, ugx_amt) 
       package = Axlsx::Package.new
       workbook = package.workbook
        
@@ -11,17 +11,17 @@ module Report
         else
           invoices = Invoice.where(customer_id: customers, date: selected_month.beginning_of_day..selected_month.end_of_month).order(date: :asc)
         end
-        add_data(sheet, invoices)
+        add_data(sheet, invoices, ugx_amt)
       end
       package.use_shared_strings = true
 
       package.serialize("#{Rails.root}/tmp/#{worksheet_name}#{selected_month.strftime("%Y")}.xlsx")
     end
 
-    def add_data(sheet, invoices)
+    def add_data(sheet, invoices, ugx_amt)
 
       sheet.add_row ['Customer Name', 'Date', 'BL Number', 'W/o Num', 'Quantity', 'EQ', 'AF', 'SLC', 'PC', 'PS', 'OF', 'CD', 'FC', 
-                     'Haulage', 'ER', 'TDC', 'LS', 'ICD', 'BCE','Others', 'Total Exp','INV', 'Invoice Amount', 'Margins']
+                     'Haulage', 'ER', 'TDC', 'LS', 'ICD', 'BCE','Other charges', 'Others', 'Total Exp','INV', 'Invoice Amount', 'Margins']
 
       invoices.each do |invoice|
         invoiceable = invoice.invoiceable   #BillOfLading OR Movement Object
@@ -40,31 +40,37 @@ module Report
           quantity        = bill_of_lading.quantity
           equipment_type  = bill_of_lading.equipment_type                             #equipment_type
           if invoice.previous_invoice.present?
-            charges, total_exp = get_charges(nil)
+            charges, total_exp = get_charges(nil, ugx_amt)
           else
-            charges, total_exp = get_charges(activity_id)
+            charges, total_exp = get_charges(activity_id, ugx_amt)
           end
           inv             = invoice.number
           inv_amount      = invoice.amount 
           margins         = invoice.amount - total_exp 
           customer_name   = invoice.customer.name
-    
+          
           sheet.add_row [customer_name, date, bl_number, work_order_num, quantity, equipment_type, 
             charges['Agency Fee'], charges['Shipping Line Charges'], charges['Port Charges'], charges['Port Storage'], charges['Ocean Freight'],
             charges['Container Demurrage'], charges['Final Clearing'], charges['Haulage'], charges['Empty Return'], charges['Truck Detention'],
-            charges['Local Shunting'], charges['ICD Charges'], charges['Border Clearing Expense'], charges['Other charges'], total_exp, inv, inv_amount, margins] 
+            charges['Local Shunting'], charges['ICD Charges'], charges['Border Clearing Expense'], charges['Other charges'], 
+            charges['Others'], total_exp, inv, inv_amount, margins] 
         end
       end
 
       sheet
     end
 
-    def get_charges(activity_id)
+    def get_charges(activity_id, ugx_amt)
       charges = {}
       total_exp = 0
       CHARGES.values.flatten.uniq.each do |charge|
+        query = BillItem.where(activity_id: activity_id, charge_for: charge)
+
         line_amount = BillItem.where(activity_id: activity_id, charge_for: charge).sum(:line_amount)
-        charges[charge] = line_amount
+        line_amount = query.sum(:line_amount) / ugx_amt if query.present? && query.first.bill.currency == 'UGX'
+
+        line_amount = (sprintf "%.2f", line_amount).to_f
+        charges[charge] = line_amount 
         total_exp += line_amount
       end
       return charges, total_exp
