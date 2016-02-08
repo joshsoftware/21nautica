@@ -21,7 +21,11 @@
         %td= bill.bill_date
         %td= bill.vendor.try(:name)
         %td= bill.value
-        %td.remark= bill.remark
+        %td.remark
+          = bill.remark
+          - if bill.debit_notes.present?
+            |
+            = bill.debit_notes.collect(&:reason).join(',') if bill.debit_notes.where.not(reason: [nil, ''])
         %td= bill.created_by.try(:email)
         %td= bill.approved_by.try(:email)
         %td= link_to 'Edit', edit_bill_path(bill), class: 'btn btn-primary' 
