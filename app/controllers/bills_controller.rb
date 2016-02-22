@@ -3,7 +3,7 @@ class BillsController < ApplicationController
   before_action :get_the_bill_id, only: [:edit, :update]
 
   def index
-    @bills = Bill.order(created_at: :desc)
+    @bills = Bill.order(created_at: :desc).limit(500)
   end
 
   def new
