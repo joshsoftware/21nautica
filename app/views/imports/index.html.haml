@@ -1,7 +1,7 @@
 .destination_filter.pull-right
   = form_tag imports_path, method: :get do |f|  
     = label_tag 'List Destination '
-    = select_tag 'destination', options_for_select( ["Kampala", "Kigali"], params[:destination] || 'Kampala' ) 
+    = select_tag 'destination', options_for_select( ["Kampala", "Kigali", "Lusaka"], params[:destination] || 'Kampala' ) 
 
 %table.table{id: 'imports_table'}
   %thead

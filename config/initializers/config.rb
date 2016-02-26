@@ -18,7 +18,7 @@ STATUS_CHANGE_DURATION = {arrived_malaba_border: 2,
 PAYMENT_MODES = %W(Cheque Cash TT)
 INVOICE_PARTICULARS = %w( Ocean\ Freight Clearing\ Charges ICD Demurrage 
 	Empty Final\ Clearing Haulage Forest\ Permits Port\ Storage Other)
-PORTS = {"Dar Es Salaam" => ["Kigali"], "Mombasa" => ["Kampala"]}
+PORTS = {"Dar Es Salaam" => ["Kigali", "Lusaka"], "Mombasa" => ["Kampala"]}
 CHARGES = {"transporter" => ["Haulage", "Empty Return", "Truck Detention", "Local Shunting"],
            "icd" => ["ICD Charges", 'Other charges'],
            "clearing_agent" => ["Ocean Freight", "Container Demurrage",

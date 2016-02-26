@@ -19,7 +19,7 @@ $(document).on 'change', '#import_from', ->
     $("#import_to").find("option:gt(0)").remove()
     $.each newOptions, (index, value) ->
       $el.append $('<option></option>').attr('value', value).text(value)
-    $el.val('Kigali')
+#$el.val('Kigali')
   else
     newOptions = window.ports["Mombasa"]
     $("#import_to").find("option:gt(0)").remove()

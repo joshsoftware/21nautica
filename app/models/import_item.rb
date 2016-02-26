@@ -56,12 +56,9 @@ class ImportItem < ActiveRecord::Base
     state :under_loading_process, initial: true
     state :truck_allocated
     state :loaded_out_of_port
-    state :arrived_at_rusumu
-    state :departed_from_rusumu
-    state :arrived_at_kigali
-    state :arrived_at_malaba
-    state :departed_from_malaba
-    state :arrived_at_kampala
+    state :arrived_at_border
+    state :departed_from_border
+    state :arrived_at_destination
     state :delivered
 
     event :allocate_truck, :after => :check_rest_of_the_containers do
@@ -72,34 +69,21 @@ class ImportItem < ActiveRecord::Base
       transitions from: :truck_allocated, to: :loaded_out_of_port
     end
 
-    event :arrived_at_malaba do
-      transitions from: :loaded_out_of_port, to: :arrived_at_malaba
+    event :arrived_at_border do
+      transitions from: :loaded_out_of_port, to: :arrived_at_border
     end
 
-    event :departed_from_malaba do
-      transitions from: :arrived_at_malaba, to: :departed_from_malaba
+    event :departed_from_border do
+      transitions from: :arrived_at_border, to: :departed_from_border
     end
 
-    event :arrived_at_kampala do
-      transitions from: :departed_from_malaba, to: :arrived_at_kampala
-    end
-
-    event :arrived_at_rusumu do
-      transitions from: :loaded_out_of_port, to: :arrived_at_rusumu
-    end
-
-    event :departed_from_rusumu do
-      transitions from: :arrived_at_rusumu, to: :departed_from_rusumu
-    end
-
-    event :arrived_at_kigali do
-      transitions from: :departed_from_rusumu, to: :arrived_at_kigali
+    event :arrived_at_destination do
+      transitions from: :departed_from_border, to: :arrived_at_destination
     end
 
     event :truck_released, :after => :check_for_invoice do
-      transitions from: [:arrived_at_kigali, :arrived_at_kampala], to: :delivered
+      transitions from: :arrived_at_destination, to: :delivered
     end
-
   end
 
   auditable only: [:status, :updated_at, :current_location, :remarks]
