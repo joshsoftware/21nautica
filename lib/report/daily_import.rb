@@ -112,7 +112,7 @@ module Report
                      h["ready_to_load"], h["truck_allocated"], h["loaded_out_of_port"],
                      (h["arrived_at_border"]), (h["departed_from_border"]), (h["arrived_at_destination"]),
                      (h["arrived_at_malaba"] or h["arrived_at_rusumu"]), (h["departed_from_malaba"] or h["departed_from_rusumu"]),
-                     (h["arrived_at_kampala"] or h["arrived_at_kigali"]), h["delivered"]]
+                     (h["arrived_at_kampala"] or h["arrived_at_kigali"]), h["delivered"]],
                      style: center, height: max_height
 
           h.clear
