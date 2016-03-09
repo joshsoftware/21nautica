@@ -54,16 +54,6 @@ $(document).ready ->
         $('#date_restrict').parent('div').find('span').remove()
   #******************* 
   
-  #***** Initialize the dataTable
-#$('#bills').dataTable(
-#                     {
-#                        "order": [[0, 'desc' ]],
-#                        "bJQueryUI": true
-#                        "bFilter": true
-#                        "sPaginationType": "full_numbers"
-#                       })
-  #***** end of dataTable
-
   if $('#bill_vendor_id').val() == ''
     $('#add_bill_items').addClass('disabled', true)
     $('#add_debit_notes').addClass('disabled', true)
@@ -258,6 +248,14 @@ $(document).ready ->
 
   #************* Stream Table **********
 window.streams_bills = ->
+
+  callbacks =
+    after_add: ->
+      console.log(count)
+      console.log(this.data.length)
+      if count is this.data.length
+        $(".streaming_div").hide()
+
   template = $.trim($('#bills_template').html())
   Mustache.parse(template);
 
@@ -282,7 +280,7 @@ window.streams_bills = ->
       per_page_select: true,
       per_page_class: 'hide'
     },
-    search_box: '#table-search'
+    search_box: '#bill-search'
   }
 
   $('#bills_table').stream_table(options, data)

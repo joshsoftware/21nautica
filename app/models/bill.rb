@@ -58,8 +58,9 @@ class Bill < ActiveRecord::Base
   def bill_remarks
     remarks = self.remark  
     if self.debit_notes.present?
-      remarks += self.debit_notes.collect(&:reason).join(',') if self.debit_notes.where.not(reason: [nil, ''])
+      remarks += ", " + self.debit_notes.collect(&:reason).join(',') if self.debit_notes.where.not(reason: [nil, ''])
     end
+    remarks
   end
 
   def check_any_bill_items?

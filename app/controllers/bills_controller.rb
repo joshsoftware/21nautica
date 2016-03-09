@@ -4,6 +4,7 @@ class BillsController < ApplicationController
 
   def index
     @bills = Bill.order(created_at: :desc).limit(params[:limit] || 100).offset(params[:offset] || 0)
+    @count = Bill.all.count
     respond_to do |format|
       format.html{}
       format.json { render json: @bills }
