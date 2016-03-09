@@ -34,6 +34,34 @@ class Bill < ActiveRecord::Base
   after_save :set_vendor_ledger_date, if: [:bill_date_changed?, :currency_changed?]
   after_save :set_debit_note_currency
 
+  def as_json(options= {})
+    super(only: [:bill_number, :bill_date, :value, :after_delivery_status, :context, :truck_number],
+            methods: [:bill_vendor, :bill_remarks, :bill_created_by, :bill_approved_by, :edit_bills_path])
+  end
+
+  def edit_bills_path
+    Rails.application.routes.url_helpers.edit_bill_path(self)
+  end
+
+  def bill_vendor
+    self.vendor.try(:name)
+  end
+
+  def bill_created_by
+    self.created_by.try(:email)
+  end
+
+  def bill_approved_by 
+    self.approved_by.try(:email)
+  end
+
+  def bill_remarks
+    remarks = self.remark  
+    if self.debit_notes.present?
+      remarks += self.debit_notes.collect(&:reason).join(',') if self.debit_notes.where.not(reason: [nil, ''])
+    end
+  end
+
   def check_any_bill_items?
     if self.bill_items.map(&:valid?) and self.bill_items.blank? 
       self.errors.add :base , 'cannot create invoice without line items'

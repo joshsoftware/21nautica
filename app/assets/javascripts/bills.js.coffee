@@ -55,13 +55,13 @@ $(document).ready ->
   #******************* 
   
   #***** Initialize the dataTable
-  $('#bills').dataTable(
-                      {
-                        "order": [[0, 'desc' ]],
-                        "bJQueryUI": true
-                        "bFilter": true
-                        "sPaginationType": "full_numbers"
-                       })
+#$('#bills').dataTable(
+#                     {
+#                        "order": [[0, 'desc' ]],
+#                        "bJQueryUI": true
+#                        "bFilter": true
+#                        "sPaginationType": "full_numbers"
+#                       })
   #***** end of dataTable
 
   if $('#bill_vendor_id').val() == ''
@@ -255,4 +255,35 @@ $(document).ready ->
       return amount == parseFloat($('.inv_value').val())
     errorMessage: 'Amount not Match'
     errorMessageKey: 'Amount not Matching'
+
+  #************* Stream Table **********
+window.streams_bills = ->
+  template = $.trim($('#bills_template').html())
+  Mustache.parse(template);
+
+  view = (record, index) ->
+    Mustache.render template,
+      record: record
+      index: index
+
+
+  options = {
+
+    view: view
+    data_url: '/bills.json'
+    stream_after: 2
+    fetch_data_limit: 100
+    callbacks: callbacks
+    pagination:{
+      span: 5,
+      next_text: 'Next &rarr;',
+      prev_text: '&larr; Previous',
+      container_class: 'text-center',
+      per_page_select: true,
+      per_page_class: 'hide'
+    },
+    search_box: '#table-search'
+  }
+
+  $('#bills_table').stream_table(options, data)
 

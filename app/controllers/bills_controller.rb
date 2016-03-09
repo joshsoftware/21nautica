@@ -3,7 +3,11 @@ class BillsController < ApplicationController
   before_action :get_the_bill_id, only: [:edit, :update]
 
   def index
-    @bills = Bill.order(created_at: :desc).limit(500)
+    @bills = Bill.order(created_at: :desc).limit(params[:limit] || 100).offset(params[:offset] || 0)
+    respond_to do |format|
+      format.html{}
+      format.json { render json: @bills }
+    end
   end
 
   def new

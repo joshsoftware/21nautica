@@ -1,10 +1,26 @@
 = link_to "Add New Vendor Invoice", new_bill_path, class: 'btn btn-primary pull-right'
 %br
 %br
+.row
+  .col-md-5
+    .col-md-5
+      %input#table-search.form-control{:placeholder => "Search here...", :type => "text"}
 
-%table.table#bills
+    .col-sm-3
+      %select.st_per_page.form-control
+        %option{:value => "10"}
+          10  
+        %option{:value => "20"}
+          20  
+        %option{:value => "30"}
+          30  
+        %option{:value => "50"}
+          50  
+    .col-md-4  
+      %h5#records_found
+
+%table.table#bills_table
   %thead
-    %th.hide
     %th Bill Number
     %th Bill Date
     %th Vendor 
@@ -14,18 +30,19 @@
     %th Approved By
     %th Action
   %tbody
-    - @bills.each do |bill|
-      %tr
-        %td.hide= bill.created_at
-        %td= bill.bill_number
-        %td= bill.bill_date
-        %td= bill.vendor.try(:name)
-        %td= bill.value
-        %td.remark
-          = bill.remark
-          - if bill.debit_notes.present?
-            |
-            = bill.debit_notes.collect(&:reason).join(',') if bill.debit_notes.where.not(reason: [nil, ''])
-        %td= bill.created_by.try(:email)
-        %td= bill.approved_by.try(:email)
-        %td= link_to 'Edit', edit_bill_path(bill), class: 'btn btn-primary' 
+
+%script#bills_template.table.table-striped{:type => 'text/html'}
+  {{record}}
+  %tr{"data-link" => "{{record.id}}" }
+    %td {{record.bill_number}}
+    %td {{record.bill_date}}
+    %td {{record.vendor}}
+    %td {{record.value}}
+    %td.remark {{record.bill_remarks}}
+    %td {{record.bill_created_by}}
+    %td {{record.bill_approved_by}}
+    %td= link_to "Edit", '{{record.edit_bills_path}}', data: {id: '{{record.id}}' }, class: 'btn btn-primary'
+
+:javascript
+  var data = #{@bills.to_json}
+  streams_bills()
