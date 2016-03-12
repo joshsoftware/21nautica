@@ -49,7 +49,7 @@ module Report
       Import.where(customer: customer, is_all_container_delivered: false).each do |import|
           bl_number = import.bl_number
           goods_description = import.description
-          estimate_arrival = import.estimate_arrival.nil? ? "" : import.estimate_arrival.to_date.strftime("%d-%b-%Y") 
+          estimate_arrival = import.estimate_arrival.nil? ? "" : import.estimate_arrival.try(:to_date).try(:strftime,"%d-%b-%Y").to_s
           equipment_quantity = "#{import.equipment} " '*' " #{import.quantity}"
           last_status_update = import.status
           remarks = import.remarks
@@ -84,13 +84,13 @@ module Report
 
               if !a[:status].blank?  and !a[:status].first.eql?(a[:status].second) then
                 h[a[:status].second] = [] if h[a[:status].second].nil?
-                h[a[:status].second].unshift(a[:updated_at].second.to_date.strftime("%d-%b-%Y") +
-                                             " : " + (a[:remarks].nil? ? " " : a[:remarks].second))
+                h[a[:status].second].unshift(a[:updated_at].try(:second).try(:[], :to_date).try(:strftime, "%d-%b-%Y").to_s +
+                                             " : " + (a[:remarks].nil? ? " " : a[:remarks].try(:second).to_s))
               else
                 if !a[:remarks].blank? then
                   h[a[:status].second] = [] if h[a[:status].second].nil?
-                  h[a[:status].second].unshift(a[:updated_at].second.to_date.strftime("%d-%b-%Y") +
-                                               " : " + a[:remarks].second)
+                  h[a[:status].second].unshift(a[:updated_at].try(:second).try(:[], :to_date).try(:strftime, "%d-%b-%Y").to_s +
+                                               " : " + a[:remarks].try(:second).to_s)
                 end
               end
 
