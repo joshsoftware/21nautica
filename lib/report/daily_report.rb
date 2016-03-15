@@ -15,9 +15,16 @@ module Report
       f.puts("Processing Started #{Time.now.to_s}")
 
       customers.each do |customer|
-        f.puts("Processing - #{customer.name}")
-        UserMailer.mail_report(customer,'export').deliver
-        f.puts("Completed - #{customer.name}")
+        begin
+          f.puts("Processing - #{customer.name}")
+
+          #******** creating Report through workers*********************
+          DailyReportWorker.perform_async(customer.id, 'export')
+          f.puts("Completed - #{customer.name}")
+
+        rescue Exception => e
+          UserMailer.error_mail_report(customer, e).deliver
+        end
       end
       f.puts("Processing End at #{Time.now.to_s}")
       f.close
@@ -34,6 +41,7 @@ module Report
           customers.push(import.customer)
         end
       end
+      
       customers = customers.uniq
       path = "#{Rails.root}/tmp/daily_report.log"
 
@@ -44,12 +52,14 @@ module Report
       customers.each do |customer|
         begin
           f.puts("Processing - #{customer.name}")
-          UserMailer.mail_report(customer,'import').deliver
+          #******** creating Report through workers*********************
+          DailyReportWorker.perform_async(customer.id, 'import')
           f.puts("Completed - #{customer.name}")
         rescue Exception => e
           UserMailer.error_mail_report(customer, e).deliver
         end
       end
+
       f.puts("Processing End at #{Time.now.to_s}")
       f.close
 

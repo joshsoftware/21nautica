@@ -7,12 +7,8 @@ class UserMailer < ActionMailer::Base
     @customer.emails = emails
     time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
     if type == 'export'
-      daily_report =Report::Daily.new
-      daily_report.create(@customer)
       attachments["Export_#{customer.name.tr(" ", "_")}_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}_#{time}.xlsx")
     else
-      daily_report =Report::DailyImport.new
-      daily_report.create(@customer)
       attachments["Import_#{customer.name.tr(" ", "_")}_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/Imports_#{customer.name.tr(" ", "_")}_#{time}.xlsx")
     end
     mail(to: @customer.emails, subject: "Customer Update #{customer.name}")

@@ -1,3 +1,4 @@
+require 'sidekiq/web'
 Rails.application.routes.draw do
 
   resources 'bills' do
@@ -10,6 +11,8 @@ Rails.application.routes.draw do
       match :validate_debit_note_number, via: :get
     end
   end
+
+  mount Sidekiq::Web, at: "/sidekiq"
 
   resources 'vendors'
   match 'search_bills' => 'bills#search', as: 'bills_search', via: [:get, :post] 
