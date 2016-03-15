@@ -46,6 +46,11 @@ class BillItem < ActiveRecord::Base
     self.vendor_id = self.bill.vendor_id
   end
 
+  def is_bill_invoice_ugx?
+    return true if self.bill.currency == 'UGX'
+    return false
+  end
+
   def bl_check_total_quantity
     case self.item_type
     when 'Import'

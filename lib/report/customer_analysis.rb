@@ -64,10 +64,12 @@ module Report
       charges = {}
       total_exp = 0
       CHARGES.values.flatten.uniq.each do |charge|
-        query = BillItem.where(activity_id: activity_id, charge_for: charge)
+        query = BillItem.includes(:bill).where(activity_id: activity_id, charge_for: charge)
 
-        line_amount = BillItem.where(activity_id: activity_id, charge_for: charge).sum(:line_amount)
-        line_amount = query.sum(:line_amount) / ugx_amt if query.present? && query.first.bill.currency == 'UGX'
+        line_amount = 0
+        query.each do |bill_item|
+          bill_item.is_bill_invoice_ugx? ? line_amount += (bill_item.line_amount / ugx_amt) : line_amount += bill_item.line_amount
+        end
 
         line_amount = (sprintf "%.2f", line_amount).to_f
         charges[charge] = line_amount 
