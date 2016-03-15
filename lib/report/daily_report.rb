@@ -18,8 +18,13 @@ module Report
         begin
           f.puts("Processing - #{customer.name}")
 
+          daily_report = Report::Daily.new
+          daily_report.create(customer)
+
+          UserMailer.mail_report(customer, 'export').deliver
+
           #******** creating Report through workers*********************
-          DailyReportWorker.perform_async(customer.id, 'export')
+          #DailyReportWorker.perform_async(customer.id, 'export')
           f.puts("Completed - #{customer.name}")
 
         rescue Exception => e
@@ -52,8 +57,13 @@ module Report
       customers.each do |customer|
         begin
           f.puts("Processing - #{customer.name}")
+
+          daily_report = Report::DailyImport.new
+          daily_report.create(customer)
+
+          UserMailer.mail_report(customer, 'import').deliver
           #******** creating Report through workers*********************
-          DailyReportWorker.perform_async(customer.id, 'import')
+          #DailyReportWorker.perform_async(customer.id, 'import')
           f.puts("Completed - #{customer.name}")
         rescue Exception => e
           UserMailer.error_mail_report(customer, e).deliver
