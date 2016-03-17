@@ -84,12 +84,12 @@ module Report
 
               if !a[:status].blank?  and !a[:status].first.eql?(a[:status].second) then
                 h[a[:status].second] = [] if h[a[:status].second].nil?
-                h[a[:status].second].unshift(a[:updated_at].try(:second).try(:[], :to_date).try(:strftime, "%d-%b-%Y").to_s +
+                h[a[:status].second].unshift(a[:updated_at].try(:second).try(:to_date).try(:strftime, "%d-%b-%Y").to_s +
                                              " : " + (a[:remarks].nil? ? " " : a[:remarks].try(:second).to_s))
               else
                 if !a[:remarks].blank? then
                   h[a[:status].second] = [] if h[a[:status].second].nil?
-                  h[a[:status].second].unshift(a[:updated_at].try(:second).try(:[], :to_date).try(:strftime, "%d-%b-%Y").to_s +
+                  h[a[:status].second].unshift(a[:updated_at].try(:second).try(:to_date).try(:strftime, "%d-%b-%Y").to_s +
                                                " : " + a[:remarks].try(:second).to_s)
                 end
               end
