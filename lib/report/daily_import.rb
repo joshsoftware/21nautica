@@ -65,7 +65,7 @@ module Report
                      "Copy Documents Received", "Original Documents Received",
                      "Container Discharged", "Ready to Load", "Truck Allocated",
                      "Loaded Out Of Port", "Arrived at Border", "Departed from Border", "Arrived at Destination",
-                     "Arrived at Malaba/ Rusumu", "Departed From Malaba/ Rusumu" , "Arrived at Kampala/ Kigali", "Truck Released"],
+                     "Truck Released"],
                   style: heading, height: 40
       if status
         imports = customer.imports.includes({import_items: :audits}, :audits).where("import_items.status" => status)
@@ -111,8 +111,7 @@ module Report
                      h["original_documents_received"], h["container_discharged"],
                      h["ready_to_load"], h["truck_allocated"], h["loaded_out_of_port"],
                      (h["arrived_at_border"]), (h["departed_from_border"]), (h["arrived_at_destination"]),
-                     (h["arrived_at_malaba"] or h["arrived_at_rusumu"]), (h["departed_from_malaba"] or h["departed_from_rusumu"]),
-                     (h["arrived_at_kampala"] or h["arrived_at_kigali"]), h["delivered"]],
+                     h["delivered"]],
                      style: center, height: max_height
 
           h.clear
