@@ -59,6 +59,7 @@ gem 'cancancan', '~> 1.10'
 gem 'sidekiq'
 gem 'foreman'
 gem 'sinatra', require: false
+gem 'mina'
 
 group :development do
   gem 'tlsmail'
