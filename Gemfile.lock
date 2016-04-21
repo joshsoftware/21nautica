@@ -6,6 +6,13 @@ GIT
       rails (>= 4.0)
       request_store
 
+GIT
+  remote: git@github.com:paritoshbotre/sparkpost_rails.git
+  revision: 7896ddce927bad7adbeaabb0907cc73995e4ab79
+  specs:
+    sparkpost_rails (1.2.0)
+      rails (~> 4.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -299,6 +306,7 @@ DEPENDENCIES
   simple_form
   simplecov
   sinatra
+  sparkpost_rails!
   spring
   therubyracer
   tlsmail

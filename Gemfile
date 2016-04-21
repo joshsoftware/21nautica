@@ -60,6 +60,7 @@ gem 'sidekiq'
 gem 'foreman'
 gem 'sinatra', require: false
 gem 'mina'
+gem 'sparkpost_rails', git: 'git@github.com:paritoshbotre/sparkpost_rails.git'
 
 group :development do
   gem 'tlsmail'
