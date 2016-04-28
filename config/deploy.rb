@@ -14,7 +14,7 @@ set :domain, '54.89.118.119'
 set :user, 'ubuntu'
 set :deploy_to, '/www/erp-21nautica'
 set :repository, 'git@github.com:joshsoftware/21nautica.git'
-set :branch, 'master'
+set :branch, 'production'
 
 # For system-wide RVM install.
 #   set :rvm_path, '/usr/local/rvm/bin/rvm'
