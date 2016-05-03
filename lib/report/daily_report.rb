@@ -53,25 +53,33 @@ module Report
       f = File.new(path, "w")
       f.puts("********* Sending import report *************")
       f.puts("Processing Started #{Time.now.to_s}")
+      f.puts('Customer List')
+      customers.each do |customer|
+        f.puts(customer.name)
+      end
+      f.close
 
       customers.each do |customer|
         begin
-          f.puts("Processing - #{customer.name}")
+          f1 = File.open(path, 'a+')
+          f1.puts("Processing - #{customer.name}")
+          f1.close
 
+          p "************ Processing Customer #{customer.name} **********"
           daily_report = Report::DailyImport.new
           daily_report.create(customer)
 
           UserMailer.mail_report(customer, 'import').deliver
           #******** creating Report through workers*********************
           #DailyReportWorker.perform_async(customer.id, 'import')
-          f.puts("Completed - #{customer.name}")
         rescue Exception => e
+          p "************ Error occured for Customer #{customer.name} **********"
           UserMailer.error_mail_report(customer, e).deliver
         end
       end
-
-      f.puts("Processing End at #{Time.now.to_s}")
-      f.close
+      append_mode_file = File.open(path, 'a+')
+      append_mode_file.puts("Processing End at #{Time.now.to_s}")
+      append_mode_file.close
 
       UserMailer.mail_report_status('import').deliver
     end
