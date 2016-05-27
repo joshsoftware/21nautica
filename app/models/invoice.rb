@@ -32,6 +32,20 @@ class Invoice < ActiveRecord::Base
     end
   end 
 
+  class << self
+    def merge_additional_invoices(invoices)
+      additional_invoices = []
+      invoices.each do |invoice|
+        if invoice.previous_invoice.nil?
+          additional_invoices << invoice
+        else
+          additional_invoices << invoice.previous_invoice
+        end
+      end
+      additional_invoices.uniq
+    end
+  end
+
   def customer_name
     self.customer.try(:name)
   end

@@ -10,6 +10,7 @@ module Report
           invoices = Invoice.where(date: selected_month.beginning_of_day..selected_month.end_of_month).order(date: :asc)
         else
           invoices = Invoice.where(customer_id: customers, date: selected_month.beginning_of_day..selected_month.end_of_month).order(date: :asc)
+          invoices = Invoice.merge_additional_invoices(invoices)
         end
         add_data(sheet, invoices, ugx_amt)
       end
@@ -21,7 +22,7 @@ module Report
     def add_data(sheet, invoices, ugx_amt)
 
       sheet.add_row ['Customer Name', 'Date', 'BL Number', 'W/o Num', 'Quantity', 'EQ', 'AF', 'SLC', 'PC', 'PS', 'OF', 'CD', 'FC', 
-                     'Haulage', 'ER', 'TDC', 'LS', 'ICD', 'BCE','Other charges', 'Others', 'Total Exp','INV', 'Invoice Amount', 'Margins']
+                     'Haulage', 'ER', 'TDC', 'LS', 'ICD', 'BCE','Other charges', 'Others', 'Total Exp','INV', 'Invoice Amount', 'VD', 'Margins']
 
       invoices.each do |invoice|
         invoiceable = invoice.invoiceable   #BillOfLading OR Movement Object
@@ -39,25 +40,41 @@ module Report
           work_order_num  = get_work_order_number(invoice)
           quantity        = bill_of_lading.quantity
           equipment_type  = bill_of_lading.equipment_type                             #equipment_type
-          if invoice.previous_invoice.present?
-            charges, total_exp = get_charges(nil, ugx_amt)
+          charges, total_exp = get_charges(activity_id, ugx_amt)
+          if invoice.additional_invoices.present?
+            inv           = invoice.number + ',' + invoice.additional_invoices.collect(&:number).join('')
+            inv_amount    = invoice.additional_invoices.sum(:amount) + invoice.amount
           else
-            charges, total_exp = get_charges(activity_id, ugx_amt)
+            inv_amount    = invoice.amount
+            inv           = invoice.number
           end
-          inv             = invoice.number
-          inv_amount      = invoice.amount 
-          margins         = invoice.amount - total_exp 
+          debit_note_amt  = get_debit_note_amt(invoice)
+          margins         = (inv_amount - total_exp) + debit_note_amt
           customer_name   = invoice.customer.name
           
           sheet.add_row [customer_name, date, bl_number, work_order_num, quantity, equipment_type, 
             charges['Agency Fee'], charges['Shipping Line Charges'], charges['Port Charges'], charges['Port Storage'], charges['Ocean Freight'],
             charges['Container Demurrage'], charges['Final Clearing'], charges['Haulage'], charges['Empty Return'], charges['Truck Detention'],
             charges['Local Shunting'], charges['ICD Charges'], charges['Border Clearing Expense'], charges['Other charges'], 
-            charges['Others'], total_exp, inv, inv_amount, margins] 
+            charges['Others'], total_exp, inv, inv_amount, debit_note_amt, margins] 
         end
       end
 
       sheet
+    end
+
+    def get_debit_note_amt(invoice)
+      invoiceable = invoice.invoiceable
+      debit_note_sum = 0
+      if invoice.invoiceable_type == 'BillOfLading'
+        bl = invoice.invoiceable
+        debit_note_sum += DebitNote.where(number: [invoice.invoiceable.bl_number,
+                                                invoice.invoiceable.import.import_items.collect(&:container_number)]).sum(:amount)
+      else
+        debit_note_sum += DebitNote.where(number: [invoice.invoiceable.bl_number,
+                                                invoice.invoiceable.export_item.container]).sum(:amount)
+      end
+      debit_note_sum
     end
 
     def get_charges(activity_id, ugx_amt)

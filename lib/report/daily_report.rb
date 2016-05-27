@@ -51,6 +51,7 @@ module Report
       path = "#{Rails.root}/tmp/daily_report.log"
 
       f = File.new(path, "w")
+      f.puts("************* #{Time.now.strftime("%d/%m/%Y %H:%M")} ***********")
       f.puts("********* Sending import report *************")
       f.puts("Processing Started #{Time.now.to_s}")
       f.puts('Customer List')
