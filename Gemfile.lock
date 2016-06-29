@@ -8,7 +8,8 @@ GIT
 
 GIT
   remote: git@github.com:paritoshbotre/sparkpost_rails.git
-  revision: 7896ddce927bad7adbeaabb0907cc73995e4ab79
+  revision: cab71c34b8bfa83041ed0c5c83a5aa0c74653e08
+  ref: cab71c34b8bfa83041ed0c5c83a5aa0c74653e08
   specs:
     sparkpost_rails (1.2.0)
       rails (~> 4.0)
