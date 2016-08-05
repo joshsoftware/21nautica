@@ -67,12 +67,18 @@ module Report
       invoiceable = invoice.invoiceable
       debit_note_sum = 0
       if invoice.invoiceable_type == 'BillOfLading'
-        bl = invoice.invoiceable
-        debit_note_sum += DebitNote.where(number: [invoice.invoiceable.bl_number,
-                                                invoice.invoiceable.import.import_items.collect(&:container_number)]).sum(:amount)
+        if invoiceable.import.nil?
+          # Export TBL type
+          export_item = invoiceable.movements.collect(&:export_item).collect(&:container)
+          debit_note_sum += DebitNote.where(number: [invoiceable.bl_number, export_item]).sum(:amount)
+
+        else
+          debit_note_sum += DebitNote.where(number: [invoiceable.bl_number,
+                                            invoiceable.import.import_items.collect(&:container_number)]).sum(:amount)
+        end
       else
-        debit_note_sum += DebitNote.where(number: [invoice.invoiceable.bl_number,
-                                                invoice.invoiceable.export_item.container]).sum(:amount)
+        debit_note_sum += DebitNote.where(number: [invoiceable.bl_number,
+                                                invoiceable.export_item.container]).sum(:amount)
       end
       debit_note_sum
     end
