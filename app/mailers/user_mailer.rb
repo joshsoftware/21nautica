@@ -24,7 +24,7 @@ class UserMailer < ActionMailer::Base
 
   def send_emails_to_all_customer(customer)
     emails = customer.add_default_emails_to_customer(customer)
-    mail(to: emails, subject: 'Urgent Emails')
+    mail(to: emails, subject: 'Our correct bank details')
   end
 
   def mail_report_status(type)
