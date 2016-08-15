@@ -22,6 +22,11 @@ class UserMailer < ActionMailer::Base
     mail(to: "paritoshbotre@joshsoftware.com", subject: "Error Report")
   end
 
+  def send_emails_to_all_customer(customer)
+    emails = customer.add_default_emails_to_customer(customer)
+    mail(to: emails, subject: 'Urgent Emails')
+  end
+
   def mail_report_status(type)
     attachments["daily_report.log"] = File.read("#{Rails.root}/tmp/daily_report.log")
     users = ["paritoshbotre@joshsoftware.com", "sameert@joshsoftware.com"]
