@@ -11,6 +11,7 @@
     %th Equipment
     %th Weight
     %th Work Order Number
+    %th Entry Number
     %th Clearing Agent
     %th ETA
     %th Quantity
@@ -25,6 +26,7 @@
         %td= import.equipment
         %td= (import.weight.to_f/import.quantity).round(2)
         %td= import.work_order_number
+        %td= import.entry_number
         %td= import.clearing_agent
         %td= import.estimate_arrival
         %td= import.quantity

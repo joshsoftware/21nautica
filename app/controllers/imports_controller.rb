@@ -44,7 +44,7 @@ class ImportsController < ApplicationController
       begin
         @import.send("#{status}!".to_sym)
       rescue
-        @import.errors[:work_order_number] = "first enter work order number"
+        @import.errors[:work_order_number] = "first enter work order number or entry number"
         @errors = @import.errors.messages.values.flatten
       end
     else
