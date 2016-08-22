@@ -128,14 +128,15 @@ class BillsController < ApplicationController
   end
 
   def get_import_qunatity(item_type, item_for, number)
-    query = BillItem.where(item_type: item_type, item_for: item_for).where('lower(item_number) = ?', number.downcase).first
+    bill_items = BillItem.where(item_type: item_type, item_for: item_for).where('lower(item_number) = ?', number.downcase)
+    query = bill_items.first
     @quantity = query.activity.quantity
     activity_id = query.activity_id
     if item_for == 'bl'
       @equipment_type = BillOfLading.where('lower(bl_number) = ?', number.downcase).first.equipment_type
       @invoice_for_bl = BillItem.where(activity_id: activity_id, activity_type: 'Import', item_for: "container")
       @sum_of_bl = BillItem.where(activity_id: activity_id, activity_type: 'Import').sum(:line_amount) 
-      @debit_notes = query.bill.debit_notes
+      @debit_notes = DebitNote.where(bill_id: bill_items.pluck(:bill_id))
       @debit_notes_sum = @debit_notes.sum(:amount)
     else
       @debit_notes = query.bill.debit_notes.where(debit_note_for: 'container')
