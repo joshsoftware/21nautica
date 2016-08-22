@@ -139,24 +139,25 @@ class BillsController < ApplicationController
       @debit_notes = DebitNote.where(bill_id: bill_items.pluck(:bill_id))
       @debit_notes_sum = @debit_notes.sum(:amount)
     else
-      @debit_notes = query.bill.debit_notes.where(debit_note_for: 'container')
+      @debit_notes = DebitNote.where(bill_id: bill_items.pluck(:bill_id), debit_note_for: 'container')
       @debit_notes_sum = @debit_notes.sum(:amount)
       @sum_of_bl = BillItem.where('lower(item_number) = ? and activity_type = ?', number.downcase, 'Import').sum(:line_amount) 
     end
   end
 
   def get_export_qunatity(item_type, item_for, number)
-    query = BillItem.where(item_type: item_type, item_for: item_for).where('lower(item_number) = ?', number.downcase).first
+    bill_items = BillItem.where(item_type: item_type, item_for: item_for).where('lower(item_number) = ?', number.downcase)
+    query = bill_items.first
     movement = Movement.where(bl_number: number) 
     activity_id = query.activity_id
     if item_for == 'container'
       bl_number = ExportItem.where('lower(container) = ?', number.downcase).first.movement.try(:bl_number)
       @quantity = Movement.where(bl_number: bl_number).count
       @sum_of_bl = BillItem.where('lower(item_number) = ? and activity_type = ?', number.downcase, 'Export').sum(:line_amount) 
-      @debit_notes = query.bill.debit_notes.where(debit_note_for: 'container')
+      @debit_notes = DebitNote.where(bill_id: bill_items.pluck(:bill_id), debit_note_for: 'container')
       @debit_notes_sum = @debit_notes.sum(:amount)
     else
-      @debit_notes = query.bill.debit_notes
+      @debit_notes = DebitNote.where(bill_id: bill_items.pluck(:bill_id))
       @debit_notes_sum = @debit_notes.sum(:amount)
       @equipment_type = BillOfLading.where('lower(bl_number) = ?', number.downcase).first.equipment_type
       @quantity = movement.count
