@@ -25,7 +25,7 @@ $(document).on 'change', '#import_from', ->
     $("#import_to").find("option:gt(0)").remove()
     $.each newOptions, (index, value) ->
       $el.append $('<option></option>').attr('value', value).text(value)
-    $el.val('Kampala')
+#$el.val('Kampala')
 
 datatable_initialize = ->
   row = 0
