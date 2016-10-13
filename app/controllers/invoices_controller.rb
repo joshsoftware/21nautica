@@ -76,8 +76,7 @@ class InvoicesController < ApplicationController
   def delete_ledger
     invoice = Invoice.find(params[:id])
     customer_id = invoice.customer_id
-    invoice.status = 'ready'
-    invoice.save
+    invoice.destroy
 
     redirect_to readjust_customer_path(customer_id)
   end
