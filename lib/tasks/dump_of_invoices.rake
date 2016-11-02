@@ -43,14 +43,17 @@ namespace "21nautica" do
   task vendor_invoices_dump_31_march: :environment do |csv|
     invoices = Invoice.includes(:customer).where("date <= ?",  '31-03-2016'.to_date).order(date: :asc)
     CSV.open("#{Rails.root}/tmp/invoices_upto_march.csv", 'wb') do |csv|
-      csv << ['Vendor Name', 'Invoice Number', 'Invoice Value', 'Customer Invoice Number']
+      csv << ['Customer Name', 'Customer Invoice amount', 'Vendor Name', 'Vendor Invoice Date',
+              'Vendor Invoice Amount', 'Vendor Invoice Number', 'Customer Invoice Number']
       invoices.each do |invoice|
         invoiceable = invoice.invoiceable   #BillOfLading OR Movement Object
 
         if invoice.invoiceable_type == 'BillOfLading'
           activity_id = invoice.invoiceable.import.id unless invoice.invoiceable.nil? || invoice.invoiceable.import.nil?
+          item_type = 'Import'
         else
           activity_id = invoice.invoiceable.export_item.export_id  unless invoice.invoiceable.nil? || invoice.invoiceable.export_item.nil?
+          item_type = 'Export'
         end
 
         inv_number = []
@@ -61,9 +64,11 @@ namespace "21nautica" do
           inv_number << invoice.number
         end
 
-        bill_items = BillItem.includes(:vendor, :bill).where('bill_date >= ? AND activity_id = ?', '1-4-2016'.to_date, activity_id)
+        bill_items = BillItem.includes(:vendor, :bill).where('bill_date >= ? AND activity_id = ? AND item_type = ?', 
+                                                             '1-4-2016'.to_date, activity_id, item_type).order(bill_date: :asc)
         bill_items.each do |bill_item|
-          csv << [bill_item.vendor.name, bill_item.bill.bill_number, bill_item.bill.value, inv_number].flatten
+          csv << [invoice.customer.name, invoice.amount, bill_item.vendor.name, bill_item.bill_date, bill_item.line_amount, 
+                  bill_item.bill.bill_number, inv_number].flatten
         end
       end
     end
@@ -73,14 +78,17 @@ namespace "21nautica" do
   task vendor_invoices_dump_30_june: :environment do |csv|
     invoices = Invoice.includes(:customer).where("date <= ?",  '30-06-2016'.to_date).order(date: :asc)
     CSV.open("#{Rails.root}/tmp/invoices_upto_june.csv", 'wb') do |csv|
-      csv << ['Vendor Name', 'Invoice Number', 'Invoice Value', 'Customer Invoice Number']
+      csv << ['Customer Name', 'Customer Invoice amount', 'Vendor Name', 'Vendor Invoice Date',
+              'Vendor Invoice Amount', 'Vendor Invoice Number', 'Customer Invoice Number']
       invoices.each do |invoice|
         invoiceable = invoice.invoiceable   #BillOfLading OR Movement Object
 
         if invoice.invoiceable_type == 'BillOfLading'
           activity_id = invoice.invoiceable.import.id unless invoice.invoiceable.nil? || invoice.invoiceable.import.nil?
+          item_type = 'Import'
         else
           activity_id = invoice.invoiceable.export_item.export_id  unless invoice.invoiceable.nil? || invoice.invoiceable.export_item.nil?
+          item_type = 'Export'
         end
 
         inv_number = []
@@ -91,9 +99,11 @@ namespace "21nautica" do
           inv_number << invoice.number
         end
 
-        bill_items = BillItem.includes(:vendor, :bill).where('bill_date >= ? AND activity_id = ?', '1-7-2016'.to_date, activity_id)
+        bill_items = BillItem.includes(:vendor, :bill).where('bill_date >= ? AND activity_id = ? AND item_type = ?',
+                                                             '1-7-2016'.to_date, activity_id, item_type).order(bill_date: :asc)
         bill_items.each do |bill_item|
-          csv << [bill_item.vendor.name, bill_item.bill.bill_number, bill_item.bill.value, inv_number].flatten
+          csv << [invoice.customer.name, invoice.amount, bill_item.vendor.name, bill_item.bill_date, bill_item.line_amount, 
+                  bill_item.bill.bill_number, inv_number].flatten
         end
       end
     end
