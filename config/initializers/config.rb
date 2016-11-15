@@ -1,6 +1,6 @@
 require 'patch'
 
-DESTINATION_PORTS = %W(Nhava\ Sheva Mundra Tuticorin Chennai Jebel\ Ali Mersin Sydney)
+DESTINATION_PORTS = %W(Nhava\ Sheva Mundra Tuticorin Chennai Jebel\ Ali Mersin Sydney Kolkata)
 TYPE = %W(TBL Haulage)
 CURRENCY = %w(USD UGX)
 EQUIPMENT_TYPE = %W(20GP 40GP 40OT 40FR 20OT)
