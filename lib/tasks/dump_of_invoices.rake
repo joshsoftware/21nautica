@@ -1,5 +1,18 @@
 require 'csv'
 namespace "21nautica" do
+  desc 'dump invoices from 1.4.2015 to 31.3.2016'
+  task dump_invoices_from_jan_to_mar: :environment do
+    CSV.open("#{Rails.root}/tmp/invoices.csv", 'wb') do |csv|
+      csv << ['Customer Name', 'Invoice Number', 'Invoice Date', 'BL Number/Container Number',
+              'Quantity', 'Equipment Type', 'Document Number', 'Invoice Amount', 'Status']
+      invoices = Invoice.includes(:customer).where(date: '1-4-2015'.to_date..'31-3-2016'.to_date).order(date: :asc)
+      invoices.each do |inv|
+        csv << [inv.customer.name, inv.number, inv.date, inv.bl_or_container_number, inv.total_containers,
+                inv.equipment_type, inv.document_number, inv.amount, inv.status]
+      end
+    end
+  end
+
   desc "Dump Invoices upto 30/6/2016"
   task dump_invoices: :environment do
     CSV.open("#{Rails.root}/invoices.csv", 'wb') do |csv|
