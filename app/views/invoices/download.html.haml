@@ -75,29 +75,35 @@
           %b Terms & Conditions:
           %ol
             %li
-              Payment should be made by A/C Payee cheque or draft in favour of “21 Nautica Logistics Limited” or by NEFT / RTGS into:
-              %br/
-              Account Name: 21 Nautica Logistics Limited
-              %br/
-              Account Number: 8500000057
-              %br/
-              Bank: EXIM Bank ( Uganda ) Limited
-              %br/
-              Branch: Kampala , Uganda
-              %br/
-              Swift Code: EXTNUGKA
+              - if @invoice.destination == 'Lusaka'
+                = render 'lusaka_template'
+              - else
+                Payment should be made by A/C Payee cheque or draft in favour of “21 Nautica Logistics Limited” or by NEFT / RTGS into:
+                %br/
+                Account Name: 21 Nautica Logistics Limited
+                %br/
+                Account Number: 8500000057
+                %br/
+                Bank: EXIM Bank ( Uganda ) Limited
+                %br/
+                Branch: Kampala , Uganda
+                %br/
+                Swift Code: EXTNUGKA
             %li   
               Our liability will never exceed the liability of the carrier, railways, transporter who have a part in the entire act of carriage of cargo
             %li
               Any errors or omissions must be brought to our notice within 3 days of receipt of this bill, failing which the contents of this invoice shall be deemed to have been accepted by the customer.
       %tr
         %td{colspan: "2"}
-          %b Agent Address:
-          %br/
-          First Floor, Nakawa House,
-          %br/
-          Portbell Road, Kampala.
-          %br/
-          Phone : +256 757527576
+          - if @invoice.destination == 'Lusaka'
+            = render 'lusaka_agent_template'
+          - else
+            %b Agent Address:
+            %br/
+            First Floor, Nakawa House,
+            %br/
+            Portbell Road, Kampala.
+            %br/
+            Phone : +256 757527576
         %td{colspan: "2"}
           %b This is a computer generated Invoice.
