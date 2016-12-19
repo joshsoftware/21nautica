@@ -1,5 +1,30 @@
 require 'csv'
 namespace "21nautica" do
+  desc 'dump invoices for vendor Tenya Logistics'
+  task dump_invoices_tenya_logistics: :environment do
+    CSV.open("#{Rails.root}/tmp/tenya_logistics_invoices.csv", 'wb') do |csv|
+      vendor = Vendor.where(name: 'Tenya Logistics').first
+      invoices = Bill.where(vendor_id: vendor.id).order(bill_date: :asc)
+      headers = ['Vendor Name', 'Invoice No', 'Invoice Date', 'Haulage', 'Empty Return', 'Truck Detention', 'Local Shunting',
+                 'ICD Charges', 'Other Charges', 'Ocean Freight', 'Container Demurrage', 'Port Charges', 'Shipping Line Charges', 
+                 'Port Storage', 'VAT', 'Final Clearing', 'Others', 'Agency Fee', 'Border Clearing Expense']
+      csv << headers
+      invoices.each do |inv|
+        charges_hash = {}
+        CHARGES.values.flatten.uniq.each do |charge|
+          amount = BillItem.where(charge_for: charge, vendor_id: vendor.id, bill_id: inv.id).sum(:line_amount)
+          charges_hash[charge] = amount.to_f
+        end
+        csv << [inv.vendor.name, inv.bill_number, inv.bill_date, charges_hash['Haulage'], charges_hash['Empty Return'], 
+                charges_hash['Truck Detention'], charges_hash['Local Shunting'], charges_hash['ICD Charges'], 
+                charges_hash['Other Charges'], charges_hash['Ocean Freight'], charges_hash['Container Demurrage'], 
+                charges_hash['Port Charges'], charges_hash['Shipping Line Charges'], charges_hash['Port Storage'],
+                charges_hash['VAT'], charges_hash['Final Clearing'], charges_hash['Others'], charges_hash['Agency Fee'],
+                charges_hash['Border Clearing Expense']]
+      end
+    end
+  end
+
   desc 'dump invoices from 1.4.2015 to 31.3.2016'
   task dump_invoices_from_jan_to_mar: :environment do
     CSV.open("#{Rails.root}/tmp/invoices.csv", 'wb') do |csv|
