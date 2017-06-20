@@ -9,10 +9,21 @@ require 'mina/rvm'    # for rvm support. (http://rvm.io)
 #   deploy_to    - Path to deploy into.
 #   repository   - Git repo to clone from. (needed by mina/git)
 #   branch       - Branch name to deploy. (needed by mina/git)
+puts 'server'
+puts server
+if server == 'server1'
+  path = '/www/ug-21nautica' 
+else
+  path = '/www/erp-21nautica' 
+end
+
+puts '***********************'
+puts '***********************'
+puts path
 
 set :domain, '54.89.118.119' 
 set :user, 'ubuntu'
-set :deploy_to, '/www/erp-21nautica'
+set :deploy_to, path
 set :repository, 'git@github.com:joshsoftware/21nautica.git'
 set :branch, 'production'
 
