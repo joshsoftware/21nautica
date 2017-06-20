@@ -93,7 +93,6 @@ task :deploy => :environment do
     invoke :'bundle:install'
     invoke :'rails:db_create'
     invoke :'rails:db_migrate'
-    invoke :'rails:db_create'
     invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
 
