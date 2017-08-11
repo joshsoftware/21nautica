@@ -19,10 +19,6 @@ else
   path = '/www/erp-21nautica' 
 end
 
-puts '***********************'
-puts '***********************'
-puts path
-
 set :domain, '54.89.118.119' 
 set :user, 'ubuntu'
 set :deploy_to, path
