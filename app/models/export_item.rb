@@ -24,6 +24,8 @@ class ExportItem < ActiveRecord::Base
   validate :assignment_of_container, if: "container.present? && container_changed?"
   validates_uniqueness_of :container, allow_nil: true
 
+  before_save :strip_whitespaces
+
   def assignment_of_container
     count=0
     count1 = 0
@@ -56,6 +58,10 @@ class ExportItem < ActiveRecord::Base
 
   def as_json(options= {})
     super(only: [:id, :export_id, :container, :location, :date_of_placement, :movement_id], methods: :date_since_placement)
+  end
+
+  def strip_whitespaces
+    self.container = container.squish if container
   end
 
 end

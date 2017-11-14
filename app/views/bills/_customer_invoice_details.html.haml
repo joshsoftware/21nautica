@@ -1,4 +1,4 @@
-- if @bl_number_invoices 
+- if @bl_number_invoices && @bill_items.any?
   - if @bl_number_invoices.count != 0
     %h3 Customer Invoice for BL 
     %table.table.table-stripped

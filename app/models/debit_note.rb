@@ -11,7 +11,7 @@ class DebitNote < ActiveRecord::Base
   belongs_to :bill
   belongs_to :vendor
   
-  has_one :vendor_ledger, as: :voucher
+  has_one :vendor_ledger, as: :voucher, dependent: :destroy
 
   validates_presence_of :amount, :reason, :vendor_id
   validates_associated :vendor
