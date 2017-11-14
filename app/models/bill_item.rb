@@ -39,7 +39,7 @@ class BillItem < ActiveRecord::Base
 
   validate :bl_check_total_quantity
 
-  before_save :assigns_bill_items
+  before_save :assigns_bill_items, :strip_whitespaces
 
   def assigns_bill_items
     self.bill_date = self.bill.bill_date
@@ -82,6 +82,10 @@ class BillItem < ActiveRecord::Base
       self.errors.add(:quantity, "Total charged qty exceeds Export qty") if export_qty < (billed_qty + self.quantity)
 
     end
+  end
+
+  def strip_whitespaces
+    self.item_number = item_number.squish
   end
 
 end
