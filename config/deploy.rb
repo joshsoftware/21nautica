@@ -20,7 +20,7 @@ elsif server == 'erp'
 elsif server == 'int'
   path = '/www/int-21nautica'
 else
-  path = '/www/rfc-21nautica'
+  path = '/www/rfs-21nautica'
 end
 
 set :domain, '54.89.118.119' 
