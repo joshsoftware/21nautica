@@ -9,14 +9,18 @@ require 'mina/rvm'    # for rvm support. (http://rvm.io)
 #   deploy_to    - Path to deploy into.
 #   repository   - Git repo to clone from. (needed by mina/git)
 #   branch       - Branch name to deploy. (needed by mina/git)
-server = ENV['server'] || 'server2'
+server = ENV['server'] || 'erp'
 puts 'server'
 puts server
 
-if server == 'server1'
+if server == 'ug'
   path = '/www/ug-21nautica' 
-else
+elsif server == 'erp'
   path = '/www/erp-21nautica' 
+elsif server == 'int'
+  path = '/www/int-21nautica'
+else
+  path = '/www/rfc-21nautica'
 end
 
 set :domain, '54.89.118.119' 
