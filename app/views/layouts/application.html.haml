@@ -1,7 +1,10 @@
 !!!
 %html
   %head
-    %title 21 Nautica
+    - if is_rfs_host?
+      %title Reliable Freight 
+    - else
+      %title 21 Nautica
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags

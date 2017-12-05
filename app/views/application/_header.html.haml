@@ -6,7 +6,10 @@
           %span.icon-bar
           %span.icon-bar
           %span.icon-bar
-        = link_to '21 Nautica', '#', class: 'navbar-brand'
+        - if is_rfs_host?
+          = link_to 'Reliable Freight', '#', class: 'navbar-brand'
+        - else
+          = link_to '21 Nautica', '#', class: 'navbar-brand'
       %ul.nav.navbar-nav
         %li.dropdown
           = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
