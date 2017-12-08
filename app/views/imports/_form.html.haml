@@ -10,6 +10,7 @@
       = f.input :from, collection: PORTS.keys, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
 
       = f.input :to, collection: [], input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+      = f.input :shipper
 
       = f.input :shipping_line_id, collection: get_shipping_line_vendors, as: :select, label: 'Shipping line', include_blank: false
 
