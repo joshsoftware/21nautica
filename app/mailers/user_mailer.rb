@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default from: "Kaushik Somanathan<kaushik@21nautica.com>"
+  default from: ENV['EMAIL_FROM']
 
   def mail_report(customer,type)
     @customer = customer
