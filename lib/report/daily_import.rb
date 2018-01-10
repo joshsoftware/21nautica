@@ -13,10 +13,11 @@ module Report
         center = s.add_style alignment: {vertical: :top, wrap_text: true },
           :border => {:style => :thin, :color => "00" }, sz: 10
 
-        # 2 worksheets in the workbook
-        {'In Transit' => nil, 'History' => 'delivered', 'Summary' => nil}.each do |name, status|
+        {'Snapshot' => nil, 'In Transit' => nil, 'History' => 'delivered', 'Summary' => nil}.each do |name, status|
           workbook.add_worksheet(name: name) do |sheet|
-            if name == 'Summary'
+            if name == 'Snapshot'
+              add_snapshot_report(customer, sheet, center, heading, status)
+            elsif name == 'Summary'
               add_summary_data(customer, sheet, center, heading, status)
             else
               add_data(customer, sheet, center, heading, status)
@@ -36,6 +37,28 @@ module Report
 
       package.serialize("#{Rails.root}/tmp/Imports_#{customer.name.tr(" ", "_")}_#{time}.xlsx")
 
+    end
+
+    def add_snapshot_report(customer, sheet, center, heading, status)
+      sheet.add_row ['In Port']
+      sheet.add_row ['BL Number', 'Shipper', 'Desc', 'Equipment', 'Qty', 'ETA', 'Status'],
+                    style: heading, height: 40
+      imports = customer.imports.where.not(status: 'ready_to_load')
+      imports.each do |import|
+        estimate_arrival = import.estimate_arrival.nil? ? "" : import.estimate_arrival.try(:to_date).try(:strftime,"%d-%b-%Y").to_s
+        sheet.add_row [import.bl_number, import.shipper, import.description, import.equipment, import.quantity, estimate_arrival, import.status]
+      end
+      sheet.add_row
+      sheet.add_row ['In Transit']
+      sheet.add_row ['BL Number', 'Shipper', 'Desc', 'Container', 'Truck Number', 'Status'],
+                    style: heading, height: 40
+      imports = customer.imports.includes(:import_items).where(status: 'ready_to_load')
+      imports.each do |import|
+        import.import_items.each do |import_item|
+          sheet.add_row [import.bl_number, import.shipper, import.description, import_item.container_number,
+                         import_item.truck_number, import_item.status]
+        end
+      end
     end
 
     def add_summary_data(customer, sheet, center, heading, status)
