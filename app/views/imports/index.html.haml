@@ -17,6 +17,8 @@
     %th Quantity
     %th#btnAddNewRow Status
     %th Remarks
+    - if is_rfs_host?
+      %th Shipper
   %tbody
     - @imports.each do |import|
       %tr{id: import.id }
@@ -39,6 +41,8 @@
           %button.btn.btn-small.btn-primary{'data-import-id' => "#{import.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => import.status + ',' + import.aasm.events.join(','), 'data-bl-number' => import.bl_number} Update
         %td.remarks.h5
           = import.remarks
+        - if is_rfs_host?
+          %td= import.shipper
 
 #statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog

@@ -15,6 +15,8 @@
     %th Work Order Number
     %th Status
     %th Remarks
+    - if is_rfs_host?
+      %th Shipper
   %tbody
     - @import_items.each do |item|
       %tr{id: item.id}
@@ -35,6 +37,8 @@
           %button.btn.btn-small.btn-primary{'data-importitem-id' => "#{item.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => item.status + ',' + item.aasm.events.join(','), 'data-truck-number' => "#{item.truck_number}",'truck-number-alloted'=> :false} Update
         %td.remarks.h5
           = item.remarks
+        - if is_rfs_host?
+          %td= item.import.shipper
 
 
 #statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
