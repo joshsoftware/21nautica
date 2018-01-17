@@ -5,7 +5,10 @@
 
 %table.table{id: 'imports_table'}
   %thead
-    %th Customer Name
+    - if is_rfs_host?
+      %th Customer Name / Shipper Name
+    - else
+      %th Customer Name
     %th BL Number
     %th Shipping Line
     %th Equipment
@@ -17,12 +20,13 @@
     %th Quantity
     %th#btnAddNewRow Status
     %th Remarks
-    - if is_rfs_host?
-      %th Shipper
   %tbody
     - @imports.each do |import|
       %tr{id: import.id }
-        %td= import.customer.name
+        - if is_rfs_host?
+          %td= "#{import.customer.name}" + " / " + "#{import.shipper}"
+        - else
+          %td= import.customer.name
         %td= import.bl_number
         %td= import.shipping_line.try(:name)
         %td= import.equipment
@@ -41,8 +45,6 @@
           %button.btn.btn-small.btn-primary{'data-import-id' => "#{import.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => import.status + ',' + import.aasm.events.join(','), 'data-bl-number' => import.bl_number} Update
         %td.remarks.h5
           = import.remarks
-        - if is_rfs_host?
-          %td= import.shipper
 
 #statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog

@@ -49,7 +49,7 @@ class ImportItem < ActiveRecord::Base
   end
 
   def customer_name
-    self.import.customer.name
+    import.customer.name
   end
 
   aasm column: 'status' do
