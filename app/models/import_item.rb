@@ -81,12 +81,16 @@ class ImportItem < ActiveRecord::Base
       transitions from: :departed_from_border, to: :arrived_at_destination
     end
 
-    event :truck_released, :after => :check_for_invoice do
+    event :truck_released, :after => [:check_for_invoice, :set_delivery_date] do
       transitions from: :arrived_at_destination, to: :delivered
     end
   end
 
   auditable only: [:status, :updated_at, :current_location, :remarks]
+
+  def set_delivery_date
+    update_attribute(:close_date, Time.zone.now)
+  end
 
   def transporter_name
     self.transporter.try(:name)
