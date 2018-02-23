@@ -55,14 +55,16 @@ module Report
       imports = customer.imports.includes(:import_items).where(status: 'ready_to_load')
       imports.each do |import|
         import.import_items.each do |import_item|
-          next if import_item.close_date.nil?
-          start_date = Time.new(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day)
-          end_date = Time.new(import_item.close_date.year, import_item.close_date.month, import_item.close_date.day)
-
-          difference_in_days = TimeDifference.between(start_date, end_date).in_days
-          next unless difference_in_days.to_i <= 3
-          sheet.add_row [import.bl_number, import.shipper, import.description, import_item.container_number,
-                         import_item.truck_number, import_item.status]
+          if import_item.delivered? && import_item.close_date
+            start_date = Time.new(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day)
+            end_date = Time.new(import_item.close_date.year, import_item.close_date.month, import_item.close_date.day)
+            difference_in_days = TimeDifference.between(start_date, end_date).in_days
+            sheet.add_row [import.bl_number, import.shipper, import.description, import_item.container_number,
+                           import_item.truck_number, import_item.status] if difference_in_days <= 3 
+          else
+            sheet.add_row [import.bl_number, import.shipper, import.description, import_item.container_number,
+                           import_item.truck_number, import_item.status]
+          end
         end
       end
     end
