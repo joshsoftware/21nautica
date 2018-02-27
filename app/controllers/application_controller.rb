@@ -13,4 +13,8 @@ class ApplicationController < ActionController::Base
   def is_rfs_host?
     ENV['HOSTNAME'] == 'RFS'
   end
+
+  def is_ug_host?
+    ENV['HOSTNAME'] == 'UG'
+  end
 end

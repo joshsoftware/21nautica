@@ -18,7 +18,14 @@ class ImportsController < ApplicationController
   def create
     @import = Import.new(import_params)
     if @import.save
-      UserMailer.welcome_message_import(@import).deliver()
+      if is_ug_host?
+        kit = authority_letter_draft
+        pdf = kit.to_pdf
+        file = kit.to_file("#{Rails.root}/tmp/authority_letter_draft.pdf")
+        UserMailer.welcome_message_import(@import, file).deliver
+      else
+        UserMailer.welcome_message_import(@import).deliver()
+      end
       redirect_to imports_path
     else
       @customers = Customer.all
@@ -26,6 +33,14 @@ class ImportsController < ApplicationController
     end
   end
 
+  def authority_letter_draft
+    html = render_to_string(:action => 'authority_letter_draft.html.haml', :layout=> false)
+    options = { margin_bottom: '1.2in', margin_top: '3.0in' }
+    kit = PDFKit.new(html, options)
+    kit.stylesheets << "#{Rails.root}/app/assets/stylesheets/invoices.css.scss"
+    kit
+  end
+  
   def update
     import = Import.find(import_update_params[:id])
     attribute = import_update_params[:columnName].downcase.gsub(' ', '_').to_sym
