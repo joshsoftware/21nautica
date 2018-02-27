@@ -7,6 +7,7 @@
       .row
         .col-md-6
           = f.input :vendor_type, collection: @vendor_type, selected: selected_vendors(@vendor), input_html: { id: 'vendor_list', multiple: true, class: 'multiselect' }
+          = f.input :address_to, as: :text
       .row
         .col-md-6
           = f.submit 'Save', class: 'btn btn-primary', id: 'vendor_save'
