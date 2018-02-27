@@ -19,6 +19,7 @@ class ImportsController < ApplicationController
     @import = Import.new(import_params)
     if @import.save
       if is_ug_host?
+        @bl_number = @import.bl_number
         authority_pdf = authority_letter_draft
         authorisation_pdf = authorisation_letter_pdf
         UserMailer.welcome_message_import(@import, authority_pdf, authorisation_pdf).deliver
@@ -51,7 +52,7 @@ class ImportsController < ApplicationController
     kit = PDFKit.new(html, options)
     kit.stylesheets << "#{Rails.root}/app/assets/stylesheets/invoices.css.scss"
     pdf = kit.to_pdf
-    kit.to_file("#{Rails.root}/tmp/#{filename}.pdf")
+    kit.to_file("#{Rails.root}/tmp/#{@bl_number}_#{filename}.pdf")
   end
   
   def update

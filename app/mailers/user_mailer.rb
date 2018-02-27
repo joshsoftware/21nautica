@@ -47,7 +47,8 @@ class UserMailer < ActionMailer::Base
   end
 
   def attach_pdf(pdf)
-    attachment_name = File.basename pdf
+    pdf_name = File.basename pdf
+    attachment_name = pdf_name.gsub("#{@import.bl_number}_", '')
     attachments[attachment_name] = File.read(pdf)
   end
 
