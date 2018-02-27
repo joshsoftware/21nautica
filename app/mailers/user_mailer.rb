@@ -34,14 +34,16 @@ class UserMailer < ActionMailer::Base
     File.delete("#{Rails.root}/tmp/daily_report.log")
   end
 
-  def welcome_message_import(import, authority_letter_pdf = nil)
+  def welcome_message_import(import, authority_letter_pdf = nil, authorisation_letter_pdf = nil)
     @import = import
     customer = Customer.find(@import.customer_id)
     emails = customer.add_default_emails_to_customer(customer)
     customer.emails = emails
     attach_pdf(authority_letter_pdf) if authority_letter_pdf
+    attach_pdf(authorisation_letter_pdf) if authorisation_letter_pdf
     mail(to: customer.emails,subject: "Your new order")
     File.delete("#{Rails.root}/tmp/authority_letter_draft.pdf") if authority_letter_pdf
+    File.delete("#{Rails.root}/tmp/authorisation_letter_for_weclines.pdf") if authorisation_letter_pdf
   end
 
   def attach_pdf(pdf)
