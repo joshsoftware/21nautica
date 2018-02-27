@@ -37,6 +37,7 @@ class ImportsController < ApplicationController
     if @import.is_wecline_shipping?
       generate_pdf_for_ug_host('authorisation_letter_for_weclines')
     else
+      generate_pdf_for_ug_host('a_letter')
     end
   end
 

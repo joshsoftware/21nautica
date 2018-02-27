@@ -42,8 +42,8 @@ class UserMailer < ActionMailer::Base
     attach_pdf(authority_letter_pdf) if authority_letter_pdf
     attach_pdf(authorisation_letter_pdf) if authorisation_letter_pdf
     mail(to: customer.emails,subject: "Your new order")
-    File.delete("#{Rails.root}/tmp/authority_letter_draft.pdf") if authority_letter_pdf
-    File.delete("#{Rails.root}/tmp/authorisation_letter_for_weclines.pdf") if authorisation_letter_pdf
+    File.delete("#{Rails.root}/tmp/#{File.basename authority_letter_pdf}") if authority_letter_pdf
+    File.delete("#{Rails.root}/tmp/#{File.basename authorisation_letter_pdf}") if authorisation_letter_pdf
   end
 
   def attach_pdf(pdf)
