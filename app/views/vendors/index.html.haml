@@ -6,10 +6,12 @@
   %thead
     %th Name 
     %th Type
+    %th Address
     %th Action
   %tbody
     - @vendors.each do |vendor|
       %tr
         %td= vendor.name 
         %td= vendor.vendor_type 
+        %td= vendor.address_to.presence || '---'
         %td= link_to 'Edit', edit_vendor_path(vendor), class: 'btn btn-primary' 

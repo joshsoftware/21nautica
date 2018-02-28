@@ -18,7 +18,14 @@ class ImportsController < ApplicationController
   def create
     @import = Import.new(import_params)
     if @import.save
-      UserMailer.welcome_message_import(@import).deliver()
+      if is_ug_host?
+        @bl_number = @import.bl_number
+        authority_pdf = authority_letter_draft
+        authorisation_pdf = authorisation_letter_pdf
+        UserMailer.welcome_message_import(@import, authority_pdf, authorisation_pdf).deliver
+      else
+        UserMailer.welcome_message_import(@import).deliver()
+      end
       redirect_to imports_path
     else
       @customers = Customer.all
@@ -26,6 +33,28 @@ class ImportsController < ApplicationController
     end
   end
 
+  def authorisation_letter_pdf
+    # AUTHORISATION LETTER FOR WEC LINES
+    if @import.is_wecline_shipping?
+      generate_pdf_for_ug_host('authorisation_letter_for_weclines')
+    else
+      generate_pdf_for_ug_host('a_letter')
+    end
+  end
+
+  def authority_letter_draft
+    generate_pdf_for_ug_host('authority_letter_draft')
+  end
+
+  def generate_pdf_for_ug_host(filename)
+    html = render_to_string(action: filename, layout: false)
+    options = { margin_bottom: '1.2in', margin_top: '2.8in' }
+    kit = PDFKit.new(html, options)
+    kit.stylesheets << "#{Rails.root}/app/assets/stylesheets/invoices.css.scss"
+    pdf = kit.to_pdf
+    kit.to_file("#{Rails.root}/tmp/#{@bl_number}_#{filename}.pdf")
+  end
+  
   def update
     import = Import.find(import_update_params[:id])
     attribute = import_update_params[:columnName].downcase.gsub(' ', '_').to_sym

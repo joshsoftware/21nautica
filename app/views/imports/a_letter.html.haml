@@ -1,0 +1,33 @@
+.authority_letter_draft
+  %p{style: "float:right"}
+    #{Date.today.strftime('%d %b %Y')}
+  %br
+  %br
+  - if @import.shipping_line.address_to.present?
+    - @import.shipping_line.address_to.split("\r\n").each do |address|
+      %p
+        = address
+  %br
+  %br
+  %p
+    Dear Sir,
+  %p
+    RE: REQUEST TO RELEASE DELIVERY ORDER FOR SHIPMENTS ON BL - #{@import.bl_number}
+
+  %br
+  %p
+    This is to inform you that we have authorized RELIABLE FREIGHT SERVICES LTD as agents for 21
+    Nautica to Clear and deliver subject shipment to Kampala. Kindly release the Delivery Order to them
+  %br
+    We indemnify you of all Liability that may arise after release of the shipment to them
+  %br
+    Your assistance in this Matter is highly appreciated
+
+  %br
+  %br
+  %br
+  %p
+    Yours Faithfully,
+  %br
+  %br
+    Director

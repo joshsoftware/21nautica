@@ -84,6 +84,11 @@ class Import < ActiveRecord::Base
 
   end
 
+  def is_wecline_shipping?
+    return false unless shipping_line
+    shipping_line.name == 'WECLINES'
+  end
+
   def is_work_order_and_entry_number_assigned
     !work_order_number.blank? && !entry_number.blank?
   end
