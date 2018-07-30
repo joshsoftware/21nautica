@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180227104716) do
+ActiveRecord::Schema.define(version: 20180726161656) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -218,7 +218,7 @@ ActiveRecord::Schema.define(version: 20180227104716) do
     t.integer  "invoiceable_id"
     t.string   "invoiceable_type"
     t.string   "legacy_bl"
-    t.string   "remarks"
+    t.text     "remarks"
   end
 
   create_table "ledgers", force: true do |t|

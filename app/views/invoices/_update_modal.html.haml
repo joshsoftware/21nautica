@@ -42,7 +42,8 @@
           #invoice_amount
             =f.input :amount, input_html: {style: "color:red;"}
           %br
-          = f.input :remarks
+          = f.input :remarks, as: :text
+          = f.input :date, as: :string, label: 'Invoice Date', input_html: {id: 'inv_date', class: 'form-control', value: f.object.date.try(:strftime, "%d-%m-%Y")}
       .row.col-md-12
         .col-md-6
           #invoice_number
@@ -89,3 +90,10 @@
 
       = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
       = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
+
+:coffeescript
+
+$(document).on "page:load ready", ->
+  $('#inv_date').datepicker
+    endDate: '+0d'
+    format: 'dd-mm-yyyy'

@@ -83,7 +83,7 @@ class InvoicesController < ApplicationController
 
   private
   def invoice_params
-    params.require(:invoice).permit(:number, :document_number, :amount, :remarks,
+    params.require(:invoice).permit(:number, :document_number, :amount, :remarks, :date,
       particulars_attributes: [:id, :name, :_destroy, :rate, :quantity, :subtotal])
   end
 
