@@ -1,6 +1,16 @@
 %div#invoice_pdf
   %center
-    %img{src: "file://#{Rails.root}/public/images/21nautica.jpg"}
+    - if is_rfs_host?
+      %img{src: "file://#{Rails.root}/public/images/RFS LOGO.jpg"}
+      %h4 Reliable Freight Service Limited
+      %span P.O. Box 42752, Near Ava Kwa Jomvu Road, Mombasa, Kenya
+      %br
+      %span Tel: 2316714/5, 020 2333794/5, 020 2630911/879, 020 2616620, Mobile: 0722-411250
+      %br
+      %center
+        %span Email: accounts@reliablefrieght.co.ke
+    - else
+      %img{src: "file://#{Rails.root}/public/images/21nautica.jpg"}
   %br
   %table#invoicetable.invoice{style: "border-collapse: collapse"}
     %thead
@@ -64,35 +74,39 @@
         %td{colspan: "4"}
           = @invoice.remarks
       %tr
-        %td{colspan: "4"}
-          E. & O.E.
-          %br/
-          PAN NO: AAACZ6633M
-          %br/
-          SERVICE TAX NO: AAACZ6633MSD002
-          %br/
-          %br/
-          %b Terms & Conditions:
-          %ol
-            %li
-              - if @invoice.destination == 'Lusaka'
-                = render 'lusaka_template'
-              - else
-                Payment should be made by A/C Payee cheque or draft in favour of “21 Nautica Logistics Limited” or by NEFT / RTGS into:
-                %br/
-                Account Name: 21 Nautica Logistics Limited
-                %br/
-                Account Number: 8500000057
-                %br/
-                Bank: EXIM Bank ( Uganda ) Limited
-                %br/
-                Branch: Kampala , Uganda
-                %br/
-                Swift Code: EXTNUGKA
-            %li   
-              Our liability will never exceed the liability of the carrier, railways, transporter who have a part in the entire act of carriage of cargo
-            %li
-              Any errors or omissions must be brought to our notice within 3 days of receipt of this bill, failing which the contents of this invoice shall be deemed to have been accepted by the customer.
+        - if is_rfs_host?
+          %td{colspan: "4"}
+            = render 'rfs_terms_conditions'
+        - else
+          %td{colspan: "4"}
+            E. & O.E.
+            %br/
+            PAN NO: AAACZ6633M
+            %br/
+            SERVICE TAX NO: AAACZ6633MSD002
+            %br/
+            %br/
+            %b Terms & Conditions:
+            %ol
+              %li
+                - if @invoice.destination == 'Lusaka'
+                  = render 'lusaka_template'
+                - else
+                  Payment should be made by A/C Payee cheque or draft in favour of “21 Nautica Logistics Limited” or by NEFT / RTGS into:
+                  %br/
+                  Account Name: 21 Nautica Logistics Limited
+                  %br/
+                  Account Number: 8500000057
+                  %br/
+                  Bank: EXIM Bank ( Uganda ) Limited
+                  %br/
+                  Branch: Kampala , Uganda
+                  %br/
+                  Swift Code: EXTNUGKA
+              %li   
+                Our liability will never exceed the liability of the carrier, railways, transporter who have a part in the entire act of carriage of cargo
+              %li
+                Any errors or omissions must be brought to our notice within 3 days of receipt of this bill, failing which the contents of this invoice shall be deemed to have been accepted by the customer.
       %tr
         %td{colspan: "2"}
           - if @invoice.destination == 'Lusaka'
