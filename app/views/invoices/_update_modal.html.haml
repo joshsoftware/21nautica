@@ -43,7 +43,6 @@
             =f.input :amount, input_html: {style: "color:red;"}
           %br
           = f.input :remarks, as: :text
-          = f.input :date, as: :string, label: 'Invoice Date', input_html: {id: 'inv_date', class: 'form-control', value: f.object.date.try(:strftime, "%d-%m-%Y")}
       .row.col-md-12
         .col-md-6
           #invoice_number
@@ -51,6 +50,7 @@
         .col-md-6
           #document_number
             = f.input :document_number
+          = f.input :date, as: :string, label: 'Invoice Date', input_html: {id: 'inv_date', class: 'form-control', value: f.object.date.try(:strftime, "%d-%m-%Y")}
       .row.col-md-12
         .panel.panel-default
           .panel-heading
@@ -92,8 +92,6 @@
       = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
 
 :coffeescript
-
-$(document).on "page:load ready", ->
   $('#inv_date').datepicker
     endDate: '+0d'
     format: 'dd-mm-yyyy'
