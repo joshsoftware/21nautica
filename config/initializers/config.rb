@@ -26,15 +26,18 @@ CHARGES = {"transporter" => ["Haulage", "Empty Return", "Truck Detention", "Loca
                                 "Port Charges", "Shipping Line Charges",
                                 "Port Storage", "VAT", "Final Clearing",
                                 "Others", "Agency Fee"],
-           "shipping_line" => ["Ocean Freight", "Container Demurrage"],
-           "final_clearing_agent" => ['Border Clearing Expense']
+           "shipping_line" => ["Ocean Freight", "Container Demurrage", "THC"],
+           "final_clearing_agent" => ['Border Clearing Expense'],
+           "port_authority" => ['Port Charges', 'Port Storage', 'Others/Misc']
           }
 
 ITEM_FOR = { 'transporter'=> ['container'] , 'icd'=> ['container'] , 'shipping_line'=> ['bl'], 'clearing_agent'=> ['bl'],
-             'final_clearing_agent' => ['container']}
+             'final_clearing_agent' => ['container'], 'port_authority' => ['container'] }
 CHARGES_CLASSIFICATION = {'container' =>["Haulage","Empty Return","Truck Detention","Local Shunting",
-                                         "ICD Charges", "Border Clearing Expense", "Other charges"],
+                                         "ICD Charges", "Border Clearing Expense", "Other charges", 'THC',
+                                         'Port Charges', 'Port Storage', 'Others/Misc' ],
                       'bl' => ['Haulage', "Ocean Freight", "Container Demurrage", "Port Charges", "Shipping Line Charges", "Port Storage", 
-                               "VAT", "Final Clearing", "Others", "Agency Fee", "Ocean Freight", "Container Demurrage"]
+                               "VAT", "Final Clearing", "Others", "Agency Fee", "Ocean Freight", "Container Demurrage", 'THC',
+                               'Port Charges', 'Port Storage', 'Others/Misc']
                         }
 #ITEM_FOR = { transporter: ['container'] , icd: ['container'] , shipping_line: ['bl'], clearing_agent: ['bl']}

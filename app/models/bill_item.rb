@@ -54,7 +54,7 @@ class BillItem < ActiveRecord::Base
   def bl_check_total_quantity
     case self.item_type
     when 'Import'
-      if self.item_for == 'container'
+      if self.item_for == 'container' && ENV['HOSTNAME'] != 'RFS'
         #container
         self.errors.add(:charge_for, "Container already charged") if BillItem.where(activity_id: self.activity_id, activity_type: 'Import', 
                                       charge_for: self.charge_for).where("lower(item_number) = ?", self.item_number.squish.downcase).where.not(id: self.id).exists?
