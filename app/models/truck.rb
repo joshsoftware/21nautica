@@ -1,3 +1,3 @@
 class Truck < ActiveRecord::Base
-  TYEP=['Truck', 'Trailer']
+  TYPE = ['Truck', 'Trailer']
 end
