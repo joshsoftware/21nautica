@@ -51,6 +51,17 @@
               %li= link_to 'List Customers', customers_path
               %li= link_to 'Report', customer_analysis_path 
               %li= link_to 'List Users', users_path 
+        - if user_signed_in? && current_user.is?('Admin')
+          %li.dropdown
+            = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
+              Yard 
+              %span.caret
+            %ul.dropdown-menu
+              %li= link_to 'Asset Master', '#' 
+              %li= link_to 'Vendor Master', '#' 
+              %li= link_to 'Mechanic Master', '#' 
+              %li= link_to 'Spare Master', '#' 
+              %li= link_to 'Req Sheet', '#' 
       -#%div.navbar-form.navbar-left
         %form{role: "search", action: "/bill_of_ladings/search"}
           .form-group
