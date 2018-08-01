@@ -116,7 +116,11 @@ Rails.application.routes.draw do
       get 'send_invoice'
     end
   end
-  resources :spart_parts
+  resources :spare_parts do
+    collection do
+      get :load_sub_categories
+    end
+  end
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

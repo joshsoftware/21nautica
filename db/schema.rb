@@ -316,12 +316,13 @@ ActiveRecord::Schema.define(version: 20180801104742) do
   create_table "spare_parts", force: true do |t|
     t.string   "product_name"
     t.text     "description"
-    t.integer  "spart_part_category_id"
+    t.integer  "spare_part_category_id"
+    t.integer  "spare_part_sub_category_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "spare_parts", ["spart_part_category_id"], name: "index_spare_parts_on_spart_part_category_id", using: :btree
+  add_index "spare_parts", ["spare_part_category_id"], name: "index_spare_parts_on_spare_part_category_id", using: :btree
 
   create_table "trucks", force: true do |t|
     t.string   "type"
