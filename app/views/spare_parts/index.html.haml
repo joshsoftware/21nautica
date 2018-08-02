@@ -1,0 +1,19 @@
+= link_to "Add New Spart Part", new_spare_part_path, class: 'btn btn-primary pull-right'
+%br
+%br
+
+%table.table#spare_parts_table
+  %thead
+    %th Product Name 
+    %th Description 
+    %th Category 
+    %th Sub Category 
+    %th 
+  %tbody
+    - @spare_parts.each do |part|
+      %tr
+        %td= part.product_name 
+        %td= part.description 
+        %td= part.spare_part_category.try(:name )
+        %td= part.spare_part_sub_category.try(:name)
+        %td= link_to 'Edit', edit_spare_part_path(part), class: 'btn btn-primary' 

@@ -22,7 +22,7 @@ module Report
     def add_data(sheet, invoices, ugx_amt)
 
       sheet.add_row ['Customer Name', 'Date', 'BL Number', 'W/o Num', 'Quantity', 'EQ', 'AF', 'SLC', 'PC', 'PS', 'OF', 'CD', 'FC', 
-                     'Haulage', 'ER', 'TDC', 'LS', 'ICD', 'BCE','Other charges', 'Others', 'Total Exp','INV', 'Invoice Amount', 'VD', 'Margins']
+                     'Haulage', 'ER', 'TDC', 'LS', 'ICD', 'BCE','Other charges', 'Others', 'THC', 'Total Exp','INV', 'Invoice Amount', 'VD', 'Margins']
 
       invoices.each do |invoice|
         invoiceable = invoice.invoiceable   #BillOfLading OR Movement Object
@@ -56,7 +56,7 @@ module Report
             charges['Agency Fee'], charges['Shipping Line Charges'], charges['Port Charges'], charges['Port Storage'], charges['Ocean Freight'],
             charges['Container Demurrage'], charges['Final Clearing'], charges['Haulage'], charges['Empty Return'], charges['Truck Detention'],
             charges['Local Shunting'], charges['ICD Charges'], charges['Border Clearing Expense'], charges['Other charges'], 
-            charges['Others'], total_exp, inv, inv_amount, debit_note_amt, margins] 
+            charges['Others'], charges['THC'], total_exp, inv, inv_amount, debit_note_amt, margins] 
         end
       end
 

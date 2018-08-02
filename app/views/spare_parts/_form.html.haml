@@ -1,0 +1,16 @@
+.col-md-12
+= simple_form_for @spare_part, html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
+  .well
+    .row
+      .col-md-6
+        = f.input :product_name
+      .col-md-6
+        = f.input :description, as: :text
+      .col-md-6
+        = f.input :spare_part_category_id, collection: SparePartCategory.main.pluck(:name, :id), include_blank: true
+      .col-md-6
+        = f.input :spare_part_sub_category_id, collection: spare_part_sub_categories, selected: @spare_part.spare_part_sub_category_id
+    .row
+      .col-md-6
+        = f.submit 'Save', class: 'btn btn-primary', id: 'vendor_save'
+        = link_to 'Cancel', spare_parts_path, class: 'btn btn-primary'

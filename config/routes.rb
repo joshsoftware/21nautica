@@ -116,6 +116,17 @@ Rails.application.routes.draw do
       get 'send_invoice'
     end
   end
+  resources :spare_parts do
+    collection do
+      get :load_sub_categories
+    end
+  end
+  resources :req_sheets do
+    collection do
+      get :load_spare_part
+      get :check_truck_type
+    end
+  end
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

@@ -4,7 +4,7 @@ DESTINATION_PORTS = %W(Nhava\ Sheva Mundra Tuticorin Chennai Jebel\ Ali Mersin S
 TYPE = %W(TBL Haulage)
 CURRENCY = %w(USD UGX)
 EQUIPMENT_TYPE = %W(20GP 40GP 40OT 40FR 20OT)
-ROLE = %W(Admin Staff)
+ROLE = %W(Admin Staff Yard)
 SALES_REP_NAMES = ['Kaushik', 'Rajan'] 
 EMAILS_DEFAULTS = ENV['EMAILS_DEFAULTS'] 
 #SHIPPING_LINE = %W(CMA\ CGM Maersk  Evergreen Safmarine PIL Emirates MSC COSCO 
@@ -32,7 +32,7 @@ CHARGES = {"transporter" => ["Haulage", "Empty Return", "Truck Detention", "Loca
           }
 
 ITEM_FOR = { 'transporter'=> ['container'] , 'icd'=> ['container'] , 'shipping_line'=> ['bl'], 'clearing_agent'=> ['bl'],
-             'final_clearing_agent' => ['container'], 'port_authority' => ['container'] }
+             'final_clearing_agent' => ['container'], 'port_authority' => ['bl'] }
 CHARGES_CLASSIFICATION = {'container' =>["Haulage","Empty Return","Truck Detention","Local Shunting",
                                          "ICD Charges", "Border Clearing Expense", "Other charges", 'THC',
                                          'Port Charges', 'Port Storage', 'Others/Misc' ],
