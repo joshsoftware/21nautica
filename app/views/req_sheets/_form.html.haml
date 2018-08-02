@@ -6,7 +6,7 @@
     .col-md-4
       = f.input :date, as: :string, label: 'Date', input_html: { id: 'req_date', class: 'form-control', value: f.object.date.try(:strftime, "%d-%m-%Y")}
     .col-md-4
-      = f.input :truck_id, collection: Truck.pluck(:reg_number, :id), label: 'Number', input_html: {} 
+      = f.input :truck_id, collection: Truck.pluck(:reg_number, :id), label: 'Number'
     .col-md-4
       - if @req_sheet.persisted? && @req_sheet.truck && @req_sheet.truck.is_truck?
         = f.input :km
@@ -21,7 +21,7 @@
       = f.input :value, label: 'Total Value'
 
   = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
-  = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+  = link_to 'Cancel', req_sheets_path, class: 'btn btn-primary', data: {dismiss: 'modal'}
 :coffeescript
   $('#req_date').datepicker
     format: 'dd-mm-yyyy'
