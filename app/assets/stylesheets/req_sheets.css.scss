@@ -1,0 +1,24 @@
+// Place all the styles related to the req_sheets controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+#req_sheet tbody{
+  .spare_part_id {
+    width: 250px !important;
+  }
+  .description {
+    width: 275px !important;
+  }
+  .mechanic_id {
+    width: 245px !important;
+  }
+  .quantity_req {
+    width: 185px !important;
+  } 
+  .req_total_cost {
+    width: 238px !important;
+  }
+  .price_req {
+    width: 235px !important;
+  }
+}

@@ -1,0 +1,16 @@
+= link_to "Add New Req Sheet", new_req_sheet_path, class: 'btn btn-primary pull-right'
+%br
+%br
+%table.table#req_sheet_table
+  %thead
+    %th Ref Number 
+    %th Date
+    %th Total Cost 
+    %th Action
+  %tbody
+    - @req_sheets.each do |req_sheet|
+      %tr
+        %td= req_sheet.ref_number
+        %td= req_sheet.date
+        %td Total Cost
+        %td= link_to "Edit", edit_req_sheet_path(req_sheet), class: 'btn btn-primary'

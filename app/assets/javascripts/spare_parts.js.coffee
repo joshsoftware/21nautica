@@ -3,6 +3,16 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $(document).ready ->
+
+  #***** Initialize the dataTable
+  $('#spare_parts_table').dataTable(
+                      {
+                        "order": [[0, 'asc' ]],
+                        "bJQueryUI": true
+                        "bFilter": true
+                        "sPaginationType": "full_numbers"
+                       })
+
   $('body').on 'change', '#spare_part_spare_part_category_id', ->
     category_id = $(this).val()
     if category_id
@@ -13,3 +23,5 @@ $(document).ready ->
         console.log(data)
     else
       $('#spare_part_spare_part_sub_category_id').html('')
+
+

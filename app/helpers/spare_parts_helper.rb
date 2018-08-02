@@ -11,4 +11,8 @@ module SparePartsHelper
       []
     end
   end
+
+  def get_spare_part
+    SparePart.pluck(:product_name, :id) 
+  end
 end

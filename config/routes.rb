@@ -121,6 +121,11 @@ Rails.application.routes.draw do
       get :load_sub_categories
     end
   end
+  resources :req_sheets do
+    collection do
+      get :load_spare_part
+    end
+  end
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

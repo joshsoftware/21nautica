@@ -1,0 +1,27 @@
+.well
+  %table.table#req_sheet
+    %thead
+      %tr
+        %th Item
+        %th Description 
+        %th Mechanic 
+        %th Price 
+        %th Quantity
+        %th Total Cost
+        %th
+    %tbody
+      = f.simple_fields_for :req_parts, @req_sheet.req_parts , wrapper: false do |part|
+        %tr.fields
+          %td.spare_part_id= part.input :spare_part_id, collection: SparePart.pluck(:product_name, :id), label: false, include_blank: true, wrapper: :vertical_form, input_html: { class: 'spare_part' }
+          - if @req_sheet.persisted?
+            %td.description= part.input :description, wrapper: :vertical_form, label: false, readonly: true, input_html: { value: part.object.spare_part.try(:description), class: 'req_part_description' }
+          - else
+            %td.description= part.input :description, wrapper: :vertical_form, label: false, readonly: true, input_html: { class: 'req_part_description' }
+          %td.mechanic_id= part.input :mechanic_id, collection: Mechanic.pluck(:name, :id), wrapper: :vertical_form, label: false
+          %td.price_req= part.input :price, wrapper: :vertical_form, label: false, input_html: {class: 'req_price'}
+          %td.quantity_req= part.input :quantity, wrapper: :vertical_form, label: false, input_html: {class: 'req_quantity'}
+          %td.req_total_cost= part.input :total_cost, wrapper: :vertical_form, label: false, readonly: true, input_html: {class: 'total_cost'}
+          %td
+            = part.link_to_remove method: :delete, class: 'delete pull-left' do
+              %span.glyphicon.glyphicon-remove
+  = f.link_to_add 'Add', :req_parts, id: 'add_req_parts', class: 'btn btn-primary', "data-target" => '#req_sheet'

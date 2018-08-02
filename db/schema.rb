@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180801104742) do
+ActiveRecord::Schema.define(version: 20180801190534) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -297,6 +297,29 @@ ActiveRecord::Schema.define(version: 20180801104742) do
 
   add_index "payments", ["customer_id"], name: "index_payments_on_customer_id", using: :btree
   add_index "payments", ["vendor_id"], name: "index_payments_on_vendor_id", using: :btree
+
+  create_table "req_parts", force: true do |t|
+    t.integer  "spare_part_id"
+    t.text     "description"
+    t.integer  "mechanic_id"
+    t.float    "price"
+    t.integer  "quantity"
+    t.float    "total_cost"
+    t.integer  "req_sheet_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "req_parts", ["mechanic_id"], name: "index_req_parts_on_mechanic_id", using: :btree
+  add_index "req_parts", ["req_sheet_id"], name: "index_req_parts_on_req_sheet_id", using: :btree
+  add_index "req_parts", ["spare_part_id"], name: "index_req_parts_on_spare_part_id", using: :btree
+
+  create_table "req_sheets", force: true do |t|
+    t.string   "ref_number"
+    t.date     "date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "spare_part_categories", force: true do |t|
     t.string   "name"
