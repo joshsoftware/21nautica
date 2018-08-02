@@ -1,4 +1,5 @@
 class SparePartsController < ApplicationController
+  before_action :find_spare_part, only: [:edit, :update]
 
   def index
     @spare_parts = SparePart.all
@@ -18,11 +19,9 @@ class SparePartsController < ApplicationController
   end
 
   def edit
-    @spare_part = SparePart.find(params[:id])
   end
 
   def update
-    @spare_part = SparePart.find(params[:id])
     if @spare_part.update(spare_part_params)
       redirect_to spare_parts_path
     else
@@ -40,5 +39,9 @@ class SparePartsController < ApplicationController
 
   def spare_part_params
     params.require(:spare_part).permit(:product_name, :description, :spare_part_category_id, :spare_part_sub_category_id)
+  end
+
+  def find_spare_part
+    @spare_part = SparePart.find(params[:id]) 
   end
 end
