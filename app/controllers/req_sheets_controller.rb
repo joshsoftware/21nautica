@@ -38,11 +38,17 @@ class ReqSheetsController < ApplicationController
     render json: spare_part.to_json
   end
 
+  def check_truck_type
+    return unless params[:truck_id]
+    truck = Truck.find params[:truck_id]
+    render json: truck.is_truck?
+  end
+
   private
 
   def req_sheets_params
-    params.require(:req_sheet).permit(:ref_number, :date, req_parts_attributes: [:id, :spare_part_id, :description, :mechanic_id,
-                                                                                 :price, :quantity, :total_cost] 
+    params.require(:req_sheet).permit(:ref_number, :date, :truck_id, :km, :value, req_parts_attributes: [:id, :spare_part_id, :description, :mechanic_id,
+                                                                                                 :price, :quantity, :total_cost] 
                                      )
   end
 

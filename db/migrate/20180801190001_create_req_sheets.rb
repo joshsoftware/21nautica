@@ -4,6 +4,8 @@ class CreateReqSheets < ActiveRecord::Migration
       t.string :ref_number
       t.date :date
       t.float :value
+      t.references :truck, index: true
+      t.integer :km
 
       t.timestamps
     end

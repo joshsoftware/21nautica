@@ -321,9 +321,13 @@ ActiveRecord::Schema.define(version: 20180801190534) do
     t.string   "ref_number"
     t.date     "date"
     t.float    "value"
+    t.integer  "truck_id"
+    t.integer  "km"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "req_sheets", ["truck_id"], name: "index_req_sheets_on_truck_id", using: :btree
 
   create_table "spare_part_categories", force: true do |t|
     t.string   "name"
@@ -352,7 +356,7 @@ ActiveRecord::Schema.define(version: 20180801190534) do
   add_index "spare_parts", ["spare_part_category_id"], name: "index_spare_parts_on_spare_part_category_id", using: :btree
 
   create_table "trucks", force: true do |t|
-    t.string   "type"
+    t.string   "type_of"
     t.string   "reg_number"
     t.date     "year_of_purchase"
     t.date     "insurance_expiry"

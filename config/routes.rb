@@ -124,6 +124,7 @@ Rails.application.routes.draw do
   resources :req_sheets do
     collection do
       get :load_spare_part
+      get :check_truck_type
     end
   end
   # Example of regular route:

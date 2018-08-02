@@ -1,5 +1,6 @@
 class ReqSheet < ActiveRecord::Base
   has_many :req_parts, dependent: :destroy
+  belongs_to :truck
 
   validates_presence_of :ref_number, :date, :value
 
