@@ -32,7 +32,7 @@ CHARGES = {"transporter" => ["Haulage", "Empty Return", "Truck Detention", "Loca
           }
 
 ITEM_FOR = { 'transporter'=> ['container'] , 'icd'=> ['container'] , 'shipping_line'=> ['bl'], 'clearing_agent'=> ['bl'],
-             'final_clearing_agent' => ['container'], 'port_authority' => ['container'] }
+             'final_clearing_agent' => ['container'], 'port_authority' => ['bl'] }
 CHARGES_CLASSIFICATION = {'container' =>["Haulage","Empty Return","Truck Detention","Local Shunting",
                                          "ICD Charges", "Border Clearing Expense", "Other charges", 'THC',
                                          'Port Charges', 'Port Storage', 'Others/Misc' ],

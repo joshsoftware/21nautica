@@ -3,6 +3,7 @@ class CreateReqSheets < ActiveRecord::Migration
     create_table :req_sheets do |t|
       t.string :ref_number
       t.date :date
+      t.float :value
 
       t.timestamps
     end

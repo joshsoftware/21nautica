@@ -234,6 +234,9 @@ ActiveRecord::Schema.define(version: 20180801190534) do
 
   create_table "mechanics", force: true do |t|
     t.string   "name"
+    t.date     "date_of_employment"
+    t.string   "designation"
+    t.float    "salary"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -317,6 +320,7 @@ ActiveRecord::Schema.define(version: 20180801190534) do
   create_table "req_sheets", force: true do |t|
     t.string   "ref_number"
     t.date     "date"
+    t.float    "value"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -350,6 +354,8 @@ ActiveRecord::Schema.define(version: 20180801190534) do
   create_table "trucks", force: true do |t|
     t.string   "type"
     t.string   "reg_number"
+    t.date     "year_of_purchase"
+    t.date     "insurance_expiry"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

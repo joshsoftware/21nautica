@@ -7,6 +7,11 @@
       = f.input :date, as: :string, label: 'Date', input_html: { id: 'req_date', class: 'form-control', value: f.object.date.try(:strftime, "%d-%m-%Y")}
   .row
     = render partial: 'req_parts', locals: { f:f, req_sheet: @req_sheet }
+  .row
+    .col-md-6
+    .col-md-3
+    .col-md-3
+      = f.input :value, label: 'Total Value'
 
   = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
   = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
