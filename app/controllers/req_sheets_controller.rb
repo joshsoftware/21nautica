@@ -47,8 +47,9 @@ class ReqSheetsController < ApplicationController
   private
 
   def req_sheets_params
-    params.require(:req_sheet).permit(:ref_number, :date, :truck_id, :km, :value, req_parts_attributes: [:id, :spare_part_id, :description, :mechanic_id,
-                                                                                                 :price, :quantity, :total_cost] 
+    params.require(:req_sheet).permit(:ref_number, :date, :truck_id, :km, :value, req_parts_attributes: [:id, :spare_part_id, :description,
+                                                                                                         :mechanic_id, :price, :quantity,
+                                                                                                         :total_cost, :_destroy] 
                                      )
   end
 

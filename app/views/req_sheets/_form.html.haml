@@ -1,4 +1,4 @@
-= simple_nested_form_for @req_sheet, html: {class: 'form-horizontal', id: 'vendor_invoice'}, defaults: {input_html: {class: 'form-control'}}, wrapper: :horizontal_form do |f|
+= simple_nested_form_for @req_sheet, html: {class: 'form-horizontal', id: 'req_invoice'}, defaults: {input_html: {class: 'form-control'}}, wrapper: :horizontal_form do |f|
   .row
     .col-md-4
       = f.input :ref_number
@@ -6,7 +6,7 @@
     .col-md-4
       = f.input :date, as: :string, label: 'Date', input_html: { id: 'req_date', class: 'form-control', value: f.object.date.try(:strftime, "%d-%m-%Y")}
     .col-md-4
-      = f.input :truck_id, collection: Truck.pluck(:reg_number, :id), label: 'Number'
+      = f.input :truck_id, collection: Truck.pluck(:reg_number, :id), label: 'Number', input_html: { class: 'truck_id' }, wrapper: :bootstrap
     .col-md-4
       - if @req_sheet.persisted? && @req_sheet.truck && @req_sheet.truck.is_truck?
         = f.input :km
@@ -18,10 +18,17 @@
     .col-md-6
     .col-md-3
     .col-md-3
-      = f.input :value, label: 'Total Value'
+      = f.input :value, label: 'Total Value', readonly: true
 
   = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
   = link_to 'Cancel', req_sheets_path, class: 'btn btn-primary', data: {dismiss: 'modal'}
 :coffeescript
   $('#req_date').datepicker
     format: 'dd-mm-yyyy'
+
+  $('#req_sheet_truck_id').select2()
+
+:css
+  #s2id_req_sheet_truck_id {
+    width: 205px;
+  }
