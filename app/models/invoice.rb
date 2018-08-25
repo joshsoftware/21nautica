@@ -4,7 +4,7 @@ class Invoice < ActiveRecord::Base
   validates_presence_of :customer
   belongs_to :customer
   belongs_to :invoiceable, polymorphic: true
-  has_many :additional_invoices, class_name: "Invoice", 
+  has_many :additional_invoices, class_name: "Invoice",
     foreign_key: "previous_invoice_id", dependent: :destroy
   belongs_to :previous_invoice, class_name: "Invoice"
   has_many :particulars, dependent: :destroy
@@ -30,7 +30,7 @@ class Invoice < ActiveRecord::Base
     event :invoice_sent, after: :update_ledger do
       transitions from: :ready, to: :sent
     end
-  end 
+  end
 
   class << self
     def merge_additional_invoices(invoices)
@@ -116,8 +116,26 @@ class Invoice < ActiveRecord::Base
     self.bl_number || self.container_number || ""
   end
 
+  def entry_number
+    if invoiceable.is_a? BillOfLading
+      invoiceable.import.entry_number
+    end
+  end
+
+  def cargo_description
+    if invoiceable.is_a? BillOfLading
+      invoiceable.import.description
+    end
+  end
+
+  def cargo_truck_numbers
+    if invoiceable.is_a? BillOfLading
+      invoiceable.import.import_items.pluck(:truck_number).join(', ')
+    end
+  end
+
   def as_json(options={})
-    super(methods: [:bl_or_container_number, :customer_name, :index_row_class, 
+    super(methods: [:bl_or_container_number, :customer_name, :index_row_class,
       :send_button_status, :total_containers, :update_button_status,
       :is_additional_invoice, :previous_invoice_number, :is_legacy_bl, :equipment_type, :formatted_date])
   end
@@ -134,7 +152,7 @@ class Invoice < ActiveRecord::Base
     self.update_attributes(number: date + count.to_s)
   end
 
-  # Only when the invoice is sent to the customer, we need to update the ledger. This is 
+  # Only when the invoice is sent to the customer, we need to update the ledger. This is
   # required for the running accounts!
   def update_ledger
     self.create_ledger(amount: self.amount, customer: self.customer, date: self.date, received: 0)

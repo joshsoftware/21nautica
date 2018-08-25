@@ -1,123 +1,126 @@
-%div#invoice_pdf
-  %center
-    - if is_rfs_host?
-      %img{src: "file://#{Rails.root}/public/images/RFS LOGO.jpg"}
-      %h4 Reliable Freight Service Limited
-      %span P.O. Box 42752, Near Ava Kwa Jomvu Road, Mombasa, Kenya
-      %br
-      %span Tel: 2316714/5, 020 2333794/5, 020 2630911/879, 020 2616620, Mobile: 0722-411250
-      %br
-      %center
-        %span Email: accounts@reliablefrieght.co.ke
-    - else
-      %img{src: "file://#{Rails.root}/public/images/21nautica.jpg"}
-  %br
-  %table#invoicetable.invoice{style: "border-collapse: collapse"}
-    %thead
-      %th{colspan: "4", style: "text-align:center"} INVOICE
-    %tbody
-      %tr
-        %td{colspan: "2"}
-          Customer Name:
-          %br/
-          #{@invoice.customer_name}
-          %br/
-          - unless @invoice.container_number.blank?
-            %p
-            Container Number: #{@invoice.container_number}
-          %br/
-          #{@invoice.equipment_type} X #{@invoice.total_containers}
-          %br/
-          Job Number: #{@invoice.document_number}
-        %td{colspan: "2", valign: "top"}
-          Inv Number: #{@invoice.number}
-          - if @invoice.is_additional_invoice
+- if is_rfs_host?
+  = render 'rfs_invoice_format', invoice: @invoice, particulars: @particulars
+- else
+  %div#invoice_pdf
+    %center
+      - if is_rfs_host?
+        %img{src: "file://#{Rails.root}/public/images/RFS LOGO.jpg"}
+        %h4 Reliable Freight Service Limited
+        %span P.O. Box 42752, Near Ava Kwa Jomvu Road, Mombasa, Kenya
+        %br
+        %span Tel: 2316714/5, 020 2333794/5, 020 2630911/879, 020 2616620, Mobile: 0722-411250
+        %br
+        %center
+          %span Email: accounts@reliablefrieght.co.ke
+      - else
+        %img{src: "file://#{Rails.root}/public/images/21nautica.jpg"}
+    %br
+    %table#invoicetable.invoice{style: "border-collapse: collapse"}
+      %thead
+        %th{colspan: "4", style: "text-align:center"} INVOICE
+      %tbody
+        %tr
+          %td{colspan: "2"}
+            Customer Name:
             %br/
-            Inv Ref: #{@invoice.previous_invoice.number}
-          %br/
-          Inv Date: #{@invoice.formatted_date}
-          %br/
-          BL Number: #{@invoice.bl_number}
-          %br/
-          Pick Up Location: #{@invoice.pick_up}
-          %br/
-          Destination: #{@invoice.destination}
-      %tr
-        %td{colspan: "4", height: '20px'}
-      %tr
-        %th{style: "text-align:center"}  Particulars
-        %th Qty
-        %th Rate
-        %th Total
-      - @particulars.each do |particular|
-        %tr{style: "height:20px;text-align:center"}
-          %td= particular.name
-          %td= particular.quantity
-          %td= particular.rate
-          %td= particular.subtotal
-      - (1..4).each do |row|
-        %tr{style: "height:20px"}
-          %td
-          %td
-          %td
-          %td
+            #{@invoice.customer_name}
+            %br/
+            - unless @invoice.container_number.blank?
+              %p
+              Container Number: #{@invoice.container_number}
+            %br/
+            #{@invoice.equipment_type} X #{@invoice.total_containers}
+            %br/
+            Job Number: #{@invoice.document_number}
+          %td{colspan: "2", valign: "top"}
+            Inv Number: #{@invoice.number}
+            - if @invoice.is_additional_invoice
+              %br/
+              Inv Ref: #{@invoice.previous_invoice.number}
+            %br/
+            Inv Date: #{@invoice.formatted_date}
+            %br/
+            BL Number: #{@invoice.bl_number}
+            %br/
+            Pick Up Location: #{@invoice.pick_up}
+            %br/
+            Destination: #{@invoice.destination}
+        %tr
+          %td{colspan: "4", height: '20px'}
+        %tr
+          %th{style: "text-align:center"}  Particulars
+          %th Qty
+          %th Rate
+          %th Total
+        - @particulars.each do |particular|
+          %tr{style: "height:20px;text-align:center"}
+            %td= particular.name
+            %td= particular.quantity
+            %td= particular.rate
+            %td= particular.subtotal
+        - (1..4).each do |row|
+          %tr{style: "height:20px"}
+            %td
+            %td
+            %td
+            %td
 
-      %tr{height: "40px"}
-        %td{colspan: "3", style: "text-align:center"} Subtotal
-        %td{style: "text-align:center"}= @invoice.amount
-      %tr
-        %td{colspan: "3", style: "text-align:center"}
-          %b= @invoice.amount.in_words.humanize + " US Dollars Only"
-        %td{style: "text-align:center"}
-          %b= @invoice.amount.to_s + " USD"
-      %tr{height: "40px"}
-        %td{colspan: "4"}
-          = @invoice.remarks
-      %tr
-        - if is_rfs_host?
+        %tr{height: "40px"}
+          %td{colspan: "3", style: "text-align:center"} Subtotal
+          %td{style: "text-align:center"}= @invoice.amount
+        %tr
+          %td{colspan: "3", style: "text-align:center"}
+            %b= @invoice.amount.in_words.humanize + " US Dollars Only"
+          %td{style: "text-align:center"}
+            %b= @invoice.amount.to_s + " USD"
+        %tr{height: "40px"}
           %td{colspan: "4"}
-            = render 'rfs_terms_conditions'
-        - else
-          %td{colspan: "4"}
-            E. & O.E.
-            %br/
-            PAN NO: AAACZ6633M
-            %br/
-            SERVICE TAX NO: AAACZ6633MSD002
-            %br/
-            %br/
-            %b Terms & Conditions:
-            %ol
-              %li
-                - if @invoice.destination == 'Lusaka'
-                  = render 'lusaka_template'
-                - else
-                  Payment should be made by A/C Payee cheque or draft in favour of “21 Nautica Logistics Limited” or by NEFT / RTGS into:
-                  %br/
-                  Account Name: 21 Nautica Logistics Limited
-                  %br/
-                  Account Number: 8500000057
-                  %br/
-                  Bank: EXIM Bank ( Uganda ) Limited
-                  %br/
-                  Branch: Kampala , Uganda
-                  %br/
-                  Swift Code: EXTNUGKA
-              %li   
-                Our liability will never exceed the liability of the carrier, railways, transporter who have a part in the entire act of carriage of cargo
-              %li
-                Any errors or omissions must be brought to our notice within 3 days of receipt of this bill, failing which the contents of this invoice shall be deemed to have been accepted by the customer.
-      %tr
-        %td{colspan: "2"}
-          - if @invoice.destination == 'Lusaka'
-            = render 'lusaka_agent_template'
+            = @invoice.remarks
+        %tr
+          - if is_rfs_host?
+            %td{colspan: "4"}
+              = render 'rfs_terms_conditions'
           - else
-            %b Agent Address:
-            %br/
-            First Floor, Nakawa House,
-            %br/
-            Portbell Road, Kampala.
-            %br/
-            Phone : +256 757527576
-        %td{colspan: "2"}
-          %b This is a computer generated Invoice.
+            %td{colspan: "4"}
+              E. & O.E.
+              %br/
+              PAN NO: AAACZ6633M
+              %br/
+              SERVICE TAX NO: AAACZ6633MSD002
+              %br/
+              %br/
+              %b Terms & Conditions:
+              %ol
+                %li
+                  - if @invoice.destination == 'Lusaka'
+                    = render 'lusaka_template'
+                  - else
+                    Payment should be made by A/C Payee cheque or draft in favour of “21 Nautica Logistics Limited” or by NEFT / RTGS into:
+                    %br/
+                    Account Name: 21 Nautica Logistics Limited
+                    %br/
+                    Account Number: 8500000057
+                    %br/
+                    Bank: EXIM Bank ( Uganda ) Limited
+                    %br/
+                    Branch: Kampala , Uganda
+                    %br/
+                    Swift Code: EXTNUGKA
+                %li
+                  Our liability will never exceed the liability of the carrier, railways, transporter who have a part in the entire act of carriage of cargo
+                %li
+                  Any errors or omissions must be brought to our notice within 3 days of receipt of this bill, failing which the contents of this invoice shall be deemed to have been accepted by the customer.
+        %tr
+          %td{colspan: "2"}
+            - if @invoice.destination == 'Lusaka'
+              = render 'lusaka_agent_template'
+            - else
+              %b Agent Address:
+              %br/
+              First Floor, Nakawa House,
+              %br/
+              Portbell Road, Kampala.
+              %br/
+              Phone : +256 757527576
+          %td{colspan: "2"}
+            %b This is a computer generated Invoice.
