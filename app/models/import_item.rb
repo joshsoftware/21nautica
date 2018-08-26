@@ -65,7 +65,7 @@ class ImportItem < ActiveRecord::Base
       transitions from: :under_loading_process, to: :truck_allocated
     end
 
-    event :loaded_out_of_port do
+    event :loaded_out_of_port, :after => [:create_rfs_invoice] do
       transitions from: :truck_allocated, to: :loaded_out_of_port
     end
 
@@ -154,6 +154,11 @@ class ImportItem < ActiveRecord::Base
     statuses = self.find_all_containers_status
     invoice = bill_of_lading.invoices.where(previous_invoice_id: nil).first
     invoice.invoice_ready! if (!statuses.include?("under_loading_process") && invoice.present?)
+  end
+
+  def create_rfs_invoice
+    return unless ENV['HOSTNAME'] == 'RFS'
+    check_for_invoice
   end
 
   def check_for_invoice
