@@ -1,0 +1,117 @@
+%header.reliable-head
+  %h1.title Invoice
+
+  %h1
+    %img{src: "file://#{Rails.root}/public/images/RFS_LOGO.jpg"}
+    Reliable Freight Services Limited
+  %p.address
+    P.O.Box 42752, Near Ava Kwa Jomvu Road, Mombasa, Kenya
+  %p
+    Tel: 2316714/5, 020 2333794/5, 020 2630911/879, 020 2616620, Mobile: 0722-411250
+  %p
+    Email: accounts@reliablefreight.co.ke
+  %section.invoice
+    %table.-to
+      %tr
+        %th Invoice To
+      %tr
+        %td
+          %p= invoice.customer_name
+    %table.-desc
+      %tr
+        %th Invoice Date
+        %th Invoice No.
+      %tr
+        %td= invoice.formatted_date
+        %td= invoice.number
+  %table.invoice-info.w-100
+    %tr
+      %th Our Ref
+      %th Your Ref
+      %th Entry No.
+      %th Description 
+    %tr
+      %td= invoice.document_number
+      %td= invoice.bl_number
+      %td= invoice.entry_number
+      %td= invoice.cargo_description
+  %table.invoice-amount.w-100
+    %colgroup
+      %col{:width => "80%"}/
+      %col
+    %tr
+      %th Description
+      %th{:colspan => "2"} Amount
+    - particulars.each do |particular|
+      %tr
+        %td
+          %p= particular.name
+        %td{:colspan => "2"}
+          %p.text-right= particular.subtotal
+    %tr.text-uppercase
+      %td
+        %h5 vat summary
+      %td
+        %h5 sub total
+      %td= invoice.amount
+  %p.invoice_remarks
+    Remarks:
+    = invoice.remarks
+  %table.invoice-terms.w-100
+    %tr
+      %th.text-uppercase vat reg no.
+      %th 0027262 D
+      %th Pin No.
+      %th.text-uppercase p 051103771 t
+      %th.text-uppercase total
+      %th.text-uppercase.font-weight-normal=  "usd #{invoice.amount}"
+    %tr
+      %td{:colspan => "6"}
+        %h5.underline Terms And Conditions.
+        %ol
+          %li This invoice is Payable on Receipt and on Demand.
+          %li Interest @ 36% per annual, and pro rate from day to day will be charged on all over due Accounts, Interest will be calculated from the date of invoice upto the date of payment.
+          %li Any disagreement about this invoice must be lodged within 15 days from the date hereof otherwise this invoice will be considered as correct and accepted
+          %li We shall have a general as well as particular lien on all goods and documents relating to goods in our possession for unpaid accounts.
+
+:css
+  body { margin: 20px; }
+
+  table, th { border: 1px solid black; border-collapse: collapse; }
+
+  th { padding: 8px; }
+
+  td { border: 1px solid black; padding: 8px; }
+  td p { margin: 0px; }
+
+  .reliable-head { text-align: center; margin-bottom: 50px; }
+  .reliable-head .title { text-align: right; }
+
+  .invoice { overflow: hidden; }
+  .invoice .-to { width: 50%; float: left; text-align: left; margin-bottom: 20px; }
+  .invoice .-desc { width: 35%; float: right; text-align: center; margin-bottom: 20px; }
+
+  .invoice-info { margin-bottom: 20px; text-align: center; }
+
+  .invoice-terms { margin-bottom: 20px; font-size: 12px; line-height: 16px; }
+  .invoice-terms ol { text-decoration: none; }
+  .invoice-terms h5 { margin: 0; margin-left: 20px; }
+
+  .w-100 { width: 100%; }
+
+  .invoice_remarks { text-align: left; padding-top: 8px; }
+
+  .text-uppercase { text-transform: uppercase; }
+
+  .padding { padding: 20px 0 0 20px; }
+
+  .underline { text-decoration: underline; }
+
+  h5 { margin: 0; }
+
+  h1 { margin: 0; }
+
+  .font-weight-normal { font-weight: normal; }
+  img { vertical-align: middle; }
+
+  .text-right { text-align: right; }
