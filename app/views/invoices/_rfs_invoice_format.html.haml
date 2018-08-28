@@ -2,7 +2,7 @@
   %h1.title Invoice
 
   %h1
-    %img{src: "file://#{Rails.root}/public/images/RFS LOGO.jpg"}
+    %img{src: "file://#{Rails.root}/public/images/RFS_LOGO.jpg"}
     Reliable Freight Services Limited
   %p.address
     P.O.Box 42752, Near Ava Kwa Jomvu Road, Mombasa, Kenya
@@ -96,9 +96,11 @@
   .reliable-head { text-align: center; margin-bottom: 50px; }
   .reliable-head .title { text-align: right; }
 
-  .invoice { margin-bottom: 30px; overflow: hidden; }
-  .invoice .-to { width: 50%; float: left; text-align: left; }
-  .invoice .-desc { width: 35%; float: right; text-align: center; }
+  .logo_wrap {display: flex; justify-content: center, align-items: center }
+
+  .invoice { overflow: hidden; }
+  .invoice .-to { width: 50%; float: left; text-align: left; margin-bottom: 30px; }
+  .invoice .-desc { width: 35%; float: right; text-align: center; margin-bottom: 30px; }
 
   .invoice-info { margin-bottom: 20px; text-align: center; }
 
