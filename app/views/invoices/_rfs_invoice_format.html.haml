@@ -28,18 +28,17 @@
     %tr
       %th Our Ref
       %th Your Ref
-      %th Ship
       %th Entry No.
-      %th Entry Date
-      %th Receipt No.
+      %th Description 
     %tr
       %td= invoice.document_number
       %td= invoice.bl_number
-      %td
       %td= invoice.entry_number
-      %td
-      %td
+      %td= invoice.cargo_description
   %table.invoice-amount.w-100
+    %colgroup
+      %col{:width => "80%"}/
+      %col
     %tr
       %th Description
       %th{:colspan => "2"} Amount
@@ -48,32 +47,23 @@
         %td
           %p= particular.name
         %td{:colspan => "2"}
-          %p= particular.subtotal
-    %tr
-      %td
-        %p.text-uppercase= invoice.cargo_description
-        %p.text-uppercase= invoice.cargo_truck_numbers
-      %td{:colspan => "2"}
+          %p.text-right= particular.subtotal
     %tr.text-uppercase
       %td
-        %h4 vat summary
+        %h5 vat summary
       %td
-        %h4 sub total
+        %h5 sub total
       %td= invoice.amount
-    %tr.text-uppercase
-      %td original
-      %td
-        %h4 vat total
-      %td
-  %p.text-uppercase.left 004efd238f4ce385d05279fff99098ed68a540b4 0063 00038456 1712040809 cos05000640
+  %p.invoice_remarks
+    Remarks:
+    = invoice.remarks
   %table.invoice-terms.w-100
     %tr
       %th.text-uppercase vat reg no.
       %th 0027262 D
       %th Pin No.
       %th.text-uppercase p 051103771 t
-      %th.text-uppercase
-        %h1 total
+      %th.text-uppercase total
       %th.text-uppercase.font-weight-normal=  "usd #{invoice.amount}"
     %tr
       %td{:colspan => "6"}
@@ -89,28 +79,27 @@
 
   table, th { border: 1px solid black; border-collapse: collapse; }
 
-  th { padding: 10px; }
+  th { padding: 8px; }
 
-  td { border: 1px solid black; padding: 20px; }
+  td { border: 1px solid black; padding: 8px; }
+  td p { margin: 0px; }
 
   .reliable-head { text-align: center; margin-bottom: 50px; }
   .reliable-head .title { text-align: right; }
 
-  .logo_wrap {display: flex; justify-content: center, align-items: center }
-
   .invoice { overflow: hidden; }
-  .invoice .-to { width: 50%; float: left; text-align: left; margin-bottom: 30px; }
-  .invoice .-desc { width: 35%; float: right; text-align: center; margin-bottom: 30px; }
+  .invoice .-to { width: 50%; float: left; text-align: left; margin-bottom: 20px; }
+  .invoice .-desc { width: 35%; float: right; text-align: center; margin-bottom: 20px; }
 
   .invoice-info { margin-bottom: 20px; text-align: center; }
 
-  .invoice-terms { margin-bottom: 20px; }
+  .invoice-terms { margin-bottom: 20px; font-size: 12px; line-height: 16px; }
   .invoice-terms ol { text-decoration: none; }
   .invoice-terms h5 { margin: 0; margin-left: 20px; }
 
   .w-100 { width: 100%; }
 
-  .left { margin-left: 20px; }
+  .invoice_remarks { text-align: left; padding-top: 8px; }
 
   .text-uppercase { text-transform: uppercase; }
 
@@ -118,8 +107,11 @@
 
   .underline { text-decoration: underline; }
 
-  h4 { margin: 0; }
+  h5 { margin: 0; }
 
   h1 { margin: 0; }
 
   .font-weight-normal { font-weight: normal; }
+  img { vertical-align: middle; }
+
+  .text-right { text-align: right; }
