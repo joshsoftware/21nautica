@@ -42,15 +42,16 @@
         %br
         %br
         %br
-      %p
-      Warm Regards
-      %br
-      Kaushik Somanathan
-      %br
-      +91 9324545489
-      %br
-      +256 755 782 324
-      %br
+      - unless ENV['HOSTNAME'] == 'RFS'
+        %p
+          Warm Regards
+        %br
+        Kaushik Somanathan
+        %br
+        +91 9324545489
+        %br
+        +256 755 782 324
+        %br
 
       %br
       **********************************************************************
@@ -67,7 +68,10 @@
       Thank You.
 
       %br
-      21 Nautica Private Limited
+      - if ENV['HOSTNAME'] == 'RFS'
+        Reliable Freight Services Limited
+      - else
+        21 Nautica Private Limited
 
       %br
       %br

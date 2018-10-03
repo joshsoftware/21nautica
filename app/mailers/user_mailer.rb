@@ -3,7 +3,11 @@ class UserMailer < ActionMailer::Base
 
   def mail_report(customer,type)
     @customer = customer
-    emails = customer.add_default_emails_to_customer(@customer)
+    emails = if ENV['HOSTNAME'] == 'RFS'
+               customer.emails
+             else
+               customer.add_default_emails_to_customer(@customer)
+             end
     @customer.emails = emails
     time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
     if type == 'export'
