@@ -19,11 +19,16 @@ class Customer < ActiveRecord::Base
   validates_uniqueness_of :name, case_sensitive: false, message: "Customer with same name already exists"
 
   validates_format_of :emails, with: /\A^((\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*)*([,])*|\s)*$\z/, on: :update
+  before_save :strip_emails
 
 
   def add_default_emails_to_customer(customer)
     customer.emails = customer.emails + ", #{EMAILS_DEFAULTS}" 
     customer.emails.split(/,/).uniq.join(',')
+  end
+
+  def strip_emails
+    self.emails = emails.strip! if emails
   end
 
 end
