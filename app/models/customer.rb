@@ -28,7 +28,7 @@ class Customer < ActiveRecord::Base
   end
 
   def strip_emails
-    self.emails = emails.strip! if emails
+    self.emails = emails.strip if emails
   end
 
 end
