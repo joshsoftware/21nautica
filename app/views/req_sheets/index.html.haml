@@ -5,6 +5,7 @@
   %thead
     %th Ref Number 
     %th Date
+    %th Truck Number
     %th Total Cost 
     %th Action
   %tbody
@@ -12,5 +13,6 @@
       %tr
         %td= req_sheet.ref_number
         %td= req_sheet.date
+        %td= req_sheet.truck_id ? req_sheet.truck.reg_number : ''
         %td= req_sheet.value
         %td= link_to "Edit", edit_req_sheet_path(req_sheet), class: 'btn btn-primary'

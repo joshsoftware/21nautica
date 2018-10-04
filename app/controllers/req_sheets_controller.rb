@@ -1,7 +1,7 @@
 class ReqSheetsController < ApplicationController
 
   def index
-    @req_sheets = ReqSheet.all
+    @req_sheets = ReqSheet.order('created_at desc')
   end
 
   def new
