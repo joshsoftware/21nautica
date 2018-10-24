@@ -72,7 +72,7 @@ class ImportItemsController < ApplicationController
   end
 
   def empty_containers
-    @import_items = ImportItem.where(:status => "delivered", :after_delivery_status => nil)
+    @import_items = ImportItem.includes(:import).where(:status => "delivered", :after_delivery_status => nil)
   end
 
   private
