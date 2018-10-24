@@ -3,7 +3,7 @@
     %th BL Number
     %th Container Number
     %th Customer Name
-    - if is_rfs_host?
+    - if is_rfs_host? || is_ug_host?
       %th Reference Number
       %th ETA
     %th G/F Expiry
@@ -21,7 +21,7 @@
         %td= item.import.bl_number
         %td= item.container_number
         %td= item.customer_name
-        - if is_rfs_host?
+        - if is_rfs_host? || is_ug_host?
           %td= item.work_order_number
           - eta = item.import.estimate_arrival
           %td= eta.nil? ? "" : eta.strftime('%Y-%m-%d')
