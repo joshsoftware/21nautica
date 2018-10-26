@@ -3,10 +3,10 @@
     %th BL Number
     %th Container Number
     %th Customer Name
+    %th G/F Expiry
     - if is_rfs_host? || is_ug_host?
       %th Reference Number
       %th ETA
-    %th G/F Expiry
     %th
     %th
     %th
@@ -21,12 +21,12 @@
         %td= item.import.bl_number
         %td= item.container_number
         %td= item.customer_name
+        %td= g_f_expiry
         - if is_rfs_host? || is_ug_host?
           %td= item.work_order_number
           - eta = item.import.estimate_arrival
           %td= eta.nil? ? "" : eta.strftime('%Y-%m-%d')
 
-        %td= g_f_expiry
         %td.emptyReturn{class: "text-center"}
           %button.btn.btn-small.btn-primary{"data-target" => "#context", "data-toggle"=>"modal", "data-after-delivery"=>"empty_return", "data-item-id"=> "#{item.id}"}  Empty Return
         %td.exportReuse{class: "text-center"}
