@@ -22,9 +22,11 @@ class Customer < ActiveRecord::Base
   before_save :strip_emails
 
 
-  def add_default_emails_to_customer(customer)
-    customer.emails = customer.emails + ", #{EMAILS_DEFAULTS}" 
-    customer.emails.split(/,/).uniq.join(',')
+  def add_default_emails_to_customer
+    return "" if !emails.present?
+    customer_emails = emails.split(/\s*,\s*/)
+    new_emails = customer_emails + EMAILS_DEFAULTS.split(/\s*,\s*/)
+    new_emails.uniq.join(', ')
   end
 
   def strip_emails

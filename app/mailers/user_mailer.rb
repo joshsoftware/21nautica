@@ -6,16 +6,15 @@ class UserMailer < ActionMailer::Base
     emails = if ENV['HOSTNAME'] == 'RFS'
                customer.emails
              else
-               customer.add_default_emails_to_customer(@customer)
+               customer.add_default_emails_to_customer
              end
-    @customer.emails = emails
     time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
     if type == 'export'
       attachments["Export_#{customer.name.tr(" ", "_")}_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}_#{time}.xlsx")
     else
       attachments["Import_#{customer.name.tr(" ", "_")}_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/Imports_#{customer.name.tr(" ", "_")}_#{time}.xlsx")
     end
-    mail(to: @customer.emails, subject: "Customer Update #{customer.name}")
+    mail(to: emails, subject: "Customer Update #{customer.name}")
     type == 'export' ? File.delete("#{Rails.root}/tmp/#{customer.name.tr(" ", "_")}_#{time}.xlsx"):
       File.delete("#{Rails.root}/tmp/Imports_#{customer.name.tr(" ", "_")}_#{time}.xlsx")
   end
@@ -27,7 +26,7 @@ class UserMailer < ActionMailer::Base
   end
 
   def send_emails_to_all_customer(customer)
-    emails = customer.add_default_emails_to_customer(customer)
+    emails = customer.add_default_emails_to_customer
     mail(to: emails, subject: 'Our correct bank details')
   end
 
@@ -41,11 +40,10 @@ class UserMailer < ActionMailer::Base
   def welcome_message_import(import, authority_letter_pdf = nil, authorisation_letter_pdf = nil)
     @import = import
     customer = Customer.find(@import.customer_id)
-    emails = customer.add_default_emails_to_customer(customer)
-    customer.emails = emails
+    emails = customer.add_default_emails_to_customer
     attach_pdf(authority_letter_pdf) if authority_letter_pdf
     attach_pdf(authorisation_letter_pdf) if authorisation_letter_pdf
-    mail(to: customer.emails,subject: "Your new order")
+    mail(to: emails, subject: "Your new order")
     File.delete("#{Rails.root}/tmp/#{File.basename authority_letter_pdf}") if authority_letter_pdf
     File.delete("#{Rails.root}/tmp/#{File.basename authorisation_letter_pdf}") if authorisation_letter_pdf
   end
@@ -68,18 +66,16 @@ class UserMailer < ActionMailer::Base
     attachment_name = File.basename attachment
     attachments[attachment_name] = File.read(attachment)
     subject = "Invoice // #{invoice.customer_name} // #{invoice.bl_number} // #{invoice.number}"
-    emails = invoice.customer.add_default_emails_to_customer(invoice.customer)
-    invoice.customer.emails = emails
-    mail(to: invoice.customer.emails , subject: subject)
+    emails = invoice.customer.add_default_emails_to_customer
+    mail(to: emails , subject: subject)
     File.delete(attachment)
   end
 
   def payment_received_receipt(customer, attachment)
     attachment_name = File.basename attachment
     attachments[attachment_name] = File.read(attachment)
-    emails = customer.add_default_emails_to_customer(customer)
-    customer.emails = emails
-    mail(to: customer.emails , subject: "Thank you for your payment")
+    emails = customer.add_default_emails_to_customer
+    mail(to: emails , subject: "Thank you for your payment")
     File.delete(attachment)
   end
 
