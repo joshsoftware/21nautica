@@ -5,6 +5,7 @@ module Report
       time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
       package = Axlsx::Package.new
       workbook = package.workbook
+      @imports = customer.imports.includes(:import_items)
 
       workbook.styles do |s|
         heading = s.add_style alignment: {horizontal: :center},
@@ -43,26 +44,26 @@ module Report
       sheet.add_row ['In Port']
       sheet.add_row ['BL Number', 'Shipper', 'Desc', 'Equipment', 'Qty', 'ETA', 'Status'],
                     style: heading, height: 40
-      imports = customer.imports.where.not(status: 'ready_to_load')
+      imports = @imports.where.not(status: 'ready_to_load')
       imports.each do |import|
         estimate_arrival = import.estimate_arrival.nil? ? "" : import.estimate_arrival.try(:to_date).try(:strftime,"%d-%b-%Y").to_s
-        sheet.add_row [import.bl_number, import.shipper, import.description, import.equipment, import.quantity, estimate_arrival, import.status]
+        sheet.add_row [import.cargo_receipt, import.shipper, import.description, import.equipment, import.quantity, estimate_arrival, import.status]
       end
       sheet.add_row
       sheet.add_row ['In Transit']
       sheet.add_row ['BL Number', 'Shipper', 'Desc', 'Container', 'Truck Number', 'Status'],
                     style: heading, height: 40
-      imports = customer.imports.includes(:import_items).where(status: 'ready_to_load')
+      imports = @imports.where(status: 'ready_to_load')
       imports.each do |import|
         import.import_items.each do |import_item|
           if import_item.delivered? && import_item.close_date
             start_date = Time.new(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day)
             end_date = Time.new(import_item.close_date.year, import_item.close_date.month, import_item.close_date.day)
             difference_in_days = TimeDifference.between(start_date, end_date).in_days
-            sheet.add_row [import.bl_number, import.shipper, import.description, import_item.container_number,
+            sheet.add_row [import.cargo_receipt, import.shipper, import.description, import_item.container_number,
                            import_item.truck_number, import_item.status] if difference_in_days <= 3 
           else
-            sheet.add_row [import.bl_number, import.shipper, import.description, import_item.container_number,
+            sheet.add_row [import.cargo_receipt, import.shipper, import.description, import_item.container_number,
                            import_item.truck_number, import_item.status]
           end
         end
@@ -73,12 +74,15 @@ module Report
       sheet.add_row ['BL Number', 'Goods Description', 'ETA', 'Equipment x Qty', 'Last Status Update', 'Remarks'],
                     style: heading, height: 40
 
-      customer.imports.each do |import|
-        import.update_attribute(:is_all_container_delivered, true) if import.import_items.where.not(status: 'delivered').count == 0
-      end
+      @imports.each do |import|
+        import.update_attribute(:is_all_container_delivered, true) if import.import_items.where.not(status: 'delivered').count.zero?
+      end 
+      #ImportItem.includes(:import).where.not(status: 'delivered').where(import_id: @imports.pluck(:id)).each do |import_item|
+      #  import_item.import.update_attribute(:is_all_container_delivered, true)
+      #end
       #import_items = ImportItem.where.not(status: 'delivered').select('import_id').uniq
       Import.where(customer: customer, is_all_container_delivered: false).each do |import|
-          bl_number = import.bl_number
+          bl_number = import.cargo_receipt
           goods_description = import.description
           estimate_arrival = import.estimate_arrival.nil? ? "" : import.estimate_arrival.try(:to_date).try(:strftime,"%d-%b-%Y").to_s
           equipment_quantity = "#{import.equipment} " '*' " #{import.quantity}"
@@ -134,7 +138,7 @@ module Report
           h.each_value{|v| max_height = v.length if v.length > max_height}
           max_height = (max_height * 0.7) if max_height > 50
 
-          sheet.add_row [import.bl_number,
+          sheet.add_row [import.cargo_receipt,
                      item.container_number, import.equipment, import.description,
                      import.estimate_arrival.nil? ? "" :
                      import.estimate_arrival.to_date.strftime("%d-%b-%Y"),
