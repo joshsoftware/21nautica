@@ -44,6 +44,11 @@ class Import < ActiveRecord::Base
     self.bill_of_lading.try(:bl_number) ? self.bill_of_lading.bl_number : self.attributes["bl_number"]
   end
 
+  def cargo_receipt
+    return self.attributes['bl_number'] if self.attributes['bl_number']
+    bl_number
+  end
+
   def strip_container_number_bl_number
     self.bl_number = self.bl_number.strip
     self.import_items.each do |import_item|

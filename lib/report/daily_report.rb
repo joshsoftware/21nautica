@@ -39,11 +39,13 @@ module Report
 
     def daily_report_import(customer_id = nil)
       customers = []
-      import_items = ImportItem.where.not(status: "delivered").select(:import_id).uniq
-      import_items.each do |item|
-        import = Import.find(item.import_id)
-        if customer_id == nil or import.customer_id == customer_id 
-          customers.push(import.customer)
+      if customer_id
+        customer = Customer.find customer_id
+        customers << customer
+      else
+        import_items = ImportItem.where.not(status: 'delivered').select(:import_id).uniq
+        Import.includes(:customer).where(id: import_items.collect(&:import_id)).each do |import|
+          customers << import.customer
         end
       end
       
