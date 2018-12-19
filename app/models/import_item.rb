@@ -157,8 +157,7 @@ class ImportItem < ActiveRecord::Base
   end
 
   def create_rfs_invoice
-    return unless ENV['HOSTNAME'] == 'RFS'
-    check_for_invoice
+    check_for_invoice if ENV['HOSTNAME'] == 'RFS' || ENV['HOSTNAME'] == 'UG'
   end
 
   def check_for_invoice
