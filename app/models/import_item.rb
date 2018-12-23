@@ -157,7 +157,7 @@ class ImportItem < ActiveRecord::Base
   end
 
   def create_rfs_invoice
-    check_for_invoice if ENV['HOSTNAME'] == 'RFS' || ENV['HOSTNAME'] == 'UG'
+    check_for_invoice if ENV['HOSTNAME'] == 'RFS' || ENV['HOSTNAME'] == 'ERP'
   end
 
   def check_for_invoice
