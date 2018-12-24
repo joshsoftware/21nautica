@@ -103,20 +103,30 @@ module Report
                      "Truck Released"],
                   style: heading, height: 40
       if status
-        imports = customer.imports.includes({import_items: :audits}, :audits).where("import_items.status" => status)
+        @imports = customer.imports.includes(:import_items).where("import_items.status" => status)
+        @import_item_ids = ImportItem.where(import_id: @imports.pluck(:id)).pluck(:id)
+        auditable_ids = @imports.pluck(:id) + @import_item_ids
+        @audited_data = Espinita::Audit.where(auditable_id: auditable_ids,
+                                              auditable_type: ['Import', 'ImportItem'])
+        # imports = customer.imports.includes({import_items: :audits}, :audits).where("import_items.status" => status)
       else
-        imports = customer.imports.includes({import_items: :audits}, :audits).where.not("import_items.status" => "delivered")
+        @imports = customer.imports.includes(:import_items).where.not("import_items.status" => "delivered")
+        @import_item_ids = ImportItem.where(import_id: @imports.pluck(:id)).pluck(:id)
+        auditable_ids = @imports.pluck(:id) + @import_item_ids
+        @audited_data = Espinita::Audit.where(auditable_id: auditable_ids,
+                                              auditable_type: ['Import', 'ImportItem'])
+        # imports = customer.imports.includes({import_items: :audits}, :audits).where.not("import_items.status" => "delivered")
       end
 
 
       h = {}
-      imports.each do |import|
+      @imports.each do |import|
         import.import_items.each do |item|
-          [import,item].each do |entity|
-            audited_changes = entity.audits.collect(&:audited_changes)
-
-            audited_changes.each do |a|
-
+          [import, item].each do |entity|
+            class_name = entity.class.name == "Import" ? "Import" : "ImportItem"
+            audits = @audited_data.select { |audit| audit.auditable_id == entity.id && audit.auditable_type == class_name}
+            audits.each do |audit|
+              a = audit.audited_changes
               if !a[:status].blank?  and !a[:status].first.eql?(a[:status].second) then
                 h[a[:status].second] = [] if h[a[:status].second].nil?
                 h[a[:status].second].unshift(a[:updated_at].try(:second).try(:to_date).try(:strftime, "%d-%b-%Y").to_s +
@@ -128,10 +138,24 @@ module Report
                                                " : " + a[:remarks].try(:second).to_s)
                 end
               end
-
-
             end
           end
+          # [import,item].each do |entity|
+          #   audited_changes = entity.audits.collect(&:audited_changes)
+          #   audited_changes.each do |a|
+          #     if !a[:status].blank?  and !a[:status].first.eql?(a[:status].second) then
+          #       h[a[:status].second] = [] if h[a[:status].second].nil?
+          #       h[a[:status].second].unshift(a[:updated_at].try(:second).try(:to_date).try(:strftime, "%d-%b-%Y").to_s +
+          #                                    " : " + (a[:remarks].nil? ? " " : a[:remarks].try(:second).to_s))
+          #     else
+          #       if !a[:remarks].blank? then
+          #         h[a[:status].second] = [] if h[a[:status].second].nil?
+          #         h[a[:status].second].unshift(a[:updated_at].try(:second).try(:to_date).try(:strftime, "%d-%b-%Y").to_s +
+          #                                      " : " + a[:remarks].try(:second).to_s)
+          #       end
+          #     end
+          #   end
+          # end
           h.replace( h.merge(h) {|key, value| value = value.join("\n")} )
 
           max_height = 0
