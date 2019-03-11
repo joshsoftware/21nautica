@@ -24,6 +24,7 @@ class ImportItem < ActiveRecord::Base
   belongs_to :import
   belongs_to :transporter, class_name: "Vendor", foreign_key: "vendor_id"
   belongs_to :icd, class_name: "Vendor"
+  belongs_to :truck
   has_many :import_expenses, dependent: :destroy
 
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
@@ -34,6 +35,8 @@ class ImportItem < ActiveRecord::Base
   delegate :clearing_agent, to: :import, allow_nil: true
 
   accepts_nested_attributes_for :import_expenses
+
+  after_update :update_truck_status
 
   after_create do |record|
     ImportExpense::CATEGORIES.each do |category|
@@ -122,7 +125,7 @@ class ImportItem < ActiveRecord::Base
 
   def as_json(options= {})
     super(only: [:container_number, :id, :after_delivery_status, :context, :truck_number],
-            methods: [:bl_number, :customer_name, :work_order_number, 
+            methods: [:bl_number, :customer_name, :work_order_number, :truck_number,
               :equipment_type, :DT_RowId, :formatted_close_date, :delivery_date,
               :transporter_name, :clearing_agent, :edit_close_date_import_item_path])
   end
@@ -173,6 +176,14 @@ class ImportItem < ActiveRecord::Base
     end
     statuses = self.find_all_containers_status
     invoice.invoice_ready! unless statuses.include?("under_loading_process")
+  end
+
+  def update_truck_status
+    if changes['truck_id'] && changes['truck_id'][0]
+      prev_truck = Truck.find(changes['truck_id'][0])
+      prev_truck.update_column(:status, Truck::FREE)
+    end
+    self.truck.update_column(:status, Truck::ALLOTED) if self.truck && truck_id_changed?
   end
 
 end

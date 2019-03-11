@@ -1,4 +1,6 @@
 $('#statusModal').modal('hide')
+- unless @import_item.truck.nil?
+  $("#import_items_table tr##{@import_item.id} td.truck_id").text("#{@import_item.truck.reg_number}")
 - if @import_item.status == "delivered"
   oTable = $("#import_items_table").dataTable()
   oTable.fnDeleteRow("tr##{@import_item.id}")

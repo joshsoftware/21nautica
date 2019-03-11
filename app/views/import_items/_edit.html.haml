@@ -1,0 +1,25 @@
+- status = []
+- status << [@import_item.status.titleize, @import_item.status]
+- status << [@import_item.aasm.events.join.titleize, @import_item.aasm.events.join]
+= simple_form_for @import_item, url: updateStatus_import_item_path(@import_item), method: :post, html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}} do |f|
+  .modal-content
+    .modal-header
+      = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+      %h1.modal-title Update Status
+      .modal-body
+        #truck_number
+        = f.label :truck_number
+        = f.input :status, collection: status, :input_html => {:class => 'select required form-control text-capitalize'}
+        = f.input :remarks, as: :text, required: false
+        = f.input :truck_id, collection: reallocate_truck_numbers, include_blank: true, label: 'Truck Number'
+
+      .modal-footer
+        = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+        = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
+
+:coffeescript
+  import_items = #{@import_item.to_json}
+  $('#import_item_truck_id').select2()
+  $('#statusModal').on 'show.bs.modal', (event) ->
+    console.log('event', event)
+

@@ -7,6 +7,10 @@ class ImportItemsController < ApplicationController
     @transporters = Vendor.transporters.pluck(:name).inject({}) {|h, x| h[x] = x; h}
   end
 
+  def edit
+    @import_item = ImportItem.find params[:id]
+  end
+
   def update
     import_item = ImportItem.find(import_item_update_params[:id])
     attribute = import_item_update_params[:columnName].downcase.gsub(' ', '_').to_sym
@@ -37,6 +41,7 @@ class ImportItemsController < ApplicationController
     @import_item = ImportItem.find(params[:id])
     initial_status = @import_item.status
     if import_item_params[:transporter].nil?
+       @import_item.truck_id = params[:import_item][:truck_id]
        if !import_item_params[:truck_number].nil?
         if initial_status == "under_loading_process"
           @import_item.remarks = import_item_params[:remarks]
@@ -79,7 +84,7 @@ class ImportItemsController < ApplicationController
 
   def import_item_params
     params.permit(:id)
-    params.require(:import_item).permit(:truck_number, :status, :remarks, :context, :transporter_name, :transporter)
+    params.require(:import_item).permit(:truck_number, :status, :remarks, :context, :transporter_name, :transporter, :truck_id)
   end
 
   def import_item_update_params
