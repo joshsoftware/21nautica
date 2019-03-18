@@ -21,6 +21,7 @@ elsif server == 'int'
   path = '/www/int-21nautica'
 elsif server == 'staging'
   path = '/www/staging'
+  set :rails_env, 'staging'
 else
   path = '/www/rfs-21nautica'
 end
