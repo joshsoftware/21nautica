@@ -69,7 +69,7 @@ class ImportItem < ActiveRecord::Base
     end
 
     event :loaded_out_of_port, :after => [:create_rfs_invoice] do
-      transitions from: :truck_allocated, to: :loaded_out_of_port
+      transitions from: :truck_allocated, to: :loaded_out_of_port, guard: :is_truck_number_assigned?
     end
 
     event :arrived_at_border do
@@ -80,7 +80,7 @@ class ImportItem < ActiveRecord::Base
       transitions from: :arrived_at_border, to: :departed_from_border
     end
 
-    event :arrived_at_destination do
+    event :arrived_at_destination, :after => [:release_truck] do
       transitions from: :departed_from_border, to: :arrived_at_destination
     end
 
@@ -90,6 +90,15 @@ class ImportItem < ActiveRecord::Base
   end
 
   auditable only: [:status, :updated_at, :current_location, :remarks]
+
+  def is_truck_number_assigned?
+    self.errors[:base] <<  'Add Truck Number first !' if truck.nil?
+    !self.errors.present?
+  end
+
+  def release_truck
+    self.truck.update_column(:status, Truck::FREE)
+  end
 
   def set_delivery_date
     update_attribute(:close_date, Time.zone.now)
@@ -124,7 +133,7 @@ class ImportItem < ActiveRecord::Base
   end
 
   def as_json(options= {})
-    super(only: [:container_number, :id, :after_delivery_status, :context, :truck_number],
+    super(only: [:container_number, :id, :after_delivery_status, :context, :truck_number, :status],
             methods: [:bl_number, :customer_name, :work_order_number, :truck_number,
               :equipment_type, :DT_RowId, :formatted_close_date, :delivery_date,
               :transporter_name, :clearing_agent, :edit_close_date_import_item_path])

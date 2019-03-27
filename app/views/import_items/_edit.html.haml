@@ -11,6 +11,7 @@
         = f.label :truck_number
         = f.input :status, collection: status, :input_html => {:class => 'select required form-control text-capitalize'}
         = f.input :remarks, as: :text, required: false
+        - readonly = ['loaded_out_of_port', 'arrived_at_border', 'departed_from_border', 'arrived_at_destination'].include?(@import_item.status)
         = f.input :truck_id, collection: reallocate_truck_numbers, include_blank: true, label: 'Truck Number'
 
       .modal-footer
@@ -18,8 +19,16 @@
         = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
 
 :coffeescript
-  import_items = #{@import_item.to_json}
   $('#import_item_truck_id').select2()
+  import_item = #{@import_item.to_json}
   $('#statusModal').on 'show.bs.modal', (event) ->
-    console.log('event', event)
+    statuses = ['loaded_out_of_port', 'arrived_at_border', 'departed_from_border', 'arrived_at_destination']
+    if statuses.includes?(import_item.status)
+      $('#import_item_truck_id').select2('readonly', 'readonly')
+    else
+      $('#import_item_truck_id').select2('readonly', false)
+
+   $('#import_item_status').on 'change', ->
+     if $(this).val() == 'truck_released'
+       $('#import_item_truck_id').select2('readonly', false)
 

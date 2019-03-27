@@ -51,7 +51,11 @@ class ImportItemsController < ApplicationController
        else
         @import_item.remarks = import_item_params[:remarks]
         status = import_item_params[:status].downcase.gsub(' ', '_')
-        status != @import_item.status ? @import_item.send("#{status}!".to_sym) : @import_item.save
+        begin
+          status != @import_item.status ? @import_item.send("#{status}!".to_sym) : @import_item.save
+        rescue
+          @errors = @import_item.errors
+        end
        end
     end
   end
