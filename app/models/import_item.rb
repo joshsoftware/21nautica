@@ -77,11 +77,11 @@ class ImportItem < ActiveRecord::Base
       transitions from: :loaded_out_of_port, to: :arrived_at_border
     end
 
-    event :departed_from_border do
+    event :departed_from_border, :after => [:release_truck] do
       transitions from: :arrived_at_border, to: :departed_from_border
     end
 
-    event :arrived_at_destination, :after => [:release_truck] do
+    event :arrived_at_destination do
       transitions from: :departed_from_border, to: :arrived_at_destination
     end
 
@@ -197,8 +197,9 @@ class ImportItem < ActiveRecord::Base
   end
 
   def add_default_date_for_remarks
+    return unless remarks.present?
     default_date = "#{Time.zone.now.strftime('%d/%m')} : "
-    self.remarks = remarks.prepend(default_date) if remarks
+    self.remarks = remarks.prepend(default_date)
   end
 
 end

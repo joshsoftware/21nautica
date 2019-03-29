@@ -42,13 +42,12 @@ class ImportItemsController < ApplicationController
     initial_status = @import_item.status
     if import_item_params[:transporter].nil?
        @import_item.truck_id = params[:import_item][:truck_id]
-       if !import_item_params[:truck_number].nil?
+       if import_item_params[:truck_id].present?
         if initial_status == "under_loading_process"
           @import_item.remarks = import_item_params[:remarks]
-          status = import_item_params[:status].downcase.gsub(' ', '_')
-          status != @import_item.status ? @import_item.send("#{status}!".to_sym) : @import_item.save
+          @import_item.allocate_truck
+          @import_item.save
         end
-       else
         @import_item.remarks = import_item_params[:remarks]
         status = import_item_params[:status].downcase.gsub(' ', '_')
         begin

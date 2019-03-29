@@ -9,7 +9,7 @@
     oTable.fnDeleteRow("tr##{@import_item.id}")
   - else
     $("#import_items_table tr##{@import_item.id} td.updatestatus button").attr('data-states', "#{@import_item.status},#{@import_item.aasm.events.join(',')}")
-    $("#import_items_table tr##{@import_item.id} td.updatestatus .updatestatus .status").text("#{@import_item.status.humanize}")
+    $("#import_items_table tr##{@import_item.id} td.updatestatus .updatestatus .status").text("#{@import_item.status.titleize}")
     $("#import_items_table tr##{@import_item.id} td.updatestatus .updatestatus .status_updated_at").text("#{status_updated_at(@import_item).to_date.to_formatted_s}")
     $("#import_items_table tr##{@import_item.id} td.remarks").text("#{@import_item.remarks}")
     $("#import_items_table tr##{@import_item.id} td.updatestatus button").attr('data-truck-number',"#{@import_item.truck_number}")
