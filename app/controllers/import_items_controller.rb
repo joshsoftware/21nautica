@@ -47,13 +47,14 @@ class ImportItemsController < ApplicationController
           @import_item.remarks = import_item_params[:remarks]
           @import_item.allocate_truck
           @import_item.save
-        end
-        @import_item.remarks = import_item_params[:remarks]
-        status = import_item_params[:status].downcase.gsub(' ', '_')
-        begin
-          status != @import_item.status ? @import_item.send("#{status}!".to_sym) : @import_item.save
-        rescue
-          @errors = @import_item.errors
+        else
+          @import_item.remarks = import_item_params[:remarks]
+          status = import_item_params[:status].downcase.gsub(' ', '_')
+          begin
+            status != @import_item.status ? @import_item.send("#{status}!".to_sym) : @import_item.save
+          rescue
+            @errors = @import_item.errors
+          end
         end
        end
     end

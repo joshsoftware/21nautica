@@ -77,11 +77,11 @@ class ImportItem < ActiveRecord::Base
       transitions from: :loaded_out_of_port, to: :arrived_at_border
     end
 
-    event :departed_from_border, :after => [:release_truck] do
+    event :departed_from_border do
       transitions from: :arrived_at_border, to: :departed_from_border
     end
 
-    event :arrived_at_destination do
+    event :arrived_at_destination, :after => [:release_truck] do
       transitions from: :departed_from_border, to: :arrived_at_destination
     end
 
