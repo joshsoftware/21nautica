@@ -27,6 +27,7 @@
       $('#import_item_truck_id').select2('readonly', 'readonly')
     else
       $('#import_item_truck_id').select2('readonly', false)
+    $('#import_item_remarks').val('')
 
    $('#import_item_status').on 'change', ->
      if $(this).val() == 'truck_released'
