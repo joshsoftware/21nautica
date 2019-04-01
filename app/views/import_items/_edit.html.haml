@@ -1,6 +1,9 @@
 - status = []
 - status << [@import_item.status.titleize, @import_item.status]
-- status << [@import_item.aasm.events.join.titleize, @import_item.aasm.events.join]
+- if @import_item.status == 'under_loading_process'
+  - status << ['Allocated Truck', @import_item.aasm.events.join]
+- else
+  - status << [@import_item.aasm.events.join.titleize, @import_item.aasm.events.join]
 = simple_form_for @import_item, url: updateStatus_import_item_path(@import_item), method: :post, html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}} do |f|
   .modal-content
     .modal-header
