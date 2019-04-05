@@ -30,8 +30,8 @@ set :domain, '54.89.118.119'
 set :user, 'ubuntu'
 set :deploy_to, path
 set :repository, 'git@github.com:joshsoftware/21nautica.git'
-#set :branch, 'production'
-set :branch, 'master'
+set :branch, 'production'
+#set :branch, 'master'
 
 # For system-wide RVM install.
 #   set :rvm_path, '/usr/local/rvm/bin/rvm'
