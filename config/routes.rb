@@ -78,7 +78,7 @@ Rails.application.routes.draw do
       post 'retainStatus'
     end
   end
-  resources :import_items,only: [:new,:create,:index] do
+  resources :import_items,only: [:new,:create,:index, :edit] do
     member do
       post 'updateStatus'
       post 'updateContext'
@@ -125,6 +125,11 @@ Rails.application.routes.draw do
     collection do
       get :load_spare_part
       get :check_truck_type
+    end
+  end
+  resources :trucks do
+    collection do
+      get :load_truck_numbers 
     end
   end
   # Example of regular route:

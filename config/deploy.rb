@@ -19,6 +19,9 @@ elsif server == 'erp'
   path = '/www/erp-21nautica' 
 elsif server == 'int'
   path = '/www/int-21nautica'
+elsif server == 'staging'
+  path = '/www/staging'
+  set :rails_env, 'staging'
 else
   path = '/www/rfs-21nautica'
 end
@@ -28,6 +31,7 @@ set :user, 'ubuntu'
 set :deploy_to, path
 set :repository, 'git@github.com:joshsoftware/21nautica.git'
 set :branch, 'production'
+#set :branch, 'master'
 
 # For system-wide RVM install.
 #   set :rvm_path, '/usr/local/rvm/bin/rvm'

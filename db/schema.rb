@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180801190534) do
+ActiveRecord::Schema.define(version: 20190304062626) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -167,10 +167,12 @@ ActiveRecord::Schema.define(version: 20180801190534) do
     t.string   "after_delivery_status"
     t.string   "context"
     t.integer  "vendor_id"
+    t.integer  "truck_id"
   end
 
   add_index "import_items", ["container_number"], name: "index_import_items_on_container_number", using: :btree
   add_index "import_items", ["import_id"], name: "index_import_items_on_import_id", using: :btree
+  add_index "import_items", ["truck_id"], name: "index_import_items_on_truck_id", using: :btree
   add_index "import_items", ["vendor_id"], name: "index_import_items_on_vendor_id", using: :btree
 
   create_table "imports", force: true do |t|
@@ -362,6 +364,8 @@ ActiveRecord::Schema.define(version: 20180801190534) do
     t.date     "insurance_expiry"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "status"
+    t.string   "location"
   end
 
   create_table "users", force: true do |t|

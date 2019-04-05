@@ -35,22 +35,7 @@ datatable_initialize = ->
                                       when "success"
                                         $.post("import_items/#{id}/updateStatus",{import_item:{status:"allocate_truck",truck_number: sValue}})
                                    },
-                                    {
-                                      type: 'select',
-                                      event: 'click',
-                                      data: JSON.stringify(@transporters),
-                                      onblur: 'submit'
-                                      sUpdateURL: (value,settings)->
-                                       row = $(this).parents('tr')[0]
-                                       id = row.id
-                                       $.post("import_items/update",{id:id,columnName:"Transporter Name",value:value})
-                                       return value
-                                     , placeholder:"Click to enter",
-                                     fnOnCellUpdated: (sStatus,sValue,settings) ->
-
-                                       $.post("import_items/#{id}/updateStatus",{import_item: {status:"allocate_truck",transporter: sValue}})
-                                    },
-                                  null, null,null
+                                  null, null,null, null
                                  ]
                   )
 

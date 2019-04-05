@@ -12,7 +12,7 @@
     %th
   %tbody
     - @import_items.each do |item|
-      - updated_at = status_updated_at(item).strftime("%Y-%m-%d")
+      -# updated_at = status_updated_at(item).strftime("%Y-%m-%d")
       - if item.g_f_expiry.nil?
         - g_f_expiry = item.g_f_expiry
       - else
