@@ -27,9 +27,9 @@
   $('#statusModal').on 'show.bs.modal', (event) ->
     statuses = ['loaded_out_of_port', 'arrived_at_border', 'departed_from_border', 'arrived_at_destination']
     if statuses.includes?(import_item.status)
-      $('#import_item_truck_id').select2('readonly', 'readonly')
+      #$('#import_item_truck_id').select2('readonly', 'readonly')
     else
-      $('#import_item_truck_id').select2('readonly', false)
+      #$('#import_item_truck_id').select2('readonly', false)
     $('#import_item_remarks').val('')
 
    $('#import_item_status').on 'change', ->
