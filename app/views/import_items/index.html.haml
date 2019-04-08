@@ -17,7 +17,8 @@
     %th Display EQ
     %th Estimate Arrival
     %th Truck Number
-    %th Truck Master(Truck Number)
+    - if is_rfs_host?
+      %th Truck Master(Truck Number)
     %th Work Order Number
     %th Status
     %th Remarks
@@ -33,7 +34,8 @@
         %td= item.import.equipment
         %td= item.import.estimate_arrival
         %td.truck_number= item.truck_number
-        %td.truck_id= item.truck.nil? ? '' : item.truck.reg_number
+        - if is_rfs_host?
+          %td.truck_id= item.truck.nil? ? '' : item.truck.reg_number
         %td= item.import.work_order_number
         %td.updatestatus{class: "text-center"}
           .updatestatus.h5

@@ -15,7 +15,8 @@
         = f.input :status, collection: status, :input_html => {:class => 'select required form-control text-capitalize'}
         = f.input :remarks, as: :text, required: false
         - readonly = ['loaded_out_of_port', 'arrived_at_border', 'departed_from_border', 'arrived_at_destination'].include?(@import_item.status)
-        = f.input :truck_id, collection: reallocate_truck_numbers, include_blank: true, label: 'Truck Number'
+        - if is_rfs_host?
+          = f.input :truck_id, collection: reallocate_truck_numbers, include_blank: true, label: 'Truck Number'
 
       .modal-footer
         = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
