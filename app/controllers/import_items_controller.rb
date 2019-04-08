@@ -42,7 +42,6 @@ class ImportItemsController < ApplicationController
     initial_status = @import_item.status
     if import_item_params[:transporter].nil?
        @import_item.truck_id = params[:import_item][:truck_id]
-       if import_item_params[:truck_id].present?
         if initial_status == "under_loading_process"
           @import_item.remarks = import_item_params[:remarks]
           @import_item.allocate_truck
@@ -56,7 +55,6 @@ class ImportItemsController < ApplicationController
             @errors = @import_item.errors
           end
         end
-       end
     end
   end
 
