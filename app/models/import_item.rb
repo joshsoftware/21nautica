@@ -93,12 +93,13 @@ class ImportItem < ActiveRecord::Base
   auditable only: [:status, :updated_at, :current_location, :remarks]
 
   def is_truck_number_assigned?
+    return true if ENV['HOSTNAME'] != 'RFS'
     self.errors[:base] <<  'Add Truck Number first !' if truck.nil?
     !self.errors.present?
   end
 
   def release_truck
-    self.truck.update_column(:status, Truck::FREE)
+    self.truck.update_column(:status, Truck::FREE) if truck.present?
   end
 
   def set_delivery_date
