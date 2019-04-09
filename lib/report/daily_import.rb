@@ -5,7 +5,7 @@ module Report
       time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
       package = Axlsx::Package.new
       workbook = package.workbook
-      @imports = customer.imports.includes(:import_items)
+      @imports = customer.imports.includes(import_items: [:truck])
 
       workbook.styles do |s|
         heading = s.add_style alignment: {horizontal: :center},
@@ -42,16 +42,17 @@ module Report
 
     def add_snapshot_report(customer, sheet, center, heading, status)
       sheet.add_row ['In Port']
-      sheet.add_row ['BL Number', 'Shipper', 'Desc', 'Equipment', 'Qty', 'ETA', 'Status'],
+      sheet.add_row ['BL Number', 'Shipper', 'Desc', 'Equipment', 'Qty', 'ETA', 'Status', 'Remarks'],
                     style: heading, height: 40
       imports = @imports.where.not(status: 'ready_to_load')
       imports.each do |import|
         estimate_arrival = import.estimate_arrival.nil? ? "" : import.estimate_arrival.try(:to_date).try(:strftime,"%d-%b-%Y").to_s
-        sheet.add_row [import.cargo_receipt, import.shipper, import.description, import.equipment, import.quantity, estimate_arrival, import.status]
+        sheet.add_row [import.cargo_receipt, import.shipper, import.description, import.equipment,
+                       import.quantity, estimate_arrival, import.status, import.remarks]
       end
       sheet.add_row
       sheet.add_row ['In Transit']
-      sheet.add_row ['BL Number', 'Shipper', 'Desc', 'Container', 'Truck Number', 'Status'],
+      sheet.add_row ['BL Number', 'Shipper', 'Desc', 'Container', 'Truck Number', 'Status', 'Remarks'],
                     style: heading, height: 40
       imports = @imports.where(status: 'ready_to_load')
       imports.each do |import|
@@ -61,10 +62,10 @@ module Report
             end_date = Time.new(import_item.close_date.year, import_item.close_date.month, import_item.close_date.day)
             difference_in_days = TimeDifference.between(start_date, end_date).in_days
             sheet.add_row [import.cargo_receipt, import.shipper, import.description, import_item.container_number,
-                           import_item.truck_number, import_item.status] if difference_in_days <= 3 
+                           import_item.truck.try(:reg_number), import_item.status, import_item.remarks] if difference_in_days <= 3
           else
             sheet.add_row [import.cargo_receipt, import.shipper, import.description, import_item.container_number,
-                           import_item.truck_number, import_item.status]
+                           import_item.truck.try(:reg_number), import_item.status, import_item.remarks]
           end
         end
       end
@@ -103,14 +104,14 @@ module Report
                      "Truck Released"],
                   style: heading, height: 40
       if status
-        @imports = customer.imports.includes(:import_items).where("import_items.status" => status)
+        @imports = customer.imports.includes(import_items: [:truck]).where("import_items.status" => status)
         @import_item_ids = ImportItem.where(import_id: @imports.pluck(:id)).pluck(:id)
         auditable_ids = @imports.pluck(:id) + @import_item_ids
         @audited_data = Espinita::Audit.where(auditable_id: auditable_ids,
                                               auditable_type: ['Import', 'ImportItem'])
         # imports = customer.imports.includes({import_items: :audits}, :audits).where("import_items.status" => status)
       else
-        @imports = customer.imports.includes(:import_items).where.not("import_items.status" => "delivered")
+        @imports = customer.imports.includes(import_items: [:truck]).where.not("import_items.status" => "delivered")
         @import_item_ids = ImportItem.where(import_id: @imports.pluck(:id)).pluck(:id)
         auditable_ids = @imports.pluck(:id) + @import_item_ids
         @audited_data = Espinita::Audit.where(auditable_id: auditable_ids,
@@ -166,7 +167,7 @@ module Report
                      item.container_number, import.equipment, import.description,
                      import.estimate_arrival.nil? ? "" :
                      import.estimate_arrival.to_date.strftime("%d-%b-%Y"),
-                     item.truck_number,h["copy_documents_received"],
+                     item.truck.try(:reg_number), h["copy_documents_received"],
                      h["original_documents_received"], h["container_discharged"],
                      h["ready_to_load"], h["truck_allocated"], h["loaded_out_of_port"],
                      (h["arrived_at_border"]), (h["departed_from_border"]), (h["arrived_at_destination"]),
