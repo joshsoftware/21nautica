@@ -23,7 +23,7 @@
         = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
 
 :coffeescript
-  $('#import_item_truck_id').select2()
+  $('#import_item_truck_id').select2({allowClear: true, placeholder: "Select an truck"})
   import_item = #{@import_item.to_json}
   $('#statusModal').on 'show.bs.modal', (event) ->
     statuses = ['loaded_out_of_port', 'arrived_at_border', 'departed_from_border', 'arrived_at_destination']
