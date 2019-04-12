@@ -11,7 +11,7 @@
         - else
           = link_to '21 Nautica', '#', class: 'navbar-brand'
       %ul.nav.navbar-nav
-        - if user_signed_in?
+        - if user_signed_in? && ['Admin', 'Operations', 'Accounts'].include?(current_user.role)
           %li.dropdown
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
               Import
@@ -22,7 +22,7 @@
               %li= link_to 'Import Tracking', import_items_path
               %li= link_to 'Import History', import_history_path
               %li= link_to 'Empty Container Import', import_empty_containers_path
-        - if user_signed_in?
+        - if user_signed_in? && ['Admin', 'Operations', 'Accounts'].include?(current_user.role)
           %li.dropdown
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
               Export
@@ -32,7 +32,7 @@
               %li= link_to 'Export Placement', exports_path,  "data-no-turbolink" =>true
               %li= link_to 'Export Tracking', movements_path
               %li= link_to 'Export History', export_history_path
-        - if user_signed_in?
+        - if user_signed_in? && ['Admin', 'Accounts'].include?(current_user.role)
           %li.dropdown
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
               Payments
@@ -60,10 +60,11 @@
               Yard 
               %span.caret
             %ul.dropdown-menu
-              %li= link_to 'Asset Master', '#' 
-              %li= link_to 'Vendor Master', '#' 
-              %li= link_to 'Mechanic Master', '#' 
-              %li= link_to 'Truck Master', trucks_path
+              - if current_user.is?('Admin')
+                %li= link_to 'Asset Master', '#' 
+                %li= link_to 'Vendor Master', '#' 
+                %li= link_to 'Mechanic Master', '#'
+                %li= link_to 'Truck Master', trucks_path
               %li= link_to 'Spare Master', spare_parts_path
               %li= link_to 'Req Sheet', req_sheets_path 
       -#%div.navbar-form.navbar-left
