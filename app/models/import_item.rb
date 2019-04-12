@@ -37,6 +37,7 @@ class ImportItem < ActiveRecord::Base
   accepts_nested_attributes_for :import_expenses
 
   before_save :add_default_date_for_remarks
+  after_save :assign_current_import_item, if: :truck_id_changed?
   after_update :update_truck_status
 
   after_create do |record|
@@ -201,6 +202,15 @@ class ImportItem < ActiveRecord::Base
     return unless remarks.present?
     default_date = "#{Time.zone.now.strftime('%d/%m')} : "
     self.remarks = remarks.prepend(default_date)
+  end
+
+  def assign_current_import_item
+    prev_truck_id, latest_truck_id = changes['truck_id']
+    truck.update_column(:current_import_item_id, id) if latest_truck_id.present?
+    if prev_truck_id.present?
+      prev_truck = Truck.find(prev_truck_id)
+      prev_truck.update_attributes(current_import_item_id: nil)
+    end
   end
 
 end

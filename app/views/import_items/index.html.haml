@@ -20,6 +20,7 @@
     - if is_rfs_host?
       %th Truck Master(Truck Number)
     %th Work Order Number
+    //%th Last Loading Date
     %th Status
     %th Remarks
   %tbody
@@ -37,6 +38,7 @@
         - if is_rfs_host?
           %td.truck_id= item.truck.nil? ? '' : item.truck.reg_number
         %td= item.import.work_order_number
+        //%td.last_loading_date= item.last_loading_date.nil? ? '' : item.last_loading_date.strftime('%Y-%m-%d')
         %td.updatestatus{class: "text-center"}
           .updatestatus.h5
             .status_updated_at

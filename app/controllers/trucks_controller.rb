@@ -1,7 +1,7 @@
 class TrucksController < ApplicationController
 
   def index
-    @trucks = Truck.all
+    @trucks = Truck.includes(:current_import_item).all
   end
 
   def new

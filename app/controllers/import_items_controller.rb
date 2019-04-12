@@ -22,6 +22,15 @@ class ImportItemsController < ApplicationController
     end
   end
 
+  def update_loading_date
+    @import_item = ImportItem.find(params[:id])
+    @import = @import_item.import
+    @import.import_items.update_all(last_loading_date: params[:last_loading_date])
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def updateContext
     @import_item = ImportItem.find(params[:id])
     after_delivery = params[:after_delivery]

@@ -5,10 +5,13 @@
   %thead
     %th Truck Number
     %th Location
+    %th Status
     %th Action
   %tbody
     - @trucks.each do |truck|
       %tr
         %td= truck.reg_number
         %td= truck.location
+        - current_import = truck.current_import_item
+        %td= current_import.nil? ? 'Un Allocated' : current_import.status.titleize
         %td= link_to "Edit", edit_truck_path(truck), class: 'btn btn-primary'

@@ -8,6 +8,7 @@ class Truck < ActiveRecord::Base
   TRUCK = 'Truck'
 
   has_many :import_items
+  belongs_to :current_import_item, class_name: "ImportItem"
 
   validates :type_of, inclusion: { in: TYPE }
   validates_presence_of :reg_number

@@ -16,26 +16,8 @@ datatable_initialize = ->
                     }).makeEditable(
                       aoColumns: [
                                   null,null,null,null,null,
-                                  {sUpdateURL: (value,settings)->
-                                    row = $(this).parents('tr')[0]
-                                    id = row.id
-                                    $.ajax(
-                                      url:"import_items/update",
-                                      type: 'POST'
-                                      data: {id:id,columnName:"Truck Number",value:value},
-                                      async: false)
-                                      .done((data) ->
-                                        if (data != value)
-                                          value = data
-                                      )
-                                    return value
-                                  , placeholder:"Click to enter",
-                                  fnOnCellUpdated: (sStatus, sValue, settings) ->
-                                    switch sStatus
-                                      when "success"
-                                        $.post("import_items/#{id}/updateStatus",{import_item:{status:"allocate_truck",truck_number: sValue}})
-                                   },
-                                  null, null,null, null
+                                  null, null, null,
+                                  null
                                  ]
                   )
 
