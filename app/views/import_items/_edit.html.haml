@@ -17,13 +17,15 @@
         - readonly = ['loaded_out_of_port', 'arrived_at_border', 'departed_from_border', 'arrived_at_destination'].include?(@import_item.status)
         - if is_rfs_host?
           = f.input :truck_id, collection: reallocate_truck_numbers, include_blank: true, label: 'Truck Number'
+          = f.input :last_loading_date, as: :string, input_html: { class: "form-control", value: f.object.last_loading_date.try(:strftime, "%Y-%m-%d") }
 
       .modal-footer
         = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
         = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
 
 :coffeescript
-  $('#import_item_truck_id').select2({allowClear: true, placeholder: "Select an truck"})
+  $('#import_item_truck_id').select2({allowClear: true, placeholder: "Select an truck"});
+  $('#import_item_last_loading_date').datepicker({ format: 'yyyy/mm/dd' });
   import_item = #{@import_item.to_json}
   $('#statusModal').on 'show.bs.modal', (event) ->
     statuses = ['loaded_out_of_port', 'arrived_at_border', 'departed_from_border', 'arrived_at_destination']

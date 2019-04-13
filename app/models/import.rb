@@ -53,6 +53,7 @@ class Import < ActiveRecord::Base
     self.bl_number = self.bl_number.strip
     self.import_items.each do |import_item|
       import_item.container_number = import_item.container_number.strip
+      import_item.last_loading_date = estimate_arrival + 8.days if estimate_arrival.present?
     end
   end
 

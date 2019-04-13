@@ -16,8 +16,7 @@ datatable_initialize = ->
                     }).makeEditable(
                       aoColumns: [
                                   null,null,null,null,null,
-                                  null, null, null,
-                                  null
+                                  null, null, null, null
                                  ]
                   )
 

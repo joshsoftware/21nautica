@@ -38,6 +38,7 @@ class ImportItem < ActiveRecord::Base
 
   before_save :add_default_date_for_remarks
   after_save :assign_current_import_item, if: :truck_id_changed?
+  after_save :update_last_loading_date, if: :last_loading_date_changed?
   after_update :update_truck_status
 
   after_create do |record|
@@ -211,6 +212,11 @@ class ImportItem < ActiveRecord::Base
       prev_truck = Truck.find(prev_truck_id)
       prev_truck.update_attributes(current_import_item_id: nil)
     end
+  end
+
+  def update_last_loading_date
+    loading_date = self.last_loading_date
+    import.import_items.update_all(last_loading_date: loading_date)
   end
 
 end
