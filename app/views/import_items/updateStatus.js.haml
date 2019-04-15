@@ -1,7 +1,10 @@
-- if @errors
+- if @errors.present?
   $('#statusModal .modal-body').append('<div class= "alert alert-danger"> #{@errors.full_messages.join(', ')} </div>')
 - else
   $('#statusModal').modal('hide')
+  - @import.import_items.each do |import_item|
+    - formatted_date = import_item.last_loading_date.try(:strftime, '%Y-%m-%d')
+    $("#import_items_table tr##{import_item.id} td.last_loading_date").text("#{formatted_date}")
   - if @import_item.truck_id.present?
     $("#import_items_table tr##{@import_item.id} td.truck_id").text("#{@import_item.truck.reg_number}")
   - else

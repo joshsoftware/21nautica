@@ -22,6 +22,15 @@ class ImportItemsController < ApplicationController
     end
   end
 
+  def update_loading_date
+    @import_item = ImportItem.find(params[:id])
+    @import = @import_item.import
+    @import.import_items.update_all(last_loading_date: params[:last_loading_date])
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def updateContext
     @import_item = ImportItem.find(params[:id])
     after_delivery = params[:after_delivery]
@@ -39,14 +48,13 @@ class ImportItemsController < ApplicationController
 
   def updateStatus
     @import_item = ImportItem.find(params[:id])
+    @import = @import_item.import
     initial_status = @import_item.status
-    @import_item.truck_id = params[:import_item][:truck_id]
+    @import_item.attributes = import_item_params
     if initial_status == "under_loading_process"
-      @import_item.remarks = import_item_params[:remarks]
       @import_item.allocate_truck
       @import_item.save
     else
-      @import_item.remarks = import_item_params[:remarks]
       status = import_item_params[:status].downcase.gsub(' ', '_')
       begin
         status != @import_item.status ? @import_item.send("#{status}!".to_sym) : @import_item.save
@@ -84,7 +92,7 @@ class ImportItemsController < ApplicationController
 
   def import_item_params
     params.permit(:id)
-    params.require(:import_item).permit(:truck_number, :status, :remarks, :context, :transporter_name, :transporter, :truck_id)
+    params.require(:import_item).permit(:truck_number, :status, :remarks, :context, :transporter_name, :transporter, :truck_id, :last_loading_date)
   end
 
   def import_item_update_params

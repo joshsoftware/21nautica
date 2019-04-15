@@ -61,7 +61,7 @@ Rails.application.routes.draw do
   post 'export_items/getcount'
   post '/imports/update'
   post '/import_items/update'
-
+  
   resources :bill_of_ladings, only: [:update] do
     collection do
       get 'search'
@@ -84,6 +84,9 @@ Rails.application.routes.draw do
       post 'updateContext'
       get 'edit-close-date'
       post 'update-close-date'
+    end
+    collection do
+      post :update_loading_date
     end
 
     resource :import_expense, only: [:edit, :update, :destroy]

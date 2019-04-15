@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190304062626) do
+ActiveRecord::Schema.define(version: 20190410202241) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -168,6 +168,7 @@ ActiveRecord::Schema.define(version: 20190304062626) do
     t.string   "context"
     t.integer  "vendor_id"
     t.integer  "truck_id"
+    t.datetime "last_loading_date"
   end
 
   add_index "import_items", ["container_number"], name: "index_import_items_on_container_number", using: :btree
@@ -366,6 +367,7 @@ ActiveRecord::Schema.define(version: 20190304062626) do
     t.datetime "updated_at"
     t.string   "status"
     t.string   "location"
+    t.integer  "current_import_item_id"
   end
 
   create_table "users", force: true do |t|

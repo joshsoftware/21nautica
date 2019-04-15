@@ -5,10 +5,19 @@
   %thead
     %th Truck Number
     %th Location
+    %th Status
+    %th Client / Work order / LLD
     %th Action
   %tbody
     - @trucks.each do |truck|
       %tr
         %td= truck.reg_number
         %td= truck.location
+        - current_import_item = truck.current_import_item
+        %td= current_import_item.nil? ? 'Un Allocated' : current_import_item.status.titleize
+        - if current_import_item.nil?
+          %td
+        - else
+          - customer = current_import_item.import.customer
+          %td= "#{customer.name} / #{current_import_item.work_order_number} / #{current_import_item.last_loading_date.try(:strftime, '%Y-%m-%d')}"
         %td= link_to "Edit", edit_truck_path(truck), class: 'btn btn-primary'
