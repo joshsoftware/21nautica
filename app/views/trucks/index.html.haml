@@ -19,5 +19,5 @@
           %td
         - else
           - customer = current_import_item.import.customer
-          %td= "#{customer.name} / #{current_import_item.work_order_number} / #{current_import_item.last_loading_date}"
+          %td= "#{customer.name} / #{current_import_item.work_order_number} / #{current_import_item.last_loading_date.try(:strftime, '%Y-%m-%d')}"
         %td= link_to "Edit", edit_truck_path(truck), class: 'btn btn-primary'
