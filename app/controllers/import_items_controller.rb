@@ -50,7 +50,7 @@ class ImportItemsController < ApplicationController
     @import_item = ImportItem.find(params[:id])
     @import = @import_item.import
     initial_status = @import_item.status
-    @import_item.attributes = import_item_params
+    @import_item.attributes = import_item_params.except('status')
     if initial_status == "under_loading_process"
       @import_item.allocate_truck
       @import_item.save
