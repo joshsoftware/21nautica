@@ -101,7 +101,7 @@ class ImportItem < ActiveRecord::Base
   end
 
   def release_truck
-    self.truck.update_column(:status, Truck::FREE) if truck.present?
+    self.truck.update_attributes(status: Truck::FREE, current_import_item_id: nil) if truck.present?
   end
 
   def set_delivery_date
