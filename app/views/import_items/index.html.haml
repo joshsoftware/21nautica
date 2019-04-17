@@ -16,9 +16,8 @@
     %th Container Number
     %th Display EQ
     %th Estimate Arrival
-    %th Truck Number
     - if is_rfs_host?
-      %th Truck Master(Truck Number)
+      %th Truck Number
     %th Work Order Number
     %th Last Loading Date
     %th Status
@@ -34,7 +33,6 @@
         %td= item.container_number
         %td= item.import.equipment
         %td= item.import.estimate_arrival
-        %td.truck_number= item.truck_number
         - if is_rfs_host?
           %td.truck_id= item.truck.nil? ? '' : item.truck.reg_number
         %td= item.import.work_order_number
