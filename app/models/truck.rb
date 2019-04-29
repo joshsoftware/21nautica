@@ -8,6 +8,7 @@ class Truck < ActiveRecord::Base
   TRUCK = 'Truck'
 
   has_many :import_items
+  has_many :location_dates
   belongs_to :current_import_item, class_name: "ImportItem"
 
   validates :type_of, inclusion: { in: TYPE }
@@ -24,5 +25,14 @@ class Truck < ActiveRecord::Base
   def set_status_and_type
     self.status = FREE if status.nil?
     self.type_of = TRUCK 
+  end
+
+  def self.update_location(truck_number, truck_location)
+    return unless truck_number.present? && truck_location.present?
+    truck = Truck.where('lower(reg_number) = lower(?)', truck_number.strip).last
+    return if truck.nil?
+    location = LocationDate.find_or_initialize_by(date: Date.today, truck_id: truck.id)
+    location.update_attributes(location: truck_location)
+    truck.update_attributes(location: truck_location)
   end
 end
