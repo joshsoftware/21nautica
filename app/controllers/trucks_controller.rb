@@ -50,12 +50,8 @@ class TrucksController < ApplicationController
   end
 
   def download_location
-    file_path = DownloadLocation.new.process
-    File.open(file_path, 'r') do |f|
-      send_data f.read, filename: "LocationDownload.xlsx", type: 'application/xlsx' 
-    end
-
-    File.delete(file_path)
+    data = DownloadLocation.new.process
+    send_data data, filename: "LocationDownload.csv", type: "text/csv"
   end
 
   private
