@@ -1,3 +1,4 @@
+require 'csv'
 class TrucksController < ApplicationController
 
   def index
@@ -37,6 +38,20 @@ class TrucksController < ApplicationController
   def load_truck_numbers
     trucks = Truck.free.pluck(:reg_number, :id)
     render json: trucks.to_json
+  end
+
+  def import_location
+    render && return if request.get?
+    CSV.read(params[:file].path, headers: true).each do |row|
+      Truck.update_location(row['TRUCK NUMBER'], row['LOCATION'])
+    end
+    flash[:notice] = "Imported Location sucessfully"
+    redirect_to import_location_trucks_path
+  end
+
+  def download_location
+    data = DownloadLocation.new.process
+    send_data data, filename: "LocationDownload.csv", type: "text/csv"
   end
 
   private

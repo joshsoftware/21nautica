@@ -52,7 +52,7 @@ module Report
       end
       sheet.add_row
       sheet.add_row ['In Transit']
-      sheet.add_row ['BL Number', 'Shipper', 'Desc', 'Container', 'Truck Number', 'Status', 'Remarks'],
+      sheet.add_row ['BL Number', 'Shipper', 'Desc', 'Container', 'Truck Number', 'Location', 'Status', 'Remarks'],
                     style: heading, height: 40
       imports = @imports.where(status: 'ready_to_load')
       imports.each do |import|
@@ -62,10 +62,11 @@ module Report
             end_date = Time.new(import_item.close_date.year, import_item.close_date.month, import_item.close_date.day)
             difference_in_days = TimeDifference.between(start_date, end_date).in_days
             sheet.add_row [import.cargo_receipt, import.shipper, import.description, import_item.container_number,
-                           import_item.truck.try(:reg_number), import_item.status, import_item.remarks] if difference_in_days <= 3
+                           import_item.truck.try(:reg_number), import_item.truck.try(:location), import_item.status,
+                           import_item.remarks] if difference_in_days <= 3
           else
             sheet.add_row [import.cargo_receipt, import.shipper, import.description, import_item.container_number,
-                           import_item.truck.try(:reg_number), import_item.status, import_item.remarks]
+                           import_item.truck.try(:reg_number), import_item.truck.try(:location), import_item.status, import_item.remarks]
           end
         end
       end
