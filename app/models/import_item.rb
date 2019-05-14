@@ -136,9 +136,13 @@ class ImportItem < ActiveRecord::Base
     status_updated_at(self).strftime("%Y-%m-%d") unless status_updated_at(self).blank?
   end
 
+  def rfs_truck_number
+    truck && truck.reg_number
+  end
+
   def as_json(options= {})
     super(only: [:container_number, :id, :after_delivery_status, :context, :truck_number, :status],
-            methods: [:bl_number, :customer_name, :work_order_number, :truck_number,
+            methods: [:bl_number, :customer_name, :work_order_number, :truck_number, :rfs_truck_number,
               :equipment_type, :DT_RowId, :formatted_close_date, :delivery_date,
               :transporter_name, :clearing_agent, :edit_close_date_import_item_path])
   end
