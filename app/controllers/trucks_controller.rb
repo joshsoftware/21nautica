@@ -54,6 +54,22 @@ class TrucksController < ApplicationController
     send_data data, filename: "LocationDownload.csv", type: "text/csv"
   end
 
+  def export_location
+    month = params[:month]
+    unless month.present?
+      flash[:error] = 'Please select month'
+      render import_location_trucks_path
+      return
+    end
+    start_date = Date.strptime(month, '%m-%Y').beginning_of_month
+    end_date = Date.strptime(month, '%m-%Y').end_of_month
+    file_path = DownloadLocation.new(true, start_date, end_date).process
+    File.open(file_path, 'r') do |f|
+      send_data f.read, filename: "LocationExport.xlsx", type: 'application/xlsx'
+    end
+    File.delete(file_path) if file_path
+  end
+
   private
 
   def trucks_params
