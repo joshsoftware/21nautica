@@ -135,6 +135,7 @@ Rails.application.routes.draw do
       get :load_truck_numbers 
       match :import_location, via: [:get, :post]
       post :download_location
+      post :export_location
     end
   end
   # Example of regular route:
