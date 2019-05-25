@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190428070052) do
+ActiveRecord::Schema.define(version: 20190524073836) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -313,6 +313,33 @@ ActiveRecord::Schema.define(version: 20190428070052) do
 
   add_index "payments", ["customer_id"], name: "index_payments_on_customer_id", using: :btree
   add_index "payments", ["vendor_id"], name: "index_payments_on_vendor_id", using: :btree
+
+  create_table "purchase_order_items", force: true do |t|
+    t.integer  "truck_id"
+    t.integer  "spare_part_id"
+    t.integer  "purchase_order_id"
+    t.string   "part_make"
+    t.integer  "quantity"
+    t.float    "price"
+    t.float    "total_price"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "purchase_order_items", ["purchase_order_id"], name: "index_purchase_order_items_on_purchase_order_id", using: :btree
+  add_index "purchase_order_items", ["spare_part_id"], name: "index_purchase_order_items_on_spare_part_id", using: :btree
+  add_index "purchase_order_items", ["truck_id"], name: "index_purchase_order_items_on_truck_id", using: :btree
+
+  create_table "purchase_orders", force: true do |t|
+    t.string   "number"
+    t.date     "date"
+    t.float    "total_cost"
+    t.integer  "vendor_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "purchase_orders", ["vendor_id"], name: "index_purchase_orders_on_vendor_id", using: :btree
 
   create_table "req_parts", force: true do |t|
     t.integer  "spare_part_id"

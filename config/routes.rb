@@ -138,6 +138,7 @@ Rails.application.routes.draw do
       post :export_location
     end
   end
+  resources :purchase_orders
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

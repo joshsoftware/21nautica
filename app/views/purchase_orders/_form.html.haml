@@ -1,0 +1,29 @@
+= simple_nested_form_for @purchase_order, html: {class: 'form-horizontal', id: 'purchase_order_form'}, defaults: {input_html: {class: 'form-control'}}, wrapper: :horizontal_form do |f|
+  .row
+    .col-md-4
+      = f.input :number
+  .row
+    .col-md-4
+      = f.input :date, as: :string, label: 'Date', input_html: { id: 'req_date', class: 'form-control', value: f.object.date.try(:strftime, "%d-%m-%Y")}
+    .col-md-8
+      = f.input :vendor_id, collection: Vendor.pluck(:name, :id), label: 'Vendor Name', input_html: { class: 'vendor_id' }, wrapper: :bootstrap
+  .row
+    = render partial: 'purchase_order_items', locals: { f:f, req_sheet: @purchase_order }
+  .row
+    .col-md-6
+    .col-md-3
+    .col-md-3
+      = f.input :total_cost, label: 'Total Value', readonly: true
+  = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
+  = link_to 'Cancel', purchase_orders_path, class: 'btn btn-primary'
+  
+:coffeescript
+  $('#req_date').datepicker
+    format: 'dd-mm-yyyy'
+
+  $('#purchase_order_vendor_id').select2()
+
+:css
+  #s2id_purchase_order_vendor_id {
+    width: 205px;
+  }

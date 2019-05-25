@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  truck_id: 
+  spare_part_id: 
+  part_make: MyString
+  quantity: 1
+  price: 1.5
+  total_price: 1.5
+
+two:
+  truck_id: 
+  spare_part_id: 
+  part_make: MyString
+  quantity: 1
+  price: 1.5
+  total_price: 1.5
