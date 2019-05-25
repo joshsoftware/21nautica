@@ -38,8 +38,7 @@ $(document).ready ->
     $('#purchase_order_total_cost').val(amount.toFixed(2))
 
   $(document).on 'click', '#add_purchase_order_items', ->
-    console.log('boom')
-    $('.truck_number_id').width(230)
-    $('.spare_part_id').width(230)
+    $('.truck_number_id').width(210)
+    $('.purchase_order_purchase_order_items_spare_part_id').width(290)
     $('.part_make').width(230)
     $('.total_cost').width(100)
