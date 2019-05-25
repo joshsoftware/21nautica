@@ -1,13 +1,12 @@
 class PurchaseOrdersController < ApplicationController
-  before_action :authenticate_user!
   before_action :load_purchase_order, only: [:edit, :update]
 
-	def index
+  def index
     @purchase_orders = PurchaseOrder.includes(:vendor).order('created_at DESC')
   end
 
   def new
-  	@purchase_order = PurchaseOrder.new
+    @purchase_order = PurchaseOrder.new
   end
 
   def create
@@ -30,9 +29,9 @@ class PurchaseOrdersController < ApplicationController
   end
 
   private
-
+  
   def load_purchase_order
-  	@purchase_order = PurchaseOrder.find(params[:id])
+    @purchase_order = PurchaseOrder.find(params[:id])
   end
 
   def purchase_orders_params
