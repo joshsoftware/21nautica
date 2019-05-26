@@ -17,9 +17,13 @@
   = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
   = link_to 'Cancel', purchase_orders_path, class: 'btn btn-primary'
   
-:coffeescript
-  $('#req_date').datepicker
-    format: 'dd-mm-yyyy'
+:javascript
+  var date = new Date();
+  var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  $('#req_date').datepicker({ format: 'dd-mm-yyyy' })
+  if (#{@purchase_order.new_record?}) {
+    $('#req_date').datepicker('setDate', today)
+  }
 
   $('#purchase_order_vendor_id').select2()
 
