@@ -1,0 +1,13 @@
+= link_to "Add New Supplier", new_supplier_path, class: 'btn btn-primary pull-right', remote: true
+%br
+%br
+#supplier_form
+%table.table#supplier_table
+  %thead
+    %th Name
+    %th Action
+  %tbody
+    = render @suppliers 
+    
+:javascript
+  $('#supplier_table').dataTable()

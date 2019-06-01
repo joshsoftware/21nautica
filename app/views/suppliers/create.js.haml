@@ -1,0 +1,6 @@
+- if @supplier.errors.present?
+  flash[:error] = 'Error'
+- else
+  $('#supplier_table').append("#{escape_javascript(render @supplier)}")
+  $('#supplierModal').modal('hide')
+  - flash.clear

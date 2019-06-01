@@ -63,7 +63,7 @@
             %ul.dropdown-menu
               - if current_user.is?('Admin')
                 %li= link_to 'Asset Master', '#' 
-                %li= link_to 'Vendor Master', '#' 
+                %li= link_to 'Supplier Master', suppliers_path 
                 %li= link_to 'Mechanic Master', '#'
                 %li= link_to 'Truck Master', trucks_path
               %li= link_to 'Spare Master', spare_parts_path
