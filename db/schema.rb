@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190524073836) do
+ActiveRecord::Schema.define(version: 20190601043705) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -334,12 +334,12 @@ ActiveRecord::Schema.define(version: 20190524073836) do
     t.string   "number"
     t.date     "date"
     t.float    "total_cost"
-    t.integer  "vendor_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "supplier_id"
   end
 
-  add_index "purchase_orders", ["vendor_id"], name: "index_purchase_orders_on_vendor_id", using: :btree
+  add_index "purchase_orders", ["supplier_id"], name: "index_purchase_orders_on_supplier_id", using: :btree
 
   create_table "req_parts", force: true do |t|
     t.integer  "spare_part_id"
@@ -394,6 +394,12 @@ ActiveRecord::Schema.define(version: 20190524073836) do
   end
 
   add_index "spare_parts", ["spare_part_category_id"], name: "index_spare_parts_on_spare_part_category_id", using: :btree
+
+  create_table "suppliers", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "trucks", force: true do |t|
     t.string   "type_of"
