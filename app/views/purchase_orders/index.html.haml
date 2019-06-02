@@ -5,7 +5,7 @@
   %thead
     %th Number
     %th Date
-    %th Vendor Name
+    %th Supplier Name
     %th Total Cost 
     %th Action
   %tbody
@@ -13,6 +13,6 @@
       %tr
         %td= purchase_order.number
         %td= purchase_order.date
-        %td= purchase_order.vendor_id ? purchase_order.vendor.name : ''
+        %td= purchase_order.supplier_id ? purchase_order.supplier.name : ''
         %td= purchase_order.total_cost
         %td= link_to "Edit", edit_purchase_order_path(purchase_order), class: 'btn btn-primary'

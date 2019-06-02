@@ -6,9 +6,9 @@
     .col-md-4
       = f.input :date, as: :string, label: 'Date', input_html: { id: 'req_date', class: 'form-control', value: f.object.date.try(:strftime, "%d-%m-%Y")}
     .col-md-8
-      = f.input :supplier_id, collection: Supplier.pluck(:name, :id), label: 'Vendor Name', input_html: { class: 'vendor_id' }, wrapper: :bootstrap
+      = f.input :supplier_id, collection: Supplier.pluck(:name, :id), label: 'Supplier Name', input_html: { class: 'vendor_id' }, wrapper: :bootstrap
   .row
-    = render partial: 'purchase_order_items', locals: { f:f, req_sheet: @purchase_order }
+    = render partial: 'purchase_order_items', locals: { f:f }
   .row
     .col-md-6
     .col-md-3
@@ -25,9 +25,9 @@
     $('#req_date').datepicker('setDate', today)
   }
 
-  $('#purchase_order_vendor_id').select2()
+  $('#purchase_order_supplier_id').select2()
 
 :css
-  #s2id_purchase_order_vendor_id {
+  #s2id_purchase_order_supplier_id {
     width: 205px;
   }

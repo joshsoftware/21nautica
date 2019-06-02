@@ -2,6 +2,7 @@
   %table.table#purchase_order_items
     %thead
       %tr
+        %th Type
         %th Truck Number
         %th Part Number 
         %th Part Make
@@ -12,6 +13,7 @@
     %tbody
       = f.simple_fields_for :purchase_order_items, @purchase_order.purchase_order_items , wrapper: false do |part|
         %tr.fields
+          %td= part.input :of_type, collection: [['Truck', 'Truck'], ['Stock', 'Stock']], label: false, wrapper: :vertical_form, include_blank: false, input_html: {class: 'type_of'}
           %td.truck_number_id= part.input :truck_id, collection: Truck.pluck(:reg_number, :id), label: false, include_blank: true, wrapper: :vertical_form, input_html: { class: 'select2-class'}
           %td= part.input :spare_part_id, collection: SparePart.pluck(:product_name, :id), label: false, include_blank: true, wrapper: :vertical_form, input_html: { class: 'select2-class' }
           %td.part_make= part.input :part_make, label: false
@@ -24,11 +26,15 @@
   = f.link_to_add 'Add', :purchase_order_items, id: 'add_purchase_order_items', class: 'btn btn-primary', "data-target" => '#purchase_order_items'
 
 :javascript
+  console.log('121212')
   $('#purchase_order_items .select2-class').select2()
-  $('.truck_number_id').width(210)
+  $('.type_of').trigger('click');
+
+  $('.purchase_order_purchase_order_items_of_type').width(170)
+  $('.purchase_order_purchase_order_items_of_type').css({ marginRight: "-65px" })
+  $('.purchase_order_purchase_order_items_truck_id').width(226)
+  $('.purchase_order_purchase_order_items_truck_id').css({ marginRight: '-50px'})
   $('.purchase_order_purchase_order_items_spare_part_id').width(290)
-  $('.part_make').width(230)
+  $('.purchase_order_purchase_order_items_spare_part_id').css({ marginRight: '-60px' })
+  $('.purchase_order_purchase_order_items_part_make').width(250)
   $('.total_cost').width(100)
-
-
-

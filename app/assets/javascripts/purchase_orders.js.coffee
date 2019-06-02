@@ -38,7 +38,23 @@ $(document).ready ->
     $('#purchase_order_total_cost').val(amount.toFixed(2))
 
   $(document).on 'click', '#add_purchase_order_items', ->
-    $('.truck_number_id').width(210)
+    $('.purchase_order_purchase_order_items_of_type').width(170)
+    $('.purchase_order_purchase_order_items_of_type').css({ marginRight: "-65px" })
+    $('.purchase_order_purchase_order_items_truck_id').width(226)
+    $('.purchase_order_purchase_order_items_truck_id').css({ marginRight: '-50px'})
     $('.purchase_order_purchase_order_items_spare_part_id').width(290)
-    $('.part_make').width(230)
+    $('.purchase_order_purchase_order_items_spare_part_id').css({ marginRight: '-60px' })
+    $('.purchase_order_purchase_order_items_part_make').width(250)
     $('.total_cost').width(100)
+
+  $(document).on 'click', '.type_of', ->
+    $parent = $(this).closest('.fields')
+    $('.fields:visible').each (index) ->
+      type = $parent.find('.type_of').val()
+      console.log('type', type)
+      $truck_number_field = $parent.find('.truck_number_id').find('.select2-class')
+      console.log('truck number', $truck_number_field)
+      if type == 'Stock'
+        $truck_number_field.select2('readonly', 'readonly')
+        $truck_number_field.val(null).trigger('change')
+
