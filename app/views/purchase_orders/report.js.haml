@@ -1,0 +1,6 @@
+- if flash[:error].present?
+  $('.alert-danger').remove()
+  $('#error_msg').append("<div class='alert alert-danger'>#{flash[:error]}</div>")
+- else
+  $('.alert-danger').remove()
+  $('#results').html("#{escape_javascript( render 'purchase_orders/result_table')}")

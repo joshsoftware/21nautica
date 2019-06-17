@@ -51,10 +51,36 @@ $(document).ready ->
     $parent = $(this).closest('.fields')
     $('.fields:visible').each (index) ->
       type = $parent.find('.type_of').val()
-      console.log('type', type)
       $truck_number_field = $parent.find('.truck_number_id').find('.select2-class')
-      console.log('truck number', $truck_number_field)
       if type == 'Stock'
         $truck_number_field.select2('readonly', 'readonly')
         $truck_number_field.val(null).trigger('change')
+
+  $(document).on 'change', '#report_type', ->
+    $field = $('#report_field')
+    $field.find('option').remove().end()
+    $field.append $("<option val=''></option>")
+    lpo_list = [['supplier_id', 'Supplier Name'], ['truck_id', 'Truck Number'], ['spare_part_id', 'Part Name']]
+    req_list = [['truck_id', 'Truck Number'], ['spare_part_id', 'Part Name']]
+    if $(this).val() == 'LPO'
+      $.each lpo_list, (index, value) ->
+        $field.append('<option value='+value[0]+'>'+value[1]+'</option>')
+    else if $(this).val() == 'REQ'
+      $.each req_list, (index, value) ->
+        $field.append('<option value='+value[0]+'>'+value[1]+'</option>')
+
+  $(document).on 'change', '#report_field', ->
+    $field = $('#report_value')
+    $field.select2('val', '')
+    $field.find('option').remove().end()
+    $field.append $("<option val=''></option>")
+    if $(this).val() == 'supplier_id'
+       $.each suppliers, (index, value) ->
+        $field.append('<option value='+value[0]+'>'+value[1]+'</option>')
+    else if $(this).val() == 'spare_part_id'
+      $.each spare_parts, (index, value) ->
+        $field.append('<option value='+value[0]+'>'+value[1]+'</option>')
+    else if $(this).val() =='truck_id'
+      $.each trucks, (index, value) ->
+        $field.append('<option value='+value[0]+'>'+value[1]+'</option>')
 

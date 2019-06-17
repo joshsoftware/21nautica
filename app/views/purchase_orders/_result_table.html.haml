@@ -1,0 +1,29 @@
+- is_search_by_lpo = params[:report][:report_type] == 'LPO'
+- if request.post? && @results.present?
+  %table.table#report_table
+    %thead
+      %th= is_search_by_lpo ? 'LPO Number' : 'Req Number' 
+      %th Date
+      %th Truck Number
+      - if is_search_by_lpo
+        %th Supplier Name
+        %th Part Make
+      %th Part Name  
+      %th Quantity
+      %th Price
+
+    %tbody
+      - @results.each do |data|
+        %tr
+          - number = is_search_by_lpo ? data.purchase_order.number : data.req_sheet.ref_number
+          %td=  number
+          %td= is_search_by_lpo ? data.purchase_order.date : data.req_sheet.date
+          %td= is_search_by_lpo ? data.truck.try(:reg_number) : data.req_sheet.truck.try(:reg_number)
+          - if params[:report][:report_type] == 'LPO'
+            %td= data.purchase_order.supplier.try(:name)
+            %td= data.part_make
+          %td= data.spare_part.try(:product_name)
+          %td= data.quantity
+          %td= data.price
+- else
+  %h4 No Data found          

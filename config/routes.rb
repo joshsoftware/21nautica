@@ -138,7 +138,11 @@ Rails.application.routes.draw do
       post :export_location
     end
   end
-  resources :purchase_orders
+  resources :purchase_orders do
+    collection do
+      match :report, via: [:get, :post]
+    end
+  end
   resources :suppliers
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
