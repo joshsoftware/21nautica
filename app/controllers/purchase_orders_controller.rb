@@ -38,10 +38,24 @@ class PurchaseOrdersController < ApplicationController
       render && return
     end
     @field = report_search[:report_field]
-    @value = report_search[:report_value]
+    @value = get_search_value(report_search)
     @start_date = report_search[:start_date].to_date
     @end_date = report_search[:end_date].to_date
     @results = report_search[:report_type] == 'LPO' ? search_by_purchase_order : search_by_req_sheet
+  end
+
+  def get_search_value(report_search)
+    if report_search[:report_value] == 'ALL'
+      if @field == 'supplier_id'
+        @suppliers.map { |row| row[0] }
+      elsif @field == 'truck_id'
+        @trucks.map { |row| row[0] }
+      else
+        @spare_parts.map { |row| row[0] }
+      end
+    else
+      report_search[:report_value]
+    end
   end
 
   def search_by_purchase_order

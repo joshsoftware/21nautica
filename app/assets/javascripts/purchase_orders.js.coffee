@@ -75,12 +75,15 @@ $(document).ready ->
     $field.find('option').remove().end()
     $field.append $("<option val=''></option>")
     if $(this).val() == 'supplier_id'
-       $.each suppliers, (index, value) ->
+      $.each suppliers, (index, value) ->
         $field.append('<option value='+value[0]+'>'+value[1]+'</option>')
+      $field.append(new Option("ALL", "ALL"))
     else if $(this).val() == 'spare_part_id'
       $.each spare_parts, (index, value) ->
         $field.append('<option value='+value[0]+'>'+value[1]+'</option>')
+      $field.append(new Option("ALL", "ALL"))
     else if $(this).val() =='truck_id'
       $.each trucks, (index, value) ->
         $field.append('<option value='+value[0]+'>'+value[1]+'</option>')
+      $field.append(new Option("ALL", "ALL"))
 
