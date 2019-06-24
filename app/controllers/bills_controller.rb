@@ -3,7 +3,7 @@ class BillsController < ApplicationController
   before_action :get_the_bill_id, only: [:edit, :update]
 
   def index
-    @bills = Bill.order(created_at: :desc).limit(params[:limit] || 100).offset(params[:offset] || 0)
+    @bills = Bill.includes(:created_by, :approved_by, :vendor, :debit_notes).order(created_at: :desc).limit(params[:limit] || 100).offset(params[:offset] || 0)
     @count = Bill.all.count
     respond_to do |format|
       format.html{}

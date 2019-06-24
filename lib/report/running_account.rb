@@ -8,10 +8,10 @@ module Report
       if klass == 'customer'
         customer = object
         # Collect ledgers for the customer
-        ledgers = customer.ledgers.order(date: :desc) 
+        ledgers = customer.ledgers.includes(:voucher).order(date: :desc)
       else
         vendor = object
-        ledgers = vendor.vendor_ledgers.order(date: :desc)
+        ledgers = vendor.vendor_ledgers.includes(:voucher).order(date: :desc)
       end
 
       CSV.generate do |f|
@@ -22,9 +22,10 @@ module Report
             sum(outstanding, total, l, 'customer')
           end
         else
-          f << ['Date', 'Type', 'Invoice No.', 'Currency','Amount', 'Adjusted']
+          f << ['Date', 'Type', 'Invoice No.', 'Currency','Amount', 'Adjusted', 'Reason']
           ledgers.each do |l|
-            f << [ l.date.to_s, l.voucher_type, l.bill_number, l.currency, l.amount, l.paid ]
+            reason = l.voucher_type == 'DebitNote' ? l.voucher.reason : ''
+            f << [ l.date.to_s, l.voucher_type, l.bill_number, l.currency, l.amount, l.paid, reason ]
             sum(outstanding, total, l, 'vendor')
           end
         end
