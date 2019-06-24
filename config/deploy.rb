@@ -15,7 +15,7 @@ puts server
 
 if server == 'ug'
   path = '/www/ug-21nautica' 
-  set :branch, 'production'
+  set :branch, 'ug'
 elsif server == 'erp'
   path = '/www/erp-21nautica' 
   set :branch, 'production'
