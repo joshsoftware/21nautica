@@ -58,7 +58,7 @@ class PaidController < ApplicationController
 
   def index
     vendor = Vendor.where(id: params[:vendor_id]).first
-    @payments = vendor.vendor_ledgers.order(date: :desc, id: :desc).to_json
+    @payments = vendor.vendor_ledgers.includes(:voucher).order(date: :desc, id: :desc).to_json
     @header = vendor
     respond_to do |format|
       format.js {}

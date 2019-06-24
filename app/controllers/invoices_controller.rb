@@ -6,8 +6,8 @@ class InvoicesController < ApplicationController
     limit_val = params[:limit] || 100
     @invoices_type = params[:type]
     @invoices = (@invoices_type == 'ready-new') ?
-      Invoice.where.not(status: 'sent').offset(offset_val).limit(limit_val).order(updated_at: :desc) :
-      Invoice.where(status: 'sent').offset(offset_val).limit(limit_val).order(updated_at: :desc)
+      Invoice.includes(:customer, :invoiceable).where.not(status: 'sent').offset(offset_val).limit(limit_val).order(updated_at: :desc) :
+      Invoice.includes(:customer, :invoiceable).where(status: 'sent').offset(offset_val).limit(limit_val).order(updated_at: :desc)
     respond_to do |format|
       format.html{
         @invoice_count = ( @invoices_type == 'ready-new') ? 
