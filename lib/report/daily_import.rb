@@ -42,16 +42,16 @@ module Report
 
     def add_snapshot_report(customer, sheet, center, heading, status)
       sheet.add_row ['In Port']
-      sheet.add_row ['BL Number', 'Shipper', 'Desc', 'Equipment', 'Qty', 'ETA', 'Status'],
+      sheet.add_row ['BL Number', 'Shipper', 'Desc', 'Equipment', 'Qty', 'ETA', 'Status', 'Remarks'],
                     style: heading, height: 40
       imports = @imports.where.not(status: 'ready_to_load')
       imports.each do |import|
         estimate_arrival = import.estimate_arrival.nil? ? "" : import.estimate_arrival.try(:to_date).try(:strftime,"%d-%b-%Y").to_s
-        sheet.add_row [import.cargo_receipt, import.shipper, import.description, import.equipment, import.quantity, estimate_arrival, import.status]
+        sheet.add_row [import.cargo_receipt, import.shipper, import.description, import.equipment, import.quantity, estimate_arrival, import.status, import.remarks]
       end
       sheet.add_row
       sheet.add_row ['In Transit']
-      sheet.add_row ['BL Number', 'Shipper', 'Desc', 'Container', 'Truck Number', 'Status'],
+      sheet.add_row ['BL Number', 'Shipper', 'Desc', 'Container', 'Truck Number', 'Status', 'Remarks'],
                     style: heading, height: 40
       imports = @imports.where(status: 'ready_to_load')
       imports.each do |import|
@@ -61,10 +61,10 @@ module Report
             end_date = Time.new(import_item.close_date.year, import_item.close_date.month, import_item.close_date.day)
             difference_in_days = TimeDifference.between(start_date, end_date).in_days
             sheet.add_row [import.cargo_receipt, import.shipper, import.description, import_item.container_number,
-                           import_item.truck_number, import_item.status] if difference_in_days <= 3 
+                           import_item.truck_number, import_item.status, import_item.remarks] if difference_in_days <= 3 
           else
             sheet.add_row [import.cargo_receipt, import.shipper, import.description, import_item.container_number,
-                           import_item.truck_number, import_item.status]
+                           import_item.truck_number, import_item.status, import_item.remarks]
           end
         end
       end
