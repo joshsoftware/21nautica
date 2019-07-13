@@ -8,6 +8,11 @@
     .col-md-8
       = f.input :supplier_id, collection: Supplier.pluck(:name, :id), label: 'Supplier Name', input_html: { class: 'vendor_id' }, wrapper: :bootstrap
   .row
+    .col-md-4
+      = f.input :inv_number, label: 'Invoice Number'
+    .col-md-4
+      = f.input :inv_date, as: :string, label: 'Invoice Date', input_html: { id: 'inv_date', class: 'form-control', value: f.object.date.try(:strftime, "%d-%m-%Y")}
+  .row
     = render partial: 'purchase_order_items', locals: { f:f }
   .row
     .col-md-6
@@ -26,6 +31,7 @@
   }
 
   $('#purchase_order_supplier_id').select2()
+  $('#inv_date').datepicker({ format: 'dd-mm-yyyy' })
 
 :css
   #s2id_purchase_order_supplier_id {

@@ -91,7 +91,7 @@ class PurchaseOrdersController < ApplicationController
   end
 
   def purchase_orders_params
-    params.require(:purchase_order).permit(:number, :date, :supplier_id, :total_cost,
+    params.require(:purchase_order).permit(:number, :date, :supplier_id, :total_cost, :inv_date, :inv_number,
       purchase_order_items_attributes: [:id, :of_type, :truck_id, :spare_part_id, :part_make, :mechanic_id, :price, :quantity,
         :total_price, :_destroy]
     )
