@@ -17,6 +17,14 @@ class BillOfLadingsController < ApplicationController
     end
   end
 
+  def change_bl_number
+    render && return if request.get?
+    bl = BillOfLading.find_by(id: params[:bill_of_lading][:id])
+    bl.update_attributes(bl_number: params[:bill_of_lading][:change_number])
+    flash[:notice] = "BL Number change successfully"
+    redirect_to change_bl_number_bill_of_ladings_path
+  end
+
   protected
   def bill_of_ladings_params
     params.require(:bill_of_lading).permit(:bl_number, :payment_ocean, :cheque_ocean,

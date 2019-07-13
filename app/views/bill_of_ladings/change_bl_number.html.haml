@@ -1,0 +1,22 @@
+.panel.panel-default.table-responsive.col-lg-12.no-padding.pull-right
+  .panel-heading SUPER ADMIN OPTION
+  .all-padding
+    = link_to "Change BL", change_bl_number_bill_of_ladings_path, class: 'btn btn-info btn-xs'
+    = link_to "Change Customer", change_customer_customers_path, class: 'btn btn-info btn-xs'
+    %h3 Change BL
+    = simple_form_for(:bill_of_lading, url: change_bl_number_bill_of_ladings_path, html: { id: 'change_bl_number', class: 'form-horizontal'},defaults: {input_html: {class: 'form-control'}}) do |f|
+      .well
+        .row
+          .col-md-6
+            = f.input :id, label: 'BL NUMBER', collection: BillOfLading.pluck(:bl_number, :id), input_html: {id: 'bill_of_lading_number'}
+        .row
+          .col-md-6
+            = f.input :change_number, label: 'New BL Number', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "BL Number is required."}
+        .row
+          .col-md-6
+            = f.submit 'Save', class: 'btn btn-primary', id: 'customer_save'
+            = link_to 'Back', customers_path, class: 'btn btn-primary'
+
+:javascript
+  $('#bill_of_lading_number').select2();
+

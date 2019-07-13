@@ -68,6 +68,15 @@ class CustomersController < ApplicationController
     #authorize! :margin_analysis_report, Customer 
   end
 
+  def change_customer
+    render && return if request.get?
+    bl = BillOfLading.find_by(id: params[:customer][:id])
+    import = bl.import
+    import.update_attributes(customer_id: params[:customer][:change_customer_id])
+    flash[:notice] = "Customer change successfully"
+    redirect_to change_customer_customers_path
+  end
+
   private
   def customer_params
     params.require(:customer).permit(:name, :emails, :sales_rep_name)

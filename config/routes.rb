@@ -65,12 +65,17 @@ Rails.application.routes.draw do
   resources :bill_of_ladings, only: [:update] do
     collection do
       get 'search'
+      match :change_bl_number, via: [:get, :post]
     end
   end
 
   resources :exports, only: [:new, :create, :index]
   resources :export_items, only: [:new, :create]
-  resources :customers, only: [:new, :create, :index, :edit, :update]
+  resources :customers, only: [:new, :create, :index, :edit, :update] do
+    collection do
+      match :change_customer, via: [:get, :post]
+    end
+  end
   #post 'customers/create_new_customer' => 'customers#create_new_customer', as: :create_new_customer
   resources :imports, only: [:new ,:create ,:index] do
     member do
