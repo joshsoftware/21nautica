@@ -1,0 +1,27 @@
+.panel.panel-default.table-responsive.col-lg-12.no-padding.pull-right
+  .panel-heading SUPER ADMIN OPTION
+  .all-padding
+    = link_to "Change BL", change_bl_number_bill_of_ladings_path, class: 'btn btn-info btn-xs'
+    = link_to "Change Customer", change_customer_customers_path, class: 'btn btn-info btn-xs'
+    %h3 Change Customer
+    = simple_form_for(:customer, url: change_customer_customers_path, html: {class: 'form-horizontal'},defaults: {input_html: {class: 'form-control'}}) do |f|
+      .well
+        .row
+          .col-md-6
+            = f.input :id, label: 'Bill Of Lading', collection: BillOfLading.pluck(:bl_number, :id),
+              input_html: { class: 'select2'}
+        .row
+          .col-md-6
+            = f.input :change_customer_id, label: 'New Customer', collection: Customer.pluck(:name, :id),
+              input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Customer is required.", class: 'select2'}
+        .row
+          .col-md-6
+            = f.submit 'Save', class: 'btn btn-primary', id: 'customer_save'
+            = link_to 'Back', customers_path, class: 'btn btn-primary'
+
+:javascript
+  $('.select2').select2();
+:css
+  .select2 {
+    width: 225px;
+  }
