@@ -5,7 +5,29 @@ $(document).ready ->
                         "bJQueryUI": true
                         "bFilter": true
                         "sPaginationType": "full_numbers"
-                      })
+                      }).makeEditable(
+                        sUpdateURL: 'purchase_orders/update',
+                        aoColumns: [
+                          { sUpdateURL: (value,settings) ->
+                            row = $(this).parents('tr')[0]
+                            id = row.id
+                            $.ajax(
+                              url:"purchase_orders/#{id}/update_inv_number",
+                              type: 'POST'
+                              data: {id:id,columnName:"Work Order Number",value:value},
+                              async: false)
+                              .done((data) ->
+                                if (data != value)
+                                  value = data
+                              )
+                            return value
+                          , placeholder:"Click to enter",
+                          fnOnCellUpdated: (sStatus, sValue, settings) ->
+                            $.post("imports/#{id}/retainStatus")
+                          },
+                          null, null, null, null, null
+                        ]
+                      )
   $('body').on 'focusout', '.purchase_order_quantity', ->
     $parent = $(this).closest('.fields')
     quantity = $parent.find('.purchase_order_quantity').val()

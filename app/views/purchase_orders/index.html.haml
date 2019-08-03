@@ -3,6 +3,7 @@
 %br
 %table.table#purchase_order_table
   %thead
+    %th Invoice Number
     %th Number
     %th Date
     %th Supplier Name
@@ -10,7 +11,8 @@
     %th Action
   %tbody
     - @purchase_orders.each do |purchase_order|
-      %tr
+      %tr{id: purchase_order.id }
+        %td= purchase_order.inv_number
         %td= purchase_order.number
         %td= purchase_order.date
         %td= purchase_order.supplier_id ? purchase_order.supplier.name : ''

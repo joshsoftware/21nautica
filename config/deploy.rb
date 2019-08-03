@@ -25,7 +25,8 @@ elsif server == 'int'
 elsif server == 'staging'
   path = '/www/staging'
   set :rails_env, 'staging'
-  set :branch, 'master'
+  branch = ENV['branch'] || 'master'
+  set :branch, branch
 else
   path = '/www/rfs-21nautica'
   set :branch, 'production'

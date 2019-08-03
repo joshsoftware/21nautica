@@ -29,6 +29,15 @@ class PurchaseOrdersController < ApplicationController
     end
   end
 
+  def update_inv_number
+    purchase_order = PurchaseOrder.find(params[:id])
+    if purchase_order.update(inv_number: purchase_order_column_update[:value])
+      render text: purchase_order_column_update[:value]
+    else
+      render text: purchase_order.errors.full_messages
+    end
+  end
+
   def report
     return if request.get?
     report_search = params[:report]
@@ -95,6 +104,10 @@ class PurchaseOrdersController < ApplicationController
       purchase_order_items_attributes: [:id, :of_type, :truck_id, :spare_part_id, :part_make, :mechanic_id, :price, :quantity,
         :total_price, :_destroy]
     )
+  end
+
+  def purchase_order_column_update
+    params.permit(:id, :columnName, :value)
   end
 
 end

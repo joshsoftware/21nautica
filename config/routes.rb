@@ -147,6 +147,9 @@ Rails.application.routes.draw do
     collection do
       match :report, via: [:get, :post]
     end
+    member do
+      post :update_inv_number
+    end
   end
   resources :suppliers
   # Example of regular route:
