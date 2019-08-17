@@ -16,6 +16,28 @@ class InvoicesController < ApplicationController
     end
   end
 
+  def manual_entry
+    render and return if request.get?
+    invoice_params = params[:invoice]
+    bl_number = BillOfLading.where("lower(bl_number) = ?", invoice_params[:bill_of_lading]).first
+    invoice = Invoice.new.tap do |i|
+      i.customer_id = invoice_params[:customer_id]
+      i.date = invoice_params[:date]
+      i.number = invoice_params[:number]
+      i.invoiceable = bl_number if bl_number
+      i.amount = invoice_params[:amount]
+      i.manual = true
+      i.save!
+      i.invoice_ready!
+      i.invoice_sent!
+    end
+    redirect_to manual_invoices_path
+  end
+
+  def manual_invoices
+    @invoices = Invoice.where(manual: true)
+  end
+
   def edit
     @invoice = Invoice.find(params[:id])
     respond_to do |format|

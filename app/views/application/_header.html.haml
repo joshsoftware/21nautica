@@ -51,10 +51,11 @@
               Admin 
               %span.caret
             %ul.dropdown-menu
-              %li= link_to 'List Vendors', vendors_path 
-              %li= link_to 'List Customers', customers_path
+              %li= link_to 'Vendors', vendors_path
+              %li= link_to 'Customers', customers_path
               %li= link_to 'Report', customer_analysis_path 
-              %li= link_to 'List Users', users_path 
+              %li= link_to 'Users', users_path
+              %li= link_to 'Manual Invoice', manual_invoices_path
               %li=# link_to 'Change BL/Customer',  change_bl_number_bill_of_ladings_path
         - if user_signed_in? && (current_user.is?('Admin') || current_user.is?('Yard'))
           %li.dropdown

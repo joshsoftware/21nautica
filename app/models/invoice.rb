@@ -147,6 +147,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def assign_parent_invoice_number
+    return if manual?
     date = Date.current.strftime("%m%Y%d")
     count = Invoice.where(previous_invoice_id: nil).where("created_at > ?", Date.current).count
     self.update_attributes(number: date + count.to_s)

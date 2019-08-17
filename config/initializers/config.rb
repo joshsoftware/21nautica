@@ -15,7 +15,7 @@ STATUS_CHANGE_DURATION = {arrived_malaba_border: 2,
                           order_released: 2,
                           arrived_port: 3,
                           document_handed: 1}
-PAYMENT_MODES = %W(Cheque Cash TT)
+PAYMENT_MODES = %W(Cheque Cash TT Credit\ Note)
 #INVOICE_PARTICULARS = %w( Ocean\ Freight Clearing\ Charges ICD Demurrage 
 #	Empty Final\ Clearing Haulage Forest\ Permits Port\ Storage Other)
 INVOICE_PARTICULARS = ["Ocean Freight", "Agency Fee", "THC as per Line", "Container Demurrage", "Port Charges as per KPA", "Final Clearing", "Transport Charges", "Forest Permits", "Port Storage", "Other"]
