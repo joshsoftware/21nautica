@@ -20,6 +20,7 @@ class InvoicesController < ApplicationController
     render and return if request.get?
     invoice_params = params[:invoice]
     bl_number = BillOfLading.where("lower(bl_number) = ?", invoice_params[:bill_of_lading]).first
+    bl_number = BillOfLading.create!(bl_number: invoice_params[:bill_of_lading]) if !bl_number.present? && invoice_params[:bill_of_lading].present?
     invoice = Invoice.new.tap do |i|
       i.customer_id = invoice_params[:customer_id]
       i.date = invoice_params[:date]
