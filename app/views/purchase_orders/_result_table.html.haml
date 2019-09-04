@@ -29,4 +29,7 @@
   %h4 No Data found
 
 :javascript
-  $('#report_table').dataTable()
+  $('#report_table').dataTable({
+    "lengthMenu": [10, 25, 50, 100, 1000],
+    "pageLength": 1000
+  })
