@@ -11,7 +11,7 @@
         - else
           = link_to '21 Nautica', '#', class: 'navbar-brand'
       %ul.nav.navbar-nav
-        - if user_signed_in? && ['Admin', 'Operations', 'Accounts'].include?(current_user.role)
+        - if user_signed_in? && ['Admin', 'Operations', 'Accounts', 'Transport'].include?(current_user.role)
           %li.dropdown
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
               Import
@@ -20,10 +20,12 @@
               %li= link_to 'New Order', new_import_path
               %li= link_to 'Port Operation', imports_path
               %li= link_to 'Import Tracking', import_items_path
+              %li= link_to 'Shiping Line', coming_soon_path
+              %li= link_to 'Custom',coming_soon_path
               %li= link_to 'Import History', import_history_path
               %li= link_to 'Empty Container Import', import_empty_containers_path
               %li= link_to 'Import/Download Location', import_location_trucks_path
-        - if user_signed_in? && ['Admin', 'Operations', 'Accounts'].include?(current_user.role)
+        - if user_signed_in? && ['Admin', 'Operations', 'Accounts', 'Transport'].include?(current_user.role)
           %li.dropdown
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
               Export
@@ -36,7 +38,7 @@
         - if user_signed_in? && ['Admin', 'Accounts'].include?(current_user.role)
           %li.dropdown
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
-              Payments
+              Accounts
               %span.caret
             %ul.dropdown-menu
               %li= link_to 'Customer Invoices', by_type_invoices_path('ready-new'),  "data-no-turbolink" =>true
@@ -44,7 +46,9 @@
               %li.divider{:role => "separator"} 
               %li= link_to 'Vendor Invoices', bills_path
               %li= link_to 'Payments Made', new_paid_path
-              %li= link_to 'BL/Container Search', bills_search_path 
+              %li= link_to 'Customer Ledger', coming_soon_path
+              %li= link_to 'Manual Invoice(customer)', coming_soon_path
+              %li= link_to 'Petty Cash', coming_soon_path
         - if user_signed_in? && current_user.is?('Admin')
           %li.dropdown
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
@@ -53,25 +57,49 @@
             %ul.dropdown-menu
               %li= link_to 'List Vendors', vendors_path 
               %li= link_to 'List Customers', customers_path
-              %li= link_to 'Report', customer_analysis_path 
+              %li= link_to 'BL/Container Search', bills_search_path 
+              %li= link_to 'Report(Margin)', customer_analysis_path 
               %li= link_to 'List Users', users_path 
               %li=# link_to 'Change BL/Customer',  change_bl_number_bill_of_ladings_path
+              %li= link_to 'Report', report_purchase_orders_path
+              %li= link_to 'Spare Part History', coming_soon_path
+              %li= link_to 'Freez P&L', coming_soon_path
+              %li= link_to 'Truck P&L', coming_soon_path
         - if user_signed_in? && (current_user.is?('Admin') || current_user.is?('Yard'))
           %li.dropdown
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
               Yard 
               %span.caret
             %ul.dropdown-menu
-              - if current_user.is?('Admin')
-                %li= link_to 'Asset Master', '#' 
-                %li= link_to 'Supplier Master', suppliers_path 
-                %li= link_to 'Mechanic Master', '#'
-                %li= link_to 'Truck Master', trucks_path
-              %li= link_to 'Spare Master', spare_parts_path
-              %li= link_to 'Req Sheet', req_sheets_path
+              %li= link_to 'Req Sheet', req_sheets_path 
               %li= link_to 'Purchase Order', purchase_orders_path
-              - if current_user.is?('Admin')
-                %li= link_to 'Report', report_purchase_orders_path
+              %li= link_to 'LPO', coming_soon_path
+              %li= link_to 'Fuel Mngt', coming_soon_path
+              %li= link_to 'Breakdown Mng', coming_soon_path
+              %li= link_to 'Spare Parts ledger', coming_soon_path
+              %li= link_to 'Job Card Mngt', coming_soon_path
+        - if user_signed_in? && current_user.is?('Admin')
+          %li.dropdown
+            = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
+              Master
+              %span.caret
+            %ul.dropdown-menu
+              %li= link_to 'Asset Master', coming_soon_path
+              %li= link_to 'Supplier Master', suppliers_path 
+              %li= link_to 'Mechanic Master', coming_soon_path
+              %li= link_to 'Truck Master', trucks_path
+              %li= link_to 'Spare Master', spare_parts_path
+              %li= link_to 'Exp Head Master', coming_soon_path
+              %li= link_to 'Repair Head Master', coming_soon_path 
+              %li= link_to 'Merge Spare Parts', coming_soon_path 
+        - if user_signed_in? && (current_user.is?('Admin') || current_user.is?('Transport'))
+          %li.dropdown
+            = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
+              Cash Mngt
+              %span.caret
+            %ul.dropdown-menu
+              %li= link_to 'Transport Mng Cash Mngt', coming_soon_path
+
       -#%div.navbar-form.navbar-left
         %form{role: "search", action: "/bill_of_ladings/search"}
           .form-group
