@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190713135502) do
+ActiveRecord::Schema.define(version: 20190909090927) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,13 @@ ActiveRecord::Schema.define(version: 20190713135502) do
 
   add_index "espinita_audits", ["auditable_id", "auditable_type"], name: "index_espinita_audits_on_auditable_id_and_auditable_type", using: :btree
   add_index "espinita_audits", ["user_id", "user_type"], name: "index_espinita_audits_on_user_id_and_user_type", using: :btree
+
+  create_table "expense_heads", force: true do |t|
+    t.string   "name"
+    t.boolean  "is_truck"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "export_items", force: true do |t|
     t.string   "container"
