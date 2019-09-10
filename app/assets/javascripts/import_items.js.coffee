@@ -6,14 +6,53 @@ $(document).on 'change', '#destination_item', ->
   destination_item =  $('#destination_item option:selected').text()
   this.form.submit()
 
+#datatable_initialize = ->
+#  row = 0
+#  id = 0
+#  imitemsTable = $('#import_items_table').dataTable({
+#                    "bJQueryUI": true,
+#                    "bFilter": true,
+#                    "sPaginationType": "full_numbers"
+#                    })
+
+
 datatable_initialize = ->
   row = 0
   id = 0
-  imitemsTable = $('#import_items_table').dataTable({
-                    "bJQueryUI": true,
+  importsTable = $('#import_items_table').dataTable({
+                    "bJQueryUI": true
                     "bFilter": true,
                     "sPaginationType": "full_numbers"
-                    })
+                    }).makeEditable(
+                      sUpdateURL: 'import_items/update',
+                      aoColumns: [null, null, null, null, null, null,
+                                  {
+                                    type: 'datepicker2',
+                                    event: 'click',
+                                    submit: 'okay',
+                                    tooltip: "yyyy-mm-dd",
+                                    sUpdateURL: (value, settings) ->
+                                      row = $(this).parents('tr')[0]
+                                      id = row.id
+                                      $.ajax(
+                                        url:"import_items/update",
+                                        type: 'POST'
+                                        data: {id:id, columnName:"Last Loading Date", value:value}
+                                        async: false
+                                      ).done((data) ->
+                                        value = data
+                                      )
+                                      return value
+                                    ,
+                                    fnOnCellUpdated: (sStatus, sValue, settings) ->
+                                      #$.post("imports/#{id}/retainStatus")
+                                  },
+                                  null, null
+                                 ]
+            
+                                 )
+
+$(document).ready datatable_initialize
 
 $(document).ready datatable_initialize
 

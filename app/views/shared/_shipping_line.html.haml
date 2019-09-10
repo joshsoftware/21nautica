@@ -1,0 +1,6 @@
+.form-group
+  .col-md-3
+    = label_tag 'Shipping Line', nil, class: 'control-label'
+  .col-md-6
+    = select_tag "#{model}[shipping_line_id]", options_for_select(shippers), {data: {for: 'multiselect'}, class: 'customer_select'}
+

@@ -37,7 +37,7 @@ class ImportsControllerTest < ActionController::TestCase
 
   test "should update work_order_number" do
     xhr :post, :update, { id: @import.id,
-                    columnName: 'Work Order Number',
+                    columnName: 'File Ref Number',
                     value: 'WON'
                     }
     xhr :post, :retainStatus, {id: @import.id}

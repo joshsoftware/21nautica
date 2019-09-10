@@ -73,7 +73,7 @@ class ImportsController < ApplicationController
       begin
         @import.send("#{status}!".to_sym)
       rescue
-        @import.errors[:work_order_number] = "first enter work order number or entry number"
+        @import.errors[:work_order_number] = "first enter file ref number or entry number"
         @errors = @import.errors.messages.values.flatten
       end
     else
@@ -95,8 +95,8 @@ class ImportsController < ApplicationController
     params.require(:import).permit(:equipment, :quantity, :from, :to, :shipper,
                                    :bl_number, :estimate_arrival, :description,
                                    :customer_id, :rate_agreed, :weight, 
-                                   :work_order_number,:remarks,:status, :shipping_line_id, 
-                                   import_items_attributes:[:container_number])
+                                   :work_order_number,:remarks,:status, :shipping_line_id, :bl_received_type,
+                                   :consignee_name, import_items_attributes:[:container_number])
   end
 
 

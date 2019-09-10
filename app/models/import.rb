@@ -31,11 +31,14 @@ class Import < ActiveRecord::Base
   belongs_to :c_agent, class_name: "Vendor", foreign_key: "clearing_agent_id"
   belongs_to :shipping_line, class_name: "Vendor"
   before_save :strip_container_number_bl_number
+  after_save :late_document_mail
 
-  validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number
+  validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number, :bl_received_type, :work_order_number
   validates_uniqueness_of :bl_number
 
   accepts_nested_attributes_for :import_items
+
+  enum bl_received_type: ["copy", "original_telex"]
 
   # Hack: I have intentionally not used delegate here, because,
   # in case of duplicate, the bl_number will be delegated to a non-existent BillOfLading in
@@ -105,6 +108,12 @@ class Import < ActiveRecord::Base
 
   def clearing_agent=(clearing_agent)
     self.c_agent = Vendor.where(name: clearing_agent).first
+  end
+
+  def late_document_mail
+    if saved_change_to_estimate_arrival && self.estimate_arrival < self.created_at
+      UserMailer.late_document_mail(self).deliver()
+    end
   end
 
   auditable only: [:status, :updated_at, :remarks]

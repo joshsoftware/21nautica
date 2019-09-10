@@ -6,7 +6,7 @@ CURRENCY = %w(USD UGX)
 EQUIPMENT_TYPE = %W(20GP 40GP 40OT 40FR 20OT)
 ROLE = %W(Admin Staff Yard Operations Accounts)
 SALES_REP_NAMES = ['Kaushik', 'Rajan'] 
-EMAILS_DEFAULTS = ENV['EMAILS_DEFAULTS'] 
+EMAILS_DEFAULTS = ["kiran.mahale@joshsoftware.com"]#ENV['EMAILS_DEFAULTS'] 
 #SHIPPING_LINE = %W(CMA\ CGM Maersk  Evergreen Safmarine PIL Emirates MSC COSCO 
 #  NYK\ line WECLINES)
 # Time in Days

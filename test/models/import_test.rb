@@ -43,7 +43,7 @@ class ImportTest < ActiveSupport::TestCase
     assert_equal @import.clearing_agent, clearing_agent.name
   end
 
-  test 'must assigned work order number before ready to load' do
+  test 'must assigned file ref number before ready to load' do
     @import.status = 'copy_documents_received' 
     @import.original_documents_received!
     @import.container_discharged!
