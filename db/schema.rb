@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190909090927) do
+ActiveRecord::Schema.define(version: 20190909140310) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,9 +106,10 @@ ActiveRecord::Schema.define(version: 20190909090927) do
 
   create_table "expense_heads", force: true do |t|
     t.string   "name"
-    t.boolean  "is_truck"
+    t.boolean  "is_related_to_truck"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_active",           default: true
   end
 
   create_table "export_items", force: true do |t|

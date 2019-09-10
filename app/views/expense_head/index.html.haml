@@ -1,0 +1,16 @@
+= link_to "Add New Expense Head", new_expense_head_path, class: 'btn btn-primary pull-right'
+%br
+%br
+
+%table.table
+  %thead
+    %th Name 
+    %th Is Related To Truck
+    
+  %tbody
+    - @expense_heads.each do |expense_head|
+      %tr
+        %td= expense_head.name 
+        %td= expense_head.is_related_to_truck
+        %td= link_to 'Edit', edit_expense_head_path(expense_head), class: 'btn btn-primary'
+        %td= link_to "Delete", expense_head, method: "delete", class: "btn btn-danger"

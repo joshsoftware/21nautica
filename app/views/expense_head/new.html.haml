@@ -1,0 +1,16 @@
+%h3 New Expense Head
+.col-md-12
+= simple_form_for @expense_head , html: {class: 'form-horizontal'},url: url_for(action: 'create', :controller => 'expense_head'), method: 'post' do |f|
+  .well
+    .row
+      .col-md-6
+        = f.input :name, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Name is required."}
+    .row
+      .col-md-2
+        = f.label :is_related_to_truck
+      .col-md-2
+        = f.check_box :is_related_to_truck, class: 'custom-control-input'
+    .row
+      .col-md-6
+        =f.submit 'Save',class: 'btn btn-primary' 
+        = link_to 'Back', expense_head_index_path, class: 'btn btn-primary'   
