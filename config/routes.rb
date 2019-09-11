@@ -152,7 +152,7 @@ Rails.application.routes.draw do
     end
   end
   resources :suppliers
-  resources :expense_head
+  resources :expense_heads, except: :destroy
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
