@@ -81,7 +81,7 @@ class UserMailer < ActionMailer::Base
 
   def late_document_mail(emails)
     #this mail is triggered after saving the import and if import eta date is less than current date
-    emails = customer.add_default_emails_to_customer
+    #emails = customer.add_default_emails_to_customer
     mail(to: emails, subject: 'Late Document Mail')
   end
 

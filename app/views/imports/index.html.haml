@@ -6,7 +6,7 @@
 %table.table{id: 'imports_table'}
   %thead
     - if is_rfs_host?
-      %th Customer Name / Shipper Name
+      %th Customer Name / Shipper Name / Consignee Name
     - else
       %th Customer Name
     %th BL Number
@@ -23,7 +23,7 @@
     - @imports.each do |import|
       %tr{id: import.id }
         - if is_rfs_host?
-          %td= "#{import.customer.name}" + " / " + "#{import.shipper}"
+          %td= "#{import.customer.name}" + " / " + "#{import.shipper}" + "#{import.consignee_name}"
         - else
           %td= import.customer.name
         %td= import.bl_number

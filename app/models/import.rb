@@ -111,7 +111,7 @@ class Import < ActiveRecord::Base
   end
 
   def late_document_mail
-    if saved_change_to_estimate_arrival && self.estimate_arrival < self.created_at
+    if estimate_arrival_changed? && estimate_arrival < DateTime.now
       UserMailer.late_document_mail(self).deliver()
     end
   end
