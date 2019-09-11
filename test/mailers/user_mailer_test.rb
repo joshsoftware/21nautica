@@ -17,9 +17,7 @@ class UserMailerTest < ActionMailer::TestCase
     email = UserMailer.welcome_message_import(@import).deliver
     assert !ActionMailer::Base.deliveries.empty?
     assert_equal ['kaushik@21nautica.com'], email.from
-    assert_equal ["cust1@gmail.com", "accounts@21nautica.com", "kaushik@21nautica.com",
-        "sachin@21nautica.com", "docs@21nautica.com", "docs-ug@21nautica.com", "ops-ug@21nautica.com", "chetan@21nautica.com",
-        "ops@21nautica.com"], email.to
+    assert_equal ["kaushik@21nautica.com", "docs-ug@21nautica.com", "ops-ug@21nautica.com", "ops@21nautica.com", "Sales-ug@21nautica.com", @customer.emails], email.to
     assert_equal "Your new order", email.subject
   end
 
@@ -57,6 +55,14 @@ class UserMailerTest < ActionMailer::TestCase
         "sachin@21nautica.com", "docs@21nautica.com", "docs-ug@21nautica.com", 
         "ops-ug@21nautica.com", "chetan@21nautica.com", "ops@21nautica.com"], email.to
     assert_equal "Customer Update #{@import.customer.name}", email.subject
+  end
+
+  test "late document mail" do
+    email = UserMailer.late_document_mail("kiranmahale@joshsoftware.com").deliver
+    assert !ActionMailer::Base.deliveries.empty?
+    assert_equal ['kaushik@21nautica.com'], email.from
+    assert_equal ["kiranmahale@joshsoftware.com"], email.to
+    assert_equal "Late Document Mail", email.subject    
   end
 
 end

@@ -29,6 +29,8 @@ FactoryGirl.define do
     remarks 'remark1'
     rate_agreed 3000
     weight 30
+    bl_received_type 0
     association				:customer
+    work_order_number 1234
   end
 end

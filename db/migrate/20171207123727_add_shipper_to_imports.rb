@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class AddShipperToImports < ActiveRecord::Migration
   def change
-    add_column :imports, :bl_received, :integer
+    add_column :imports, :shippers, :integer
   end
 end

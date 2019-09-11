@@ -23,7 +23,7 @@
     - @imports.each do |import|
       %tr{id: import.id }
         - if is_rfs_host?
-          %td= "#{import.customer.name}" + " / " + "#{import.shipper}" + "#{import.consignee_name}"
+          %td= "#{import.customer.name}" + " / " + "#{import.shipper}" +" / "+ "#{import.consignee_name}"
         - else
           %td= import.customer.name
         %td= import.bl_number

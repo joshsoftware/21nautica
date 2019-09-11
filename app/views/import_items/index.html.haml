@@ -27,7 +27,7 @@
     - @import_items.each do |item|
       %tr{id: item.id}
         - if is_rfs_host?
-          %td= "#{item.customer_name}" + " / " + "#{item.import.shipper}" + "/#{item.consignee_name}"
+          %td= "#{item.customer_name}" + " / " + "#{item.import.shipper}" + "/#{item.import.consignee_name}"
         - else
           %td= item.customer_name
         %td= item.import.bl_number

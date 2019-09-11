@@ -32,7 +32,7 @@ class CustomerTest < ActiveSupport::TestCase
 
   test 'should add default emails to customer' do
     customer = @customer
-    customer.add_default_emails_to_customer(customer)
+    customer.add_default_emails_to_customer
     assert customer.emails, 'paritoshbotre@joshsoftware.com, accounts@21nautica.com, kaushik@21nautica.com, 
     sachin@21nautica.com, docs@21nautica.com, docs-ug@21nautica.com, ops-ug@21nautica.com, chetan@21nautica.com, ops@21nautica.com '
   end

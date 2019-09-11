@@ -79,10 +79,9 @@ class UserMailer < ActionMailer::Base
     File.delete(attachment)
   end
 
-  def late_document_mail(emails)
+  def late_document_mail(import)
     #this mail is triggered after saving the import and if import eta date is less than current date
-    #emails = customer.add_default_emails_to_customer
-    mail(to: emails, subject: 'Late Document Mail')
+    mail(to: "kiranmahale@joshsoftware.com", subject: 'Late Document Mail')
   end
 
 end

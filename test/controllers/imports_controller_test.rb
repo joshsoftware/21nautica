@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 require "minitest/autorun"
 
 class ImportsControllerTest < ActionController::TestCase
@@ -11,7 +11,7 @@ class ImportsControllerTest < ActionController::TestCase
 
   test "should not save import with duplicate bl_number" do
     assert_no_difference('Import.count') do
-      post :create, import: {bl_number: 'BL1', to: "momabasa", from: "k",
+      post :create, import: {bl_number: "BL1", to: "momabasa", from: "k",
         shipping_line: "Maersk", estimate_arrival: "06-10-2014", equipment: "20GP",
         quantity: "1", description: "tfy", import_items_attributes: {"1410153969411" => {container_number: "1"}}}
     end
@@ -19,9 +19,10 @@ class ImportsControllerTest < ActionController::TestCase
 
   test "should create new import" do
     assert_difference('Import.count') do
-      post :create, import: {bl_number: 'BL_123_123', to: "momabasa", from: "k", customer_id: @customer.id,
+      post :create, import: {bl_number: "BL_123_123", to: "momabasa", from: "k", customer_id: @customer.id,
         estimate_arrival: "06-10-2014", equipment: "20GP",
         quantity: "1", description: "tfy", rate_agreed: 2000, weight: 30,
+        bl_received_type: "copy", work_order_number: 1234,
         import_items_attributes: {"1410153969411" => {container_number: "con1"}}}
     end
     assert_redirected_to imports_path
@@ -37,12 +38,12 @@ class ImportsControllerTest < ActionController::TestCase
 
   test "should update work_order_number" do
     xhr :post, :update, { id: @import.id,
-                    columnName: 'File Ref Number',
-                    value: 'WON'
+                    columnName: "work order number",
+                    value: "WON"
                     }
     xhr :post, :retainStatus, {id: @import.id}
     @import.reload
-    assert_equal 'WON', @import.work_order_number
+    assert_equal "WON", @import.work_order_number
   end
 
   test "should update import status to ready_to_load if work_order_number present" do
@@ -55,8 +56,8 @@ class ImportsControllerTest < ActionController::TestCase
     xhr :post, :updateStatus, import: {status: "ready_to_load", "remarks"=>"okay"}, id: @import.id
     assert_template :updateStatus
     @import.reload
-    assert_equal 'ready_to_load', @import.status
-    assert_select 'table tr', :count => 0
+    assert_equal "ready_to_load", @import.status
+    assert_select "table tr", :count => 0
   end
 
   test "should get new" do

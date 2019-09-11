@@ -39,6 +39,8 @@ class Import < ActiveRecord::Base
   accepts_nested_attributes_for :import_items
 
   enum bl_received_type: ["copy", "original_telex"]
+  scope :ready_to_load, -> {where(status: 'ready_to_load')}
+  scope :not_ready_to_load, -> {where.not(status: 'ready_to_load')}
 
   # Hack: I have intentionally not used delegate here, because,
   # in case of duplicate, the bl_number will be delegated to a non-existent BillOfLading in
