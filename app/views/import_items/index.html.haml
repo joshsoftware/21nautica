@@ -16,7 +16,7 @@
     %th Container Number
     %th Display EQ
     %th Estimate Arrival
-    - if is_rfs_host?
+    - if is_rfs_host? || is_ug_host?
       %th Truck Number
       %th Location
     %th Work Order Number
@@ -34,7 +34,7 @@
         %td= item.container_number
         %td= item.import.equipment
         %td= item.import.estimate_arrival
-        - if is_rfs_host?
+        - if is_rfs_host? || is_ug_host?
           %td.truck_id= item.truck.nil? ? '' : item.truck.reg_number
           %td= item.truck.nil? ? '' : item.truck.location
         %td= item.import.work_order_number
