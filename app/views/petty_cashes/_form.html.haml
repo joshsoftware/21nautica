@@ -1,0 +1,42 @@
+.col-md-12
+= simple_form_for(@petty_cash, html: { id: 'add_new_petty_cash', class: 'form-horizontal'},defaults: {input_html: {class: 'form-control'}}) do |f|
+  .well
+    .row
+      =f.hidden_field :created_by_id, value: current_user.id
+      .col-md-6
+        = f.label :Date
+        = @date
+        = f.hidden_field :date, value: @date
+      .col-md-6
+        = f.input :expense_head_id, label: 'Expense Head', collection: @expense_heads, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Expense Head is required."}
+    .row
+      .col-md-6
+        = f.input :truck_id, label: 'Truck Number', collection: @trucks, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Truck Number is required."}
+      .col-md-6
+        = f.input :transaction_type, label: 'Transaction Type', collection: TRANSACTION_TYPES, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Transacion Type is required."}
+    .row  
+      .col-md-6
+        = f.input :transaction_amount, label: 'Amount', input_html: {:"data-validation" => "number", :"data-validation-error-msg" => "Amount Should be a valid Positive Number."}
+      .col-md-6
+        = f.input :description, label: 'Remark', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Remark is required."}
+    .row
+      .col-md-6
+        = f.button :submit, class: 'btn btn-primary' 
+        = link_to 'Back', petty_cashes_path, class: 'btn btn-primary'
+
+       
+:javascript
+  $(document).ready(function(){
+    $('#petty_cash_expense_head_id').change(function(){
+      console.log(this.selectedOptions[0].getAttribute('data-is_related_to_truck'))
+      if(this.selectedOptions[0].getAttribute('data-is_related_to_truck')==='true'){
+        $('#petty_cash_truck_id').attr('disabled',false)
+      }
+      else{
+        $('#petty_cash_truck_id').attr('disabled',true)
+      }
+
+        
+      
+      })
+  })
