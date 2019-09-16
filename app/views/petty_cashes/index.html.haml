@@ -1,0 +1,27 @@
+= link_to "Add New Petty Cash", new_petty_cash_path, class: 'btn btn-primary pull-right'
+%br
+%br
+
+%table#petty_cash_table.table
+  %thead
+    %th Date 
+    %th Expense head
+    %th Truck Number
+    %th Transaction amount
+    %th Available balance
+    %th Remark
+    %th created by
+    
+  %tbody
+    - @petty_cash.each do |petty_cash|
+      %tr
+        %td= petty_cash.date.to_date.strftime("%d/%m/%y")
+        %td= petty_cash.expense_head.name
+        %td= petty_cash.truck.reg_number if petty_cash.truck_id
+        -if petty_cash.transaction_type.include?'Withdrawal'
+          %td{ class: 'red'}= - petty_cash.transaction_amount 
+        -if petty_cash.transaction_type.include?'Deposit'
+          %td{ class: 'green'}= petty_cash.transaction_amount             
+        %td= petty_cash.available_balance
+        %td= petty_cash.description
+        %td= petty_cash.created_by.name

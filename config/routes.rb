@@ -153,6 +153,7 @@ Rails.application.routes.draw do
   end
   resources :suppliers
   resources :expense_heads, except: :destroy
+  resources :petty_cashes, except: [:destroy, :edit, :update]
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
