@@ -1,4 +1,4 @@
 $("#imports_table tr##{@import.id} td.updateStatus button").attr('data-states', "#{@import.status},#{@import.aasm.events.join(',')}")
 $("#imports_table tr##{@import.id} td.updateStatus .updateStatus .status").text("#{@import.status.humanize}")
 $("#imports_table tr##{@import.id} td.updateStatus .updateStatus .status_updated_at").text("#{status_updated_at(@import).localtime.to_date.to_formatted_s}")
-$("#imports_table tr##{@import.id} .remarks").text("#{@import.remarks}")
+$("#imports_table tr##{@import.id} .remarks .desc").text("#{@model_instance.remarks.try(:last).try(:desc)}")

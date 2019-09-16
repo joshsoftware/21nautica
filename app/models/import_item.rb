@@ -20,6 +20,7 @@ class ImportItem < ActiveRecord::Base
   include AASM
   include EspinitaPatch
   include MovementsHelper
+  include Remarkable
 
   belongs_to :import
   belongs_to :transporter, class_name: "Vendor", foreign_key: "vendor_id"
@@ -92,7 +93,7 @@ class ImportItem < ActiveRecord::Base
     end
   end
 
-  auditable only: [:status, :updated_at, :current_location, :remarks]
+  auditable only: [:status, :updated_at, :current_location]
 
   def is_truck_number_assigned?
     return true if ENV['HOSTNAME'] != 'RFS'

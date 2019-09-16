@@ -1,4 +1,6 @@
 class BillOfLading < ActiveRecord::Base
+  include Remarkable
+  
   has_one :import
   has_many :movements
   has_many :invoices, as: :invoiceable

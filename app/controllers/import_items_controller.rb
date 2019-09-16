@@ -51,6 +51,7 @@ class ImportItemsController < ApplicationController
     @import = @import_item.import
     initial_status = @import_item.status
     @import_item.attributes = import_item_params.except('status')
+    @import_item.remarks.create(desc: params[:remarks], date: Date.today, category: "external") unless params[:remarks].blank?
     if initial_status == "under_loading_process"
       @import_item.allocate_truck
       @import_item.save
@@ -92,7 +93,7 @@ class ImportItemsController < ApplicationController
 
   def import_item_params
     params.permit(:id)
-    params.require(:import_item).permit(:truck_number, :status, :remarks, :context, :transporter_name, :transporter, :truck_id, :last_loading_date)
+    params.require(:import_item).permit(:truck_number, :status, :context, :transporter_name, :transporter, :truck_id, :last_loading_date)
   end
 
   def import_item_update_params

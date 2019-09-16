@@ -23,6 +23,7 @@
 class Movement < ActiveRecord::Base
   include AASM
   include MovementsHelper
+  include Remarkable
 
   has_one :export_item
   belongs_to :bill_of_lading
@@ -95,7 +96,7 @@ class Movement < ActiveRecord::Base
 
   end
 
-  auditable only: [:status, :updated_at, :remarks, :vendor_id, :transporter_payment,
+  auditable only: [:status, :updated_at, :vendor_id, :transporter_payment,
     :clearing_agent, :clearing_agent_payment, :clearing_agent_id]
 
   def bl_number_required?

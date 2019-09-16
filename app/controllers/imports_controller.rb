@@ -67,8 +67,8 @@ class ImportsController < ApplicationController
 
   def updateStatus
     @import = Import.find(params[:id])
-    @import.remarks = import_params[:remarks]
     status = import_params[:status].downcase.gsub(' ', '_')
+    @import.remarks.create(desc: import_params[:remarks], date: Date.today, category: "external") unless import_params[:remarks].blank?
     if status != @import.status 
       begin
         @import.send("#{status}!".to_sym)
@@ -95,7 +95,7 @@ class ImportsController < ApplicationController
     params.require(:import).permit(:equipment, :quantity, :from, :to, :shipper,
                                    :bl_number, :estimate_arrival, :description,
                                    :customer_id, :rate_agreed, :weight, 
-                                   :work_order_number,:remarks,:status, :shipping_line_id, 
+                                   :work_order_number, :remarks, :status, :shipping_line_id, 
                                    import_items_attributes:[:container_number])
   end
 
