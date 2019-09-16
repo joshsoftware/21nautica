@@ -33,6 +33,8 @@
         $('#petty_cash_truck_id').attr('disabled',false)
       }
       else{
+        console.log($('#petty_cash_truck_id')[0].getAttribute('data-validation-error-msg'))
+        //# $('#petty_cash_truck_id').removeClass(this.errorClass)
         $('#petty_cash_truck_id').attr('disabled',true)
       }
 

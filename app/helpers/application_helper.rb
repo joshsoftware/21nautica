@@ -1,4 +1,5 @@
 module ApplicationHelper
+  include ActionView::Helpers::NumberHelper
   def get_date_range(payment_type)
   	current_date = Date.current
   	end_date = Date.current.to_s

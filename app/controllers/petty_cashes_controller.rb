@@ -16,7 +16,7 @@ class PettyCashesController < ApplicationController
   def create
     @petty_cash = PettyCash.new(petty_cash_params)
     if @petty_cash.save
-      flash[:notice] = 'Petty Cash saved successfulyy'
+      flash[:notice] = 'Petty Cash saved '
       redirect_to :petty_cashes
     else
       render 'new'
@@ -29,7 +29,7 @@ class PettyCashesController < ApplicationController
   end
 
   def update_available_balance
-    last_available_balance = PettyCash.count == 0?0.00:PettyCash.last.available_balance
+    last_available_balance = PettyCash.count == 0?BigDecimal.new('0.00'):PettyCash.last.available_balance
     if params[:petty_cash][:transaction_type] === 'Deposit' 
       params[:petty_cash][:available_balance] = last_available_balance + params[:petty_cash][:transaction_amount].to_f
     else

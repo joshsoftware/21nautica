@@ -18,10 +18,9 @@
         %td= petty_cash.date.to_date.strftime("%d/%m/%y")
         %td= petty_cash.expense_head.name
         %td= petty_cash.truck.reg_number if petty_cash.truck_id
-        -if petty_cash.transaction_type.include?'Withdrawal'
-          %td{ class: 'red'}= - petty_cash.transaction_amount 
-        -if petty_cash.transaction_type.include?'Deposit'
-          %td{ class: 'green'}= petty_cash.transaction_amount             
-        %td= petty_cash.available_balance
+        %td{ class: "#{petty_cash.transaction_type.eql?('Withdrawal') ? 'red' : 'green'}" }
+          = number_with_precision(petty_cash.transaction_amount, precision: 2)
+        %td{ class: "#{petty_cash.available_balance < 0.0 ? 'red' : 'green'}" }
+          = number_with_precision(petty_cash.available_balance, precision: 2)
         %td= petty_cash.description
         %td= petty_cash.created_by.name
