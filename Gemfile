@@ -97,6 +97,7 @@ end
 group :test, :development do 
   gem 'pry'
   gem 'pry-nav'
+  gem 'byebug'
 end
 
 gem 'mocha'

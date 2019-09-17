@@ -155,6 +155,7 @@ Rails.application.routes.draw do
   end
   resources :suppliers
   get '/coming_soon' => "welcome#coming_soon"
+  resources :expense_heads, except: :destroy
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

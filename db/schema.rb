@@ -104,6 +104,14 @@ ActiveRecord::Schema.define(version: 20190816041047) do
   add_index "espinita_audits", ["auditable_id", "auditable_type"], name: "index_espinita_audits_on_auditable_id_and_auditable_type", using: :btree
   add_index "espinita_audits", ["user_id", "user_type"], name: "index_espinita_audits_on_user_id_and_user_type", using: :btree
 
+  create_table "expense_heads", force: true do |t|
+    t.string   "name"
+    t.boolean  "is_related_to_truck"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "is_active",           default: true
+  end
+
   create_table "export_items", force: true do |t|
     t.string   "container"
     t.string   "location"
