@@ -1,16 +1,12 @@
 # Expense Head Class
 class ExpenseHeadsController < ApplicationController
-  before_action :find_expense_head_id, only: %i[edit update destroy]
+  before_action :find_expense_head_id, only: %i[edit update]
   def index
     @expense_heads = ExpenseHead.all
   end
 
   def new
     @expense_head = ExpenseHead.new
-  end
-
-  def edit
-    @expense_head = ExpenseHead.find_by(id: params[:id])
   end
 
   def create
