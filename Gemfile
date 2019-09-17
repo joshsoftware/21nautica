@@ -97,7 +97,7 @@ end
 group :test, :development do 
   gem 'pry'
   gem 'pry-nav'
-  gem 'rspec-rails', '~> 3.8'
+  gem 'byebug'
 end
 
 gem 'mocha'
