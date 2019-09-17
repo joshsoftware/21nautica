@@ -152,7 +152,7 @@ Rails.application.routes.draw do
     end
   end
   resources :suppliers
-  get '/coming_soon' => "coming_soon#index"
+  get '/coming_soon' => "welcome#coming_soon"
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
