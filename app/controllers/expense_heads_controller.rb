@@ -9,10 +9,6 @@ class ExpenseHeadsController < ApplicationController
     @expense_head = ExpenseHead.new
   end
 
-  def edit
-    @expense_head
-  end
-
   def create
     @expense_head = ExpenseHead.new(expense_head_params)
     if @expense_head.save
