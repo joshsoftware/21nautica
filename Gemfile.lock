@@ -276,6 +276,7 @@ DEPENDENCIES
   binding_of_caller
   bootstrap-datepicker-rails
   bootstrap-sass (~> 3.2.0.4)
+  byebug
   cancancan (~> 1.10)
   codeclimate-test-reporter
   coffee-rails (~> 4.0.0)
