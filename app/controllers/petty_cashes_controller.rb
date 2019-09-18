@@ -29,8 +29,8 @@ class PettyCashesController < ApplicationController
   end
 
   def update_available_balance
-    last_available_balance = PettyCash.count == 0?BigDecimal.new('0.00'):PettyCash.last.available_balance
-    if params[:petty_cash][:transaction_type] === 'Deposit' 
+    last_available_balance = PettyCash.count == 0 ? 0.00 : PettyCash.last.available_balance
+    if params[:petty_cash][:transaction_type] === "Deposit"
       params[:petty_cash][:available_balance] = last_available_balance + params[:petty_cash][:transaction_amount].to_f
     else
       params[:petty_cash][:available_balance] = last_available_balance - params[:petty_cash][:transaction_amount].to_f
