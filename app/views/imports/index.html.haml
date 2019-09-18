@@ -6,14 +6,13 @@
 %table.table{id: 'imports_table'}
   %thead
     - if is_rfs_host?
-      %th Customer Name / Shipper Name
+      %th Customer Name / Shipper Name / Consignee Name
     - else
       %th Customer Name
     %th BL Number
     %th Shipping Line
     %th Equipment
     %th Weight
-    %th Work Order Number
     %th Entry Number
     %th Clearing Agent
     %th ETA
@@ -24,14 +23,13 @@
     - @imports.each do |import|
       %tr{id: import.id }
         - if is_rfs_host?
-          %td= "#{import.customer.name}" + " / " + "#{import.shipper}"
+          %td= "#{import.customer.name}" + " / " + "#{import.shipper}" +" / "+ "#{import.consignee_name}"
         - else
           %td= import.customer.name
         %td= import.bl_number
         %td= import.shipping_line.try(:name)
         %td= import.equipment
         %td= (import.weight.to_f/import.quantity).round(2)
-        %td= import.work_order_number
         %td= import.entry_number
         %td= import.clearing_agent
         %td= import.estimate_arrival

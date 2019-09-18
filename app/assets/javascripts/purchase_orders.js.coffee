@@ -14,7 +14,7 @@ $(document).ready ->
                             $.ajax(
                               url:"purchase_orders/#{id}/update_inv_number",
                               type: 'POST'
-                              data: {id:id,columnName:"Work Order Number",value:value},
+                              data: {id:id,columnName:"File Ref Number",value:value},
                               async: false)
                               .done((data) ->
                                 if (data != value)

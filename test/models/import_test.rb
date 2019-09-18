@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: imports
@@ -18,7 +20,7 @@
 #  updated_at       :datetime
 #
 
-require 'test_helper'
+require "test_helper"
 
 class ImportTest < ActiveSupport::TestCase
   setup do
@@ -26,25 +28,18 @@ class ImportTest < ActiveSupport::TestCase
   end
 
   test "Bl number must be unique" do
-    import1 = Import.new(to: 'a', from: 'b', weight: 3, rate_agreed: 1200)
-    import1.bl_number = 'BL_NUMBER1'
-    assert import1.save
-
-    import2 = Import.new(to: 'a', from: 'b', weight: 3, rate_agreed: 3000)
-    import2.bl_number = 'BL_NUMBER1'
-    assert_not import2.save
-    assert import2.errors.messages[:bl_number].include?(
-                      'has already been taken')
+    import2 = FactoryGirl.create :import, bl_number: @import.bl_number
+    assert import2.errors.messages[:bl_number].include?("has already been taken")
   end
 
-  test 'should set the clearing agent' do
+  test "should set the clearing agent" do
     clearing_agent = FactoryGirl.create(:vendor)
     @import.clearing_agent_id = clearing_agent.id
     assert_equal @import.clearing_agent, clearing_agent.name
   end
 
-  test 'must assigned work order number before ready to load' do
-    @import.status = 'copy_documents_received' 
+  test "must assigned file ref number before ready to load" do
+    @import.status = "copy_documents_received"
     @import.original_documents_received!
     @import.container_discharged!
     assert_raises(AASM::InvalidTransition) do

@@ -79,4 +79,9 @@ class UserMailer < ActionMailer::Base
     File.delete(attachment)
   end
 
+  def late_document_mail(import)
+    #this mail is triggered after saving the import and if import eta date is less than current date
+    mail(to: "kiranmahale@joshsoftware.com", subject: 'Late Document Mail')
+  end
+
 end
