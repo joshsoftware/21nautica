@@ -1,5 +1,5 @@
 class BillOfLading < ActiveRecord::Base
-  include Remarkable
+  # include Remarkable
   
   has_one :import
   has_many :movements

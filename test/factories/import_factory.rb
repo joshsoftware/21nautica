@@ -26,7 +26,6 @@ FactoryGirl.define do
     estimate_arrival '10-10-2014'
     equipment        '20GP'
     quantity				  3
-    remarks 'remark1'
     rate_agreed 3000
     weight 30
     bl_received_type 0

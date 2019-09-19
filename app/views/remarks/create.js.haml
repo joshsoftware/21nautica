@@ -11,14 +11,3 @@ $('#remarkModal .alert').remove();
     $("#imports_table tr##{@model_instance.id} td.remarks .desc").text("#{@model_instance.remarks.try(:last).try(:desc)}")
   - when "ImportItem"
     $("#import_items_table tr##{@model_instance.id} td.remarks .desc").text("#{@model_instance.remarks.try(:last).try(:desc)}")
-
-
-
-
-
-
-
-
-
-
-

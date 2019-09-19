@@ -12,7 +12,7 @@
 #  created_on    :datetime
 #  approved_by   :integer
 class Bill < ActiveRecord::Base
-  include Remarkable
+  # include Remarkable
   
   attr_accessor :bill_items_total
   belongs_to :created_by, class_name: 'User'

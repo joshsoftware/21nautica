@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190713135502) do
+ActiveRecord::Schema.define(version: 20190916070656) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 20190713135502) do
     t.string   "cheque_ocean"
     t.string   "payment_clearing"
     t.string   "cheque_clearing"
-    t.string   "remarks"
+    t.string   "remark"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "agency_fee"
@@ -202,6 +202,18 @@ ActiveRecord::Schema.define(version: 20190713135502) do
     t.boolean  "is_all_container_delivered", default: false
     t.string   "entry_number"
     t.string   "shipper"
+    t.integer  "bl_received_type"
+    t.string   "consignee_name"
+    t.date     "bl_received_at"
+    t.date     "charges_received_at"
+    t.date     "charges_paid_at"
+    t.date     "do_received_at"
+    t.date     "pl_received_at"
+    t.date     "gf_return_date"
+    t.string   "return_location"
+    t.boolean  "is_late_submission"
+    t.string   "rotation_number"
+    t.integer  "entry_type"
   end
 
   add_index "imports", ["bill_of_lading_id"], name: "index_imports_on_bill_of_lading_id", using: :btree
@@ -221,7 +233,7 @@ ActiveRecord::Schema.define(version: 20190713135502) do
     t.integer  "invoiceable_id"
     t.string   "invoiceable_type"
     t.string   "legacy_bl"
-    t.text     "remarks"
+    t.text     "remark"
   end
 
   create_table "ledgers", force: true do |t|
@@ -263,7 +275,7 @@ ActiveRecord::Schema.define(version: 20190713135502) do
     t.date     "estimate_delivery"
     t.string   "movement_type"
     t.string   "custom_seal"
-    t.string   "remarks"
+    t.string   "remark"
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -302,7 +314,7 @@ ActiveRecord::Schema.define(version: 20190713135502) do
     t.integer  "amount"
     t.string   "mode_of_payment"
     t.string   "reference"
-    t.string   "remarks"
+    t.string   "remark"
     t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -343,6 +355,16 @@ ActiveRecord::Schema.define(version: 20190713135502) do
   end
 
   add_index "purchase_orders", ["supplier_id"], name: "index_purchase_orders_on_supplier_id", using: :btree
+
+  create_table "remarks", force: true do |t|
+    t.integer  "category"
+    t.datetime "date"
+    t.string   "remarkable_type"
+    t.integer  "remarkable_id"
+    t.string   "desc"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "req_parts", force: true do |t|
     t.integer  "spare_part_id"

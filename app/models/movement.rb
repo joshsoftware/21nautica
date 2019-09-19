@@ -23,7 +23,7 @@
 class Movement < ActiveRecord::Base
   include AASM
   include MovementsHelper
-  include Remarkable
+  # include Remarkable
 
   has_one :export_item
   belongs_to :bill_of_lading

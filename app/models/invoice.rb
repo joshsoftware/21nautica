@@ -1,6 +1,6 @@
 class Invoice < ActiveRecord::Base
   include AASM
-  include Remarkable
+  # include Remarkable
   
   validates_presence_of :customer
   belongs_to :customer

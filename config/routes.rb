@@ -1,7 +1,6 @@
 require 'sidekiq/web'
 Rails.application.routes.draw do
 
-
   resources 'bills' do
     collection do
       match :get_container, via: :get 
