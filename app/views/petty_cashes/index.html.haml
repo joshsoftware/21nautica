@@ -19,7 +19,7 @@
         %td= petty_cash.expense_head.name
         %td= petty_cash.truck.reg_number if petty_cash.truck_id
         %td{ class: "#{petty_cash.transaction_type.eql?('Withdrawal') ? 'red' : 'green'}" }
-          = number_with_precision(petty_cash.transaction_amount, precision: 2)
+          = number_with_precision("#{petty_cash.transaction_type.eql?('Withdrawal') ? -petty_cash.transaction_amount : petty_cash.transaction_amount }", precision: 2)
         %td{ class: "#{petty_cash.available_balance < 0.0 ? 'red' : 'green'}" }
           = number_with_precision(petty_cash.available_balance, precision: 2)
         %td= petty_cash.description

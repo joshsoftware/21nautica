@@ -11,36 +11,33 @@
         = f.hidden_field :date, value: @date
     .row
       .col-md-6
-        = f.input :truck_id, label: 'Truck Number', disabled: true, collection: @trucks, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Truck Number is required."}
+        = f.input :truck_id, label: 'Truck Number', collection: @trucks, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Truck Number is required."}
       .col-md-6
         =f.collection_radio_buttons :transaction_type, [['Withdrawal', 'Withdrawal'] ,['Deposit', 'Deposit']],:first, :last, checked: 'Withdrawal' 
-        -# = f.input :transaction_type, label: 'Transaction Type', collection: TRANSACTION_TYPES, include_blank: false, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Transacion Type is required."}
     .row  
       .col-md-6
-        = f.input :transaction_amount, label: 'Amount', input_html: {:"data-validation" => "required"}
+        = f.input :transaction_amount, label: 'Amount', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Amount is required."}
       .col-md-6
         = f.input :description, label: 'Remark'
     .row
       .col-md-6
-        = f.button :submit, class: 'btn btn-primary' 
+        = f.button :submit, class: 'btn btn-primary'
         = link_to 'Back', petty_cashes_path, class: 'btn btn-primary'
 
        
 :javascript
   $(document).ready(function(){
     $('#petty_cash_expense_head_id').change(function(){
-      $('#petty_cash_truck_id')
-      console.log(this.selectedOptions[0].getAttribute('data-is_related_to_truck'))
       if(this.selectedOptions[0].getAttribute('data-is_related_to_truck')==='true'){
-        $('#petty_cash_truck_id').attr('disabled',false)
+        $('#petty_cash_truck_id').attr('disabled',false);
       }
       else{
-        console.log($('#petty_cash_truck_id')[0].getAttribute('data-validation-error-msg'))
-        //# $('#petty_cash_truck_id').removeClass(this.errorClass)
-        $('#petty_cash_truck_id').attr('disabled',true)
+        var petty_cash_truck_id = $("#petty_cash_truck_id")
+        petty_cash_truck_id.attr("disabled",true)
+        petty_cash_truck_id.val('')
+        petty_cash_truck_id.closest('div').removeClass('has-error')
+        petty_cash_truck_id.siblings(".form-error").remove()
+        petty_cash_truck_id.removeAttr("style");
       }
-
-        
-      
       })
   })
