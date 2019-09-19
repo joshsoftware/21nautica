@@ -1,10 +1,10 @@
+# frozen_string_literal: true
+
 class RemarksController < ApplicationController
   before_action :set_model_instance
 
   def create
-    if @model_instance
-      @model_instance.remarks.create(desc: remarks_params[:desc], date: format_datetime, category: (remarks_params[:category] || "internal"))
-    end    
+    @model_instance && @model_instance.remarks.create(desc: remarks_params[:desc], date: format_datetime, category: (remarks_params[:category] || "internal"))
   end
 
   def index
@@ -28,6 +28,6 @@ class RemarksController < ApplicationController
   end
 
   def format_datetime
-    DateTime.parse(remarks_params[:date] || DateTime.now.to_s) + Time.now.seconds_since_midnight.seconds
+    Time.zone.parse(remarks_params[:date] || Time.zone.now.to_s) + Time.zone.now.seconds_since_midnight.seconds
   end
 end

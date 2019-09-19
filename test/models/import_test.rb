@@ -28,8 +28,8 @@ class ImportTest < ActiveSupport::TestCase
   end
 
   test "Bl number must be unique" do
-    import2 = FactoryGirl.create :import, bl_number: @import.bl_number
-    assert import2.errors.messages[:bl_number].include?("has already been taken")
+    import = Import.new(bl_number: @import.bl_number)
+    assert_not import.save
   end
 
   test "should set the clearing agent" do
