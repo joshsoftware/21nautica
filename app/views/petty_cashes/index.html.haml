@@ -13,7 +13,7 @@
     %th created by
     
   %tbody
-    - @petty_cash.each do |petty_cash|
+    - @petty_cashes.each do |petty_cash|
       %tr
         %td= petty_cash.date.to_date.strftime("%d/%m/%y")
         %td= petty_cash.expense_head.name
@@ -24,3 +24,4 @@
           = number_with_precision(petty_cash.available_balance, precision: 2)
         %td= petty_cash.description
         %td= petty_cash.created_by.name
+= will_paginate @petty_cashes

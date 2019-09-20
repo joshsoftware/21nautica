@@ -2,13 +2,11 @@
 = simple_form_for(@petty_cash, html: { id: 'add_new_petty_cash', class: 'form-horizontal'},defaults: {input_html: {class: 'form-control'}}) do |f|
   .well
     .row
-      =f.hidden_field :created_by_id, value: current_user.id
       .col-md-6
         = f.input :expense_head_id, label: 'Expense Head', collection: @expense_heads, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Expense Head is required."}
       .col-md-6
-        = f.label :Date
-        = @date
-        = f.hidden_field :date, value: @date
+        = f.label :date
+        = f.date_field  :date, value:Date.current, disabled: true
     .row
       .col-md-6
         = f.input :truck_id, label: 'Truck Number', collection: @trucks, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Truck Number is required."}
@@ -21,23 +19,26 @@
         = f.input :description, label: 'Remark'
     .row
       .col-md-6
-        = f.button :submit, class: 'btn btn-primary'
+        = f.button :submit, class: 'btn btn-primary', id: 'submitButton'
         = link_to 'Back', petty_cashes_path, class: 'btn btn-primary'
 
        
 :javascript
   $(document).ready(function(){
     $('#petty_cash_expense_head_id').change(function(){
-      if(this.selectedOptions[0].getAttribute('data-is_related_to_truck')==='true'){
+      if (this.selectedOptions[0].getAttribute('data-is_related_to_truck' )=== 'true') {
         $('#petty_cash_truck_id').attr('disabled',false);
-      }
-      else{
+      } else {
         var petty_cash_truck_id = $("#petty_cash_truck_id")
         petty_cash_truck_id.attr("disabled",true)
         petty_cash_truck_id.val('')
-        petty_cash_truck_id.closest('div').removeClass('has-error')
-        petty_cash_truck_id.siblings(".form-error").remove()
         petty_cash_truck_id.removeAttr("style");
+        if (petty_cash_truck_id.closest('div').hasClass('has-success')) {
+          petty_cash_truck_id.closest('div').removeClass('has-success')
+        } else {
+          petty_cash_truck_id.closest('div').removeClass('has-error')
+          petty_cash_truck_id.siblings(".form-error").remove()
+        }
       }
       })
   })
