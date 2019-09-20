@@ -13,3 +13,4 @@
         %td= repair_head.name 
         %td= repair_head.is_active ? "Yes": "No"
         %td= link_to 'Edit', edit_repair_head_path(repair_head), class: 'btn btn-primary'
+= will_paginate @repair_heads

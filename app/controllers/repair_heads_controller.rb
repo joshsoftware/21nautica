@@ -1,7 +1,7 @@
 class RepairHeadsController < ApplicationController
   before_action :get_repair_head, only: %i[edit update]
   def index
-    @repair_heads = RepairHead.all
+    @repair_heads = RepairHead.all.paginate(page: params[:page], per_page: 3)
   end
 
   def new

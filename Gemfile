@@ -50,6 +50,7 @@ gem "select2-rails"
 
 # bootstrap-datepicker-rails project integrates a datepicker with Rails 3 assets pipeline.
 gem 'bootstrap-datepicker-rails'
+gem 'will_paginate', '~> 3.1.0'
 
 gem 'axlsx'
 
