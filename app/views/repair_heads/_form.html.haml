@@ -1,0 +1,17 @@
+.col-md-12
+  = simple_form_for(@repair_head, html: { id: 'add_new_repair_head', class: 'form-horizontal'},defaults: {input_html: {class: 'form-control'}}) do |f|
+    .well
+      .row
+        .col-md-6
+          = f.input :name, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Name is required."}
+      - if params[:id]
+        .row
+          .col-md-2
+            = f.label :is_active
+          .col-md-2
+            = f.check_box :is_active, class: 'custom-control-input'
+
+      .row
+        .col-md-6
+          = f.submit 'Save', class: 'btn btn-primary', id: 'expense_head_save'
+          = link_to 'Back', repair_heads_path, class: 'btn btn-primary'

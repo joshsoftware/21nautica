@@ -1,0 +1,10 @@
+%h1 Edit Repair Head
+= render :partial => 'form' 
+
+:javascript
+  window.validate_form = function(){
+    $.validate({
+      form: '#add_new_repair_head'
+    });
+  }
+  validate_form();

@@ -152,6 +152,7 @@ Rails.application.routes.draw do
     end
   end
   resources :suppliers
+  resources :repair_heads 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

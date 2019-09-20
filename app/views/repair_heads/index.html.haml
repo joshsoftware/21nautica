@@ -1,0 +1,15 @@
+= link_to "Add New Reapir Head", new_repair_head_path, class: 'btn btn-primary pull-right'
+%br
+%br
+
+%table.table
+  %thead
+    %th Name 
+    %th Is_active
+
+  %tbody
+    - @repair_heads.each do |repair_head|
+      %tr
+        %td= repair_head.name 
+        %td= repair_head.is_active ? "Yes": "No"
+        %td= link_to 'Edit', edit_repair_head_path(repair_head), class: 'btn btn-primary'
