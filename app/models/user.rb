@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   validates :email, :password, presence: true
+  has_many :job_cards, foreign_key: "created_by_id"
 
   def is?(role)
     self.role == role
