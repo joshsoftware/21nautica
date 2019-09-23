@@ -1,0 +1,19 @@
+= link_to "Add New Job Card Detail", new_job_card_path, class: 'btn btn-primary pull-right'
+%br
+%br
+
+%table.table
+  %thead
+    %th Date
+    %th Job Card number
+    %th Truck Number
+    %th Actions
+
+  %tbody
+    - @job_card.each do |job_card|
+      %tr
+        %td= job_card.date 
+        %td= job_card.number
+        %td= job_card.truck.reg_number
+        %td= link_to 'Edit', edit_job_card_path(job_card), class: 'btn btn-primary' 
+        %td= link_to 'Show', job_card_path(job_card), class: 'btn btn-success'

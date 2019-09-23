@@ -1,0 +1,12 @@
+%h1 edit Job Card
+= render 'form'
+
+:javascript
+  window.validate_form = function(){
+    $.validate({
+      form: '#add_new_job_card'
+
+    });
+  }
+  
+  validate_form();

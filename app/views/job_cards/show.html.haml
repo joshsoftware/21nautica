@@ -1,0 +1,36 @@
+= link_to "Back", job_cards_path, class: 'btn btn-primary'
+%center
+%h1 Job card Details
+.well
+  .row
+    .col-md-6
+      %h5 Date
+    .col-md-6
+      %h5= @job_card.date
+  .row
+    .col-md-6
+      %h5 Job Card Number
+    .col-md-6 
+      %h5= @job_card.number
+  .row
+    .col-md-6
+      %h5 Truck Number
+    .col-md-6 
+      %h5= @job_card.truck.reg_number
+  .row 
+    .col-md-6
+      %h5 Created By
+    .col-md-6
+      %h5= @job_card.created_by.name
+
+%table.table
+  %thead
+    %th Repair Head
+    %th Description
+   
+  %tbody
+    - @job_card_details.each do |job_card_detail|
+      %tr
+        %td= job_card_detail.repair_head.name
+        %td= job_card_detail.description.empty? ? "No Description" : job_card_detail.description
+    = will_paginate @job_card_details
