@@ -7,6 +7,7 @@ class Truck < ActiveRecord::Base
 
   TRUCK = 'Truck'
 
+  has_many :job_cards
   has_many :import_items
   has_many :location_dates
   belongs_to :current_import_item, class_name: "ImportItem"

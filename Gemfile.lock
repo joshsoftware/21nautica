@@ -64,6 +64,7 @@ GEM
     bootstrap-sass (3.2.0.4)
       sass (~> 3.2)
     builder (3.2.2)
+    byebug (9.0.6)
     cancancan (1.13.1)
     codeclimate-test-reporter (0.4.6)
       simplecov (>= 0.7.1, < 1.0.0)
@@ -276,6 +277,7 @@ DEPENDENCIES
   binding_of_caller
   bootstrap-datepicker-rails
   bootstrap-sass (~> 3.2.0.4)
+  byebug (~> 9.0, >= 9.0.6)
   cancancan (~> 1.10)
   codeclimate-test-reporter
   coffee-rails (~> 4.0.0)
