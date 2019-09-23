@@ -2,7 +2,8 @@
 class PettyCashesController < ApplicationController
   before_action :update_available_balance, only: %i[create]
   def index
-    @petty_cashes = PettyCash.all.paginate(page: params[:page], per_page: 20)
+    @petty_cashes = PettyCash.all.includes(:truck, :expense_head, :created_by)
+                             .paginate(page: params[:page], per_page: 20)
   end
 
   def new
