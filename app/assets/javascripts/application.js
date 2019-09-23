@@ -21,6 +21,10 @@
 //= require jquery_nested_form
 //= require_tree .
 
+ $(document).on("page:load ready", function(){
+   $("input.datepicker").datepicker();
+ });
+
 var callbacks = {
   beforeRecordRender: function(record) {
     if(record.voucher_type == "Payment") {
