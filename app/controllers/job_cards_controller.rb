@@ -1,7 +1,7 @@
 # Job Card Details
 class JobCardsController < ApplicationController
   before_action :set_job_card, only: %i[show edit update]
-  before_action :get_repair_head, :get_trucks, only: %i[new edit]
+  before_action :set_repair_heads, :set_trucks, only: %i[new edit]
 
   def index
     @job_card = JobCard.includes(:created_by, :truck)

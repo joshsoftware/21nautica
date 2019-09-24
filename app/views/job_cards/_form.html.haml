@@ -3,8 +3,7 @@
   .well
     .row
       .col-md-4
-        = f.label :date
-        = f.date_field :date, label: 'Date' ,value: Date.today
+        = f.input :date, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}, value: Date.today.strftime('%d-%m-%Y')}
       .col-md-4
         = f.input :number , lable: 'Job card number',input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Job card Number is required."}
       .col-md-4
