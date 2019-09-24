@@ -1,0 +1,18 @@
+= link_to "Add New Manual Invoice", manual_entry_invoices_path, class: 'btn btn-primary pull-right'
+%br
+%br
+%table.table#purchase_order_table
+  %thead
+    %th Customer Name
+    %th Date
+    %th Invoice Number
+    %th Bill Of Lading
+    %th Amount
+  %tbody
+    - @invoices.each do |invoice|
+      %tr{id: invoice.id }
+        %td= invoice.customer.name
+        %td= invoice.date
+        %td= invoice.number
+        %td= invoice.invoiceable.try(:bl_number)
+        %td= invoice.amount

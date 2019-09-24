@@ -11,6 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema.define(version: 20190916103607) do
 
   # These are extensions that must be enabled in order to support this database
@@ -230,6 +231,7 @@ ActiveRecord::Schema.define(version: 20190916103607) do
     t.string   "invoiceable_type"
     t.string   "legacy_bl"
     t.text     "remarks"
+    t.boolean  "manual",              default: false
   end
 
   create_table "ledgers", force: true do |t|

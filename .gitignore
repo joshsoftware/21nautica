@@ -15,7 +15,7 @@
 .dat*
 .repl_history
 build/
-
+config/database.yml
 ## Documentation cache and generated files:
 /.yardoc/
 /_yardoc/

@@ -59,6 +59,7 @@ class Ledger < ActiveRecord::Base
   end
 
   def invoice_number
+    return "#{voucher.number} (M)" if invoice? && voucher.manual?
     return self.voucher.number if self.voucher_type == "Invoice"
     self.voucher.reference    
   end
