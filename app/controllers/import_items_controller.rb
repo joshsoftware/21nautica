@@ -50,8 +50,9 @@ class ImportItemsController < ApplicationController
     @import_item = ImportItem.find(params[:id])
     @import = @import_item.import
     initial_status = @import_item.status
+    remark_params = params[:import_item]
     @import_item.attributes = import_item_params.except('status')
-    @import_item.remarks.create(desc: params[:remarks], date: Date.today, category: "external") unless params[:remarks].blank?
+    @import_item.remarks.create(desc: remark_params[:remarks], date: Date.today, category: "external") unless remark_params[:remarks].blank?
     if initial_status == "under_loading_process"
       @import_item.allocate_truck
       @import_item.save

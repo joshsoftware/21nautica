@@ -37,7 +37,7 @@ class ImportItem < ActiveRecord::Base
 
   accepts_nested_attributes_for :import_expenses
 
-  before_save :add_default_date_for_remarks
+  # before_save :add_default_date_for_remarks
   after_save :assign_current_import_item, if: :truck_id_changed?
   after_save :update_last_loading_date, if: :last_loading_date_changed?
   after_update :update_truck_status

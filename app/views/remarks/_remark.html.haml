@@ -6,12 +6,8 @@
         %h1.modal-title Remarks
       = simple_form_for(:remark, url: '', html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
         .row
-          .col-md-6.right-vertical-dash
-            %h3.text-center Internal
-            %ul#internal_remarks
-          .col-md-6.left-vertical-dash
-            %h3.text-center External
-            %ul#external_remarks
+          .col-md-12
+            %ul#all_remarks
         .modal-body
           = f.input :desc, as: :text, required: true
           .form-group.custom-radio
@@ -47,13 +43,10 @@
       data: {remark: {model_id: model_id, model_type: model_type}}
       async: true)
       .done((data) ->
-        external = internal = ""
-        for remark in data.internal
-          internal += "<li>("+formatDate(remark.date)+") - "+remark.desc+"</li>"
-        for remark in data.external
-          external += "<li>("+formatDate(remark.date)+") - "+remark.desc+"</li>"
-        $("#internal_remarks").html(internal)
-        $("#external_remarks").html(external)
+        remarks = ""
+        for remark in data.remarks
+          remarks += "<li>(<label class='bold'> "+(if remark.category == 'internal' then 'INT' else 'EXT')+" - "+formatDate(remark.date)+") - </label> "+remark.desc+"</li>"
+        $("#all_remarks").html(remarks)
       )
 
   formatDate =(date) ->

@@ -44,7 +44,7 @@
         %td.remarks.h5
           .desc
             = import.remarks.try(:last).try(:desc)
-          %button.btn.btn-small.btn-primary{'data-model-id' => "#{import.id}", 'data-model-type' => 'import', 'data-target' => '#remarkModal', 'data-toggle' => 'modal'} Add
+          / %button.btn.btn-small.btn-primary{'data-model-id' => "#{import.id}", 'data-model-type' => 'import', 'data-target' => '#remarkModal', 'data-toggle' => 'modal'} Add
 
 #statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog

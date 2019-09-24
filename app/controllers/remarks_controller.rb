@@ -8,7 +8,7 @@ class RemarksController < ApplicationController
   end
 
   def index
-    render json: {internal: @model_instance.remarks.internal, external: @model_instance.remarks.external}
+    render json: {remarks: @model_instance.remarks.order(date: :desc)}
   end
 
   private
