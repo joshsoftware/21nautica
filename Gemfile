@@ -32,7 +32,7 @@ gem 'nested_form'
 # State machines for Ruby classes, Read more: https://github.com/aasm/aasm
 gem 'aasm', '~> 3.3'
 # bootstrap-sass is a Sass-powered version of Bootstrap. Read more: https://github.com/twbs/bootstrap-sass
-gem 'bootstrap-sass', '~> 3.2.0'
+gem 'bootstrap-sass', '~> 3.2.0.4'
 
 # Haml-rails provides Haml generators for Rails 4
 gem 'haml-rails'
@@ -97,6 +97,7 @@ end
 group :test, :development do 
   gem 'pry'
   gem 'pry-nav'
+  gem 'byebug'
 end
 
 gem 'mocha'

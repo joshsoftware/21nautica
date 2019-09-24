@@ -61,6 +61,7 @@ Rails.application.routes.draw do
   post 'export_items/getcount'
   post '/imports/update'
   post '/import_items/update'
+  get '/manual_invoices' => 'invoices#manual_invoices'
   
   resources :bill_of_ladings, only: [:update] do
     collection do
@@ -115,6 +116,7 @@ Rails.application.routes.draw do
   end
   resources :invoices, only: [:edit, :update] do
     collection do
+      match :manual_entry, via: [:get, :post]
       get ':type', to: :index, as: :by_type
     end
     member do
@@ -152,6 +154,8 @@ Rails.application.routes.draw do
     end
   end
   resources :suppliers
+  get '/coming_soon' => "welcome#coming_soon"
+  resources :expense_heads, except: :destroy
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
