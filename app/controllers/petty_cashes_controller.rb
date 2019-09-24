@@ -1,6 +1,5 @@
 # Petty Cash Mangement Controller
 class PettyCashesController < ApplicationController
-  before_action :update_available_balance, only: %i[create]
   def index
     @petty_cashes = PettyCash.order(id: :desc)
                              .includes(:truck, :expense_head, :created_by)
@@ -14,7 +13,7 @@ class PettyCashesController < ApplicationController
   end
 
   def create
-    @petty_cash = current_user.petty_cashes.new(petty_cash_params)
+    @petty_cash = current_user.petty_cashes.build(petty_cash_params)
     if @petty_cash.save
       flash[:notice] = I18n.t 'petty_cash.saved'
       redirect_to :petty_cashes
@@ -28,18 +27,7 @@ class PettyCashesController < ApplicationController
   def petty_cash_params
     params.require(:petty_cash).permit(
       :transaction_amount, :transaction_type,
-      :description, :expense_head_id, :truck_id, :available_balance
+      :description, :expense_head_id, :truck_id
     )
-  end
-
-  def update_available_balance
-    available_balance =
-      PettyCash.count.zero? ? 0.00 : PettyCash.last.available_balance
-    transaction_amount = params[:petty_cash][:transaction_amount].to_f
-    if params[:petty_cash][:transaction_type].eql?('Deposit')
-      params[:petty_cash][:available_balance] = available_balance + transaction_amount
-    else
-      params[:petty_cash][:available_balance] = available_balance - transaction_amount
-    end
   end
 end
