@@ -2,7 +2,8 @@
 class PettyCashesController < ApplicationController
   before_action :update_available_balance, only: %i[create]
   def index
-    @petty_cashes = PettyCash.all.includes(:truck, :expense_head, :created_by)
+    @petty_cashes = PettyCash.order(id: :desc)
+                             .includes(:truck, :expense_head, :created_by)
                              .paginate(page: params[:page], per_page: 20)
   end
 
@@ -15,7 +16,7 @@ class PettyCashesController < ApplicationController
   def create
     @petty_cash = current_user.petty_cashes.new(petty_cash_params)
     if @petty_cash.save
-      flash[:notice] = 'Petty Cash saved '
+      flash[:notice] = I18n.t 'petty_cash.saved'
       redirect_to :petty_cashes
     else
       render 'new'

@@ -2,7 +2,7 @@ require 'test_helper'
 
 class PettyCashesControllerTest < ActionController::TestCase
   setup do
-  	@user = FactoryGirl.create :user, role: 'Admin'
+    @user = FactoryGirl.create :user, role: 'Admin'
     sign_in @user
     @petty_cash = FactoryGirl.create :petty_cash
   end
@@ -23,7 +23,7 @@ class PettyCashesControllerTest < ActionController::TestCase
     end
   end
   test "Should update petty cash with current date" do
-    assert_difference 'PettyCash.count', do
+    assert_difference 'PettyCash.count' do
       post :create, petty_cash: {description: "Paid to", transaction_amount: 200.0, transaction_type: "Deposit" }
       assert_equal Date.current, PettyCash.last.date
     end
