@@ -15,7 +15,7 @@
   %tbody
     - @petty_cashes.each do |petty_cash|
       %tr
-        %td= petty_cash.date.to_date.strftime("%d/%m/%y")
+        %td= petty_cash.date.to_date.strftime('%d-%m-%Y')
         %td= petty_cash.expense_head.name
         %td= petty_cash.truck.reg_number if petty_cash.truck_id
         %td{ class: "#{petty_cash.transaction_type.eql?('Withdrawal') ? 'red' : 'green'}" }
