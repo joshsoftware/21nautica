@@ -12,7 +12,7 @@
   %tbody
     - @job_card.each do |job_card|
       %tr
-        %td= job_card.date 
+        %td= job_card.date.to_date.strftime('%d-%m-%Y') 
         %td= job_card.number
         %td= job_card.truck.reg_number
         %td= link_to 'Edit', edit_job_card_path(job_card), class: 'btn btn-primary' 

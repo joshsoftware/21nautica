@@ -4,7 +4,7 @@ class JobCardsController < ApplicationController
   before_action :set_repair_heads, :set_trucks, only: %i[new edit]
 
   def index
-    @job_card = JobCard.includes(:created_by, :truck)
+    @job_card = JobCard.order(id: :desc).includes(:created_by, :truck)
                        .paginate(page: params[:page], per_page: 10)
   end
 
@@ -19,19 +19,18 @@ class JobCardsController < ApplicationController
   end
 
   def create
-    @job_card = current_user.job_cards.new job_card_params
+    @job_card = current_user.job_cards.build(job_card_params)
     if @job_card.save
-      flash[:notice] = 'Job Card Details saved'
+      flash[:notice] = I18n.t 'job_card.success'
       redirect_to :job_cards
     else
-      flash[:error] = 'error'
       render 'new'
     end
   end
 
   def update
     if @job_card.update(update_params)
-      flash[:notice] = 'Job Card updated successfully'
+      flash[:notice] = I18n.t 'job_card.update'
       redirect_to :job_cards
     else
       render 'edit'

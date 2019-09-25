@@ -21,3 +21,9 @@
 
 en:
   hello: "Hello world"
+  repair_head:
+    'success': 'Repair Head Saved Successfully'
+    'update': 'Repait Head Updated Successfully'
+  job_card:
+    'success' : 'Job Card Saved Successfully'
+    'failed' : 'Job Card Updated Successfully'
