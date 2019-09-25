@@ -1,0 +1,73 @@
+#remarkModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+        %h1.modal-title Remarks
+      = simple_form_for(:remark, url: '', html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+        .row
+          .col-md-12
+            %ul#all_remarks
+        .modal-body
+          = f.input :desc, as: :text, required: true
+          .form-group.custom-radio
+            .col-md-3
+              %label Remark Type
+            .col-md-6
+              %label.radio-inline
+              = f.radio_button :category, "internal", :checked => true
+              = label :category, 'Internal', inline: true
+              %label.radio-inline
+              = f.radio_button :category, "external"
+              = label :category, 'External'
+
+          = f.input :date, as: :string, input_html: { class: 'form-control date'}
+          = f.hidden_field :model_id, :value => 0
+          = f.hidden_field :model_type, :value => ""
+        .modal-footer
+          = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+          = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
+
+:coffeescript
+  $('#remarkModal').on 'shown.bs.modal', (event) ->
+    $("#remark_date").datepicker({format: "yyyy-mm-dd"}).datepicker("setDate", new Date())
+    $('#remarkModal .alert').remove()
+    link_tag = $(event.relatedTarget)
+    model_id = link_tag.attr('data-model-id')
+    model_type = link_tag.attr('data-model-type')
+    $('#remarkModal form').attr('action', "/remarks/")
+    $('#remark_model_id').val(model_id)
+    $('#remark_model_type').val(model_type)
+    $.ajax(
+      url: "remarks",
+      data: {remark: {model_id: model_id, model_type: model_type}}
+      async: true)
+      .done((data) ->
+        remarks = ""
+        for remark in data.remarks
+          remarks += "<li>(<label class='bold'> "+(if remark.category == 'internal' then 'INT' else 'EXT')+" - "+formatDate(remark.date)+") - </label> "+remark.desc+"</li>"
+        $("#all_remarks").html(remarks)
+      )
+
+  formatDate =(date) ->
+    date = new Date(date.substring(0, 10))
+    dd = date.getDate()
+    mm = date.getMonth()+1
+    yyyy = date.getFullYear()
+    return yyyy+'/'+mm+'/'+dd
+
+  $('#remarkModal').on 'submit', (event) ->
+    toReturn = true
+    if $("#remark_desc").val().length < 1 
+      $("#remark_desc").siblings(".remark-error").remove()
+      $("<label class='remark-error text-danger'>Should not be empty</label>").insertAfter("#remark_desc")
+      return false
+    else
+      $("#remark_desc").siblings(".remark-error").remove()
+    if $("#remark_date").val().length < 1 
+      $("#remark_date").siblings(".remark-error").remove()
+      $("<label class='remark-error text-danger'>Should not be empty</label>").insertAfter("#remark_date")
+      return false
+    else
+      $("#remark_date").siblings(".remark-error").remove()
+

@@ -1,6 +1,7 @@
 class Invoice < ActiveRecord::Base
   include AASM
-
+  # include Remarkable
+  
   validates_presence_of :customer
   belongs_to :customer
   belongs_to :invoiceable, polymorphic: true

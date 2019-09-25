@@ -1,0 +1,13 @@
+
+$('#remarkModal .alert').remove();
+- if @errors.present?
+  -@errors.each do |msg|
+    $('#remarkModal .modal-body').append("<div class='alert alert-danger'>#{msg}</div>");
+
+- else
+  $('#remarkModal').modal('hide')
+  - case @model_instance.class.to_s
+  - when "Import"
+    $("#imports_table tr##{@model_instance.id} td.remarks .desc").text("#{@model_instance.remarks.try(:last).try(:desc)}")
+  - when "ImportItem"
+    $("#import_items_table tr##{@model_instance.id} td.remarks .desc").text("#{@model_instance.remarks.try(:last).try(:desc)}")

@@ -16,5 +16,5 @@
     $("#import_items_table tr##{@import_item.id} td.updatestatus button").attr('data-states', "#{@import_item.status},#{@import_item.aasm.events.join(',')}")
     $("#import_items_table tr##{@import_item.id} td.updatestatus .updatestatus .status").text("#{@import_item.status.titleize}")
     $("#import_items_table tr##{@import_item.id} td.updatestatus .updatestatus .status_updated_at").text("#{status_updated_at(@import_item).to_date.try(:to_formatted_s)}")
-    $("#import_items_table tr##{@import_item.id} td.remarks").text("#{@import_item.remarks}")
+    $("#import_items_table tr##{@import_item.id} td.remarks .desc").text("#{@import_item.remarks.try(:last).try(:desc)}")
     $("#import_items_table tr##{@import_item.id} td.updatestatus button").attr('data-truck-number',"#{@import_item.truck_number}")

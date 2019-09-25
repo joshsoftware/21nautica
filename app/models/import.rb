@@ -23,6 +23,7 @@ require 'patch'
 class Import < ActiveRecord::Base
   include AASM
   include EspinitaPatch
+  include Remarkable
 
   has_many :import_items, :dependent => :destroy
   has_many :bill_items, as: :activity
@@ -112,12 +113,11 @@ class Import < ActiveRecord::Base
     self.c_agent = Vendor.where(name: clearing_agent).first
   end
 
+  auditable only: [:status, :updated_at]
+  
   def late_document_mail
     if estimate_arrival_changed? && estimate_arrival < DateTime.now
       UserMailer.late_document_mail(self).deliver()
     end
   end
-
-  auditable only: [:status, :updated_at, :remarks]
-
 end
