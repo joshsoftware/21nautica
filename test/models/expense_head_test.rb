@@ -1,23 +1,17 @@
 require 'test_helper'
 
 class ExpenseHeadTest < ActiveSupport::TestCase
+  setup do
+    @expense_head = FactoryGirl.create :expense_head
+  end
 
-  test "Should create a new Expense head"  do
-    expense_head = ExpenseHead.create(name: "spare", is_related_to_truck: true)
-    assert expense_head.name == 'spare'
-    assert expense_head.is_related_to_truck == true
-    assert expense_head.is_active == true  
+  test 'Should name is presenset' do
+    expense_head = ExpenseHead.create
+    assert_not expense_head.save
+    assert expense_head.errors.messages[:name].include?("can't be blank")
   end
-  test "should is_related to truck false " do
-    expense_head = ExpenseHead.create(name: "spare")
-    assert expense_head.name == 'spare'
-    assert expense_head.is_related_to_truck ==  false  
+
+  test 'should is_active true  when expense_head is created' do
+    assert_equal true, @expense_head.is_active
   end
-  
-  test " should update Expense head " do 
-    expense_head = ExpenseHead.create(name: "spare")    
-    expense_head.update(name: "spare2")  
-    assert expense_head.name =="spare2"  
-  end 
- 
 end

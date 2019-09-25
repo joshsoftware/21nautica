@@ -156,6 +156,7 @@ Rails.application.routes.draw do
   resources :suppliers
   get '/coming_soon' => "welcome#coming_soon"
   resources :expense_heads, except: :destroy
+  resources :petty_cashes, except: [:destroy, :edit, :update]
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

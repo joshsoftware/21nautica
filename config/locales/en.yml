@@ -21,3 +21,9 @@
 
 en:
   hello: "Hello world"
+  petty_cash:
+    'saved': 'Petty Cash Saved successfully'
+  expense_head:
+    'saved' : 'Expense Head Saved Successfully'
+    'update' : 'Expense Head Updated Successfully'
+    

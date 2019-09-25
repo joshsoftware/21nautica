@@ -10,7 +10,7 @@ class Truck < ActiveRecord::Base
   has_many :import_items
   has_many :location_dates
   belongs_to :current_import_item, class_name: "ImportItem"
-
+  has_many :petty_cashes
   validates :type_of, inclusion: { in: TYPE }
   validates_presence_of :reg_number
 

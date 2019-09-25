@@ -11,7 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190816041047) do
+
+ActiveRecord::Schema.define(version: 20190916103607) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,10 +107,10 @@ ActiveRecord::Schema.define(version: 20190816041047) do
 
   create_table "expense_heads", force: true do |t|
     t.string   "name"
-    t.boolean  "is_related_to_truck"
+    t.boolean  "is_related_to_truck", default: false
+    t.boolean  "is_active",           default: true
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "is_active",           default: true
   end
 
   create_table "export_items", force: true do |t|
@@ -322,6 +323,23 @@ ActiveRecord::Schema.define(version: 20190816041047) do
 
   add_index "payments", ["customer_id"], name: "index_payments_on_customer_id", using: :btree
   add_index "payments", ["vendor_id"], name: "index_payments_on_vendor_id", using: :btree
+
+  create_table "petty_cashes", force: true do |t|
+    t.date     "date"
+    t.text     "description"
+    t.string   "transaction_type"
+    t.decimal  "transaction_amount", precision: 15, scale: 2
+    t.decimal  "available_balance",  precision: 15, scale: 2
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "expense_head_id"
+    t.integer  "truck_id"
+    t.integer  "created_by_id"
+  end
+
+  add_index "petty_cashes", ["created_by_id"], name: "index_petty_cashes_on_created_by_id", using: :btree
+  add_index "petty_cashes", ["expense_head_id"], name: "index_petty_cashes_on_expense_head_id", using: :btree
+  add_index "petty_cashes", ["truck_id"], name: "index_petty_cashes_on_truck_id", using: :btree
 
   create_table "purchase_order_items", force: true do |t|
     t.integer  "truck_id"
