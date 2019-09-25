@@ -41,14 +41,14 @@ class JobCardsController < ApplicationController
   private
 
   def update_params
-    params.require(:job_card).permit(:date, :number, :truck_id,
+    params.require(:job_card).permit(:number, :truck_id,
                                      job_card_details_attributes:
                                       %i[id repair_head_id
                                          description _destroy])
   end
 
   def job_card_params
-    params.require(:job_card).permit(:date, :number, :truck_id,
+    params.require(:job_card).permit(:number, :truck_id,
                                      job_card_details_attributes:
                                       %i[repair_head_id description])
   end

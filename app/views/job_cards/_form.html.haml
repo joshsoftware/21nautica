@@ -3,21 +3,46 @@
   .well
     .row
       .col-md-4
-        = f.input :date, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}, value: Date.today.strftime('%d-%m-%Y')}
-      .col-md-4
         = f.input :number , lable: 'Job card number',input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Job card Number is required."}
       .col-md-4
-        = f.input :truck_id, label: 'Truck Number', collection: @trucks, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Truck Number is required."}        
+        = f.input :truck_id, label: 'TruckNumber', as: :select, collection: @trucks, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Truck Number is required."}        
+      .col-md-4
+        = f.input :date, disabled:true, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}, value: Date.today.strftime('%d-%m-%Y')}
     = f.simple_fields_for :job_card_details do |j|
       .row
         .col-md-4
-          = j.input :repair_head_id, label: 'Repair head', collection: @repair_heads,include_blank: false, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Repair_head is required."}
-        .col-md-4
-          = j.input :description, lable: "Description"
-        .col-md-4
+          = j.input :repair_head_id, label:'Repair_head', collection: @repair_heads,include_blank: false, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Repair_head is required."}
+        .col-md-6
+          = j.input :description, lable: "Description", input_html: { rows:3, cols: 40 }
+        .col-md-2
           = j.link_to_remove 'Remove', class: 'btn btn-danger'
-    = f.link_to_add 'Add Details', :job_card_details, class: 'btn btn-success'
+    = f.link_to_add 'Add More Repair Heads', :job_card_details, class: 'btn btn-success'
     %br
     %br
     .center
       = f.submit 'Save', class: 'btn btn-primary'
+      = link_to 'Back', job_cards_path, class: 'btn btn-primary'
+:javascript
+  $(function() {
+    var fieldsCount,
+      minFieldsCount = 1
+
+    function toggleRemoveLink() {
+      $removeLink = $('a.remove_nested_fields');      
+      $removeLink.toggle(fieldsCount > minFieldsCount)
+    }
+
+    $(document).on('nested:fieldAdded', function() {
+      fieldsCount += 1;
+      toggleRemoveLink();
+    });
+
+    $(document).on('nested:fieldRemoved', function() {
+      fieldsCount -= 1;
+      toggleRemoveLink();
+    });  
+
+  // count existing nested fields after page was loaded
+    fieldsCount = $('form .fields').length;
+    toggleRemoveLink();
+  })

@@ -242,7 +242,7 @@ ActiveRecord::Schema.define(version: 20190921191903) do
 
   create_table "job_cards", force: true do |t|
     t.date     "date"
-    t.integer  "number"
+    t.string   "number"
     t.integer  "truck_id"
     t.integer  "created_by_id"
     t.datetime "created_at"

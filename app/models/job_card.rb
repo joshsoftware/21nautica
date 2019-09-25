@@ -3,4 +3,9 @@ class JobCard < ActiveRecord::Base
   belongs_to :truck
   has_many :job_card_details 
   accepts_nested_attributes_for :job_card_details, allow_destroy: true
+  before_create :update_date
+
+  def update_date
+    self.date = Date.current.strftime('%d/%m/%y')
+  end
 end
