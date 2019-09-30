@@ -1,14 +1,16 @@
+# Repair Head Controller
 class RepairHeadsController < ApplicationController
-  before_action :get_repair_head, only: %i[edit update]
+  before_action :set_repair_head, only: %i[edit update]
+
   def index
-    @repair_heads = RepairHead.order(:name).paginate(page: params[:page], per_page: 20)
+    @repair_heads = RepairHead.order(:name)
+                              .paginate(page: params[:page], per_page: 20)
   end
 
   def new
     @repair_head = RepairHead.new
   end
 
-  
   def create
     @repair_head = RepairHead.new(repair_head_params)
     if @repair_head.save
@@ -34,7 +36,7 @@ class RepairHeadsController < ApplicationController
     params.require(:repair_head).permit(:name)
   end
 
-  def get_repair_head
+  def set_repair_head
     @repair_head = RepairHead.find_by(id: params[:id])
   end
 

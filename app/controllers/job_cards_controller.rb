@@ -1,4 +1,4 @@
-# Job Card Details
+# Job Card Details controller
 class JobCardsController < ApplicationController
   before_action :set_job_card, only: %i[show edit update]
   before_action :set_repair_heads, :set_trucks, only: %i[new edit]
@@ -10,7 +10,6 @@ class JobCardsController < ApplicationController
 
   def show
     @job_card_details = @job_card.job_card_details.includes(:repair_head)
-                                 .paginate(page: params[:page], per_page: 10)
   end
 
   def new

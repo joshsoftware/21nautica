@@ -26,4 +26,4 @@ en:
     'update': 'Repait Head Updated Successfully'
   job_card:
     'success' : 'Job Card Saved Successfully'
-    'failed' : 'Job Card Updated Successfully'
+    'update' : 'Job Card Updated Successfully'
