@@ -4,7 +4,7 @@ class JobCardsController < ApplicationController
   before_action :set_repair_heads, :set_trucks, only: %i[new edit]
 
   def index
-    @job_card = JobCard.order(id: :desc).includes(:created_by, :truck)
+    @job_cards = JobCard.order(id: :desc).includes(:created_by, :truck)
                        .paginate(page: params[:page], per_page: 10)
   end
 
@@ -28,7 +28,7 @@ class JobCardsController < ApplicationController
   end
 
   def update
-    if @job_card.update(update_params)
+    if @job_card.update(job_card_params)
       flash[:notice] = I18n.t 'job_card.update'
       redirect_to :job_cards
     else
@@ -38,17 +38,11 @@ class JobCardsController < ApplicationController
 
   private
 
-  def update_params
+  def job_card_params
     params.require(:job_card).permit(:number, :truck_id,
                                      job_card_details_attributes:
                                       %i[id repair_head_id
                                          description _destroy])
-  end
-
-  def job_card_params
-    params.require(:job_card).permit(:number, :truck_id,
-                                     job_card_details_attributes:
-                                      %i[repair_head_id description])
   end
 
   def set_job_card
@@ -56,10 +50,10 @@ class JobCardsController < ApplicationController
   end
 
   def set_repair_heads
-    @repair_heads = RepairHead.all.map { |repair_head| [repair_head.name, repair_head.id] }
+    @repair_heads = RepairHead.order(:name).map { |repair_head| [repair_head.name, repair_head.id] }
   end
 
   def set_trucks
-    @trucks = Truck.all.map { |truck| [truck.reg_number, truck.id] }
+    @trucks = Truck.order(:reg_number).pluck(:reg_number, :id).uniq {|truck| truck[0]}
   end
 end

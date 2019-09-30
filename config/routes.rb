@@ -156,7 +156,6 @@ Rails.application.routes.draw do
   resources :suppliers
   resources :repair_heads 
   resources :job_cards
-  resources :job_card_details
   get '/coming_soon' => "welcome#coming_soon"
   resources :expense_heads, except: :destroy
   resources :petty_cashes, except: [:destroy, :edit, :update]

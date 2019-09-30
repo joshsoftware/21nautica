@@ -10,7 +10,7 @@
     %th Actions
 
   %tbody
-    - @job_card.each do |job_card|
+    - @job_cards.each do |job_card|
       %tr
         %td= job_card.date.to_date.strftime('%d-%m-%Y') 
         %td= job_card.number
