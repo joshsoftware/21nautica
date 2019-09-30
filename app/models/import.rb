@@ -41,6 +41,8 @@ class Import < ActiveRecord::Base
   enum bl_received_type: ["copy", "original_telex"]
   scope :ready_to_load, -> {where(status: 'ready_to_load')}
   scope :not_ready_to_load, -> {where.not(status: 'ready_to_load')}
+  scope :shipping_dates_not_present, -> {where("bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL")}
+  scope :shipping_dates_present, -> {where.not("bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL")}
 
   # Hack: I have intentionally not used delegate here, because,
   # in case of duplicate, the bl_number will be delegated to a non-existent BillOfLading in

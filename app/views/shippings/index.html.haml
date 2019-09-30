@@ -1,0 +1,106 @@
+.destination_filter.pull-right
+  = form_tag shippings_path, method: :get do |f|  
+    = label_tag 'List Destination '
+    = select_tag 'destination', options_for_select( ["Kampala", "Kigali", "Lusaka", "Goma"], params[:destination] || 'Kampala' )
+
+%table.table{id: 'shippings_table'}
+  %thead
+    %th BL Number
+    %th Original BL Received
+    %th Charges Received
+    %th Charges Paid
+    %th Delivery Order Received
+    %th Packing List Received
+  %tbody
+    - @imports.each do |import|
+      %tr{id: import.id }
+        %td= import.bl_number
+        %td.text-center
+          .h5
+            .bl_received
+              %input{:type => "checkbox", :checked => import.bl_received_at.present?, :class => "shipping_checkbox", "data-column" => "bl_received_at", "data-eta" => import.estimate_arrival.try(:to_date).try(:to_formatted_s)}
+              %label.bl-received-date
+                = import.bl_received_at.try(:to_date).try(:to_formatted_s)
+        %td.text-center
+          .h5
+            .charges_received
+              %input{:type => "checkbox", :checked => import.charges_received_at.present?, :class => "shipping_checkbox", "data-column" => "charges_received_at"}
+              %label.charges-received-date
+                = import.charges_received_at.try(:to_date).try(:to_formatted_s)
+        %td.text-center
+          .h5
+            .charges_paid
+              %input{:type => "checkbox", :checked => import.charges_paid_at.present?, :class => "shipping_checkbox", "data-column" => "charges_paid_at"}
+              %label.charges-paid-date
+                = import.charges_paid_at.try(:to_date).try(:to_formatted_s)
+        %td.text-center
+          .h5
+            .do_received
+              %input{:type => "checkbox", :checked => import.do_received_at.present?, :class => "shipping_checkbox", "data-column" => "do_received_at"}
+              %label.do-received-date
+                = import.do_received_at.try(:to_date).try(:to_formatted_s)
+        %td.text-center
+          .h5
+            .pl_received
+              %input{:type => "checkbox", :checked => import.pl_received_at.present?, :class => "shipping_checkbox", "data-column" => "pl_received_at"}
+              %label.pl-received-date
+                = import.pl_received_at.try(:to_date).try(:to_formatted_s)
+
+#DOModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1", "data-backdrop" => "static", "data-keyboard" => "false"}
+  .modal-dialog
+    = simple_form_for(:import, url: '', html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+      .modal-content
+        .modal-header
+          / = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+          %h1.modal-title Update
+        .modal-body
+          = f.input :return_location, collection: ["Kampala", "Kigali", "Lusaka", "Goma"], :input_html => {:class => 'select required form-control text-capitalize'}
+          = f.input :gf_return_date, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}}
+          = f.hidden_field :do_recieved_at
+        .modal-footer
+          / = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+          = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
+
+:coffeescript
+  @customers = #{@customers.to_json}
+  @equipment = #{@equipment.to_json}
+  @clearing_agent = #{@clearing_agent.to_json}
+
+  $('#DOModal').on 'shown.bs.modal', (event) ->
+    $('#DOModal .alert').remove()
+    id = $('#DOModal form').attr('data-import-id')
+    $(".date").datepicker(format: "dd-mm-yyyy")
+
+    $("#shippings_table tr#"+ id + " td.updateStatus .updateStatus").hide()
+    $('#DOModal form').attr('action', "/shippings/" + id + "/update")
+
+  $('#DOModal').on 'hide.bs.modal', (event) ->
+    $("#shipings_table tr td.updateStatus .updateStatus").show()
+
+  $('.shipping_checkbox').on 'change', (event) ->
+    columnName = event.target.getAttribute("data-column")
+    id = this.closest('tr').id
+    is_date = "true"
+    checked = event.target.checked
+    $('#DOModal form').attr("data-import-id", id)
+    if columnName == "do_received_at" && checked
+      $("#DOModal").modal("show")
+    else if columnName == "bl_received_at" && checked
+      eta = new Date(event.target.getAttribute("data-eta"))
+      if eta < new Date()
+        confirmAns = confirm("Is this late submission of Document?")
+        if confirmAns
+          $.post("shippings/"+id+"/late_document_mail")
+    else
+      updateColumn(columnName, id, checked, is_date)
+
+  updateColumn =(columnName, id, checked, is_date) ->
+    $.ajax(
+      url: "shippings/"+id+"/update_column",
+      type: 'POST'
+      data: {id: id, columnName: columnName, value: checked, is_date: is_date}
+      async: false
+    ).done((data) ->
+      $.post("shippings/"+id+"/retainStatus")
+    )
+    

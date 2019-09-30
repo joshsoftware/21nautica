@@ -1,0 +1,8 @@
+$('#DOModal .alert').remove();
+- if @errors.present?
+  -@errors.each do |msg|
+    $('#DOModal .modal-body').append("<div class='alert alert-danger'>#{msg}</div>");
+
+- else
+  $('#DOModal').modal('hide')
+  $.post("shippings/#{@import.id}/retainStatus")
