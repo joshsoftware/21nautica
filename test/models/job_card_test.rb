@@ -6,6 +6,6 @@ class JobCardTest < ActiveSupport::TestCase
   end
   test 'should save current date' do
     assert @job_card.save
-    assert_equal Date.current, @job_card.date
+    assert_equal Date.today, @job_card.date
   end
 end
