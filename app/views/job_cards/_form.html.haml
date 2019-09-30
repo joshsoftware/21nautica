@@ -2,16 +2,16 @@
 = simple_nested_form_for(@job_card, html: { id: 'add_new_job_card', class: 'form-horizontal'},defaults: {input_html: {class: 'form-control'}}) do |f|
   .well
     .row
-      .col-md-4
-        = f.input :number , lable: 'Job card number',input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Job card Number is required."}
-      .col-md-5
-        = f.input :truck_id, label: 'Truck Number', as: :select, collection: @trucks, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Truck Number is required."}        
+      .col-md-3
+        = f.input :number , label: 'Number',input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Job card Number is required."}
+      .col-md-6
+        = f.input :truck_id, label: 'Truck Number', as: :select, collection: @trucks, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Truck Number is required."}
       .col-md-3
         = f.input :date, disabled:true, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}, value: Date.today.strftime('%d-%m-%Y')}
     = f.simple_fields_for :job_card_details do |j|
       .row
         .col-md-5
-          = j.input :repair_head_id, label:'Repair head', collection: @repair_heads,include_blank: false, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Repair_head is required."}
+          = j.input :repair_head_id, label:'Repair head', collection: @repair_heads,include_blank: false, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => 'Repair_head is required.'}
         .col-md-5
           = j.input :description, lable: "Description", input_html: { rows:3, cols: 40 }
         .col-md-2
@@ -22,6 +22,7 @@
     .center
       = f.submit 'Save', class: 'btn btn-primary'
       = link_to 'Back', job_cards_path, class: 'btn btn-primary'
+
 :javascript
   $(function() {
     var fieldsCount,

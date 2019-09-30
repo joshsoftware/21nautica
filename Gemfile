@@ -24,11 +24,9 @@ gem 'jquery-turbolinks'
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0',          group: :doc
-gem 'will_paginate', '~> 3.1.0'
 
 # Simple helps you with powerful components to create your forms.
 gem 'simple_form'
-gem 'byebug', '~> 9.0', '>= 9.0.6'
 gem 'nested_form'
 # State machines for Ruby classes, Read more: https://github.com/aasm/aasm
 gem 'aasm', '~> 3.3'
