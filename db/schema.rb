@@ -230,6 +230,7 @@ ActiveRecord::Schema.define(version: 20190921191903) do
     t.string   "invoiceable_type"
     t.string   "legacy_bl"
     t.text     "remarks"
+    t.boolean  "manual",              default: false
   end
 
   create_table "job_card_details", force: true do |t|

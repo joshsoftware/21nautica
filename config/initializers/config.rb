@@ -4,8 +4,8 @@ DESTINATION_PORTS = %W(Nhava\ Sheva Mundra Tuticorin Chennai Jebel\ Ali Mersin S
 TYPE = %W(TBL Haulage)
 CURRENCY = %w(USD UGX)
 EQUIPMENT_TYPE = %W(20GP 40GP 40OT 40FR 20OT)
-ROLE = %W(Admin Staff Yard Operations Accounts)
-SALES_REP_NAMES = ['Kaushik', 'Rajan'] 
+ROLE = %W(Admin Staff Yard Operations Accounts Transport)
+SALES_REP_NAMES = ['Kaushik', 'Rajan']
 EMAILS_DEFAULTS = ENV['EMAILS_DEFAULTS'] 
 #SHIPPING_LINE = %W(CMA\ CGM Maersk  Evergreen Safmarine PIL Emirates MSC COSCO 
 #  NYK\ line WECLINES)
@@ -15,7 +15,7 @@ STATUS_CHANGE_DURATION = {arrived_malaba_border: 2,
                           order_released: 2,
                           arrived_port: 3,
                           document_handed: 1}
-PAYMENT_MODES = %W(Cheque Cash TT)
+PAYMENT_MODES = %W(Cheque Cash TT Credit\ Note)
 #INVOICE_PARTICULARS = %w( Ocean\ Freight Clearing\ Charges ICD Demurrage 
 #	Empty Final\ Clearing Haulage Forest\ Permits Port\ Storage Other)
 INVOICE_PARTICULARS = ["Ocean Freight", "Agency Fee", "THC as per Line", "Container Demurrage", "Port Charges as per KPA", "Final Clearing", "Transport Charges", "Forest Permits", "Port Storage", "Other"]

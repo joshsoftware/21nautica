@@ -27,3 +27,9 @@ en:
   job_card:
     'success' : 'Job Card Saved Successfully'
     'update' : 'Job Card Updated Successfully'
+  petty_cash:
+    'saved': 'Petty Cash Saved successfully'
+  expense_head:
+    'saved' : 'Expense Head Saved Successfully'
+    'update' : 'Expense Head Updated Successfully'
+    
