@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190921191903) do
+ActiveRecord::Schema.define(version: 20191001090426) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -357,17 +357,6 @@ ActiveRecord::Schema.define(version: 20190921191903) do
   add_index "petty_cashes", ["expense_head_id"], name: "index_petty_cashes_on_expense_head_id", using: :btree
   add_index "petty_cashes", ["truck_id"], name: "index_petty_cashes_on_truck_id", using: :btree
 
-  create_table "pettycashes", force: true do |t|
-    t.datetime "date"
-    t.text     "description"
-    t.string   "withdrwal"
-    t.string   "deposite"
-    t.string   "balance"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "expense_head_id"
-  end
-
   create_table "purchase_order_items", force: true do |t|
     t.integer  "truck_id"
     t.integer  "spare_part_id"
@@ -461,6 +450,21 @@ ActiveRecord::Schema.define(version: 20190921191903) do
 
   create_table "suppliers", force: true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "transport_manger_cashes", force: true do |t|
+    t.integer  "sr_number"
+    t.date     "transaction_date"
+    t.string   "transaction_type"
+    t.decimal  "transaction_amount", precision: 10, scale: 2
+    t.decimal  "available_balance",  precision: 10, scale: 2
+    t.string   "truck_number"
+    t.integer  "import_id"
+    t.integer  "import_item_id"
+    t.integer  "truck_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

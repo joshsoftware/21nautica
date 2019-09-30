@@ -5,8 +5,7 @@
       .col-md-6
         = f.input :expense_head_id, label: 'Expense Head', collection: @expense_heads, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Expense Head is required."}
       .col-md-6
-        = f.label :date
-        = f.date_field  :date, value:Date.current, disabled: true
+        = f.input :date, disabled:true, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}, value: Date.today.strftime('%d-%m-%Y')}
     .row
       .col-md-6
         = f.input :truck_id, label: 'Truck Number', disabled: true, collection: @trucks, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Truck Number is required."}

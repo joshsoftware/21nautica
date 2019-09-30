@@ -5,8 +5,9 @@ class PettyCash < ActiveRecord::Base
   belongs_to :truck
   validates  :transaction_type, :transaction_amount, presence: true
   before_create :update_date, :update_balance
+  after_create :check_expense_head
   def update_date
-    self.date = Date.current.strftime('%d/%m/%Y')
+    self.date = Date.today.strftime('%d/%m/%Y')
   end
 
   def update_balance
@@ -17,6 +18,14 @@ class PettyCash < ActiveRecord::Base
                              end
   end
 
+  def check_expense_head
+    if expense_head.name.eql?('Trip Allowence')
+      last_balance = TransportMangerCash.last.try(:available_balance).to_f
+      balance = last_balance + self.transaction_amount
+      transport = TransportMangerCash.new(transaction_type: 'Deposit', transaction_amount: self.transaction_amount, available_balance: balance )
+      transport.save
+    end
+  end
   private
 
   def current_balance
