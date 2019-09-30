@@ -3,7 +3,7 @@
 class ImportsController < ApplicationController
   def index
     destination = params[:destination] || 'Kampala'
-    @imports = Import.not_ready_to_load.where(to: destination)
+    @imports = Import.not_ready_to_load.custom_entry_generated.shipping_dates_present.where(to: destination)
     @equipment = EQUIPMENT_TYPE.inject({}) { |h, x| h[x] = x; h }
     @clearing_agent = Vendor.clearing_agents.order(:name).pluck(:name).inject({}) { |h, x| h[x] = x; h}
   end

@@ -38,11 +38,14 @@ class Import < ActiveRecord::Base
 
   accepts_nested_attributes_for :import_items
 
+  enum entry_type: ["wt8", "im4"]
   enum bl_received_type: ["copy", "original_telex"]
   scope :ready_to_load, -> {where(status: 'ready_to_load')}
   scope :not_ready_to_load, -> {where.not(status: 'ready_to_load')}
   scope :shipping_dates_not_present, -> {where("bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL")}
   scope :shipping_dates_present, -> {where.not("bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL")}
+  scope :custom_entry_not_generated, -> {where("entry_number IS NULL OR entry_type IS NULL")}
+  scope :custom_entry_generated, -> {where("entry_number IS NOT NULL AND entry_type IS NOT NULL")}
 
   # Hack: I have intentionally not used delegate here, because,
   # in case of duplicate, the bl_number will be delegated to a non-existent BillOfLading in
@@ -118,6 +121,10 @@ class Import < ActiveRecord::Base
     if estimate_arrival_changed? && estimate_arrival < DateTime.now
       UserMailer.late_document_mail(self).deliver()
     end
+  end
+
+  def custom_entry_generated?
+    entry_number.present? && entry_type.present?
   end
 
   auditable only: [:status, :updated_at, :remarks]

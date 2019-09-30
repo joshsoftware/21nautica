@@ -1,0 +1,88 @@
+.destination_filter.pull-right
+  = form_tag customs_path, method: :get do |f|  
+    = label_tag 'List Destination '
+    = select_tag 'destination', options_for_select( ["Kampala", "Kigali", "Lusaka", "Goma"], params[:destination] || 'Kampala' )
+
+%table.table{id: 'customs_table'}
+  %thead
+    %th BL Number
+    %th Rotation Number
+    %th Custom Entry Generated
+  %tbody
+    - @imports.each do |import|
+      %tr{id: import.id }
+        %td= import.bl_number
+        -if import.rotation_number.blank?
+          %td= import.rotation_number
+        -else
+          %td.no-event= import.rotation_number
+        %td.text-center
+          .h5
+            .custom-entry
+              %input{:type => "checkbox", :checked => import.custom_entry_generated?, :class => "custom_checkbox", "data-column" => "pl_received_at", "disabled" => import.custom_entry_generated?}
+
+#CustomModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1", "data-backdrop" => "static", "data-keyboard" => "false"}
+  .modal-dialog
+    = simple_form_for(:import, url: '', html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+      .modal-content
+        .modal-header
+          %h1.modal-title Custom Entry
+        .modal-body
+          = f.input :entry_number, :input_html => {:class => 'select required form-control text-capitalize'}
+          .form-group.custom-radio
+            .col-md-3.control-label
+              %label.control-label Entry Type
+            .col-md-6
+              %label.control-label
+                = f.radio_button :entry_type, "im4", :checked => true
+                = f.label :entry_type, 'IM4', inline: true
+              %label.control-label
+                = f.radio_button :entry_type, "wt8", :checked => false
+                = f.label :entry_type, 'WT8', inline: true
+
+        .modal-footer
+          = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
+
+:coffeescript
+  $('#CustomModal').on 'shown.bs.modal', (event) ->
+    $('#CustomModal .alert').remove()
+    id = $('#CustomModal form').attr('data-import-id')
+    $(".date").datepicker(format: "dd-mm-yyyy")
+
+    $("#customs_table tr#"+ id + " td.updateStatus .updateStatus").hide()
+    $('#CustomModal form').attr('action', "/customs/" + id + "/update")
+
+  $('#CustomModal').on 'hide.bs.modal', (event) ->
+    $("#customs_table tr td.updateStatus .updateStatus").show()
+
+  $('.custom_checkbox').on 'change', (event) ->
+    columnName = event.target.getAttribute("data-column")
+    id = this.closest('tr').id
+    is_date = "true"
+    checked = event.target.checked
+    $('#CustomModal form').attr("data-import-id", id)
+    if checked
+      $("#CustomModal").modal("show")
+
+  updateColumn =(columnName, id, checked, is_date) ->
+    $.ajax(
+      url: "customs/"+id+"/update_column",
+      type: 'POST'
+      data: {id: id, columnName: columnName, value: checked, is_date: is_date}
+      async: false
+    ).done((data) ->
+      $.post("customs/"+id+"/retainStatus")
+    )
+    
+  $('#CustomModal form').on 'submit', (event) ->
+    if $("#import_entry_number").val().length < 1
+      $("<label class='red'>Should not be empty</label>").insertAfter("#import_entry_number")
+      return false
+    else
+      try
+        $("#import_entry_number").siblings("label")[0].remove()
+      catch
+        console.log("no sibling found for import entry number")
+      return true
+
+

@@ -1,0 +1,9 @@
+$('#CustomModal .alert').remove();
+- if @errors.present?
+  -@errors.each do |msg|
+    $('#CustomModal .modal-body').append("<div class='alert alert-danger'>#{msg}</div>");
+
+- else
+  $('#CustomModal').modal('hide')
+  location.reload()
+  / $.post("customs/#{@import.id}/retainStatus")

@@ -94,6 +94,14 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :customs, only: [:index] do
+    member do
+      post 'update'
+      post 'retainStatus'
+      post 'update_column'
+      post 'late_document_mail'
+    end
+  end
   resources :import_items,only: [:new,:create,:index, :edit] do
     member do
       post 'updateStatus'
