@@ -1,7 +1,7 @@
 require "test_helper"
 require "minitest/autorun"
 
-class ShippingsControllerTest < ActionController::TestCase
+class CustomsControllerTest < ActionController::TestCase
   setup do
     @user = FactoryGirl.create :user
     sign_in @user
@@ -14,21 +14,22 @@ class ShippingsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:imports)
     assert_response :success
     assert_template layout: "application"
-    assert_select 'table#shippings_table', :count => 1
+    assert_select 'table#customs_table', :count => 1
   end
 
   test "should update dates" do
     xhr :post, :update, import: {
-                    bl_received_at: Date.today,
-                    charges_received_at: Date.today
+                    entry_number: "1231",
+                    entry_type: "im4",
+                    rotation_number: "121212"
                     }, id: @import.id
     xhr :post, :retainStatus, {id: @import.id}
     @import.reload
-    assert_equal Date.today, @import.bl_received_at
+    assert_equal "1231", @import.entry_number
   end
 
-  test "should fetch shipping modal" do
-    xhr :get, :fetch_shipping_modal, id: @import.id
-    assert_template partial: "shippings/_shipping_modal"
+  test "should fetch custom modal" do
+    xhr :get, :fetch_custom_modal, id: @import.id
+    assert_template partial: "customs/_custom_modal"
   end  
 end

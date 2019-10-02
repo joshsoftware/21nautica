@@ -7,17 +7,6 @@ class CustomsController < ApplicationController
     @imports = Import.not_ready_to_load.custom_entry_not_generated.where(to: destination)
     @equipment = EQUIPMENT_TYPE.inject({}) { |h, x| h[x] = x; h }
   end
-  
-  def update_column
-    import = Import.find(import_update_params[:id])
-    attribute = import_update_params[:columnName].downcase.gsub(' ', '_').to_sym
-    value = import_update_params[:value]
-    if import.update(attribute => value)
-      render text: import_update_params[:value]
-    else
-      render text: import.errors.full_messages
-    end
-  end
 
   def update
     params[:import][:entry_number]= nil if params[:import][:entry_number].empty?
@@ -25,11 +14,6 @@ class CustomsController < ApplicationController
   end
 
   def retainStatus
-    # @import = Import.find(params[:id])
-  end
-
-  def late_document_mail
-    UserMailer.late_document_mail(@import).deliver()
   end
 
   def fetch_shipping_modal

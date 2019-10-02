@@ -119,8 +119,6 @@ class Import < ActiveRecord::Base
   def clearing_agent=(clearing_agent)
     self.c_agent = Vendor.where(name: clearing_agent).first
   end
-
-  auditable only: [:status, :updated_at]
   
   def late_document_mail
     if estimate_arrival_changed? && estimate_arrival < DateTime.now
