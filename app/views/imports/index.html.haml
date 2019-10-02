@@ -42,7 +42,9 @@
               = import.status.humanize
           %button.btn.btn-small.btn-primary{'data-import-id' => "#{import.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => import.status + ',' + import.aasm.events.join(','), 'data-bl-number' => import.bl_number} Update
         %td.remarks.h5
-          = import.remarks
+          .desc
+            = import.remarks.try(:last).try(:desc)
+          / %button.btn.btn-small.btn-primary{'data-model-id' => "#{import.id}", 'data-model-type' => 'import', 'data-target' => '#remarkModal', 'data-toggle' => 'modal'} Add
 
 #statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog
@@ -56,10 +58,13 @@
             = f.label :bl_number
           = f.input :status, collection: [], :input_html => {:class => 'select required form-control text-capitalize'}
           = f.input :remarks, as: :text, required: false
+          = f.hidden_field :category, :value => "external"
 
         .modal-footer
           = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
           = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
+
+= render 'remarks/remark'
 
 :coffeescript
   @customers = #{@customers.to_json}
@@ -81,3 +86,5 @@
 
   $('#statusModal').on 'hide.bs.modal', (event) ->
     $("#imports_table tr td.updateStatus .updateStatus").show()
+
+    

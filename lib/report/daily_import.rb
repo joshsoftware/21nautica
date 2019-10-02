@@ -48,7 +48,7 @@ module Report
       imports.each do |import|
         estimate_arrival = import.estimate_arrival.nil? ? "" : import.estimate_arrival.try(:to_date).try(:strftime,"%d-%b-%Y").to_s
         sheet.add_row [import.cargo_receipt, import.shipper, import.description, import.equipment,
-                       import.quantity, estimate_arrival, import.status, import.remarks]
+                       import.quantity, estimate_arrival, import.status, import.remarks.external.try(:last).try(:desc)]
       end
       sheet.add_row
       sheet.add_row ['In Transit']
@@ -63,10 +63,10 @@ module Report
             difference_in_days = TimeDifference.between(start_date, end_date).in_days
             sheet.add_row [import.cargo_receipt, import.shipper, import.description, import_item.container_number,
                            import_item.truck.try(:reg_number), import_item.truck.try(:location), import_item.status,
-                           import_item.remarks] if difference_in_days <= 3
+                           import_item.remarks.external.try(:last).try(:desc)] if difference_in_days <= 3
           else
             sheet.add_row [import.cargo_receipt, import.shipper, import.description, import_item.container_number,
-                           import_item.truck.try(:reg_number), import_item.truck.try(:location), import_item.status, import_item.remarks]
+                           import_item.truck.try(:reg_number), import_item.truck.try(:location), import_item.status, import_item.remarks.external.try(:last).try(:desc)]
           end
         end
       end
@@ -89,7 +89,7 @@ module Report
           estimate_arrival = import.estimate_arrival.nil? ? "" : import.estimate_arrival.try(:to_date).try(:strftime,"%d-%b-%Y").to_s
           equipment_quantity = "#{import.equipment} " '*' " #{import.quantity}"
           last_status_update = import.status
-          remarks = import.remarks
+          remarks = import.remarks.external.try(:last).try(:desc)
 
           sheet.add_row [bl_number, goods_description, estimate_arrival, equipment_quantity, last_status_update, remarks], style: center, 
                                                                                         widths: [:igonre, :auto], height: 40
