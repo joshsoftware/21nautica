@@ -31,9 +31,11 @@ class Import < ActiveRecord::Base
   belongs_to :c_agent, class_name: "Vendor", foreign_key: "clearing_agent_id"
   belongs_to :shipping_line, class_name: "Vendor"
   before_save :strip_container_number_bl_number
-  after_save :late_document_mail
+  after_save :late_document_mail, :rotation_number_mail
+  after_create :set_bl_received
 
-  validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number, :bl_received_type, :work_order_number
+  validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number, :bl_received_type
+  validates_presence_of :work_order_number, on: :create
   validates_uniqueness_of :bl_number
 
   accepts_nested_attributes_for :import_items
@@ -125,6 +127,18 @@ class Import < ActiveRecord::Base
 
   def custom_entry_generated?
     entry_number.present? && entry_type.present?
+  end
+
+  def set_bl_received
+    if bl_received_type == "original_telex"
+      self.update_column(bl_received_at: Date.today)
+    end
+  end
+
+  def rotation_number_mail
+    if rotation_number_changed? && rotation_number.present?
+      UserMailer.rotation_number_mail(self).deliver()
+    end
   end
 
   auditable only: [:status, :updated_at, :remarks]

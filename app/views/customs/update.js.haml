@@ -5,5 +5,6 @@ $('#CustomModal .alert').remove();
 
 - else
   $('#CustomModal').modal('hide')
-  location.reload()
-  / $.post("customs/#{@import.id}/retainStatus")
+  -if @import.custom_entry_generated?
+    location.reload()
+  $.post("customs/#{@import.id}/retainStatus")

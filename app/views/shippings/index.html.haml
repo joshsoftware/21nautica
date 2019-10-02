@@ -5,102 +5,96 @@
 
 %table.table{id: 'shippings_table'}
   %thead
-    %th BL Number
-    %th Original BL Received
-    %th Charges Received
-    %th Charges Paid
-    %th Delivery Order Received
-    %th Packing List Received
+    - if is_rfs_host?
+      %th.shrink-name Customer / Shipper / Consignee Name
+    - else
+      %th.shrink-name Customer Name
+    %th.bl-width BL Number
+    %th Shipping Line
+    %th Equipment
+    %th Weight
+    %th Entry Number
+    %th ETA
+    %th Quantity
+    %th#btnAddNewRow Status
+    %th.bl-width Shipping Status
+    %th Remarks
   %tbody
     - @imports.each do |import|
       %tr{id: import.id }
+        - if is_rfs_host?
+          %td= "#{import.customer.name}" + " / " + "#{import.shipper}" +" / "+ "#{import.consignee_name}"
+        - else
+          %td= import.customer.name
         %td= import.bl_number
-        %td.text-center
+        %td= import.shipping_line.try(:name)
+        %td= import.equipment
+        %td= (import.weight.to_f/import.quantity).round(2)
+        %td= import.entry_number
+        %td= import.estimate_arrival
+        %td= import.quantity
+        %td.updateStatus{class: "text-center"}
+          .updateStatus.h5
+            .status_updated_at
+              = status_updated_at(import).to_date.to_formatted_s
+            .status.text-capitalize
+              = import.status.humanize
+          %button.btn.btn-small.btn-primary{'data-import-id' => "#{import.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => import.status + ',' + import.aasm.events.join(','), 'data-bl-number' => import.bl_number} Update
+        %td.shippingStatus{class: "text-center"}
           .h5
-            .bl_received
-              %input{:type => "checkbox", :checked => import.bl_received_at.present?, :class => "shipping_checkbox", "data-column" => "bl_received_at", "data-eta" => import.estimate_arrival.try(:to_date).try(:to_formatted_s)}
-              %label.bl-received-date
-                = import.bl_received_at.try(:to_date).try(:to_formatted_s)
-        %td.text-center
-          .h5
-            .charges_received
-              %input{:type => "checkbox", :checked => import.charges_received_at.present?, :class => "shipping_checkbox", "data-column" => "charges_received_at"}
-              %label.charges-received-date
-                = import.charges_received_at.try(:to_date).try(:to_formatted_s)
-        %td.text-center
-          .h5
-            .charges_paid
-              %input{:type => "checkbox", :checked => import.charges_paid_at.present?, :class => "shipping_checkbox", "data-column" => "charges_paid_at"}
-              %label.charges-paid-date
-                = import.charges_paid_at.try(:to_date).try(:to_formatted_s)
-        %td.text-center
-          .h5
-            .do_received
-              %input{:type => "checkbox", :checked => import.do_received_at.present?, :class => "shipping_checkbox", "data-column" => "do_received_at"}
-              %label.do-received-date
-                = import.do_received_at.try(:to_date).try(:to_formatted_s)
-        %td.text-center
-          .h5
-            .pl_received
-              %input{:type => "checkbox", :checked => import.pl_received_at.present?, :class => "shipping_checkbox", "data-column" => "pl_received_at"}
-              %label.pl-received-date
-                = import.pl_received_at.try(:to_date).try(:to_formatted_s)
+            .status_updated_at
+              -if import.bl_received_at
+                .date.obl= "OBL: #{import.bl_received_at.to_date.to_formatted_s}"
+              -if import.charges_received_at
+                .date.cr= "C/R: #{import.charges_received_at.to_date.to_formatted_s}"
+              -if import.charges_paid_at
+                .date.cp= "C/P: #{import.charges_paid_at.to_date.to_formatted_s}"
+              -if import.do_received_at
+                .date.do= "DO: #{import.do_received_at.to_date.to_formatted_s}"
+              -if import.pl_received_at
+                .date.pl= "P/L: #{import.pl_received_at.to_date.to_formatted_s}"
+          = link_to "Update", fetch_shipping_modal_shipping_path(id: import.id), :remote => true, :class => "button btn btn-small btn-primary"
+        %td.remarks.h5
+          = import.remarks
 
-#DOModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1", "data-backdrop" => "static", "data-keyboard" => "false"}
+#statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog
     = simple_form_for(:import, url: '', html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
       .modal-content
         .modal-header
-          / = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
-          %h1.modal-title Update
+          = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+          %h1.modal-title Update Status
         .modal-body
-          = f.input :return_location, collection: ["Kampala", "Kigali", "Lusaka", "Goma"], :input_html => {:class => 'select required form-control text-capitalize'}
-          = f.input :gf_return_date, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}}
-          = f.hidden_field :do_recieved_at
+          #bl_number
+            = f.label :bl_number
+          = f.input :status, collection: [], :input_html => {:class => 'select required form-control text-capitalize'}
+          = f.input :remarks, as: :text, required: false
+
         .modal-footer
-          / = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+          = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
           = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
+#shipping_modal
+
+  
 
 :coffeescript
   @customers = #{@customers.to_json}
   @equipment = #{@equipment.to_json}
-  @clearing_agent = #{@clearing_agent.to_json}
 
-  $('#DOModal').on 'shown.bs.modal', (event) ->
-    $('#DOModal .alert').remove()
-    id = $('#DOModal form').attr('data-import-id')
-    $(".date").datepicker(format: "dd-mm-yyyy")
+  $('#statusModal').on 'shown.bs.modal', (event) ->
+    $('#statusModal .alert').remove()
+    link_tag = $(event.relatedTarget)
+    id = link_tag.attr('data-import-id')
 
     $("#shippings_table tr#"+ id + " td.updateStatus .updateStatus").hide()
-    $('#DOModal form').attr('action', "/shippings/" + id + "/update")
+    $('#statusModal #bl_number label').text("BL Number : " + link_tag.attr('data-bl-number'))
+    $('#statusModal form #import_status').html("")
+    for i in link_tag.attr('data-states').split(",")
+      $('#statusModal form #import_status').append("<option value=" + i + ">" + i.replace(/_/g, ' ') + "</option>")
 
-  $('#DOModal').on 'hide.bs.modal', (event) ->
-    $("#shipings_table tr td.updateStatus .updateStatus").show()
+    $('#statusModal form').attr('action', "/imports/" + id + "/updateStatus")
 
-  $('.shipping_checkbox').on 'change', (event) ->
-    columnName = event.target.getAttribute("data-column")
-    id = this.closest('tr').id
-    is_date = "true"
-    checked = event.target.checked
-    $('#DOModal form').attr("data-import-id", id)
-    if columnName == "do_received_at" && checked
-      $("#DOModal").modal("show")
-    else if columnName == "bl_received_at" && checked
-      eta = new Date(event.target.getAttribute("data-eta"))
-      if eta < new Date()
-        confirmAns = confirm("Is this late submission of Document?")
-        if confirmAns
-          $.post("shippings/"+id+"/late_document_mail")
-    else
-      updateColumn(columnName, id, checked, is_date)
+  $('#statusModal').on 'hide.bs.modal', (event) ->
+    $("#shippings_table tr td.updateStatus .updateStatus").show()
 
-  updateColumn =(columnName, id, checked, is_date) ->
-    $.ajax(
-      url: "shippings/"+id+"/update_column",
-      type: 'POST'
-      data: {id: id, columnName: columnName, value: checked, is_date: is_date}
-      async: false
-    ).done((data) ->
-      $.post("shippings/"+id+"/retainStatus")
-    )
     

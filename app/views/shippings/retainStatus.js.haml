@@ -1,9 +1,2 @@
 
-$("#shippings_table tr##{@import.id} .bl-received-date").text("#{@import.bl_received_at.try(:to_date).try(:to_formatted_s)}")
-$("#shippings_table tr##{@import.id} .charges-received-date").text("#{@import.charges_received_at.try(:to_date).try(:to_formatted_s)}")
-$("#shippings_table tr##{@import.id} .charges-paid-date").text("#{@import.charges_paid_at.try(:to_date).try(:to_formatted_s)}")
-$("#shippings_table tr##{@import.id} .do-received-date").text("#{@import.do_received_at.try(:to_date).try(:to_formatted_s)}")
-$("#shippings_table tr##{@import.id} .pl-received-date").text("#{@import.pl_received_at.try(:to_date).try(:to_formatted_s)}")
-
-/ $("#shippings_table tr##{@import.id} td.updateStatus .updateStatus .status_updated_at").text("#{status_updated_at(@import).localtime.to_date.to_formatted_s}")
-/ $("#shippings_table tr##{@import.id} .remarks").text("#{@import.remarks}")
+$("#shippings_table tr##{@import.id} td.shippingStatus .status_updated_at").html("#{@date_divs.html_safe}")

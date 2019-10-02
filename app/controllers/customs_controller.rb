@@ -20,6 +20,7 @@ class CustomsController < ApplicationController
   end
 
   def update
+    params[:import][:entry_number]= nil if params[:import][:entry_number].empty?
     @import.update(update_params)
   end
 
@@ -31,6 +32,12 @@ class CustomsController < ApplicationController
     UserMailer.late_document_mail(@import).deliver()
   end
 
+  def fetch_shipping_modal
+    respond_to do |format|               
+      format.js
+    end        
+  end   
+
   private
 
   def import_update_params
@@ -38,15 +45,7 @@ class CustomsController < ApplicationController
   end
 
   def update_params
-    params.require(:import).permit(:entry_number, :entry_type)
-  end
-
-  def custom_params
-    custom_parameters = {}
-    if params[:import][:return_location].present? && params[:import][:gf_return_date].present?
-      custom_parameters = custom_parameters.merge({do_received_at: Date.today, return_location: params[:import][:return_location], gf_return_date: params[:import][:gf_return_date]})
-    end
-    custom_parameters
+    params.require(:import).permit(:entry_number, :entry_type, :rotation_number)
   end
 
   def set_import

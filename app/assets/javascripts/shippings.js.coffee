@@ -94,27 +94,6 @@ datatable_initialize = ->
                                   , placeholder:"Click to enter",
                                   fnOnCellUpdated: (sStatus, sValue, settings) ->
                                     $.post("imports/#{id}/retainStatus")},
-                                    {
-                                    type: 'select',
-                                    event: 'click',
-                                    data: JSON.stringify(@clearing_agent),
-                                    onblur: 'submit'
-                                    sUpdateURL: (value, settings) ->
-                                      row = $(this).parents('tr')[0]
-                                      id = row.id
-                                      $.ajax(
-                                        url:"imports/update",
-                                        type: 'POST'
-                                        data: {id:id, columnName:"Clearing Agent", value:value}
-                                        async: false
-                                      ).done((data) ->
-                                        value = data
-                                      )
-                                      return value
-                                    , placeholder:"Click to enter",
-                                    fnOnCellUpdated: (sStatus, sValue, settings) ->
-                                      $.post("imports/#{id}/retainStatus")
-                                  },
                                   {
                                     type: 'datepicker2',
                                     event: 'click',

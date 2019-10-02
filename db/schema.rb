@@ -11,7 +11,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
 ActiveRecord::Schema.define(version: 20190916103607) do
 
   # These are extensions that must be enabled in order to support this database
@@ -370,6 +369,16 @@ ActiveRecord::Schema.define(version: 20190916103607) do
   end
 
   add_index "purchase_orders", ["supplier_id"], name: "index_purchase_orders_on_supplier_id", using: :btree
+
+  create_table "remarks", force: true do |t|
+    t.integer  "category"
+    t.datetime "date"
+    t.string   "remarkable_type"
+    t.integer  "remarkable_id"
+    t.string   "desc"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "req_parts", force: true do |t|
     t.integer  "spare_part_id"

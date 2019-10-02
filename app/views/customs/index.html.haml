@@ -5,84 +5,90 @@
 
 %table.table{id: 'customs_table'}
   %thead
-    %th BL Number
-    %th Rotation Number
-    %th Custom Entry Generated
+    - if is_rfs_host?
+      %th.shrink-name Customer / Shipper / Consignee Name
+    - else
+      %th.shrink-name Customer Name
+    %th.bl-width BL Number
+    %th Shipping Line
+    %th Equipment
+    %th Weight
+    %th Entry Number
+    %th ETA
+    %th Quantity
+    %th#btnAddNewRow Status
+    %th.bl-width Custom Status
+    %th Remarks
   %tbody
     - @imports.each do |import|
       %tr{id: import.id }
+        - if is_rfs_host?
+          %td= "#{import.customer.name}" + " / " + "#{import.shipper}" +" / "+ "#{import.consignee_name}"
+        - else
+          %td= import.customer.name
         %td= import.bl_number
-        -if import.rotation_number.blank?
-          %td= import.rotation_number
-        -else
-          %td.no-event= import.rotation_number
-        %td.text-center
+        %td= import.shipping_line.try(:name)
+        %td= import.equipment
+        %td= (import.weight.to_f/import.quantity).round(2)
+        %td= import.entry_number
+        %td= import.estimate_arrival
+        %td= import.quantity
+        %td.updateStatus{class: "text-center"}
+          .updateStatus.h5
+            .status_updated_at
+              = status_updated_at(import).to_date.to_formatted_s
+            .status.text-capitalize
+              = import.status.humanize
+          %button.btn.btn-small.btn-primary{'data-import-id' => "#{import.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => import.status + ',' + import.aasm.events.join(','), 'data-bl-number' => import.bl_number} Update
+        %td.customStatus{class: "text-center"}
           .h5
-            .custom-entry
-              %input{:type => "checkbox", :checked => import.custom_entry_generated?, :class => "custom_checkbox", "data-column" => "pl_received_at", "disabled" => import.custom_entry_generated?}
+            .status_updated_at
+              -if import.rotation_number
+                .date.cp= "RN: #{import.rotation_number}"
+              -if import.entry_number
+                .date.obl= "EN: #{import.entry_number}"
+          = link_to "Update", fetch_custom_modal_custom_path(id: import.id), :remote => true, :class => "button btn btn-small btn-primary"
+        %td.remarks.h5
+          = import.remarks
 
-#CustomModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1", "data-backdrop" => "static", "data-keyboard" => "false"}
+#statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog
     = simple_form_for(:import, url: '', html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
       .modal-content
         .modal-header
-          %h1.modal-title Custom Entry
+          = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+          %h1.modal-title Update Status
         .modal-body
-          = f.input :entry_number, :input_html => {:class => 'select required form-control text-capitalize'}
-          .form-group.custom-radio
-            .col-md-3.control-label
-              %label.control-label Entry Type
-            .col-md-6
-              %label.control-label
-                = f.radio_button :entry_type, "im4", :checked => true
-                = f.label :entry_type, 'IM4', inline: true
-              %label.control-label
-                = f.radio_button :entry_type, "wt8", :checked => false
-                = f.label :entry_type, 'WT8', inline: true
+          #bl_number
+            = f.label :bl_number
+          = f.input :status, collection: [], :input_html => {:class => 'select required form-control text-capitalize'}
+          = f.input :remarks, as: :text, required: false
 
         .modal-footer
+          = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
           = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
+#custom_modal
+
+  
 
 :coffeescript
-  $('#CustomModal').on 'shown.bs.modal', (event) ->
-    $('#CustomModal .alert').remove()
-    id = $('#CustomModal form').attr('data-import-id')
-    $(".date").datepicker(format: "dd-mm-yyyy")
+  @customers = #{@customers.to_json}
+  @equipment = #{@equipment.to_json}
+
+  $('#statusModal').on 'shown.bs.modal', (event) ->
+    $('#statusModal .alert').remove()
+    link_tag = $(event.relatedTarget)
+    id = link_tag.attr('data-import-id')
 
     $("#customs_table tr#"+ id + " td.updateStatus .updateStatus").hide()
-    $('#CustomModal form').attr('action', "/customs/" + id + "/update")
+    $('#statusModal #bl_number label').text("BL Number : " + link_tag.attr('data-bl-number'))
+    $('#statusModal form #import_status').html("")
+    for i in link_tag.attr('data-states').split(",")
+      $('#statusModal form #import_status').append("<option value=" + i + ">" + i.replace(/_/g, ' ') + "</option>")
 
-  $('#CustomModal').on 'hide.bs.modal', (event) ->
+    $('#statusModal form').attr('action', "/imports/" + id + "/updateStatus")
+
+  $('#statusModal').on 'hide.bs.modal', (event) ->
     $("#customs_table tr td.updateStatus .updateStatus").show()
 
-  $('.custom_checkbox').on 'change', (event) ->
-    columnName = event.target.getAttribute("data-column")
-    id = this.closest('tr').id
-    is_date = "true"
-    checked = event.target.checked
-    $('#CustomModal form').attr("data-import-id", id)
-    if checked
-      $("#CustomModal").modal("show")
-
-  updateColumn =(columnName, id, checked, is_date) ->
-    $.ajax(
-      url: "customs/"+id+"/update_column",
-      type: 'POST'
-      data: {id: id, columnName: columnName, value: checked, is_date: is_date}
-      async: false
-    ).done((data) ->
-      $.post("customs/"+id+"/retainStatus")
-    )
     
-  $('#CustomModal form').on 'submit', (event) ->
-    if $("#import_entry_number").val().length < 1
-      $("<label class='red'>Should not be empty</label>").insertAfter("#import_entry_number")
-      return false
-    else
-      try
-        $("#import_entry_number").siblings("label")[0].remove()
-      catch
-        console.log("no sibling found for import entry number")
-      return true
-
-

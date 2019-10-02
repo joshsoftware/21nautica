@@ -85,4 +85,14 @@ class UserMailer < ActionMailer::Base
     mail(to: import.customer.emails.split(","), subject: 'Late Document Mail')
   end
 
+  def late_bl_received_mail(import)
+    @import = import
+    mail(to: import.customer.emails.split(","), subject: 'Late BL Received Mail')
+  end
+
+  def rotation_number_mail(import)
+    @import = import
+    mail(to: @import.customer.emails.split(","), subject: 'Rotation Number Mail')
+  end  
+
 end
