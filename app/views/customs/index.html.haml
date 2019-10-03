@@ -13,6 +13,7 @@
     %th Shipping Line
     %th Equipment
     %th Weight
+    %th File Ref. Number
     %th Entry Number
     %th ETA
     %th Quantity
@@ -30,6 +31,7 @@
         %td= import.shipping_line.try(:name)
         %td= import.equipment
         %td= (import.weight.to_f/import.quantity).round(2)
+        %td= import.work_order_number
         %td= import.entry_number
         %td= import.estimate_arrival
         %td= import.quantity
@@ -49,7 +51,11 @@
                 .date.obl= "EN: #{import.entry_number}"
           = link_to "Update", fetch_custom_modal_custom_path(id: import.id), :remote => true, :class => "button btn btn-small btn-primary"
         %td.remarks.h5
-          = import.remarks
+          .desc
+            = import.remarks.try(:last).try(:desc)
+          %button.btn.btn-small.btn-primary{'data-model-id' => "#{import.id}", 'data-model-type' => 'import', 'data-target' => '#remarkModal', 'data-toggle' => 'modal'} Add
+
+= render :partial => 'remarks/remark', :locals => {:@table => "custom"}
 
 #statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog
@@ -86,7 +92,7 @@
     for i in link_tag.attr('data-states').split(",")
       $('#statusModal form #import_status').append("<option value=" + i + ">" + i.replace(/_/g, ' ') + "</option>")
 
-    $('#statusModal form').attr('action', "/imports/" + id + "/updateStatus")
+    $('#statusModal form').attr('action', "/customs/" + id + "/updateStatus")
 
   $('#statusModal').on 'hide.bs.modal', (event) ->
     $("#customs_table tr td.updateStatus .updateStatus").show()

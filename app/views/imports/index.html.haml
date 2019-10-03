@@ -13,8 +13,8 @@
     %th Shipping Line
     %th Equipment
     %th Weight
+    %th File Ref Number
     %th Entry Number
-    %th Clearing Agent
     %th ETA
     %th Quantity
     %th#btnAddNewRow Status
@@ -30,8 +30,8 @@
         %td= import.shipping_line.try(:name)
         %td= import.equipment
         %td= (import.weight.to_f/import.quantity).round(2)
+        %td= import.work_order_number
         %td= import.entry_number
-        %td= import.clearing_agent
         %td= import.estimate_arrival
         %td= import.quantity
         %td.updateStatus{class: "text-center"}
@@ -44,7 +44,7 @@
         %td.remarks.h5
           .desc
             = import.remarks.try(:last).try(:desc)
-          / %button.btn.btn-small.btn-primary{'data-model-id' => "#{import.id}", 'data-model-type' => 'import', 'data-target' => '#remarkModal', 'data-toggle' => 'modal'} Add
+          %button.btn.btn-small.btn-primary{'data-model-id' => "#{import.id}", 'data-model-type' => 'import', 'data-target' => '#remarkModal', 'data-toggle' => 'modal'} Add
 
 #statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog

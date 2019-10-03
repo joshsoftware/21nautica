@@ -34,6 +34,7 @@ class Import < ActiveRecord::Base
   before_save :strip_container_number_bl_number
   after_save :late_document_mail, :rotation_number_mail
   after_create :set_bl_received
+  before_create :set_is_new_order_flag
 
   validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number, :bl_received_type
   validates_presence_of :work_order_number, on: :create
@@ -45,10 +46,10 @@ class Import < ActiveRecord::Base
   enum bl_received_type: ["copy", "original_telex"]
   scope :ready_to_load, -> {where(status: 'ready_to_load')}
   scope :not_ready_to_load, -> {where.not(status: 'ready_to_load')}
-  scope :shipping_dates_not_present, -> {where("bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL")}
-  scope :shipping_dates_present, -> {where.not("bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL")}
-  scope :custom_entry_not_generated, -> {where("entry_number IS NULL OR entry_type IS NULL")}
-  scope :custom_entry_generated, -> {where("entry_number IS NOT NULL AND entry_type IS NOT NULL")}
+  scope :shipping_dates_not_present, -> {where("CASE WHEN is_new_order = TRUE THEN (bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL) ELSE TRUE END")}
+  scope :shipping_dates_present, -> {where.not("CASE WHEN is_new_order = TRUE THEN (bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL) ELSE TRUE END")}
+  scope :custom_entry_not_generated, -> {where("CASE WHEN is_new_order = TRUE THEN (entry_number IS NULL OR entry_type IS NULL) ELSE TRUE END")}
+  scope :custom_entry_generated, -> {where("CASE WHEN is_new_order = TRUE THEN (entry_number IS NOT NULL AND entry_type IS NOT NULL) ELSE TRUE END")}
 
   # Hack: I have intentionally not used delegate here, because,
   # in case of duplicate, the bl_number will be delegated to a non-existent BillOfLading in
@@ -142,5 +143,13 @@ class Import < ActiveRecord::Base
     end
   end
 
-  auditable only: [:status, :updated_at, :remarks]
+  def shipping_checked?
+    bl_received_at.present? && charges_received_at.present? && charges_paid_at.present? && do_received_at.present? && pl_received_at.present?
+  end
+
+  def set_is_new_order_flag
+    self.is_new_order = true
+  end
+
+  auditable only: [:status, :updated_at, :remark]
 end

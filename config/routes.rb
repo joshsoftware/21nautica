@@ -91,6 +91,8 @@ Rails.application.routes.draw do
       post 'retainStatus'
       post 'late_document_mail'
       get 'fetch_shipping_modal'
+      post 'update_column'
+      post 'updateStatus'
     end
   end
 
@@ -101,6 +103,7 @@ Rails.application.routes.draw do
       post 'update_column'
       post 'late_document_mail'
       get 'fetch_custom_modal'
+      post 'updateStatus'
     end
   end
   resources :import_items,only: [:new,:create,:index, :edit] do

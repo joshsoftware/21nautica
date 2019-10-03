@@ -36,16 +36,37 @@ datatable_initialize = ->
                     "sPaginationType": "full_numbers"
                     }).makeEditable(
                       sUpdateURL: 'customs/update_column',
-                      aoColumns: [null,
+                      aoColumns: [null, null, null,
                                   {
-                                    onblur: 'submit',
+                                    type: 'select',
+                                    event: 'click',
+                                    data: JSON.stringify(@equipment),
+                                    onblur: 'submit'
+                                    sUpdateURL: (value, settings) ->
+                                      row = $(this).parents('tr')[0]
+                                      id = row.id
+                                      $.ajax(
+                                        url:"customs/#{id}/update_column",
+                                        type: 'POST'
+                                        data: {id:id, columnName:"Equipment", value:value}
+                                        async: false
+                                      ).done((data) ->
+                                        value = data
+                                      )
+                                      return value
+                                    , placeholder:"Click to enter",
+                                    fnOnCellUpdated: (sStatus, sValue, settings) ->
+                                      $.post("customs/#{id}/retainStatus")
+                                  }, null, null,
+                                  {
+                                    onblur: 'submit'
                                     sUpdateURL: (value,settings)->
                                       row = $(this).parents('tr')[0]
                                       id = row.id
                                       $.ajax(
-                                        url:"customs/"+id+"/update_column",
+                                        url:"customs/#{id}/update_column",
                                         type: 'POST'
-                                        data: {id:id,columnName:"Rotation Number",value:value},
+                                        data: {id:id,columnName:"Entry Number",value:value},
                                         async: false)
                                         .done((data) ->
                                           if (data != value)
@@ -53,14 +74,32 @@ datatable_initialize = ->
                                         )
                                       return value
                                     , placeholder:"Click to enter",
+                                  fnOnCellUpdated: (sStatus, sValue, settings) ->
+                                    $.post("customs/#{id}/retainStatus")},
+                                  {
+                                    type: 'datepicker2',
+                                    event: 'click',
+                                    submit: 'okay',
+                                    tooltip: "yyyy-mm-dd",
+                                    sUpdateURL: (value, settings) ->
+                                      row = $(this).parents('tr')[0]
+                                      id = row.id
+                                      $.ajax(
+                                        url:"customs/#{id}/update_column",
+                                        type: 'POST'
+                                        data: {id:id, columnName:"Estimate Arrival", value:value}
+                                        async: false
+                                      ).done((data) ->
+                                        value = data
+                                      )
+                                      return value
+                                    , placeholder:"Click to enter",
                                     fnOnCellUpdated: (sStatus, sValue, settings) ->
                                       $.post("customs/#{id}/retainStatus")
-                                      if sValue
-                                        $.post("customs/#{id}/late_document_mail")
-                                  }
-                                  , null
+                                  },
+                                  null, null,null, null
                                  ]
+            
                                  )
 
 $(document).ready datatable_initialize
-

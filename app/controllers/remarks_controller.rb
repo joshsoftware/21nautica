@@ -14,7 +14,7 @@ class RemarksController < ApplicationController
   private
 
   def remarks_params
-    params.require(:remark).permit(:desc, :date, :import_id, :category, :model_id, :model_type)
+    params.require(:remark).permit(:desc, :date, :import_id, :category, :model_id, :model_type, :table)
   end
 
   def set_model_instance

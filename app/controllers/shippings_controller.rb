@@ -14,6 +14,32 @@ class ShippingsController < ApplicationController
     end
   end
 
+  def updateStatus
+    @import = Import.find(params[:id])
+    status = shipping_params[:status].downcase.gsub(' ', '_')
+    @import.remarks.create(desc: shipping_params[:remarks], date: Date.today, category: "external") unless shipping_params[:remarks].blank?
+    if status != @import.status
+      begin
+        @import.send("#{status}!".to_sym)
+      rescue
+        @import.errors[:work_order_number] = "first enter file ref number or entry number"
+        @errors = @import.errors.messages.values.flatten
+      end
+    else
+      @import.save
+    end
+  end
+
+  def update_column
+    import = Import.find(import_update_params[:id])
+    attribute = import_update_params[:columnName].downcase.gsub(' ', '_').to_sym
+    if import.update(attribute => import_update_params[:value])
+      render text: import_update_params[:value]
+    else
+      render text: import.errors.full_messages
+    end
+  end
+
   def retainStatus
     shortForms = ["OBL", "C/R", "C/P", "DO", "P/L"]
     @date_divs = ""
@@ -56,4 +82,8 @@ class ShippingsController < ApplicationController
       UserMailer.late_bl_received_mail(@import).deliver()
     end
   end
+
+  def shipping_params
+    params.require(:import).permit(:remarks, :status)
+  end  
 end

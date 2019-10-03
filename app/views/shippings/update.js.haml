@@ -5,4 +5,6 @@
 
 - else
   $("#ShippingStatusModal").modal('hide')
+  -if @import.shipping_checked?
+    $("#shippings_table tr##{@import.id}").remove()
   $.post("shippings/#{@import.id}/retainStatus")

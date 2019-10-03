@@ -35,28 +35,8 @@ datatable_initialize = ->
                     "bFilter": true,
                     "sPaginationType": "full_numbers"
                     }).makeEditable(
-                      sUpdateURL: 'imports/update',
-                      aoColumns: [null,
-                                  {
-                                    type: 'checkbox',
-                                    name: "Bl received at"
-                                    onchange: 'submit'
-                                    sUpdateURL: (value, settings) ->
-                                      row = $(this).parents('tr')[0]
-                                      id = row.id
-                                      $.ajax(
-                                        url:"imports/update",
-                                        type: 'POST'
-                                        data: {id:id, columnName:"Equipment", value:value}
-                                        async: false
-                                      ).done((data) ->
-                                        value = data
-                                      )
-                                      return value
-                                    , placeholder:"Click to enter",
-                                    fnOnCellUpdated: (sStatus, sValue, settings) ->
-                                      $.post("imports/#{id}/retainStatus")
-                                  },
+                      sUpdateURL: 'shippings/update_column',
+                      aoColumns: [null, null, null,
                                   {
                                     type: 'select',
                                     event: 'click',
@@ -66,7 +46,7 @@ datatable_initialize = ->
                                       row = $(this).parents('tr')[0]
                                       id = row.id
                                       $.ajax(
-                                        url:"imports/update",
+                                        url:"shippings/#{id}/update_column",
                                         type: 'POST'
                                         data: {id:id, columnName:"Equipment", value:value}
                                         async: false
@@ -76,24 +56,26 @@ datatable_initialize = ->
                                       return value
                                     , placeholder:"Click to enter",
                                     fnOnCellUpdated: (sStatus, sValue, settings) ->
-                                      $.post("imports/#{id}/retainStatus")
-                                  }, null,
-                                  {sUpdateURL: (value,settings)->
-                                    row = $(this).parents('tr')[0]
-                                    id = row.id
-                                    $.ajax(
-                                      url:"imports/update",
-                                      type: 'POST'
-                                      data: {id:id,columnName:"Entry Number",value:value},
-                                      async: false)
-                                      .done((data) ->
-                                        if (data != value)
-                                          value = data
-                                      )
-                                    return value
-                                  , placeholder:"Click to enter",
+                                      $.post("shippings/#{id}/retainStatus")
+                                  }, null, null,
+                                  {
+                                    onblur: 'submit'
+                                    sUpdateURL: (value,settings)->
+                                      row = $(this).parents('tr')[0]
+                                      id = row.id
+                                      $.ajax(
+                                        url:"shippings/#{id}/update_column",
+                                        type: 'POST'
+                                        data: {id:id,columnName:"Entry Number",value:value},
+                                        async: false)
+                                        .done((data) ->
+                                          if (data != value)
+                                            value = data
+                                        )
+                                      return value
+                                    , placeholder:"Click to enter",
                                   fnOnCellUpdated: (sStatus, sValue, settings) ->
-                                    $.post("imports/#{id}/retainStatus")},
+                                    $.post("shippings/#{id}/retainStatus")},
                                   {
                                     type: 'datepicker2',
                                     event: 'click',
@@ -103,7 +85,7 @@ datatable_initialize = ->
                                       row = $(this).parents('tr')[0]
                                       id = row.id
                                       $.ajax(
-                                        url:"imports/update",
+                                        url:"shippings/#{id}/update_column",
                                         type: 'POST'
                                         data: {id:id, columnName:"Estimate Arrival", value:value}
                                         async: false
@@ -113,12 +95,11 @@ datatable_initialize = ->
                                       return value
                                     , placeholder:"Click to enter",
                                     fnOnCellUpdated: (sStatus, sValue, settings) ->
-                                      $.post("imports/#{id}/retainStatus")
+                                      $.post("shippings/#{id}/retainStatus")
                                   },
-                                  null, null,null
+                                  null, null,null, null
                                  ]
             
                                  )
 
 $(document).ready datatable_initialize
-
