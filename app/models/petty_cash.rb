@@ -3,12 +3,10 @@ class PettyCash < ActiveRecord::Base
   belongs_to :created_by, class_name: 'User', foreign_key: 'created_by_id'
   belongs_to :expense_head
   belongs_to :truck
+  validates_length_of :description, within: 0..100, on: :create, message: "Description should be within 100 char" 
   validates  :transaction_type, :transaction_amount, presence: true
-  before_create :update_date, :update_balance
-  def update_date
-    self.date = Date.current.strftime('%d/%m/%Y')
-  end
-
+  before_create :update_balance
+  
   def update_balance
     self.available_balance = if transaction_type.eql?('Deposit')
                                current_balance + transaction_amount
@@ -17,6 +15,7 @@ class PettyCash < ActiveRecord::Base
                              end
   end
 
+  
   private
 
   def current_balance

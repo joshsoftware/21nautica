@@ -27,3 +27,15 @@ input[type="radio"]{
   margin-top: 1px \9;
   line-height: normal;
 }
+.petty_cash_td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  width: 10%;
+  height: auto;
+}
+
+.petty_cash_table{
+  table-layout:fixed; 
+  max-width: 10%;
+}
