@@ -31,5 +31,16 @@ class CustomsControllerTest < ActionController::TestCase
   test "should fetch custom modal" do
     xhr :get, :fetch_custom_modal, id: @import.id
     assert_template partial: "customs/_custom_modal"
-  end  
+  end
+
+  test "should update the column" do
+    xhr :post, :update_column, {
+                    id: @import.id,
+                    columnName: "equipment",
+                    value: "20GP"
+                    }
+    xhr :post, :retainStatus, {id: @import.id}
+    @import.reload
+    assert_equal "20GP", @import.equipment
+  end
 end

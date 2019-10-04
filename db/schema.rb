@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191003075652) do
+ActiveRecord::Schema.define(version: 20191005115710) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -168,7 +168,7 @@ ActiveRecord::Schema.define(version: 20191003075652) do
     t.integer  "import_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "remarks"
+    t.string   "remark"
     t.string   "yard_name"
     t.datetime "g_f_expiry"
     t.datetime "close_date"
@@ -200,7 +200,7 @@ ActiveRecord::Schema.define(version: 20191003075652) do
     t.datetime "updated_at"
     t.string   "shipping_line_name"
     t.string   "work_order_number"
-    t.string   "remarks"
+    t.string   "remark"
     t.string   "clearing_agent"
     t.string   "bill_of_lading_id"
     t.string   "rate_agreed"
@@ -222,7 +222,6 @@ ActiveRecord::Schema.define(version: 20191003075652) do
     t.boolean  "is_late_submission"
     t.string   "rotation_number"
     t.integer  "entry_type"
-    t.boolean  "is_new_order",               default: false
   end
 
   add_index "imports", ["bill_of_lading_id"], name: "index_imports_on_bill_of_lading_id", using: :btree

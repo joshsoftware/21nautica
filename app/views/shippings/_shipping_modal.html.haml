@@ -1,7 +1,7 @@
 
 #ShippingStatusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog
-    = simple_form_for(:import, url: "/shippings/#{@import.id}/update", html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+    = simple_form_for(:import, url: "/shippings/#{@import.id}/update", html: { class: 'form-horizontal', id: "shipping_date_form"}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
       .modal-content
         .modal-header
           = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
@@ -44,15 +44,6 @@
             .col-md-4
               %input{:type => "text", :name => "import[do_received_at]", :class => "form-control #{@import.do_received_at.present? ? "" : "hidden"} do_received_at",
                 :value => @import.do_received_at.try(:to_date).try(:to_formatted_s)}
-          .form-group
-            .col-md-4
-              = label_tag 'Packing List Received', nil, class: "form-check-label"
-            .col-md-2.pad1
-              %input{:type => "checkbox", :checked => @import.pl_received_at.present?, 
-                :class => "shipping_checkbox form-check-input", "data-column" => "pl_received_at"}
-            .col-md-4
-              %input{:type => "text", :name => "import[pl_received_at]", :class => "form-control #{@import.pl_received_at.present? ? "" : "hidden"} pl_received_at",
-                :value => @import.pl_received_at.try(:to_date).try(:to_formatted_s)}
           .form-group.do-extra_field
             %hr
             .col-md-4
@@ -74,23 +65,26 @@
           = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
 
 :coffeescript
+  server_do_date_present = #{@import.do_received_at.present?}
+  server_bl_date_present = #{@import.bl_received_at.present?}
+  server_charges_paid_date_present = #{@import.charges_paid_at.present?}
+  server_charges_rec_date_present = #{@import.charges_received_at.present?}
+
   $('#ShippingStatusModal').on 'shown.bs.modal', (event) ->
     bl_date = new Date("#{@import.bl_received_at.present? ? @import.bl_received_at.to_date.try(:to_formatted_s) : Date.today.to_date.try(:to_formatted_s)}")
     cr_date = new Date("#{@import.charges_received_at.present? ? @import.charges_received_at.to_date.to_formatted_s : Date.today.to_date.to_formatted_s }")
     cp_date = new Date("#{@import.charges_paid_at.present? ? @import.charges_paid_at.to_date.to_formatted_s : Date.today.to_date.to_formatted_s }")
     do_date = new Date("#{@import.do_received_at.present? ? @import.do_received_at.to_date.to_formatted_s : Date.today.to_date.to_formatted_s }")
-    pl_date = new Date("#{@import.pl_received_at.present? ? @import.pl_received_at.to_date.to_formatted_s : Date.today.to_date.to_formatted_s }")
     initDatePicker(bl_date, "bl_received_at")
     initDatePicker(cr_date, "charges_received_at")
     initDatePicker(cp_date, "charges_paid_at")
     initDatePicker(do_date, "do_received_at")
-    initDatePicker(pl_date, "pl_received_at")
+    validateDateChronology()
     if "#{@import.do_received_at.present?}" == "true"
       $(".do-extra_field").show()
       initDatePicker(do_date, "gf_return_date")
     else
       $(".do-extra_field").hide()
-
 
   $('#statusModal').on 'hide.bs.modal', (event) ->
     $("#imports_table tr td.updateStatus .updateStatus").show()
@@ -98,11 +92,13 @@
   $('.shipping_checkbox').on 'change', (event) ->
     columnName = event.target.getAttribute("data-column")
     checked = event.target.checked
+    validateDateChronology()
     if checked
       $("."+columnName).show().removeClass("hidden")
       if columnName == "do_received_at"
         $(".do-extra_field").show()
         initDatePicker(new Date("#{Date.today.to_formatted_s}"), "gf_return_date")
+        $(".do_received_at").val(todayDate)
     else
       $("."+columnName).hide().val("")
       if columnName == "do_received_at"
@@ -115,6 +111,7 @@
       startDate: '-1y',
       defaultViewDate: date,
     }).on 'changeDate', (event) ->
+      validateDateChronology()
       if event.currentTarget.className.includes("bl_received_at") && event.date > new Date("#{@import.estimate_arrival.try(:to_formatted_s)}")
         confirmAns = confirm("Is this late submission of Document?")
         if confirmAns
@@ -123,3 +120,70 @@
           $("#import_late_submission").val(false)
       else
         $("#import_late_submission").val(false)
+
+  $("#shipping_date_form").on 'submit', (event) ->
+    validateDOReceived()
+
+  todayDate = () ->
+    today = new Date()
+    dd = today.getDate()
+    mm = today.getMonth() + 1
+    yyyy = today.getFullYear()
+    return yyyy+"/"+mm+"/"+dd
+
+  validateDOReceived = () ->
+    return_value = true
+    if $('*[data-column="do_received_at"]').is(":checked") && !$('*[data-column="do_received_at"]').prop("disabled")
+      if $(".do_received_at").val() == ""
+        $('.do_received_at').siblings(".field-error").remove()
+        $("<label class='field-error text-danger'>Should not be empty</label>").insertAfter('.do_received_at')
+        return_value = false
+      else
+        $('.do_received_at').siblings(".field-error").remove()
+
+      if $(".return_location").val() == ""
+        $('.return_location').siblings(".field-error").remove()
+        $("<label class='field-error text-danger'>Should not be empty</label>").insertAfter('.return_location')
+        return_value = false
+      else
+        $('.return_location').siblings(".field-error").remove()
+      
+      if $(".gf_return_date").val() == ""
+        $('.gf_return_date').siblings(".field-error").remove()
+        $("<label class='field-error text-danger'>Should not be empty</label>").insertAfter('.gf_return_date')
+        return_value = false
+      else
+        $('.gf_return_date').siblings(".field-error").remove()
+
+      return return_value
+
+  validateDateChronology = () ->
+    if $('*[data-column="bl_received_at"]').is(":checked") && $(".bl_received_at").val() != ""
+      $('*[data-column="charges_received_at"]').removeAttr("disabled")
+      $(".charges_received_at").removeAttr("disabled")
+      $(".bl_received_at").show().removeClass("hidden")
+    else
+      $('*[data-column="charges_received_at"]').attr("disabled", "disabled")
+      $(".charges_received_at").attr("disabled", "disabled")
+      $(".charges_received_at, .charges_paid_at, .do_received_at").val("")
+      $(".charges_received_at, .charges_paid_at, .do_received_at").hide()
+      $('*[data-column="charges_received_at"], *[data-column="charges_paid_at"], *[data-column="do_received_at"]').prop("checked", false);
+
+    if $('*[data-column="charges_received_at"]').is(":checked") && $(".charges_received_at").val() != ""
+      $('*[data-column="charges_paid_at"]').removeAttr("disabled")
+      $(".charges_paid_at").removeAttr("disabled")
+    else
+      $('*[data-column="charges_paid_at"]').attr("disabled", "disabled")
+      $(".charges_paid_at, .do_received_at").val("")
+      $(".charges_received_at, .charges_paid_at, .do_received_at").hide()
+      $('*[data-column="charges_paid_at"], *[data-column="do_received_at"]').prop("checked", false);      
+
+    if $('*[data-column="charges_paid_at"]').is(":checked") && $(".charges_paid_at").val() != ""
+      $('*[data-column="do_received_at"]').removeAttr("disabled")
+      $(".do_received_at").removeAttr("disabled")
+    else
+      $('*[data-column="do_received_at"]').attr("disabled", "disabled")
+      $(".do_received_at").attr("disabled", "disabled")
+      $(".do_received_at").val("")
+      $(".gf_return_date, .return_location").val("")
+      $(".do-extra_field").hide()

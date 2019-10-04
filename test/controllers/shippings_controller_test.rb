@@ -30,5 +30,17 @@ class ShippingsControllerTest < ActionController::TestCase
   test "should fetch shipping modal" do
     xhr :get, :fetch_shipping_modal, id: @import.id
     assert_template partial: "shippings/_shipping_modal"
-  end  
+  end
+
+  test "should update the column" do
+    xhr :post, :update_column, {
+                    id: @import.id,
+                    columnName: "equipment",
+                    value: "20GP"
+                    }
+    xhr :post, :retainStatus, {id: @import.id}
+    @import.reload
+    assert_equal "20GP", @import.equipment
+  end
+
 end

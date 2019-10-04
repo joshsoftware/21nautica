@@ -57,25 +57,7 @@ datatable_initialize = ->
                                     , placeholder:"Click to enter",
                                     fnOnCellUpdated: (sStatus, sValue, settings) ->
                                       $.post("customs/#{id}/retainStatus")
-                                  }, null, null,
-                                  {
-                                    onblur: 'submit'
-                                    sUpdateURL: (value,settings)->
-                                      row = $(this).parents('tr')[0]
-                                      id = row.id
-                                      $.ajax(
-                                        url:"customs/#{id}/update_column",
-                                        type: 'POST'
-                                        data: {id:id,columnName:"Entry Number",value:value},
-                                        async: false)
-                                        .done((data) ->
-                                          if (data != value)
-                                            value = data
-                                        )
-                                      return value
-                                    , placeholder:"Click to enter",
-                                  fnOnCellUpdated: (sStatus, sValue, settings) ->
-                                    $.post("customs/#{id}/retainStatus")},
+                                  }, null, null, null,
                                   {
                                     type: 'datepicker2',
                                     event: 'click',
@@ -97,7 +79,7 @@ datatable_initialize = ->
                                     fnOnCellUpdated: (sStatus, sValue, settings) ->
                                       $.post("customs/#{id}/retainStatus")
                                   },
-                                  null, null,null, null
+                                  null, null,null, null, null
                                  ]
             
                                  )

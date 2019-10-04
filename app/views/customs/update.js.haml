@@ -5,6 +5,7 @@ $('#CustomModal .alert').remove();
 
 - else
   $('#CustomModal').modal('hide')
+  $("#customs_table tr##{@import.id} .remarks .desc").text("#{@import.remarks.try(:last).try(:desc)}")
   -if @import.custom_entry_generated?
     $("#customs_table tr##{@import.id}").remove()
   $.post("customs/#{@import.id}/retainStatus")

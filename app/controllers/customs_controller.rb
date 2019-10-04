@@ -13,22 +13,6 @@ class CustomsController < ApplicationController
     @import.update(update_params)
   end
 
-  def updateStatus
-    @import = Import.find(params[:id])
-    status = custom_params[:status].downcase.gsub(' ', '_')
-    @import.remarks.create(desc: custom_params[:remarks], date: Date.today, category: "external") unless custom_params[:remarks].blank?
-    if status != @import.status
-      begin
-        @import.send("#{status}!".to_sym)
-      rescue
-        @import.errors[:work_order_number] = "first enter file ref number or entry number"
-        @errors = @import.errors.messages.values.flatten
-      end
-    else
-      @import.save
-    end
-  end  
-
   def retainStatus
   end
 
@@ -55,11 +39,7 @@ class CustomsController < ApplicationController
   end
 
   def update_params
-    params.require(:import).permit(:entry_number, :entry_type, :rotation_number)
-  end
-
-  def custom_params
-    params.require(:import).permit(:remarks, :status)
+    params.require(:import).permit(:entry_number, :rotation_number)
   end
 
   def set_import

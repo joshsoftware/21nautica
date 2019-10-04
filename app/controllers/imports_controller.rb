@@ -3,7 +3,7 @@
 class ImportsController < ApplicationController
   def index
     destination = params[:destination] || 'Kampala'
-    @imports = Import.not_ready_to_load.custom_entry_not_generated.shipping_dates_not_present.where(to: destination)
+    @imports = Import.not_ready_to_load.custom_shipping_dates_not_present.where(to: destination)
     @equipment = EQUIPMENT_TYPE.inject({}) { |h, x| h[x] = x; h }
     @clearing_agent = Vendor.clearing_agents.order(:name).pluck(:name).inject({}) { |h, x| h[x] = x; h}
   end
@@ -64,21 +64,21 @@ class ImportsController < ApplicationController
     end
   end
 
-  def updateStatus
-    @import = Import.find(params[:id])
-    status = import_params[:status].downcase.gsub(' ', '_')
-    @import.remarks.create(desc: import_params[:remarks], date: Date.today, category: "external") unless import_params[:remarks].blank?
-    if status != @import.status
-      begin
-        @import.send("#{status}!".to_sym)
-      rescue
-        @import.errors[:work_order_number] = "first enter file ref number or entry number"
-        @errors = @import.errors.messages.values.flatten
-      end
-    else
-      @import.save
-    end
-  end
+  # def updateStatus not using right now
+  #   @import = Import.find(params[:id])
+  #   status = import_params[:status].downcase.gsub(' ', '_')
+  #   @import.remarks.create(desc: import_params[:remarks], date: Date.today, category: "external") unless import_params[:remarks].blank?
+  #   if status != @import.status
+  #     begin
+  #       @import.send("#{status}!".to_sym)
+  #     rescue
+  #       @import.errors[:work_order_number] = "first enter file ref number or entry number"
+  #       @errors = @import.errors.messages.values.flatten
+  #     end
+  #   else
+  #     @import.save
+  #   end
+  # end
 
   def retainStatus
     @import = Import.find(params[:id])

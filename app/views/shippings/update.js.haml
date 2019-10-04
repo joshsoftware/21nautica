@@ -1,7 +1,7 @@
-/ $('#DOModal .alert').remove();
-- if @errors.present?
-  -@errors.each do |msg|
-    $('#DOModal .modal-body').append("<div class='alert alert-danger'>#{msg}</div>");
+$('#ShippingStatusModal .alert').remove();
+- if @import.errors.present?
+  -@import.errors[:base].each do |msg|
+    $('#ShippingStatusModal .modal-body').append("<div class='alert alert-danger'>#{msg}</div>");
 
 - else
   $("#ShippingStatusModal").modal('hide')

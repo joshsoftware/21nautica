@@ -3,7 +3,4 @@
 $("#customs_table tr##{@import.id} td.customStatus .status_updated_at").html("#{div.html_safe}")
 $("#CustomStatusModal").modal("hide")
 
-$("#customs_table tr##{@import.id} td.updateStatus button").attr('data-states', "#{@import.status},#{@import.aasm.events.join(',')}")
-$("#customs_table tr##{@import.id} td.updateStatus .updateStatus .status").text("#{@import.status.humanize}")
-$("#customs_table tr##{@import.id} td.updateStatus .updateStatus .status_updated_at").text("#{status_updated_at(@import).localtime.to_date.to_formatted_s}")
 $("#customs_table tr##{@import.id} .remarks .desc").html("#{@import.remarks.try(:last).try(:desc)}")

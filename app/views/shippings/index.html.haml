@@ -14,10 +14,8 @@
     %th Equipment
     %th Weight
     %th File Ref Number
-    %th Entry Number
     %th ETA
     %th Quantity
-    %th#btnAddNewRow Status
     %th.bl-width Shipping Status
     %th Remarks
   %tbody
@@ -32,16 +30,8 @@
         %td= import.equipment
         %td= (import.weight.to_f/import.quantity).round(2)
         %td= import.work_order_number
-        %td= import.entry_number
         %td= import.estimate_arrival
         %td= import.quantity
-        %td.updateStatus{class: "text-center"}
-          .updateStatus.h5
-            .status_updated_at
-              = status_updated_at(import).to_date.to_formatted_s
-            .status.text-capitalize
-              = import.status.humanize
-          %button.btn.btn-small.btn-primary{'data-import-id' => "#{import.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => import.status + ',' + import.aasm.events.join(','), 'data-bl-number' => import.bl_number} Update
         %td.shippingStatus{class: "text-center"}
           .h5
             .status_updated_at

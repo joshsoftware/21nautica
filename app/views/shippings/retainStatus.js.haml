@@ -1,2 +1,9 @@
 
 $("#shippings_table tr##{@import.id} td.shippingStatus .status_updated_at").html("#{@date_divs.html_safe}")
+
+$('#statusModal').modal('hide')
+- if @import.status == "ready_to_load"
+  $("#customs_table tr##{@import.id}").remove()
+- else
+  $("#shippings_table tr##{@import.id} td.shippingStatus .status_updated_at").html("#{@date_divs.html_safe}")
+  $("#shippings_table tr##{@import.id} .remarks .desc").text("#{@import.remarks.try(:last).try(:desc)}")

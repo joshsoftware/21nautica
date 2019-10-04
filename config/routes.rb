@@ -80,7 +80,7 @@ Rails.application.routes.draw do
   #post 'customers/create_new_customer' => 'customers#create_new_customer', as: :create_new_customer
   resources :imports, only: [:new ,:create ,:index] do
     member do
-      post 'updateStatus'
+      # post 'updateStatus'
       post 'retainStatus'
     end
   end
@@ -92,7 +92,7 @@ Rails.application.routes.draw do
       post 'late_document_mail'
       get 'fetch_shipping_modal'
       post 'update_column'
-      post 'updateStatus'
+      # post 'updateStatus'
     end
   end
 
@@ -103,7 +103,7 @@ Rails.application.routes.draw do
       post 'update_column'
       post 'late_document_mail'
       get 'fetch_custom_modal'
-      post 'updateStatus'
+      # post 'updateStatus'
     end
   end
   resources :import_items,only: [:new,:create,:index, :edit] do

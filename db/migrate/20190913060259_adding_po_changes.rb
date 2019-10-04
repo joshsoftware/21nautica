@@ -9,7 +9,6 @@ class AddingPoChanges < ActiveRecord::Migration
     add_column :imports, :return_location, :string
     add_column :imports, :is_late_submission, :boolean
     add_column :imports, :rotation_number, :string
-    # add_column :imports, :entry_number, :string - Already exists
     add_column :imports, :entry_type, :integer
   end
 end

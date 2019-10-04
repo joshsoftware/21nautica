@@ -46,4 +46,63 @@ class ImportTest < ActiveSupport::TestCase
       @import.ready_to_load!
     end
   end
+
+  test "Shipping dates must be chronologically(in order)(charges_paid_at)" do
+    #order is bl_received_at, charges_received_at, charges_paid_at, do_received_at
+    @import.bl_received_at = Date.today
+    @import.charges_paid_at = Date.today
+    @import.save
+    @import.reload
+    assert_equal @import.charges_paid_at, nil
+  end
+
+  test "Shipping dates must be chronologically(in order)(do_recieved_at)" do
+    #order is bl_received_at, charges_received_at, charges_paid_at, do_received_at
+    @import.bl_received_at = Date.today
+    @import.charges_received_at = Date.today
+    @import.do_received_at = Date.today
+    @import.save
+    @import.reload
+    assert_equal @import.do_received_at, nil
+  end
+
+  test "save entry type according to entry number" do
+    @import.entry_number = "S12345"
+    @import.save
+    @import.reload
+    assert_equal @import.entry_type, "wt8"
+  end
+
+  test "Test the method #shipping_checked? - should return false if dates not present" do
+    @import.bl_received_at = nil
+    @import.save
+    @import.reload
+    assert_equal @import.shipping_checked?, false
+  end
+
+  test "Test the method #shipping_checked? - should return true if dates present" do
+    @import.bl_received_at = Date.today
+    @import.charges_received_at = Date.today
+    @import.charges_paid_at = Date.today
+    @import.do_received_at = Date.today
+    @import.save
+    @import.reload
+    assert_equal @import.shipping_checked?, true
+  end
+
+  test "Set bl received date when bl received type is original_telex" do
+    import = Import.new(to: 'location 2', from: 'location 1', estimate_arrival: '10-10-2014',
+     equipment: '20GP', quantity: 3, rate_agreed: 3000, weight: 30,
+     bl_received_type: "original_telex", work_order_number: 1234, bl_number: "test#{DateTime.now.to_i}")
+    import.save
+    import.reload
+    assert_equal import.bl_received_at, Date.today
+  end
+
+  test "Check custom entry generated function - true" do
+    @import.entry_number = "CSINJH"
+    @import.save
+    @import.reload
+    assert_equal @import.custom_entry_generated?, true
+  end
 end
