@@ -1,8 +1,10 @@
+# Mechanic Controller
 class MechanicsController < ApplicationController
   before_action :set_mechanic, only: %i[edit update]
 
   def index
-    @mechanics = Mechanic.order(id: :desc).paginate(page: params[:page], per_page: 10)
+    @mechanics = Mechanic.includes(:created_by).order(:name)
+                         .paginate(page: params[:page], per_page: 10)
   end
 
   def new
@@ -10,22 +12,20 @@ class MechanicsController < ApplicationController
   end
 
   def create
-    @mechanics = Mechanic.new(mechanic_params)
-    if @mechanics.save
-      flash[:notice] = 'mechanic saved successfully'
+    @mechanic = current_user.mechanics.new(mechanic_params)
+    if @mechanic.save
+      flash[:notice] = I18n.t 'mechanic.saved'
       redirect_to :mechanics
     else
-      flash[:error] = 'Mechanic not saved'
       render 'new'
     end
   end
 
   def update
     if @mechanic.update(mechanic_params)
-      flash[:notice] = 'Mechanic updated Successfully'
+      flash[:notice] = I18n.t 'mechanic.update'
       redirect_to :mechanics
     else
-      flash[:error] = 'Mechanic Not Updated Successfully'
       render 'edit'
     end
   end

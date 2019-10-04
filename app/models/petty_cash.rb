@@ -6,7 +6,7 @@ class PettyCash < ActiveRecord::Base
   validates  :transaction_type, :transaction_amount, presence: true
   before_create :update_date, :update_balance
   def update_date
-    self.date = Date.today.strftime('%d/%m/%Y')
+    self.date = Date.current.strftime('%d/%m/%Y')
   end
 
   def update_balance

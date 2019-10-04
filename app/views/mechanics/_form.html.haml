@@ -6,13 +6,10 @@
           = f.input :name, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Name is required."}
         .col-md-6
           = f.input :date_of_employment ,label: 'Date of joining', as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}}
-
       .row
         .col-md-6
           = f.input :designation
-
         .col-md-6
-
           = f.input :salary
 
       .row

@@ -7,6 +7,6 @@ class JobCard < ActiveRecord::Base
   before_create :update_date
 
   def update_date
-    self.date = Date.today.strftime('%d-%m-%Y')
+    self.date = Date.current.strftime('%d-%m-%Y')
   end
 end
