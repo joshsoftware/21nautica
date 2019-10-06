@@ -460,11 +460,10 @@ ActiveRecord::Schema.define(version: 20191001090426) do
     t.string   "transaction_type"
     t.decimal  "transaction_amount", precision: 10, scale: 2
     t.decimal  "available_balance",  precision: 10, scale: 2
-    t.string   "truck_number"
     t.integer  "import_id"
     t.integer  "import_item_id"
     t.integer  "truck_id"
-    t.integer  "user_id"
+    t.integer  "created_by_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

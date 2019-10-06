@@ -20,7 +20,7 @@ class ImportItem < ActiveRecord::Base
   include AASM
   include EspinitaPatch
   include MovementsHelper
-
+  has_many :transport_manger_cashes
   belongs_to :import
   belongs_to :transporter, class_name: "Vendor", foreign_key: "vendor_id"
   belongs_to :icd, class_name: "Vendor"

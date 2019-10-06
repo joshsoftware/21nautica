@@ -23,7 +23,7 @@ require 'patch'
 class Import < ActiveRecord::Base
   include AASM
   include EspinitaPatch
-
+  has_many :transport_manger_cashes
   has_many :import_items, :dependent => :destroy
   has_many :bill_items, as: :activity
   belongs_to :customer

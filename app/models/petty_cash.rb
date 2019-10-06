@@ -17,12 +17,11 @@ class PettyCash < ActiveRecord::Base
                                current_balance - transaction_amount
                              end
   end
-
   def check_expense_head
     if expense_head.name.eql?('Trip Allowence')
-      last_balance = TransportMangerCash.last.try(:available_balance).to_f
+      last_balance = TransportMangerCash.where.not(transaction_date:nil).last.try(:available_balance).to_f
       balance = last_balance + self.transaction_amount
-      transport = TransportMangerCash.new(transaction_type: 'Deposit', transaction_amount: self.transaction_amount, available_balance: balance )
+      transport = TransportMangerCash.new(transaction_date:Date.today, transaction_type: 'Deposit', transaction_amount: self.transaction_amount, available_balance: balance )
       transport.save
     end
   end
