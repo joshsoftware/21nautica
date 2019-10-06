@@ -1,0 +1,6 @@
+-div = "<div class='rn'>RN: #{@import.rotation_number}</div>"
+-div += "<div class='rn'>EN: #{@import.entry_number}</div>" if @import.entry_number
+$("#customs_table tr##{@import.id} td.customStatus .status_updated_at").html("#{div.html_safe}")
+$("#CustomStatusModal").modal("hide")
+
+$("#customs_table tr##{@import.id} .remarks .desc").html("#{@import.remarks.try(:last).try(:desc)}")

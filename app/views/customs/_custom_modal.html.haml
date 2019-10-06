@@ -1,0 +1,62 @@
+
+#CustomStatusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    = simple_form_for(:import, url: "/customs/#{@import.id}/update", html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+      .modal-content
+        .modal-header
+          = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+          %h1.modal-title Update Custom Status
+        .modal-body
+          .form-group
+            .col-md-4
+              = label_tag 'Rotation Number', nil, class: "form-check-label"
+            .col-md-4
+              %input{:type => "text", :name => "import[rotation_number]", :class => "form-control rotation_number", :value => @import.rotation_number}
+          .form-group
+            .col-md-4
+              = label_tag 'Custom Entry Generated', nil, class: "form-check-label"
+            .col-md-4.pad1
+              %input{:type => "checkbox", :checked => @import.custom_entry_generated?, 
+                :class => "custom_checkbox form-check-input"}
+          .form-group.custom-extra_field
+            %hr
+            .col-md-4
+              = label_tag 'Entry Number', nil, class: "form-check-label"
+            .col-md-4
+              %input{:type => "text", :name => "import[entry_number]",
+                :class => "form-control entry_number",
+                :value => @import.entry_number}
+          / .form-group.custom-radio.custom-extra_field
+          /   .col-md-4
+          /     %label.control-label Entry Type
+          /   .col-md-6
+          /     %label.radio-inline
+          /       = f.radio_button :entry_type, "im4", :checked => (@import.entry_type == "im4" ? true : (@import.entry_type.nil?)), :class => "mt-15"
+          /       = label :entry_type, 'IM4', inline: true
+          /     %label.radio-inline
+          /       = f.radio_button :entry_type, "wt8", :checked => @import.entry_type == "wt8" , :class => "mt-15"
+          /       = label :entry_type, 'WT8', inline: true
+        .modal-footer
+          = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+          = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
+
+:coffeescript
+  $('#CustomStatusModal').on 'shown.bs.modal', (event) ->
+    if "#{@import.custom_entry_generated?}" == "true"
+      $(".custom-extra_field").show()
+    else
+      $(".custom-extra_field").hide()
+
+  $('#statusModal').on 'hide.bs.modal', (event) ->
+    $("#customs_table tr td.updateStatus .updateStatus").show()
+
+  $('.custom_checkbox').on 'change', (event) ->
+    checked = event.target.checked
+    if checked
+      $(".custom-extra_field").show()
+    else
+      $(".custom-extra_field").hide().val("")
+:css
+  .mt-15 {
+    position: unset !important
+  }

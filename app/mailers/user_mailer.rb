@@ -79,4 +79,21 @@ class UserMailer < ActionMailer::Base
     File.delete(attachment)
   end
 
+  def late_document_mail(import)
+    #this mail is triggered after saving the import and if import eta date is less than current date
+    #nd also if bl_received_date is greater than eta date
+    @import = import
+    mail(to: import.customer.emails.split(","), subject: 'Late Document Mail')
+  end
+
+  def late_bl_received_mail(import)
+    @import = import
+    mail(to: import.customer.emails.split(","), subject: 'Late BL Received Mail')
+  end
+
+  def rotation_number_mail(import)
+    @import = import
+    mail(to: @import.customer.emails.split(","), subject: 'Rotation Number Mail')
+  end  
+
 end

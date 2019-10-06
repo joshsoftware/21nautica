@@ -27,4 +27,25 @@ module ApplicationHelper
     end
   end
 
+  def shipping_date_divs(import)
+    shortForms = ["OBL", "C/R", "C/P", "DO", "P/L"]
+    date_divs = ""
+    [:bl_received_at, :charges_received_at, :charges_paid_at, :do_received_at].each_with_index do |date, index|
+      if import.send(date).present?
+        date_divs += "<div class='date obl'>#{shortForms[index]}: #{import.send(date).to_date.to_formatted_s}</div>"
+      end
+    end
+    date_divs
+  end
+
+  def custom_date_divs(import)
+    shortForms = ["RN", "EN", "ET"]
+    field_divs = ""
+    [:rotation_number, :entry_number, :entry_type].each_with_index do |field, index|
+      if import.send(field).present?
+        field_divs += "<div class='date obl'>#{shortForms[index]}: #{import.send(field).to_s.upcase}</div>"
+      end
+    end
+    field_divs
+  end
 end

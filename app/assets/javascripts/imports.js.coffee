@@ -37,105 +37,10 @@ datatable_initialize = ->
                     }).makeEditable(
                       sUpdateURL: 'imports/update',
                       aoColumns: [null, null, null,
-                                  {
-                                    type: 'select',
-                                    event: 'click',
-                                    data: JSON.stringify(@equipment),
-                                    onblur: 'submit'
-                                    sUpdateURL: (value, settings) ->
-                                      row = $(this).parents('tr')[0]
-                                      id = row.id
-                                      $.ajax(
-                                        url:"imports/update",
-                                        type: 'POST'
-                                        data: {id:id, columnName:"Equipment", value:value}
-                                        async: false
-                                      ).done((data) ->
-                                        value = data
-                                      )
-                                      return value
-                                    , placeholder:"Click to enter",
-                                    fnOnCellUpdated: (sStatus, sValue, settings) ->
-                                      $.post("imports/#{id}/retainStatus")
-                                  }, null,
-                                  {sUpdateURL: (value,settings)->
-                                    row = $(this).parents('tr')[0]
-                                    id = row.id
-                                    $.ajax(
-                                      url:"imports/update",
-                                      type: 'POST'
-                                      data: {id:id,columnName:"Work Order Number",value:value},
-                                      async: false)
-                                      .done((data) ->
-                                        if (data != value)
-                                          value = data
-                                      )
-                                    return value
-                                  , placeholder:"Click to enter",
-                                  fnOnCellUpdated: (sStatus, sValue, settings) ->
-                                    $.post("imports/#{id}/retainStatus")},
-                                  {sUpdateURL: (value,settings)->
-                                    row = $(this).parents('tr')[0]
-                                    id = row.id
-                                    $.ajax(
-                                      url:"imports/update",
-                                      type: 'POST'
-                                      data: {id:id,columnName:"Entry Number",value:value},
-                                      async: false)
-                                      .done((data) ->
-                                        if (data != value)
-                                          value = data
-                                      )
-                                    return value
-                                  , placeholder:"Click to enter",
-                                  fnOnCellUpdated: (sStatus, sValue, settings) ->
-                                    $.post("imports/#{id}/retainStatus")},
-                                    {
-                                    type: 'select',
-                                    event: 'click',
-                                    data: JSON.stringify(@clearing_agent),
-                                    onblur: 'submit'
-                                    sUpdateURL: (value, settings) ->
-                                      row = $(this).parents('tr')[0]
-                                      id = row.id
-                                      $.ajax(
-                                        url:"imports/update",
-                                        type: 'POST'
-                                        data: {id:id, columnName:"Clearing Agent", value:value}
-                                        async: false
-                                      ).done((data) ->
-                                        value = data
-                                      )
-                                      return value
-                                    , placeholder:"Click to enter",
-                                    fnOnCellUpdated: (sStatus, sValue, settings) ->
-                                      $.post("imports/#{id}/retainStatus")
-                                  },
-                                  {
-                                    type: 'datepicker2',
-                                    event: 'click',
-                                    submit: 'okay',
-                                    tooltip: "yyyy-mm-dd",
-                                    sUpdateURL: (value, settings) ->
-                                      row = $(this).parents('tr')[0]
-                                      id = row.id
-                                      $.ajax(
-                                        url:"imports/update",
-                                        type: 'POST'
-                                        data: {id:id, columnName:"Estimate Arrival", value:value}
-                                        async: false
-                                      ).done((data) ->
-                                        value = data
-                                      )
-                                      return value
-                                    , placeholder:"Click to enter",
-                                    fnOnCellUpdated: (sStatus, sValue, settings) ->
-                                      $.post("imports/#{id}/retainStatus")
-                                  },
-                                  null, null,null
-                                 ]
-            
-                                 )
+                                  null, null, null,
+                                  null, null, null,
+                                  null, null
+                                 ])
 
 $(document).ready datatable_initialize
 
