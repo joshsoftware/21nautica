@@ -357,17 +357,6 @@ ActiveRecord::Schema.define(version: 20190921191903) do
   add_index "petty_cashes", ["expense_head_id"], name: "index_petty_cashes_on_expense_head_id", using: :btree
   add_index "petty_cashes", ["truck_id"], name: "index_petty_cashes_on_truck_id", using: :btree
 
-  create_table "pettycashes", force: true do |t|
-    t.datetime "date"
-    t.text     "description"
-    t.string   "withdrwal"
-    t.string   "deposite"
-    t.string   "balance"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "expense_head_id"
-  end
-
   create_table "purchase_order_items", force: true do |t|
     t.integer  "truck_id"
     t.integer  "spare_part_id"

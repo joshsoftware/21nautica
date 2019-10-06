@@ -47,7 +47,7 @@
               %li= link_to 'Vendor Invoices', bills_path
               %li= link_to 'Payments Made', new_paid_path
               %li= link_to 'Customer Ledger', coming_soon_path
-              %li= link_to 'Manual Invoice(customer)', coming_soon_path
+              %li= link_to 'Manual Invoice(customer)', manual_invoices_path
               %li= link_to 'Petty Cash Mngt', petty_cashes_path
         - if user_signed_in? && current_user.is?('Admin')
           %li.dropdown
