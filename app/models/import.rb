@@ -31,6 +31,7 @@ class Import < ActiveRecord::Base
   belongs_to :c_agent, class_name: "Vendor", foreign_key: "clearing_agent_id"
   belongs_to :shipping_line, class_name: "Vendor"
   before_save :strip_container_number_bl_number
+  after_create :generate_invoice
 
   validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number
   validates_uniqueness_of :bl_number
@@ -108,5 +109,11 @@ class Import < ActiveRecord::Base
   end
 
   auditable only: [:status, :updated_at, :remarks]
+
+  def generate_invoice
+    invoice = bill_of_lading.invoices.build(date: Date.today, customer_id: customer_id)
+    invoice.save
+    invoice.invoice_ready!
+  end
 
 end

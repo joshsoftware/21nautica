@@ -135,9 +135,17 @@ class Invoice < ActiveRecord::Base
   end
 
   def as_json(options={})
-    super(methods: [:bl_or_container_number, :customer_name, :index_row_class,
+    super(methods: [:bl_or_container_number, :customer_name, :index_row_class, :format_document_number,
       :send_button_status, :total_containers, :update_button_status,
       :is_additional_invoice, :previous_invoice_number, :is_legacy_bl, :equipment_type, :formatted_date])
+  end
+
+  def format_document_number
+    if invoiceable.is_a? BillOfLading
+      invoiceable.import.try(:work_order_number) || document_number
+    else
+      document_number
+    end
   end
 
   def assign_additional_invoice_number
