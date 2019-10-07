@@ -39,14 +39,16 @@ class TransportMangerCashesController < ApplicationController
 
   def transport_manger_params
     params.require(:transport_manger_cash).permit(:id,
-                                                  :truck_id,
+                                                  :import_item_id,
+                                                  :transaction_type,
                                                   :transaction_amount)
   end
 
   def set_trucks
-    @trucks = ImportItem.where(status: 'truck_allocated')
-                        .includes(:truck)
-                        .map { |import_item| [import_item.truck.reg_number, import_item.truck.id] unless import_item.truck_id.nil? }.compact!
+    @trucks = ImportItem.includes(:truck)
+                        .where.not(truck_id: nil)
+                        .where(status: 'truck_allocated')
+                        .map { |import_item| [import_item.truck.reg_number, import_item.id] }
   end
 
   def set_transport_cash

@@ -1,12 +1,12 @@
 # Transport manger cash Model
 class TransportMangerCash < ActiveRecord::Base
-  before_create :update_sr_number, :update_import_item_id, :update_import_id, if: :truck_id?
+  validates :import_item_id, :transaction_amount, presence: true, if: -> { transaction_type.include?('Withdrawal') }
+  validate :cash_assigned?, if: :import_item_id?
+  before_save :update_sr_number, :update_truck_id, :update_import_id, if: -> { transaction_type.include?('Withdrawal') }
   belongs_to :created_by, class_name: 'User', foreign_key: 'created_by_id'
   belongs_to :import
   belongs_to :import_item
   belongs_to :truck
-  validates :truck_id, :transaction_amount, presence: true, if: :truck_id?
-  validate :cash_assigned?, if: :truck_id?
 
   def last_enrty_month
     TransportMangerCash.where('created_at >= ? ', Date.today.beginning_of_month)
@@ -17,12 +17,8 @@ class TransportMangerCash < ActiveRecord::Base
     self.sr_number = last_enrty_month + 1
   end
 
-  def import_item
-    ImportItem.find_by(truck_id: truck_id, status: 'truck_allocated')
-  end
-
-  def update_import_item_id
-    self.import_item_id = import_item.id
+  def update_truck_id
+    self.truck_id = import_item.truck.id
   end
 
   def update_import_id
@@ -34,8 +30,8 @@ class TransportMangerCash < ActiveRecord::Base
   end
 
   def cash_assigned?
-    if TransportMangerCash.find_by(truck_id: truck_id, transaction_date: nil)
-      errors.add(:truck_id, 'truck has already  cash')
+    if TransportMangerCash.find_by(truck_id: import_item.truck.id, transaction_date: nil)
+      errors.add(:import_item_id, 'truck has already  cash')
     end
   end
 end
