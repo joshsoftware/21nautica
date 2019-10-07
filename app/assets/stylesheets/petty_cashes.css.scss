@@ -8,24 +8,25 @@
 .green{
   color: green
 }
-form input[type='number']::-webkit-outer-spin-button,
-form input[type='number']::-webkit-inner-spin-button {
-   -webkit-appearance: none;
-   margin: 0;
-}
 
-label {
-  display: inline-block;
-  max-width: 100%;
-  margin: 10px;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-input[type="radio"]{
-  margin: 14px 0 0;
-  margin-top: 1px \9;
-  line-height: normal;
+.petty_cash{
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+     -webkit-appearance: none;
+     margin: 0;
+  }
+  label {
+    display: inline-block;
+    max-width: 100%;
+    margin: 10px;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  input[type="radio"]{
+    margin: 14px 0 0;
+    margin-top: 1px \9;
+    line-height: normal;
+  }
 }
 .petty_cash_td {
   white-space: nowrap;

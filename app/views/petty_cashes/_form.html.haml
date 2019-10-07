@@ -1,5 +1,5 @@
 .col-md-12
-= simple_form_for(@petty_cash, html: { id: 'add_new_petty_cash', class: 'form-horizontal'},defaults: {input_html: {class: 'form-control'}}) do |f|
+= simple_form_for(@petty_cash, html: { id: 'add_new_petty_cash', class: 'form-horizontal petty_cash'},defaults: {input_html: {class: 'form-control petty_cash'}}) do |f|
   .well
     .row
       .col-md-6
@@ -13,7 +13,7 @@
         =f.collection_radio_buttons :transaction_type, [['Expense', 'Withdrwal'] ,['Invert', 'Deposit']],:last, :first, checked: 'Withdrwal' 
     .row  
       .col-md-6
-        = f.input :transaction_amount, label: 'Amount', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Amount is required."}
+        = f.input :transaction_amount,label: 'Amount',input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Amount is required."}
       .col-md-6
         = f.input :description, label: 'Remark'
     .row
