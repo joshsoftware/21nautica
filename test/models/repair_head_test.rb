@@ -10,6 +10,5 @@ class RepairHeadTest < ActiveSupport::TestCase
     repair_head.name = 'stater'
     assert_not repair_head.save
     assert repair_head.errors.messages[:name].include?('Repair_Head with same name already exists')
-    byebug
   end
 end
