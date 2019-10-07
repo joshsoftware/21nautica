@@ -27,7 +27,7 @@ input[type="radio"]{
   margin-top: 1px \9;
   line-height: normal;
 }
-td {
+.petty_cash_td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; 
@@ -35,7 +35,7 @@ td {
   height: auto;
 }
 
-table{
+.petty_cash_table{
   table-layout:fixed; 
   max-width: 10%;
 }

@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 20191006075952) do
     t.string   "cheque_ocean"
     t.string   "payment_clearing"
     t.string   "cheque_clearing"
-    t.string   "remark"
+    t.string   "remarks"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "agency_fee"
@@ -241,7 +241,7 @@ ActiveRecord::Schema.define(version: 20191006075952) do
     t.integer  "invoiceable_id"
     t.string   "invoiceable_type"
     t.string   "legacy_bl"
-    t.text     "remark"
+    t.text     "remarks"
     t.boolean  "manual",              default: false
   end
 
@@ -304,7 +304,7 @@ ActiveRecord::Schema.define(version: 20191006075952) do
     t.date     "estimate_delivery"
     t.string   "movement_type"
     t.string   "custom_seal"
-    t.string   "remark"
+    t.string   "remarks"
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -343,7 +343,7 @@ ActiveRecord::Schema.define(version: 20191006075952) do
     t.integer  "amount"
     t.string   "mode_of_payment"
     t.string   "reference"
-    t.string   "remark"
+    t.string   "remarks"
     t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -402,19 +402,19 @@ ActiveRecord::Schema.define(version: 20191006075952) do
 
   add_index "purchase_orders", ["supplier_id"], name: "index_purchase_orders_on_supplier_id", using: :btree
 
-  create_table "repair_heads", force: true do |t|
-    t.string   "name"
-    t.boolean  "is_active",  default: true
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "remarks", force: true do |t|
     t.integer  "category"
     t.datetime "date"
     t.string   "remarkable_type"
     t.integer  "remarkable_id"
     t.string   "desc"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "repair_heads", force: true do |t|
+    t.string   "name"
+    t.boolean  "is_active",  default: true
     t.datetime "created_at"
     t.datetime "updated_at"
   end
