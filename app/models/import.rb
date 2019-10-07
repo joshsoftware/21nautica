@@ -33,7 +33,7 @@ class Import < ActiveRecord::Base
   belongs_to :shipping_line, class_name: "Vendor"
   before_save :strip_container_number_bl_number, :save_entry_type, :shipping_date_chronology
   after_save :late_document_mail, :rotation_number_mail
-  after_create :set_bl_received
+  after_create :set_bl_received, :generate_invoice
 
   validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number, :bl_received_type
   validates_presence_of :work_order_number, on: :create
@@ -184,4 +184,11 @@ class Import < ActiveRecord::Base
   end
 
   auditable only: [:status, :updated_at, :remark]
+
+  def generate_invoice
+    invoice = bill_of_lading.invoices.build(date: Date.today, customer_id: customer_id)
+    invoice.save
+    invoice.invoice_ready!
+  end
+
 end

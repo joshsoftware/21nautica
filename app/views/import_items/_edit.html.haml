@@ -15,7 +15,7 @@
         = f.input :status, collection: status, :input_html => {:class => 'select required form-control text-capitalize'}
         = f.input :remarks, as: :text, required: false
         - readonly = ['loaded_out_of_port', 'arrived_at_border', 'departed_from_border', 'arrived_at_destination'].include?(@import_item.status)
-        - if is_rfs_host?
+        - if is_rfs_host? || is_ug_host?
           = f.input :truck_id, collection: reallocate_truck_numbers, include_blank: true, label: 'Truck Number'
           = f.input :last_loading_date, as: :string, input_html: { class: "form-control", value: f.object.last_loading_date.try(:strftime, "%Y-%m-%d") }
 
