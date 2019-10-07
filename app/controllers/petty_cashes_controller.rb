@@ -1,5 +1,6 @@
 # Petty Cash Mangement Controller
 class PettyCashesController < ApplicationController
+  before_action :set_date, :set_expense_head, :set_trucks ,only: %i[new create]
   def index
     @petty_cashes = PettyCash.order(id: :desc)
                              .includes(:truck, :expense_head, :created_by)
@@ -8,8 +9,6 @@ class PettyCashesController < ApplicationController
 
   def new
     @petty_cash = PettyCash.new
-    @expense_heads = ExpenseHead.active.order(:name).map { |expense_head| [expense_head.name, expense_head.id, { 'data-is_related_to_truck' => expense_head.is_related_to_truck }] }
-    @trucks = Truck.order(:reg_number).pluck(:reg_number, :id).uniq {|truck| truck[0]}
   end
 
   def create
@@ -26,8 +25,21 @@ class PettyCashesController < ApplicationController
 
   def petty_cash_params
     params.require(:petty_cash).permit(
+      :date,
       :transaction_amount, :transaction_type,
       :description, :expense_head_id, :truck_id
     )
+  end
+  
+  def set_date
+    @date = PettyCash.last.try(:date) || Date.current  
+  end
+
+  def set_expense_head
+    @expense_heads = ExpenseHead.active.order(:name).map { |expense_head| [expense_head.name, expense_head.id, { 'data-is_related_to_truck' => expense_head.is_related_to_truck }] }
+  end
+
+  def set_trucks
+    @trucks = Truck.order(:reg_number).pluck(:reg_number, :id).uniq {|truck| truck[0]}
   end
 end

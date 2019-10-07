@@ -27,3 +27,15 @@ input[type="radio"]{
   margin-top: 1px \9;
   line-height: normal;
 }
+td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  width: 10%;
+  height: auto;
+}
+
+table{
+  table-layout:fixed; 
+  max-width: 10%;
+}

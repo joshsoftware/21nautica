@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191005115710) do
+ActiveRecord::Schema.define(version: 20191006075952) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -290,7 +290,10 @@ ActiveRecord::Schema.define(version: 20191005115710) do
     t.float    "salary"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "created_by_id"
   end
+
+  add_index "mechanics", ["created_by_id"], name: "index_mechanics_on_created_by_id", using: :btree
 
   create_table "movements", force: true do |t|
     t.string   "booking_number"
@@ -472,6 +475,20 @@ ActiveRecord::Schema.define(version: 20191005115710) do
 
   create_table "suppliers", force: true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "transport_manger_cashes", force: true do |t|
+    t.integer  "sr_number"
+    t.date     "transaction_date"
+    t.string   "transaction_type"
+    t.decimal  "transaction_amount", precision: 10, scale: 2
+    t.decimal  "available_balance",  precision: 10, scale: 2
+    t.integer  "import_id"
+    t.integer  "import_item_id"
+    t.integer  "truck_id"
+    t.integer  "created_by_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

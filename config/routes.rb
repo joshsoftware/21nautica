@@ -182,6 +182,7 @@ Rails.application.routes.draw do
   resources :expense_heads, except: :destroy
   resources :petty_cashes, except: [:destroy, :edit, :update]
   resources :remarks
+  resources :mechanics
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
