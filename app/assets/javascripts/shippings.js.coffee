@@ -57,7 +57,7 @@ datatable_initialize = ->
                                     , placeholder:"Click to enter",
                                     fnOnCellUpdated: (sStatus, sValue, settings) ->
                                       $.post("shippings/#{id}/retainStatus")
-                                  }, null, null, null,
+                                  }, null, null,
                                   {
                                     type: 'datepicker2',
                                     event: 'click',
