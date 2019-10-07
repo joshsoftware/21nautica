@@ -17,7 +17,7 @@ class UserMailerTest < ActionMailer::TestCase
     email = UserMailer.welcome_message_import(@import).deliver
     assert !ActionMailer::Base.deliveries.empty?
     assert_equal ['kaushik@21nautica.com'], email.from
-    assert_equal ["kaushik@21nautica.com", "docs-ug@21nautica.com", "ops-ug@21nautica.com", "ops@21nautica.com", "Sales-ug@21nautica.com", @customer.emails], email.to
+    assert_equal [@customer.emails, "kaushik@21nautica.com", "docs-ug@21nautica.com", "ops-ug@21nautica.com", "ops@21nautica.com", "Sales-ug@21nautica.com"], email.to
     assert_equal "Your new order", email.subject
   end
 
@@ -25,7 +25,6 @@ class UserMailerTest < ActionMailer::TestCase
     @import_item1.import = @import
     @import_item2.import = @import
     @import.customer = @customer
-    @import.remarks = "remark2"
     @import.save!
     @import_item1.save!
     @import_item2.save!
@@ -33,9 +32,9 @@ class UserMailerTest < ActionMailer::TestCase
     time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
     assert !ActionMailer::Base.deliveries.empty?
     assert_equal ['kaushik@21nautica.com'], email.from
-    assert_equal ["cust1@gmail.com", "accounts@21nautica.com", "kaushik@21nautica.com",
+    assert_equal ["accounts@21nautica.com", "kaushik@21nautica.com",
         "sachin@21nautica.com", "docs@21nautica.com", "docs-ug@21nautica.com", 
-        "ops-ug@21nautica.com", "chetan@21nautica.com", "ops@21nautica.com"], email.to
+        "ops-ug@21nautica.com", "chetan@21nautica.com", "ops@21nautica.com", "cust1@gmail.com"], email.to
     assert_equal "Customer Update #{@import.customer.name}", email.subject
   end
 
@@ -58,11 +57,19 @@ class UserMailerTest < ActionMailer::TestCase
   end
 
   test "late document mail" do
-    email = UserMailer.late_document_mail("kiranmahale@joshsoftware.com").deliver
+    email = UserMailer.late_document_mail(@import).deliver
     assert !ActionMailer::Base.deliveries.empty?
     assert_equal ['kaushik@21nautica.com'], email.from
-    assert_equal ["kiranmahale@joshsoftware.com"], email.to
+    assert_equal @import.customer.emails.split(","), email.to
     assert_equal "Late Document Mail", email.subject    
+  end
+
+  test "rotation number email" do
+    @import.rotation_number = "1234"
+    @import.save
+    email = UserMailer.rotation_number_mail(@import).deliver()
+    assert_equal ['kaushik@21nautica.com'], email.from
+    assert_equal "Rotation Number Mail", email.subject
   end
 
 end

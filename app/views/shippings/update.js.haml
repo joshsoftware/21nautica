@@ -1,0 +1,10 @@
+$('#ShippingStatusModal .alert').remove();
+- if @import.errors.present?
+  -@import.errors[:base].each do |msg|
+    $('#ShippingStatusModal .modal-body').append("<div class='alert alert-danger'>#{msg}</div>");
+
+- else
+  $("#ShippingStatusModal").modal('hide')
+  -if @import.shipping_checked?
+    $("#shippings_table tr##{@import.id}").remove()
+  $.post("shippings/#{@import.id}/retainStatus")

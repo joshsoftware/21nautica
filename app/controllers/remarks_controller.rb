@@ -4,17 +4,17 @@ class RemarksController < ApplicationController
   before_action :set_model_instance
 
   def create
-    @model_instance && @model_instance.remarks.create(desc: remarks_params[:desc], date: format_datetime, category: (remarks_params[:category] || "internal"))
+    @model_instance && @model_instance.remarks.create(desc: remarks_params[:desc], category: (remarks_params[:category] || "internal"))
   end
 
   def index
-    render json: {remarks: @model_instance.remarks.order(date: :desc)}
+    render json: {remarks: @model_instance.remarks.order(created_at: :desc)}
   end
 
   private
 
   def remarks_params
-    params.require(:remark).permit(:desc, :date, :import_id, :category, :model_id, :model_type)
+    params.require(:remark).permit(:desc, :import_id, :category, :model_id, :model_type, :table)
   end
 
   def set_model_instance
@@ -25,9 +25,5 @@ class RemarksController < ApplicationController
     when "import_item"
       @model_instance = ImportItem.find_by(id: remarks_params[:model_id])
     end
-  end
-
-  def format_datetime
-    Time.zone.parse(remarks_params[:date] || Time.zone.now.to_s) + Time.zone.now.seconds_since_midnight.seconds
   end
 end
