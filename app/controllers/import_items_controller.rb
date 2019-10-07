@@ -2,7 +2,7 @@ class ImportItemsController < ApplicationController
 
   def index
     param = params[:destination_item] if params[:destination_item].present?
-    imports = Import.includes(:import_item).where(status: "ready_to_load").where(to: param || 'Kampala').select("id")
+    imports = Import.where("imports.status='ready_to_load' OR (imports.bl_received_at IS NOT NULL AND imports.entry_number IS NOT NULL AND imports.entry_type IS NOT NULL)").where(to: param || 'Kampala').select("id")
     @import_items = ImportItem.where(import_id: imports).where.not(status: "delivered")
     @transporters = Vendor.transporters.pluck(:name).inject({}) {|h, x| h[x] = x; h}
   end

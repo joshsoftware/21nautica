@@ -54,7 +54,7 @@ class ShippingsController < ApplicationController
   def check_late_bl_received
     @import.reload
     if params[:import][:late_submission] == "true" && @import.bl_received_at && @import.estimate_arrival && @import.bl_received_at > @import.estimate_arrival
-      # UserMailer.late_bl_received_mail(@import).deliver()
+      UserMailer.late_bl_received_mail(@import).deliver()
     end
   end
 end
