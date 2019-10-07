@@ -31,9 +31,10 @@ class Import < ActiveRecord::Base
   belongs_to :bill_of_lading
   belongs_to :c_agent, class_name: "Vendor", foreign_key: "clearing_agent_id"
   belongs_to :shipping_line, class_name: "Vendor"
-  before_save :strip_container_number_bl_number, :save_entry_type, :shipping_date_chronology
+  before_save :strip_container_number_bl_number, :save_entry_type, :shipping_date_chronology, :change_status
   after_save :late_document_mail, :rotation_number_mail
   after_create :set_bl_received
+  before_create :set_new_import_flag
 
   validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number, :bl_received_type
   validates_presence_of :work_order_number, on: :create
@@ -44,21 +45,33 @@ class Import < ActiveRecord::Base
 
   enum entry_type: ["wt8", "im4"]
   enum bl_received_type: ["copy", "original_telex"]
-  scope :ready_to_load, -> {where(status: 'ready_to_load')}
-  scope :not_ready_to_load, -> {where.not(status: 'ready_to_load')}
-  scope :shipping_dates_not_present, -> {where("bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR gf_return_date IS NULL")}
-  scope :custom_entry_not_generated, -> {where("entry_number IS NULL OR entry_type IS NULL")}
-  scope :custom_shipping_dates_not_present, -> {where("entry_number IS NULL OR entry_type IS NULL OR bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR gf_return_date IS NULL")}
 
-  #following code will be needed when we add new_order_flag to import table
-  # scope :shipping_dates_not_present, -> {where("CASE WHEN is_new_order = TRUE THEN (bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL) ELSE TRUE END")}
-  # scope :shipping_dates_present, -> {where.not("CASE WHEN is_new_order = TRUE THEN (bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL) ELSE TRUE END")}
-  # scope :custom_entry_not_generated, -> {where("CASE WHEN is_new_order = TRUE THEN (entry_number IS NULL OR entry_type IS NULL) ELSE TRUE END")}
-  # scope :custom_entry_generated, -> {where("CASE WHEN is_new_order = TRUE THEN (entry_number IS NOT NULL AND entry_type IS NOT NULL) ELSE TRUE END")}
+  # scope :ready_to_load, -> {where(status: 'ready_to_load')}
+  # scope :not_ready_to_load, -> {where.not(status: 'ready_to_load')}
+
+  scope :ready_to_load,  -> {where("CASE WHEN new_import = TRUE THEN (bl_received_at IS NOT NULL AND entry_number IS NOT NULL AND entry_type IS NOT NULL ) ELSE status = 'ready_to_load' END")}
+  scope :not_ready_to_load,  -> {where("CASE WHEN new_import = TRUE THEN (bl_received_at IS NULL OR entry_number IS NULL OR entry_type IS NULL ) ELSE status != 'ready_to_load' END")}
+
+  # scope :shipping_dates_not_present, -> {where("bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR gf_return_date IS NULL")}
+  # scope :custom_entry_not_generated, -> {where("entry_number IS NULL OR entry_type IS NULL")}
+  # scope :custom_shipping_dates_not_present, -> {where("entry_number IS NULL OR entry_type IS NULL OR bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR gf_return_date IS NULL")}
+
+  #following code will be needed when we add new_import_flag to import table
+  scope :shipping_dates_not_present, -> {where("CASE WHEN new_import = TRUE THEN (bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL) ELSE status != 'ready_to_load' END")}
+  # scope :shipping_dates_present, -> {where.not("CASE WHEN new_import = TRUE THEN (bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL) ELSE TRUE END")}
+  scope :custom_entry_not_generated, -> {where("CASE WHEN new_import = TRUE THEN (entry_number IS NULL OR entry_type IS NULL) ELSE status != 'ready_to_load' END")}
+  # scope :custom_entry_generated, -> {where("CASE WHEN new_import = TRUE THEN (entry_number IS NOT NULL AND entry_type IS NOT NULL) ELSE TRUE END")}
 
   # Hack: I have intentionally not used delegate here, because,
   # in case of duplicate, the bl_number will be delegated to a non-existent BillOfLading in
   # the `render :new` call. :allow_nil would not work, as we actually lose the bl_number then!
+
+  def set_new_import_flag
+    #This flag is used after splitting the port operation table into custom and shipping line. Few fields and 
+    # conditions were added so we need to differentiate the new and old imports.
+    self.new_import = true
+  end
+
   def presence_of_date#going to use for date chronology
     ["bl_received_at", "charges_received_at", "charges_paid_at", "do_received_at"].each do |date|
       if self.send("#{date}_changed?".to_sym) && !self.send(date.to_sym).present?
@@ -155,7 +168,7 @@ class Import < ActiveRecord::Base
 
   def rotation_number_mail
     if rotation_number_changed? && rotation_number.present?
-      UserMailer.rotation_number_mail(self).deliver()
+      # UserMailer.rotation_number_mail(self).deliver()
     end
   end
 
@@ -180,6 +193,12 @@ class Import < ActiveRecord::Base
       elsif !charges_paid_at.present?
         self.do_received_at = nil
       end
+    end
+  end
+
+  def change_status
+    if bl_received_at_changed? && bl_received_at.present? && custom_entry_generated?
+      self.status = "ready_to_load"
     end
   end
 

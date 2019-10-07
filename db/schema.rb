@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191005115710) do
+ActiveRecord::Schema.define(version: 20191007055127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -222,6 +222,7 @@ ActiveRecord::Schema.define(version: 20191005115710) do
     t.boolean  "is_late_submission"
     t.string   "rotation_number"
     t.integer  "entry_type"
+    t.boolean  "new_import",                 default: false
   end
 
   add_index "imports", ["bill_of_lading_id"], name: "index_imports_on_bill_of_lading_id", using: :btree
@@ -369,17 +370,6 @@ ActiveRecord::Schema.define(version: 20191005115710) do
   add_index "petty_cashes", ["expense_head_id"], name: "index_petty_cashes_on_expense_head_id", using: :btree
   add_index "petty_cashes", ["truck_id"], name: "index_petty_cashes_on_truck_id", using: :btree
 
-  create_table "pettycashes", force: true do |t|
-    t.datetime "date"
-    t.text     "description"
-    t.string   "withdrwal"
-    t.string   "deposite"
-    t.string   "balance"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "expense_head_id"
-  end
-
   create_table "purchase_order_items", force: true do |t|
     t.integer  "truck_id"
     t.integer  "spare_part_id"
@@ -416,8 +406,10 @@ ActiveRecord::Schema.define(version: 20191005115710) do
     t.string   "remarkable_type"
     t.integer  "remarkable_id"
     t.string   "desc"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
-  
+
   create_table "repair_heads", force: true do |t|
     t.string   "name"
     t.boolean  "is_active",  default: true

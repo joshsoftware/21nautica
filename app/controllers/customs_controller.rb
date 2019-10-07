@@ -4,7 +4,7 @@ class CustomsController < ApplicationController
   before_action :set_import, except: [:index, :update_column]
   def index
     destination = params[:destination] || 'Kampala'
-    @imports = Import.not_ready_to_load.custom_entry_not_generated.where(to: destination)
+    @imports = Import.custom_entry_not_generated.where(to: destination)
     @equipment = EQUIPMENT_TYPE.inject({}) { |h, x| h[x] = x; h }
   end
 
