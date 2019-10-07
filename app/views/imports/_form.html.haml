@@ -11,8 +11,10 @@
 
       = f.input :to, collection: [], input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
       = f.input :shipper
+      = f.input :consignee_name
 
-      = f.input :shipping_line_id, collection: get_shipping_line_vendors, as: :select, label: 'Shipping line', include_blank: false
+      %div{data: {for: 'customerSelect'}}
+        = render '/shared/shipping_line', shippers: get_shipping_line_vendors, model: 'import'
 
       = f.input :estimate_arrival, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}}
 
@@ -23,6 +25,21 @@
       = f.input :description, label: 'Description', label: "#{@import.description}"
       = f.input :rate_agreed, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
       = f.input :weight, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+      = f.input :work_order_number, label: "File Ref Number", input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+      .form-group.custom-radio
+        .col-md-3
+          %label.control-label BL- Received Type
+        .col-md-6
+          %label.radio-inline
+            = f.radio_button :bl_received_type, "copy", :checked => (@import.new_record?), :class => "mt4"
+            = label :bl_received_type, 'Copy', inline: true
+          %label.radio-inline
+            = f.radio_button :bl_received_type, "original_telex", :class => "mt4"
+            = label :bl_received_type, 'Original/Telex'
+
+
+
+
       .form-group
         .col-sm-offset-2.col-sm-2
           = f.submit 'Save', class: 'btn-primary', "data-disable-with" => "saving...."
@@ -84,4 +101,9 @@
     return
 
   return
+
+:javascript
+  $(document).ready(function(){
+    $("[data-for='multiselect']").select2();
+  })
 

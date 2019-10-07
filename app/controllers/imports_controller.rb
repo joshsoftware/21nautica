@@ -1,12 +1,11 @@
+# frozen_string_literal: true
+ 
 class ImportsController < ApplicationController
-
   def index
-    param =  params[:destination] if params[:destination].present?
-    @imports = Import.where.not(status: "ready_to_load").where(to: param || 'Kampala')
-    cust_array = Customer.all.select(:id , :name).to_a
-    @customers = cust_array.inject({}) {|h,x| h[x.id] = x.name; h}
-    @equipment = EQUIPMENT_TYPE.inject({}) {|h, x| h[x] = x; h}
-    @clearing_agent = Vendor.clearing_agents.order(:name).pluck(:name).inject({}) {|h, x| h[x] = x; h}
+    destination = params[:destination] || 'Kampala'
+    @imports = Import.not_ready_to_load.custom_shipping_dates_not_present.where(to: destination)
+    @equipment = EQUIPMENT_TYPE.inject({}) { |h, x| h[x] = x; h }
+    @clearing_agent = Vendor.clearing_agents.order(:name).pluck(:name).inject({}) { |h, x| h[x] = x; h}
   end
 
   def new
@@ -65,28 +64,24 @@ class ImportsController < ApplicationController
     end
   end
 
-  def updateStatus
-    @import = Import.find(params[:id])
-    @import.remarks = import_params[:remarks]
-    status = import_params[:status].downcase.gsub(' ', '_')
-    if status != @import.status 
-      begin
-        @import.send("#{status}!".to_sym)
-      rescue
-        @import.errors[:work_order_number] = "first enter work order number or entry number"
-        @errors = @import.errors.messages.values.flatten
-      end
-    else
-      @import.save
-    end
-  end
+  # def updateStatus not using right now
+  #   @import = Import.find(params[:id])
+  #   status = import_params[:status].downcase.gsub(' ', '_')
+  #   @import.remarks.create(desc: import_params[:remarks], date: Date.today, category: "external") unless import_params[:remarks].blank?
+  #   if status != @import.status
+  #     begin
+  #       @import.send("#{status}!".to_sym)
+  #     rescue
+  #       @import.errors[:work_order_number] = "first enter file ref number or entry number"
+  #       @errors = @import.errors.messages.values.flatten
+  #     end
+  #   else
+  #     @import.save
+  #   end
+  # end
 
   def retainStatus
     @import = Import.find(params[:id])
-  end
-
-
-  def history
   end
 
   private
@@ -94,14 +89,14 @@ class ImportsController < ApplicationController
   def import_params
     params.require(:import).permit(:equipment, :quantity, :from, :to, :shipper,
                                    :bl_number, :estimate_arrival, :description,
-                                   :customer_id, :rate_agreed, :weight, 
-                                   :work_order_number,:remarks,:status, :shipping_line_id, 
-                                   import_items_attributes:[:container_number])
+                                   :customer_id, :rate_agreed, :weight,
+                                   :work_order_number, :remarks, :status,
+                                   :shipping_line_id,
+                                   :bl_received_type, :consignee_name,
+                                   import_items_attributes: [:container_number])
   end
-
 
   def import_update_params
     params.permit(:id, :columnName, :value, :clearing_agent, :estimate_arrival)
   end
 end
-

@@ -1,6 +1,6 @@
 FactoryGirl.define do
 	factory :bill, class: 'Bill' do
-	  sequence(:bill_number) {|n| "bill-#{n}" }	
+	  sequence(:bill_number) {|n| "bill-#{n}#{Time.now.to_i}" }	
     bill_date '2015-08-26' 
     value 1000
     remark 'test'

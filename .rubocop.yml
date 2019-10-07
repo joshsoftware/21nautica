@@ -1,0 +1,155 @@
+# require: rubocop-rails
+
+Metrics/LineLength:
+  Max: 250
+
+Metrics/MethodLength:
+  Max: 20
+  Exclude:
+    - "config/**/*.rb"
+    - "db/migrate/*.rb"
+
+Metrics/ClassLength:
+  Max: 1000
+
+Metrics/ModuleLength:
+  Exclude:
+    - "**/*_spec.rb"
+    - "config/**/*.rb"
+Metrics/BlockLength:
+  Exclude:
+    - "**/*_test.rb"
+    - "**/*.rake"
+    - "**/*_spec.rb"
+    - "config/**/*.rb"
+    - "db/migrate/*.rb"
+    - "db/schema.rb"
+    - "spec/factories/**/*.rb"
+
+Layout/SpaceAroundEqualsInParameterDefault:
+  Exclude:
+    - "config/**/*.rb"
+    - "db/migrate/*.rb"
+
+  EnforcedStyle: no_space
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/SymbolArray:
+  Enabled: true
+
+Layout/AlignHash:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+
+Style/HashSyntax:
+  EnforcedStyle: ruby19_no_mixed_keys
+
+Style/FormatString:
+  EnforcedStyle: percent
+
+Style/CollectionMethods:
+  Enabled: true
+  PreferredMethods:
+    reduce: "inject"
+
+
+Style/ParenthesesAroundCondition:
+  AllowSafeAssignment: false
+
+Lint/AssignmentInCondition:
+  AllowSafeAssignment: true
+
+Style/RaiseArgs:
+  Enabled: false
+
+Layout/MultilineOperationIndentation:
+  Enabled: false
+
+Style/SignalException:
+  EnforcedStyle: only_raise
+
+Lint/HandleExceptions:
+  Enabled: false
+
+Layout/SpaceInsideBlockBraces:
+  SpaceBeforeBlockParameters: false
+
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: no_space
+
+Style/BlockDelimiters:
+  Enabled: false
+
+Style/MethodCalledOnDoEndBlock:
+  Enabled: true
+
+Style/SingleLineBlockParams:
+  Enabled: false
+
+Lint/ShadowingOuterLocalVariable:
+  Enabled: true
+
+# Check with yard instead.
+Style/Documentation:
+  Enabled: false
+
+Naming/BinaryOperatorParameterName:
+  Enabled: false
+
+Lint/Debugger:
+  Enabled: true
+
+Style/MethodDefParentheses:
+  Enabled: false
+
+Style/DoubleNegation:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Max: 11
+  Severity: warning
+
+Metrics/PerceivedComplexity:
+  Max: 11
+  Severity: warning
+
+Metrics/AbcSize:
+  Max: 36
+  Severity: warning
+  Exclude:
+    - "config/**/*.rb"
+    - "db/migrate/*.rb"
+
+Style/RegexpLiteral:
+  EnforcedStyle: "slashes"
+
+Layout/IndentationConsistency:
+  Severity: error
+
+Rails:
+  Enabled: true
+
+Rails/Blank:
+  Exclude:
+    - "bin/*"
+
+Rails/SkipsModelValidations:
+  Exclude:
+    - "db/migrate/*"
+
+AllCops:
+  TargetRubyVersion: 2.5.1
+  Exclude:
+    - "tmp/**/*"
+    - ".bundle/**/*"
+    - "vendor/**/*"
+    - "log/**/*"
+    - "node_modules/**/*"
+    - "db/schema.rb"
+    - "lib/schemas/**/*"
+    - "config/deploy.rb"
+    - "bin/setup"
+    - "bin/update"
+    - "app/admin/*.rb"

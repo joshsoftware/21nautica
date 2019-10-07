@@ -1,0 +1,29 @@
+// Place all the styles related to the Remarks controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.right-vertical-dash {
+  border-right: dashed 1px;
+}
+
+.left-vertical-dash {
+  border-left: dashed 1px;
+}
+
+#all_remarks {
+  border-bottom: #0c0c0c solid 1px;
+  overflow-x: scroll;
+  max-height: 300px;
+  margin-left: 2%;
+}
+
+.bold {
+  font-weight:bold;
+}
+
+.-ml2 {
+  margin-left: -2%;
+}
+
+.-ml9 {
+  margin-left: -8%;
+}
