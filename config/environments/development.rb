@@ -41,15 +41,14 @@ Net::SMTP.enable_tls(OpenSSL::SSL::VERIFY_NONE)
   #Defined SMTP options
   #SMTP
   config.action_mailer.default_url_options = { :host => 'localhost:3000'}
-  config.action_mailer.delivery_method = :sparkpost
+  # config.action_mailer.delivery_method = :sparpost
   config.action_mailer.smtp_settings = {
-    :address              => 'smtp.sparkpostmail.com',
+    :address              => 'smtp.sendgrid.net',
     :port                 => 587,
-    :domain               => '21nautica.com', #you can also use google.com
-    :authentication       => 'AUTH LOGIN',
-    :user_name            =>  ENV["SPARKPOST_USERNAME"],
-    :password             =>  ENV["SPARKPOST_API_KEY"],
-    :encryption           => 'STARTTLS',
+    :authentication => :plain,
+    :domain               => ENV['DOMAIN'], #you can also use google.com
+    :user_name            =>  ENV["SENDGRID_USERNAME"],
+    :password             =>  ENV["SENDGRID_PASSWORD"],
     :enable_starttls_auto => true
   }
 end
