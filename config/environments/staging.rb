@@ -82,15 +82,25 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
    #Defined SMTP options
    #SMTP
-  config.action_mailer.delivery_method = :sparkpost
+  config.action_mailer.default_url_options = { host: ENV['HOST'] }
+
+  # ActionMailer::Base.smtp_settings = {
+  #   :address        => 'smtp.sparkpostmail.com',
+  #   :port           => '587',
+  #   :encryption     => 'STARTTLS',
+  #   :authentication => :plain,
+  #   :user_name      => ENV['SENDGRID_USERNAME'],
+  #   :password       => ENV['SENDGRID_PASSWORD'],
+  #   :domain         => ENV['DOMAIN'],
+  #   :enable_starttls_auto => true
+  # }
   ActionMailer::Base.smtp_settings = {
-    :address        => 'smtp.sparkpostmail.com',
+    :address        => 'smtp.sendgrid.net',
     :port           => '587',
-    :authentication => 'AUTH LOGIN',
-    :user_name      =>  ENV["SPARKPOST_USERNAME"],
-    :password       =>  ENV["SPARKPOST_API_KEY"],
-    :domain         => '21nautica.com',
-    :encryption     => 'STARTTLS',
+    :authentication => :plain,
+    :user_name      => ENV['SENDGRID_USERNAME'],
+    :password       => ENV['SENDGRID_PASSWORD'],
+    :domain         => ENV['DOMAIN'],
     :enable_starttls_auto => true
-  }
+  }  
 end

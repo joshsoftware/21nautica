@@ -1,0 +1,17 @@
+= link_to "Add Mechanic", new_mechanic_path, class: 'btn btn-primary pull-right'
+%br
+%br
+
+%table#mechanic_table.table
+  %thead
+    %th Name
+    %th Created By
+    %th Actions
+    
+  %tbody
+    - @mechanics.each do |mechanic|
+      %tr
+        %td= mechanic.name
+        %td= mechanic.created_by.name if mechanic.created_by_id?
+        %td= link_to 'Edit',edit_mechanic_path(mechanic), class: 'btn btn-primary' 
+= will_paginate @mechanics

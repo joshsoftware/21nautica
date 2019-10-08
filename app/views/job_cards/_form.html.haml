@@ -3,7 +3,7 @@
   .well
     .row
       .col-md-3
-        = f.input :number , lable: 'Job card number',input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Job card Number is required."}
+        = f.input :number , label: 'Number',input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Job card Number is required."}
       .col-md-6
         = f.input :truck_id, label: 'Truck Number', as: :select, collection: @trucks, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Truck Number is required.", class:'truck_number'}        
       .col-md-3

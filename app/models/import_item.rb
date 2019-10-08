@@ -20,6 +20,8 @@ class ImportItem < ActiveRecord::Base
   include AASM
   include EspinitaPatch
   include MovementsHelper
+  include Remarkable
+
   has_many :transport_manger_cashes
   belongs_to :import
   belongs_to :transporter, class_name: "Vendor", foreign_key: "vendor_id"
@@ -36,7 +38,7 @@ class ImportItem < ActiveRecord::Base
 
   accepts_nested_attributes_for :import_expenses
 
-  before_save :add_default_date_for_remarks
+  # before_save :add_default_date_for_remarks
   after_save :assign_current_import_item, if: :truck_id_changed?
   after_save :update_last_loading_date, if: :last_loading_date_changed?
   after_update :update_truck_status
@@ -92,7 +94,7 @@ class ImportItem < ActiveRecord::Base
     end
   end
 
-  auditable only: [:status, :updated_at, :current_location, :remarks]
+  auditable only: [:status, :updated_at, :current_location]
 
   def is_truck_number_assigned?
     return true if ENV['HOSTNAME'] != 'RFS'

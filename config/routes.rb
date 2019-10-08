@@ -80,8 +80,30 @@ Rails.application.routes.draw do
   #post 'customers/create_new_customer' => 'customers#create_new_customer', as: :create_new_customer
   resources :imports, only: [:new ,:create ,:index] do
     member do
-      post 'updateStatus'
+      # post 'updateStatus'
       post 'retainStatus'
+    end
+  end
+
+  resources :shippings, only: [:index] do
+    member do
+      post 'update'
+      post 'retainStatus'
+      post 'late_document_mail'
+      get 'fetch_shipping_modal'
+      post 'update_column'
+      # post 'updateStatus'
+    end
+  end
+
+  resources :customs, only: [:index] do
+    member do
+      post 'update'
+      post 'retainStatus'
+      post 'update_column'
+      post 'late_document_mail'
+      get 'fetch_custom_modal'
+      # post 'updateStatus'
     end
   end
   resources :import_items,only: [:new,:create,:index, :edit] do
@@ -160,6 +182,8 @@ Rails.application.routes.draw do
   resources :expense_heads, except: :destroy
   resources :petty_cashes, except: [:destroy, :edit, :update]
   resources :transport_manger_cashes
+  resources :remarks
+  resources :mechanics
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

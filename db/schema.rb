@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191001090426) do
+ActiveRecord::Schema.define(version: 20191006075952) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 20191001090426) do
     t.string   "cheque_ocean"
     t.string   "payment_clearing"
     t.string   "cheque_clearing"
-    t.string   "remarks"
+    t.string   "remark"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "agency_fee"
@@ -168,7 +168,7 @@ ActiveRecord::Schema.define(version: 20191001090426) do
     t.integer  "import_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "remarks"
+    t.string   "remark"
     t.string   "yard_name"
     t.datetime "g_f_expiry"
     t.datetime "close_date"
@@ -200,7 +200,7 @@ ActiveRecord::Schema.define(version: 20191001090426) do
     t.datetime "updated_at"
     t.string   "shipping_line_name"
     t.string   "work_order_number"
-    t.string   "remarks"
+    t.string   "remark"
     t.string   "clearing_agent"
     t.string   "bill_of_lading_id"
     t.string   "rate_agreed"
@@ -210,6 +210,18 @@ ActiveRecord::Schema.define(version: 20191001090426) do
     t.boolean  "is_all_container_delivered", default: false
     t.string   "entry_number"
     t.string   "shipper"
+    t.integer  "bl_received_type"
+    t.string   "consignee_name"
+    t.date     "bl_received_at"
+    t.date     "charges_received_at"
+    t.date     "charges_paid_at"
+    t.date     "do_received_at"
+    t.date     "pl_received_at"
+    t.date     "gf_return_date"
+    t.string   "return_location"
+    t.boolean  "is_late_submission"
+    t.string   "rotation_number"
+    t.integer  "entry_type"
   end
 
   add_index "imports", ["bill_of_lading_id"], name: "index_imports_on_bill_of_lading_id", using: :btree
@@ -229,7 +241,7 @@ ActiveRecord::Schema.define(version: 20191001090426) do
     t.integer  "invoiceable_id"
     t.string   "invoiceable_type"
     t.string   "legacy_bl"
-    t.text     "remarks"
+    t.text     "remark"
     t.boolean  "manual",              default: false
   end
 
@@ -278,7 +290,10 @@ ActiveRecord::Schema.define(version: 20191001090426) do
     t.float    "salary"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "created_by_id"
   end
+
+  add_index "mechanics", ["created_by_id"], name: "index_mechanics_on_created_by_id", using: :btree
 
   create_table "movements", force: true do |t|
     t.string   "booking_number"
@@ -289,7 +304,7 @@ ActiveRecord::Schema.define(version: 20191001090426) do
     t.date     "estimate_delivery"
     t.string   "movement_type"
     t.string   "custom_seal"
-    t.string   "remarks"
+    t.string   "remark"
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -328,7 +343,7 @@ ActiveRecord::Schema.define(version: 20191001090426) do
     t.integer  "amount"
     t.string   "mode_of_payment"
     t.string   "reference"
-    t.string   "remarks"
+    t.string   "remark"
     t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -390,6 +405,16 @@ ActiveRecord::Schema.define(version: 20191001090426) do
   create_table "repair_heads", force: true do |t|
     t.string   "name"
     t.boolean  "is_active",  default: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "remarks", force: true do |t|
+    t.integer  "category"
+    t.datetime "date"
+    t.string   "remarkable_type"
+    t.integer  "remarkable_id"
+    t.string   "desc"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

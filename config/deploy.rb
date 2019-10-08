@@ -15,21 +15,21 @@ puts server
 
 if server == 'ug'
   path = '/www/ug-21nautica' 
-  set :branch, 'ug'
+  set :branch, 'ug_production'
 elsif server == 'erp'
   path = '/www/erp-21nautica' 
-  set :branch, 'production'
+  set :branch, 'erp'
 elsif server == 'int'
   path = '/www/int-21nautica'
+  set :branch, 'int_production'
+elsif server == 'rfs'
+  path = '/www/rfs-21nautica'
   set :branch, 'production'
-elsif server == 'staging'
+else
   path = '/www/staging'
   set :rails_env, 'staging'
   branch = ENV['branch'] || 'staging'
-  set :branch, branch
-else
-  path = '/www/rfs-21nautica'
-  set :branch, 'production'
+  set :branch, branch  
 end
 
 set :domain, '54.89.118.119' 
