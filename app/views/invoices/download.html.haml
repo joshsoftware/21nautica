@@ -31,7 +31,7 @@
             %br/
             #{@invoice.equipment_type} X #{@invoice.total_containers}
             %br/
-            Job Number: #{@invoice.document_number}
+            Job Number: #{@invoice.formatted_document_number}
           %td{colspan: "2", valign: "top"}
             Inv Number: #{@invoice.number}
             - if @invoice.is_additional_invoice
