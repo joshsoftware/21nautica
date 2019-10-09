@@ -205,6 +205,7 @@ class Import < ActiveRecord::Base
   auditable only: [:status, :updated_at, :remark]
 
   def generate_invoice
+    return if ENV['HOSTNAME'] != 'ERP'
     invoice = bill_of_lading.invoices.build(date: Date.today, customer_id: customer_id)
     invoice.save
     invoice.invoice_ready!
