@@ -41,4 +41,3 @@ CHARGES_CLASSIFICATION = {'container' =>["Haulage","Empty Return","Truck Detenti
                                'Port Charges', 'Port Storage', 'Others/Misc']
                         }
 #ITEM_FOR = { transporter: ['container'] , icd: ['container'] , shipping_line: ['bl'], clearing_agent: ['bl']}
-TRIP_ALLOWENCE_ID = ExpenseHead.find_by(name:'Trip Allowence').id

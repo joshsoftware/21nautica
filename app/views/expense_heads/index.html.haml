@@ -6,14 +6,13 @@
   %thead
     %th Name 
     %th Is Related To Truck
-    %th Is_active
-    
+    %th Is_active    
   %tbody
     - @expense_heads.each do |expense_head|
       %tr
         %td= expense_head.name 
         %td= expense_head.is_related_to_truck ? "Yes": "No"
         %td= expense_head.is_active ? "Yes": "No"
-        %td= link_to 'Edit', edit_expense_head_path(expense_head), class: 'btn btn-primary'
+        %td= link_to 'Edit', edit_expense_head_path(expense_head), class: 'btn btn-primary' if expense_head.name.exclude?('Trip Allowance')
 
 = will_paginate @expense_heads
