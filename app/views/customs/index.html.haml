@@ -6,17 +6,18 @@
 %table.table{id: 'customs_table'}
   %thead
     - if is_rfs_host?
-      %th.shrink-name Customer / Shipper / Consignee Name / Shipping Line
+      %th.shrink-name-custom Customer / Shipper / Consignee Name
     - else
-      %th.shrink-name Customer Name / Shipping Line
+      %th.shrink-name-custom Customer Name
     %th.bl-width BL Number
+    %th.shipping-line-custom Shipping Line
     %th Eq
     %th Weight
     %th Ref
     %th ETA
     %th Qty
     %th.bl-width Custom Status
-    %th Remarks
+    %th.shrink-name-custom Remarks
   %tbody
     - @imports.each do |import|
       %tr{id: import.id }
@@ -25,6 +26,7 @@
         - else
           %td= "#{import.customer.name}" + " / " + "#{import.shipping_line.try(:name)}"
         %td= import.bl_number
+        %td= import.shipping_line.try(:name)
         %td= import.equipment
         %td= (import.weight.to_f/import.quantity).round(2)
         %td= import.work_order_number
