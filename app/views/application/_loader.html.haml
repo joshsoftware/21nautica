@@ -1,0 +1,30 @@
+.loader_div{id: "loader_div"}
+  = image_tag("loader.gif", class: "loader_img", id: "loader_img")
+
+:css
+  #loader_div {
+    position: fixed;
+    background-color: transparent;
+    height: 100%;
+    width: 100%;
+    top:0px;
+    right:0px;
+    background-color:#666;
+    background-repeat:no-repeat;
+    background-position:center;
+    z-index:10000000;
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+    display: none;
+  }
+  .loader_img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 10%;
+    z-index: 1000;
+  }
+:javascript
+  window.addEventListener("page:before-change", function (event) {
+    $("#loader_div").show();
+  });

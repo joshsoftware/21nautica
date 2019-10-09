@@ -39,7 +39,7 @@ datatable_initialize = ->
                       aoColumns: [null, null, null,
                                   null, null, null,
                                   null, null, null,
-                                  null
+                                  null, null
                                  ])
 
 $(document).ready datatable_initialize

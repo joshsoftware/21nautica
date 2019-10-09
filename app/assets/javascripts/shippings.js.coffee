@@ -36,7 +36,7 @@ datatable_initialize = ->
                     "sPaginationType": "full_numbers"
                     }).makeEditable(
                       sUpdateURL: 'shippings/update_column',
-                      aoColumns: [null, null,
+                      aoColumns: [null, null, null,
                                   {
                                     type: 'select',
                                     event: 'click',
