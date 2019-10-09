@@ -94,7 +94,7 @@
     checked = event.target.checked
     validateDateChronology()
     if checked
-      $("."+columnName).show().removeClass("hidden")
+      $("."+columnName).show().removeClass("hidden").val(todayDate)
       if columnName == "do_received_at"
         $(".do-extra_field").show()
         initDatePicker(new Date("#{Date.today.to_formatted_s}"), "gf_return_date")
