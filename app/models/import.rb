@@ -39,6 +39,7 @@ class Import < ActiveRecord::Base
   validates_presence_of :work_order_number, on: :create
   validates_uniqueness_of :bl_number
   validates_format_of :bl_received_at, :with => /\d{4}\-\d{2}\-\d{2}/, :message => "^Date must be in the following format: yyyy/mm/dd", :allow_blank => true
+  validate :should_be_future_date
 
   accepts_nested_attributes_for :import_items
 
@@ -181,6 +182,24 @@ class Import < ActiveRecord::Base
         self.do_received_at = nil
       end
     end
+  end
+
+  def should_be_future_date
+    if bl_received_at && bl_received_at > Date.today
+      self.errors.add(:base, "BL received date can not be set as future date")
+    end
+    if charges_received_at && charges_received_at > Date.today
+      self.errors.add(:base, "Charges received date can not be set as future date")
+    end
+    if charges_paid_at && charges_paid_at > Date.today
+      self.errors.add(:base, "Charges paid date can not be set as future date")
+    end
+    if do_received_at && do_received_at > Date.today
+      self.errors.add(:base, "Delivery order received date can not be set as future date")
+    end
+    if gf_return_date && gf_return_date > Date.today
+      self.errors.add(:base, "Guarantee form return date can not be set as future date")
+    end    
   end
 
   auditable only: [:status, :updated_at, :remark]

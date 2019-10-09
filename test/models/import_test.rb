@@ -105,4 +105,28 @@ class ImportTest < ActiveSupport::TestCase
     @import.reload
     assert_equal @import.custom_entry_generated?, true
   end
+
+  test "Fail if bl_received_at is a future date" do
+    @import.bl_received_at = Date.tomorrow
+    @import.save
+    assert_equal @import.errors.full_messages, ["BL received date can not be set as future date"]
+  end
+
+  test "Fail if charges_received_at is a future date" do
+    @import.charges_received_at = Date.tomorrow
+    @import.save
+    assert_equal @import.errors.full_messages, ["Charges received date can not be set as future date"]
+  end
+
+  test "Fail if charges_paid_at is a future date" do
+    @import.charges_paid_at = Date.tomorrow
+    @import.save
+    assert_equal @import.errors.full_messages, ["Charges paid date can not be set as future date"]
+  end
+
+  test "Fail if do_received_at is a future date" do
+    @import.do_received_at = Date.tomorrow
+    @import.save
+    assert_equal @import.errors.full_messages, ["Delivery order received date can not be set as future date"]
+  end
 end
