@@ -14,7 +14,7 @@ class PettyCashesController < ApplicationController
   def create
     @petty_cash = current_user.petty_cashes.build(petty_cash_params)
     if @petty_cash.save
-      PettyCash.update_transport_cash(current_user,params[:petty_cash][:transaction_amount]) if @petty_cash.expense_head.name.eql?('Trip Allowence')
+      PettyCash.update_transport_cash(current_user,params[:petty_cash][:transaction_amount]) if @petty_cash.expense_head_id == TRIP_ALLOWENCE_ID
       flash[:notice] = I18n.t 'petty_cash.saved'
       redirect_to :new_petty_cash
     else

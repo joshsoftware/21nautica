@@ -4,7 +4,7 @@ datatable_initialize = ->
   imitemsTable = $('#transport_cash_table').dataTable({
                     "order": [[0, 'asc' ]],
                     "bJQueryUI": false,
-                    "bFilter": true,
+                    "searching": false,
                     'bPaginate': false
                     })
 
