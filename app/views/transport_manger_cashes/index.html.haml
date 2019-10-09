@@ -22,7 +22,7 @@
         %td= transport_manger_cash.truck.reg_number if transport_manger_cash.truck_id
         %td= transport_manger_cash.import.work_order_number if transport_manger_cash.import_id
         %td= transport_manger_cash.import.to if transport_manger_cash.import_id
-        %td{class: "#{transport_manger_cash.transaction_type.eql?('Deposit')? 'green': 'red' }"}= "#{transport_manger_cash.transaction_type.eql?('Deposit')? transport_manger_cash.transaction_amount : - transport_manger_cash.transaction_amount }"
-        %td{class: "#{transport_manger_cash.transaction_type.eql?('Deposit')? 'green': 'red' }"}=transport_manger_cash.available_balance
+        %td{class: "#{transport_manger_cash.transaction_type.eql?('Deposite')? 'green': 'red' }"}= "#{transport_manger_cash.transaction_type.eql?('Deposite')? transport_manger_cash.transaction_amount : - transport_manger_cash.transaction_amount }"
+        %td{class: "#{transport_manger_cash.transaction_type.eql?('Deposite')? 'green': 'red' }"}=transport_manger_cash.available_balance
         %td= transport_manger_cash.created_by.name if transport_manger_cash.created_by_id
         %td= link_to 'Edit',edit_transport_manger_cash_path(transport_manger_cash), class: 'btn btn-primary' if !transport_manger_cash.transaction_date
