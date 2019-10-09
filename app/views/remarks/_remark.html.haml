@@ -23,7 +23,7 @@
             .col-md-3
               %label Description
             .col-md-9
-              %textarea{:name => "remark[desc]", :class => "form-control", :rows => "4", :cols => "50"}
+              %textarea{:name => "remark[desc]", :class => "form-control", :rows => "4", :cols => "50", :id => "remark_textarea"}
           = f.hidden_field :model_id, :value => 0
           = f.hidden_field :model_type, :value => ""
           = f.hidden_field :table_name, :value => @table
@@ -35,6 +35,8 @@
   $('#remarkModal').on 'shown.bs.modal', (event) ->
     $("#remark_date").datepicker({format: "yyyy-mm-dd"}).datepicker("setDate", new Date())
     $('#remarkModal .alert').remove()
+    $("#remark_textarea").val("")
+
     link_tag = $(event.relatedTarget)
     model_id = link_tag.attr('data-model-id')
     model_type = link_tag.attr('data-model-type')
