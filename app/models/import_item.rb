@@ -41,7 +41,7 @@ class ImportItem < ActiveRecord::Base
   # before_save :add_default_date_for_remarks
   after_save :assign_current_import_item, if: :truck_id_changed?
   after_save :update_last_loading_date, if: :last_loading_date_changed?
-  after_update :update_truck_status
+  after_update :update_truck_status, :update_transport_cash
 
   after_create do |record|
     ImportExpense::CATEGORIES.each do |category|
@@ -95,6 +95,15 @@ class ImportItem < ActiveRecord::Base
   end
 
   auditable only: [:status, :updated_at, :current_location]
+
+  def update_transport_cash
+    if self.status.eql?('loaded_out_of_port') && truck.present?
+      last_balance = TransportMangerCash.where.not(transaction_date:nil).last.try(:available_balance).to_f
+      transport_manger_cash = self.truck.transport_manger_cashes.find_by(transaction_date:nil)
+      current_balance = last_balance - transport_manger_cash.transaction_amount.to_f
+      transport_manger_cash.update(transaction_date: Date.today, available_balance: current_balance)
+    end
+  end
 
   def is_truck_number_assigned?
     return true if ENV['HOSTNAME'] != 'RFS'
