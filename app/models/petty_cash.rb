@@ -16,10 +16,10 @@ class PettyCash < ActiveRecord::Base
   end
 
   def self.update_transport_cash(current_user, transaction_amount)
-    last_balance = TransportMangerCash.where.not(transaction_date: nil).last.try(:available_balance).to_f
+    last_balance = TransportManagerCash.where.not(transaction_date: nil).last.try(:available_balance).to_f
     current_balance = last_balance + transaction_amount.to_f
-    transport_manger_cash = current_user.transport_manger_cashes.new(transaction_date: Date.today, transaction_type: 'Deposite',transaction_amount: transaction_amount, available_balance: current_balance)
-    transport_manger_cash.save
+    transport_manager_cash = current_user.transport_manager_cashes.new(transaction_date: Date.today, transaction_type: 'Deposite',transaction_amount: transaction_amount, available_balance: current_balance)
+    transport_manager_cash.save
   end
   
   private

@@ -1,6 +1,6 @@
-class CreateTransportMangerCashes < ActiveRecord::Migration
+class CreateTransportManagerCashes < ActiveRecord::Migration
   def change
-    create_table :transport_manger_cashes do |t|
+    create_table :transport_manager_cashes do |t|
       t.integer :sr_number
       t.date  :transaction_date
       t.string :transaction_type

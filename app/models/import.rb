@@ -25,7 +25,7 @@ class Import < ActiveRecord::Base
   include EspinitaPatch
   include Remarkable
 
-  has_many :transport_manger_cashes
+  has_many :transport_manager_cashes
   has_many :import_items, :dependent => :destroy
   has_many :bill_items, as: :activity
   belongs_to :customer

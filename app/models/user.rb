@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
 
   validates :email, :password, presence: true
   has_many :job_cards, foreign_key: 'created_by_id'
-  has_many :transport_manger_cashes, foreign_key: 'created_by_id'
+  has_many :transport_manager_cashes, foreign_key: 'created_by_id'
   has_many :petty_cashes, foreign_key: 'created_by_id'
   def is?(role)
     self.role == role

@@ -22,7 +22,7 @@ class ImportItem < ActiveRecord::Base
   include MovementsHelper
   include Remarkable
 
-  has_many :transport_manger_cashes
+  has_many :transport_manager_cashes
   belongs_to :import
   belongs_to :transporter, class_name: "Vendor", foreign_key: "vendor_id"
   belongs_to :icd, class_name: "Vendor"
@@ -98,10 +98,10 @@ class ImportItem < ActiveRecord::Base
 
   def update_transport_cash
     if self.status.eql?('loaded_out_of_port') && truck.present?
-      last_balance = TransportMangerCash.where.not(transaction_date:nil).last.try(:available_balance).to_f
-      transport_manger_cash = self.truck.transport_manger_cashes.find_by(transaction_date:nil)
-      current_balance = last_balance - transport_manger_cash.transaction_amount.to_f
-      transport_manger_cash.update(transaction_date: Date.today, available_balance: current_balance)
+      last_balance = TransportManagerCash.where.not(transaction_date:nil).last.try(:available_balance).to_f
+      transport_manager_cash = self.truck.transport_manager_cashes.find_by(transaction_date:nil)
+      current_balance = last_balance - transport_manager_cash.transaction_amount.to_f
+      transport_manager_cash.update(transaction_date: Date.today, available_balance: current_balance)
     end
   end
 

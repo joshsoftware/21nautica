@@ -1,16 +1,16 @@
 # Transport manger cash Model
-class TransportMangerCash < ActiveRecord::Base
+class TransportManagerCash < ActiveRecord::Base
   validates :import_item_id, :transaction_amount, presence: true, if: -> { transaction_type.include?('Withdrawal') }
   validate :cash_assigned?, if: -> { transaction_date.nil? }
   before_save  :update_truck_id, :update_import_id, if: -> { transaction_type.include?('Withdrawal') }
-  before_create :update_sr_number
+  before_create :update_sr_number, if: -> { transaction_type.include?('Withdrawal') }
   belongs_to :created_by, class_name: 'User', foreign_key: 'created_by_id'
   belongs_to :import
   belongs_to :import_item
   belongs_to :truck
 
   def last_enrty_month
-    TransportMangerCash.where('created_at >= ? ', Date.today.beginning_of_month)
+    TransportManagerCash.where('created_at >= ? ', Date.today.beginning_of_month)
                        .where.not(sr_number: nil).count
   end
 
@@ -27,11 +27,11 @@ class TransportMangerCash < ActiveRecord::Base
   end
 
   def last_available_balance
-    TransportMangerCash.last.try(:available_balance).to_f
+    TransportManagerCash.last.try(:available_balance).to_f
   end
 
   def cash_assigned?
-    if TransportMangerCash.find_by(truck_id: import_item.truck.id, transaction_date: nil)
+    if TransportManagerCash.find_by(truck_id: import_item.truck.id, transaction_date: nil)
       errors.add(:import_item_id, 'truck has already assigned cash')
     end
   end

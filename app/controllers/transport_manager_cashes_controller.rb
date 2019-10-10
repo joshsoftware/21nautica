@@ -1,10 +1,10 @@
 # Transport Manger Cash Controller
-class TransportMangerCashesController < ApplicationController
+class TransportManagerCashesController < ApplicationController
   before_action :set_trucks, only: %i[edit new create update]
   before_action :set_transport_cash, only: %i[edit update]
 
   def index
-    @transport_manger_cashes = TransportMangerCash.where('created_at >= ? ', Date.today.beginning_of_month)
+    @transport_manager_cashes = TransportManagerCash.where('created_at >= ? ', Date.today.beginning_of_month)
                                                   .order(:sr_number)
                                                   .includes(:import_item,
                                                             :import,
@@ -13,23 +13,23 @@ class TransportMangerCashesController < ApplicationController
   end
 
   def new
-    @transport_manger_cash = TransportMangerCash.new
+    @transport_manager_cash = TransportManagerCash.new
   end
 
   def create
-    @transport_manger_cash = current_user.transport_manger_cashes.new(transport_manger_params)
-    if @transport_manger_cash.save
+    @transport_manager_cash = current_user.transport_manager_cashes.new(transport_manger_params)
+    if @transport_manager_cash.save
       flash[:notice] = 'Transport Manger Cash saved successfully'
-      redirect_to :transport_manger_cashes
+      redirect_to :transport_manager_cashes
     else
       render 'new'
     end
   end
 
   def update
-    if @transport_manger_cash.update(transport_manger_params)
+    if @transport_manager_cash.update(transport_manger_params)
       flash[:notice] = 'Transport Manger Cash Update saved successfully'
-      redirect_to :transport_manger_cashes
+      redirect_to :transport_manager_cashes
     else
       render 'edit'
     end
@@ -38,7 +38,7 @@ class TransportMangerCashesController < ApplicationController
   private
 
   def transport_manger_params
-    params.require(:transport_manger_cash).permit(:id,
+    params.require(:transport_manager_cash).permit(:id,
                                                   :import_item_id,
                                                   :transaction_type,
                                                   :transaction_amount)
@@ -52,6 +52,6 @@ class TransportMangerCashesController < ApplicationController
   end
 
   def set_transport_cash
-    @transport_manger_cash = TransportMangerCash.find_by(id: params[:id])
+    @transport_manager_cash = TransportManagerCash.find_by(id: params[:id])
   end
 end
