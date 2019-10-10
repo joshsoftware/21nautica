@@ -36,7 +36,7 @@ datatable_initialize = ->
                     "sPaginationType": "full_numbers"
                     }).makeEditable(
                       sUpdateURL: 'customs/update_column',
-                      aoColumns: [null, null, null,
+                      aoColumns: [null, null,
                                   {
                                     type: 'select',
                                     event: 'click',
@@ -57,7 +57,7 @@ datatable_initialize = ->
                                     , placeholder:"Click to enter",
                                     fnOnCellUpdated: (sStatus, sValue, settings) ->
                                       $.post("customs/#{id}/retainStatus")
-                                  }, null, null, null,
+                                  }, null, null,
                                   {
                                     type: 'datepicker2',
                                     event: 'click',

@@ -94,7 +94,7 @@
     checked = event.target.checked
     validateDateChronology()
     if checked
-      $("."+columnName).show().removeClass("hidden")
+      $("."+columnName).show().removeClass("hidden").val(todayDate)
       if columnName == "do_received_at"
         $(".do-extra_field").show()
         initDatePicker(new Date("#{Date.today.to_formatted_s}"), "gf_return_date")
@@ -110,6 +110,7 @@
       format: "yyyy/mm/dd",
       startDate: '-1y',
       defaultViewDate: date,
+      endDate: new Date(),
     }).on 'changeDate', (event) ->
       validateDateChronology()
       if event.currentTarget.className.includes("bl_received_at") && event.date > new Date("#{@import.estimate_arrival.try(:to_formatted_s)}")

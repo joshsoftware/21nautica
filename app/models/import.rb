@@ -33,13 +33,13 @@ class Import < ActiveRecord::Base
   belongs_to :shipping_line, class_name: "Vendor"
   before_save :strip_container_number_bl_number, :save_entry_type, :shipping_date_chronology, :change_status
   after_save :late_document_mail, :rotation_number_mail
-  after_create :set_bl_received
-  before_create :set_new_import_flag
+  after_create :set_bl_received, :generate_invoice
 
   validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number, :bl_received_type
   validates_presence_of :work_order_number, on: :create
   validates_uniqueness_of :bl_number
   validates_format_of :bl_received_at, :with => /\d{4}\-\d{2}\-\d{2}/, :message => "^Date must be in the following format: yyyy/mm/dd", :allow_blank => true
+  validate :shouldnt_be_future_date
 
   accepts_nested_attributes_for :import_items
 
@@ -202,5 +202,30 @@ class Import < ActiveRecord::Base
     end
   end
 
+  def shouldnt_be_future_date
+    if bl_received_at && bl_received_at > Date.today
+      self.errors.add(:base, "BL received date can not be set as future date")
+    end
+    if charges_received_at && charges_received_at > Date.today
+      self.errors.add(:base, "Charges received date can not be set as future date")
+    end
+    if charges_paid_at && charges_paid_at > Date.today
+      self.errors.add(:base, "Charges paid date can not be set as future date")
+    end
+    if do_received_at && do_received_at > Date.today
+      self.errors.add(:base, "Delivery order received date can not be set as future date")
+    end
+    if gf_return_date && gf_return_date > Date.today
+      self.errors.add(:base, "Guarantee form return date can not be set as future date")
+    end
+  end
+
   auditable only: [:status, :updated_at, :remark]
+
+  def generate_invoice
+    invoice = bill_of_lading.invoices.build(date: Date.today, customer_id: customer_id)
+    invoice.save
+    invoice.invoice_ready!
+  end
+
 end

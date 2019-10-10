@@ -73,7 +73,7 @@ class ImportItem < ActiveRecord::Base
     end
 
     event :loaded_out_of_port, :after => [:create_rfs_invoice] do
-      transitions from: :truck_allocated, to: :loaded_out_of_port, guard: :is_truck_number_assigned?
+      transitions from: :truck_allocated, to: :loaded_out_of_port, guard: [:is_truck_number_assigned?, :is_all_docs_received?]
     end
 
     event :arrived_at_border do
@@ -99,6 +99,14 @@ class ImportItem < ActiveRecord::Base
     return true if ENV['HOSTNAME'] != 'RFS'
     self.errors[:base] <<  'Add Truck Number first !' if truck.nil?
     !self.errors.present?
+  end
+
+  def is_all_docs_received? #all shipping dates present?
+    byebug
+    unless import.bl_received_at.present? && import.charges_received_at.present? && import.charges_paid_at.present? && import.do_received_at.present? && import.gf_return_date.present?
+      self.errors[:base] << "All documents are not received yet for this order"
+      !self.errors.present?
+    end
   end
 
   def release_truck
@@ -178,7 +186,7 @@ class ImportItem < ActiveRecord::Base
   end
 
   def create_rfs_invoice
-    check_for_invoice if ENV['HOSTNAME'] == 'RFS' || ENV['HOSTNAME'] == 'ERP'
+    true#check_for_invoice if ENV['HOSTNAME'] == 'RFS' || ENV['HOSTNAME'] == 'ERP'
   end
 
   def check_for_invoice

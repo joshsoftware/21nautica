@@ -1,0 +1,10 @@
+%h1 Add New   Mechanic
+= render :partial => 'form' 
+
+:javascript
+  window.validate_form = function(){
+    $.validate({
+      form: '#add_new_mechanic'
+    });
+  }
+  validate_form();

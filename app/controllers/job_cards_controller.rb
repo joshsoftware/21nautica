@@ -54,6 +54,6 @@ class JobCardsController < ApplicationController
   end
 
   def set_trucks
-    @trucks = Truck.order(:reg_number).pluck(:reg_number, :id).uniq {|truck| truck[0]}
+    @trucks = Truck.all.map { |truck| [truck.reg_number, truck.id] }
   end
 end

@@ -9,20 +9,20 @@
 %table.table{id: 'import_items_table'}
   %thead
     - if is_rfs_host?
-      %th Customer Name / Shipper Name / Consignee Name
+      %th.import-items-cust-name Customer Name / Shipper Name / Consignee Name
     - else
-      %th Customer Name
-    %th BL Number
-    %th Container Number
-    %th Display EQ
-    %th Estimate Arrival
-    - if is_rfs_host?
-      %th Truck Number
-      %th Location
-    %th File Ref Number
-    %th Last Loading Date
-    %th Status
-    %th Remarks
+      %th.import-items-cust-name Customer Name
+    %th.import-items-bl-number BL Number
+    %th.import-items-cont-number Container Number
+    %th.import-items-eq Display EQ
+    %th.import-items-eta Estimate Arrival
+    - if is_rfs_host? || is_ug_host?
+      %th.import-items-truck-number Truck Number
+      %th.import-items-location Location
+    %th.import-items-file-ref File Ref Number
+    %th.import-items-last-load-date Last Loading Date
+    %th.import-items-status Status
+    %th.import-items-remarks Remarks
   %tbody
     - @import_items.each do |item|
       %tr{id: item.id}
@@ -34,7 +34,7 @@
         %td= item.container_number
         %td= item.import.equipment
         %td= item.import.estimate_arrival
-        - if is_rfs_host?
+        - if is_rfs_host? || is_ug_host?
           %td.truck_id= item.truck.nil? ? '' : item.truck.reg_number
           %td= item.truck.nil? ? '' : item.truck.location
         %td= item.import.work_order_number

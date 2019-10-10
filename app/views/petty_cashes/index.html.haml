@@ -2,7 +2,7 @@
 %br
 %br
 
-%table#petty_cash_table.table
+%table.table{id: 'petty_cash_table', class: 'petty_cash_table'}
   %thead
     %th Date 
     %th Expense head
@@ -22,6 +22,6 @@
           = number_with_precision("#{petty_cash.transaction_type.eql?('Withdrawal') ? -petty_cash.transaction_amount : petty_cash.transaction_amount }", precision: 2)
         %td{ class: "#{petty_cash.available_balance < 0.0 ? 'red' : 'green'}" }
           = number_with_precision(petty_cash.available_balance, precision: 2)
-        %td= petty_cash.description
+        %td{class: 'petty_cash_td'}= petty_cash.description
         %td= petty_cash.created_by.name
 = will_paginate @petty_cashes
