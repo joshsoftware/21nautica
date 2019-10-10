@@ -1,0 +1,12 @@
+%h1 Edit Transport Cash
+= render 'form' 
+
+:javascript
+  window.validate_form = function(){
+    $.validate({
+      form: '#add_new_transport_cash'
+
+    });
+  }
+  
+  validate_form();

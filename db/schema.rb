@@ -479,7 +479,7 @@ ActiveRecord::Schema.define(version: 20191006075952) do
     t.datetime "updated_at"
   end
 
-  create_table "transport_manger_cashes", force: true do |t|
+  create_table "transport_manager_cashes", force: true do |t|
     t.integer  "sr_number"
     t.date     "transaction_date"
     t.string   "transaction_type"
