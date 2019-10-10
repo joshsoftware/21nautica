@@ -31,10 +31,10 @@
           %label.control-label BL- Received Type
         .col-md-6
           %label.radio-inline
-            = f.radio_button :bl_received_type, "copy", :checked => (@import.new_record?), :class => "mt4"
+            = f.radio_button :bl_received_type, "copy", :checked => (@import.new_record?)
             = label :bl_received_type, 'Copy', inline: true
           %label.radio-inline
-            = f.radio_button :bl_received_type, "original_telex", :class => "mt4"
+            = f.radio_button :bl_received_type, "original_telex"
             = label :bl_received_type, 'Original/Telex'
 
 
