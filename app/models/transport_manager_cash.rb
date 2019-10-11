@@ -35,4 +35,9 @@ class TransportManagerCash < ActiveRecord::Base
       errors.add(:import_item_id, 'truck has already assigned cash')
     end
   end
+  
+  def self.last_balance
+    TransportManagerCash.where(updated_at: TransportManagerCash.where.not(transaction_date: nil).maximum(:updated_at)).last.try(:available_balance).to_f
+  end
+  
 end
