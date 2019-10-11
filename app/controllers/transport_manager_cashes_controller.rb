@@ -10,6 +10,7 @@ class TransportManagerCashesController < ApplicationController
                                                             :import,
                                                             :created_by,
                                                             :truck)
+    @available_balance = TransportManagerCash.last_balance
   end
 
   def new

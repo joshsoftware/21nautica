@@ -98,7 +98,7 @@ class ImportItem < ActiveRecord::Base
 
   def update_transport_cash
     if self.status.eql?('loaded_out_of_port') && truck.present?
-      last_balance = TransportManagerCash.where.not(transaction_date:nil).last.try(:available_balance).to_f
+      last_balance = TransportManagerCash.last_balance
       transport_manager_cash = self.truck.transport_manager_cashes.find_by(transaction_date:nil)
       current_balance = last_balance - transport_manager_cash.transaction_amount.to_f
       transport_manager_cash.update(transaction_date: Date.today, available_balance: current_balance)
