@@ -19,11 +19,11 @@ module ApplicationHelper
 
   def reallocate_truck_numbers
     if @import_item.truck_id.present?
-      trucks = Truck.free.pluck(:reg_number, :id)
+      trucks = Truck.free.pluck(:reg_number, :id).uniq {|number| number[0]}
       # trucks = trucks.select {|t| t != [@import_item.truck.reg_number, @import_item.truck_id] }
       trucks << [@import_item.truck.reg_number, @import_item.truck_id]
     else
-      Truck.free.pluck(:reg_number, :id)
+      Truck.free.pluck(:reg_number, :id).uniq {|number| number[0]}
     end
   end
 

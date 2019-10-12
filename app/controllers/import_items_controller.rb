@@ -51,6 +51,7 @@ class ImportItemsController < ApplicationController
     @import = @import_item.import
     initial_status = @import_item.status
     remark_params = params[:import_item]
+    params[:import_item][:truck_number] = nil if params[:import_item][:truck_number].blank?
     @import_item.attributes = import_item_params.except('status')
     @import_item.remarks.create(desc: remark_params[:remarks], date: Date.today, category: "external") unless remark_params[:remarks].blank?
     if initial_status == "under_loading_process"
@@ -59,8 +60,11 @@ class ImportItemsController < ApplicationController
     else
       status = import_item_params[:status].downcase.gsub(' ', '_')
       begin
-        status != @import_item.status ? @import_item.send("#{status}!".to_sym) : @import_item.save
+        @import_item.send("#{status}!".to_sym) if status != @import_item.status
+        @import_item.save
+        @errors = @import_item.errors
       rescue
+        @import_item.save
         @errors = @import_item.errors
       end
     end

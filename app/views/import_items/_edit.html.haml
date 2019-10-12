@@ -9,14 +9,20 @@
     .modal-header
       = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
       %h1.modal-title Update Status
+      %hr
       .modal-body
         #truck_number
-        = f.label :truck_number
+        /= f.label :truck_number
         = f.input :status, collection: status, :input_html => {:class => 'select required form-control text-capitalize'}
         = f.input :remarks, as: :text, required: false
         - readonly = ['loaded_out_of_port', 'arrived_at_border', 'departed_from_border', 'arrived_at_destination'].include?(@import_item.status)
         - if is_rfs_host? || is_ug_host?
-          = f.input :truck_id, collection: reallocate_truck_numbers, include_blank: true, label: 'Truck Number'
+          - if current_user.role == "Admin"
+            = f.input :truck_id, collection: reallocate_truck_numbers, include_blank: true, label: 'Truck'
+            = f.input :truck_number, label: 'Truck Number'
+          - else
+            = f.input :truck_id, collection: reallocate_truck_numbers, include_blank: true, label: 'Truck'
+            = f.input :truck_number, label: 'Truck Number', :disabled => @import_item.truck_number.present?
           = f.input :last_loading_date, as: :string, input_html: { class: "form-control", value: f.object.last_loading_date.try(:strftime, "%Y-%m-%d") }
 
       .modal-footer
@@ -28,14 +34,25 @@
   $('#import_item_last_loading_date').datepicker({ format: 'yyyy/mm/dd' });
   import_item = #{@import_item.to_json}
   $('#statusModal').on 'show.bs.modal', (event) ->
+    if #{@import_item.truck_number.present?}
+      $(".import_item_truck_number").show()
+    else
+      $(".import_item_truck_number").hide()
     statuses = ['loaded_out_of_port', 'arrived_at_border', 'departed_from_border', 'arrived_at_destination']
     if statuses.includes?(import_item.status)
       #$('#import_item_truck_id').select2('readonly', 'readonly')
     else
       #$('#import_item_truck_id').select2('readonly', false)
     $('#import_item_remarks').val('')
-
    $('#import_item_status').on 'change', ->
     # if $(this).val() == 'truck_released'
     #   $('#import_item_truck_id').select2('readonly', false)
+
+  $("#import_item_truck_id").on 'change', (event) ->
+    if event.added.text.toLowerCase().includes("3rd party truck")
+      $("#import_item_truck_number").removeAttr("disabled")
+      $(".import_item_truck_number").show()
+    else
+      $("#import_item_truck_number").val("")
+      $(".import_item_truck_number").hide()
 

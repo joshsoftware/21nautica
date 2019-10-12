@@ -27,10 +27,12 @@ class ImportItem < ActiveRecord::Base
   belongs_to :icd, class_name: "Vendor"
   belongs_to :truck
   has_many :import_expenses, dependent: :destroy
+  has_one :status_date, dependent: :destroy
 
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
   validates_presence_of :container_number
   validates_uniqueness_of :container_number
+  validate :validate_truck_number
  
   delegate :bl_number, to: :import
   delegate :clearing_agent, to: :import, allow_nil: true
@@ -68,27 +70,27 @@ class ImportItem < ActiveRecord::Base
     state :arrived_at_destination
     state :delivered
 
-    event :allocate_truck, :after => :check_rest_of_the_containers do
+    event :allocate_truck, :after => [:check_rest_of_the_containers, :save_status_date] do
       transitions from: :under_loading_process, to: :truck_allocated
     end
 
-    event :loaded_out_of_port, :after => [:create_rfs_invoice] do
+    event :loaded_out_of_port, :after => [:create_rfs_invoice, :save_status_date] do
       transitions from: :truck_allocated, to: :loaded_out_of_port, guard: [:is_truck_number_assigned?, :is_all_docs_received?]
     end
 
-    event :arrived_at_border do
+    event :arrived_at_border, :after => [:save_status_date] do
       transitions from: :loaded_out_of_port, to: :arrived_at_border
     end
 
-    event :departed_from_border do
+    event :departed_from_border, :after => [:save_status_date] do
       transitions from: :arrived_at_border, to: :departed_from_border
     end
 
-    event :arrived_at_destination do
+    event :arrived_at_destination, :after => [:save_status_date] do
       transitions from: :departed_from_border, to: :arrived_at_destination
     end
 
-    event :truck_released, :after => [:check_for_invoice, :set_delivery_date, :release_truck] do
+    event :truck_released, :after => [:check_for_invoice, :set_delivery_date, :release_truck, :save_status_date] do
       transitions from: :arrived_at_destination, to: :delivered
     end
   end
@@ -102,10 +104,11 @@ class ImportItem < ActiveRecord::Base
   end
 
   def is_all_docs_received? #all shipping dates present?
-    byebug
-    unless import.bl_received_at.present? && import.charges_received_at.present? && import.charges_paid_at.present? && import.do_received_at.present? && import.gf_return_date.present?
+    if import.status != "ready_to_load" && !(import.bl_received_at.present? && import.charges_received_at.present? && import.charges_paid_at.present? && import.do_received_at.present? && import.gf_return_date.present?)
       self.errors[:base] << "All documents are not received yet for this order"
       !self.errors.present?
+    else
+      true      
     end
   end
 
@@ -186,7 +189,7 @@ class ImportItem < ActiveRecord::Base
   end
 
   def create_rfs_invoice
-    true#check_for_invoice if ENV['HOSTNAME'] == 'RFS' || ENV['HOSTNAME'] == 'ERP'
+    check_for_invoice if ENV['HOSTNAME'] == 'RFS' || ENV['HOSTNAME'] == 'ERP'
   end
 
   def check_for_invoice
@@ -230,6 +233,21 @@ class ImportItem < ActiveRecord::Base
   def update_last_loading_date
     loading_date = self.last_loading_date
     import.import_items.update_all(last_loading_date: loading_date)
+  end
+
+  def save_status_date
+    if status_date
+      status_date.update_attributes(status.to_sym => Date.today)
+    else
+      create_status_date(status.to_sym => Date.today)
+    end
+  end
+
+  def validate_truck_number
+    if truck_id_changed? && Truck.find_by(id: truck_id).try(:reg_number).to_s.downcase.include?("3rd party truck") && truck_number.blank?
+      self.errors[:base] <<  "Truck number should be present if 3rd party truck is selected"
+    end
+    !self.errors.present?
   end
 
 end

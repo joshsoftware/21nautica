@@ -56,13 +56,10 @@ class ImportItemTest < ActiveSupport::TestCase
   test "READY invoice if loaded out of port and invoice not already present and BL has only one container" do
   end
 
-  test "Should not loaded out of port if docs are not received" do
-    @import_item.allocate_truck
-    byebug
+  test "Truck number must be exists if 3rd party truck is selected" do
+    truck = Truck.create(reg_number: "3rd Party Truck")
+    @import_item.truck = truck
     @import_item.save
-    @import_item.reload
-    @import_item.loaded_out_of_port
-    @import_item.save
-    assert_equal ["All documents are not received yet for this order"], @import_item.errors.full_messages
+    assert_equal ["Truck number should be present if 3rd party truck is selected"], @import_item.errors.full_messages
   end
 end
