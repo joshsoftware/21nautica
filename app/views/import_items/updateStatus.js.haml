@@ -1,6 +1,6 @@
-
+$('#statusModal .alert').remove();
 - if @errors.present?
-  $('#statusModal .modal-body').append('<div class= "alert alert-danger"> #{@errors.full_messages.join(', ')} </div>')
+  $('#statusModal .modal-body').append('<div class= "alert alert-danger"> #{@errors.join(' and ')} </div>')
 - else
   $('#statusModal').modal('hide')
   - @import.import_items.each do |import_item|

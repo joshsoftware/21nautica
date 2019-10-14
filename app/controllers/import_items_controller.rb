@@ -61,11 +61,11 @@ class ImportItemsController < ApplicationController
       status = import_item_params[:status].downcase.gsub(' ', '_')
       begin
         @import_item.send("#{status}!".to_sym) if status != @import_item.status
+        @errors = @import_item.errors.full_messages
         @import_item.save
-        @errors = @import_item.errors
       rescue
+        @errors = @import_item.errors.full_messages
         @import_item.save
-        @errors = @import_item.errors
       end
     end
   end
@@ -98,7 +98,7 @@ class ImportItemsController < ApplicationController
 
   def import_item_params
     params.permit(:id)
-    params.require(:import_item).permit(:truck_number, :status, :context, :transporter_name, :transporter, :truck_id, :last_loading_date)
+    params.require(:import_item).permit(:truck_number, :status, :context, :transporter_name, :transporter, :truck_id, :last_loading_date, :exit_note_received, :expiry_date)
   end
 
   def import_item_update_params

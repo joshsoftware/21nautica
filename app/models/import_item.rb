@@ -64,6 +64,7 @@ class ImportItem < ActiveRecord::Base
   aasm column: 'status' do
     state :under_loading_process, initial: true
     state :truck_allocated
+    state :ready_to_load
     state :loaded_out_of_port
     state :arrived_at_border
     state :departed_from_border
@@ -74,8 +75,12 @@ class ImportItem < ActiveRecord::Base
       transitions from: :under_loading_process, to: :truck_allocated
     end
 
+    event :ready_to_load, :after => [:save_status_date] do
+      transitions from: :truck_allocated, to: :ready_to_load, guard: [:expiry_date_and_exit_note_received?]
+    end    
+
     event :loaded_out_of_port, :after => [:create_rfs_invoice, :save_status_date] do
-      transitions from: :truck_allocated, to: :loaded_out_of_port, guard: [:is_truck_number_assigned?, :is_all_docs_received?]
+      transitions from: :ready_to_load, to: :loaded_out_of_port, guard: [:is_truck_number_assigned?, :is_all_docs_received?]
     end
 
     event :arrived_at_border, :after => [:save_status_date] do
@@ -109,6 +114,17 @@ class ImportItem < ActiveRecord::Base
       !self.errors.present?
     else
       true      
+    end
+  end
+
+  def expiry_date_and_exit_note_received?
+    if import.entry_type == "im4"
+      #should we check for the exit note received here?
+      true
+    elsif import.entry_type == "wt8"
+      self.errors[:base] << "Expiry date is required" if expiry_date.nil?
+      self.errors[:base] << "Exit note should be received" unless exit_note_received
+      !self.errors.present?
     end
   end
 

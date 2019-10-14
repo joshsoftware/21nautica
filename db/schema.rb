@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191011050544) do
+ActiveRecord::Schema.define(version: 20191014052140) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -177,6 +177,11 @@ ActiveRecord::Schema.define(version: 20191011050544) do
     t.integer  "vendor_id"
     t.integer  "truck_id"
     t.datetime "last_loading_date"
+    t.boolean  "exit_note_received",    default: false
+    t.string   "dropped_location"
+    t.string   "return_status"
+    t.date     "expiry_date"
+    t.boolean  "is_co_loaded",          default: false
   end
 
   add_index "import_items", ["container_number"], name: "index_import_items_on_container_number", using: :btree
@@ -482,6 +487,7 @@ ActiveRecord::Schema.define(version: 20191011050544) do
     t.date     "departed_from_border"
     t.date     "arrived_at_destination"
     t.date     "delivered"
+    t.date     "ready_to_load"
     t.integer  "import_item_id"
     t.datetime "created_at"
     t.datetime "updated_at"

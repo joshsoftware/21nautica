@@ -8,6 +8,7 @@ class CreateStatusDates < ActiveRecord::Migration
       t.date :departed_from_border
       t.date :arrived_at_destination
       t.date :delivered
+      t.date :ready_to_load
       t.references :import_item
 
       t.timestamps
