@@ -20,6 +20,11 @@ $(document).on 'change', '#import_from', ->
     $.each newOptions, (index, value) ->
       $el.append $('<option></option>').attr('value', value).text(value)
 #$el.val('Kigali')
+  else if (optionSelected == "Beira")
+    newOptions = window.ports['Beira'];
+    $("#import_to").find("option:gt(0)").remove()
+    $.each newOptions, (index, value) ->
+      $el.append $('<option></option>').attr('value', value).text(value)
   else
     newOptions = window.ports["Mombasa"]
     $("#import_to").find("option:gt(0)").remove()
