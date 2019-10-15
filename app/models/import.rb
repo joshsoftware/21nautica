@@ -32,8 +32,8 @@ class Import < ActiveRecord::Base
   belongs_to :c_agent, class_name: "Vendor", foreign_key: "clearing_agent_id"
   belongs_to :shipping_line, class_name: "Vendor"
   before_save :strip_container_number_bl_number, :save_entry_type, :shipping_date_chronology
-  after_save :late_document_mail, :rotation_number_mail
-  after_create :set_bl_received, :generate_invoice
+  after_save :late_document_mail, :rotation_number_mail, :update_status_to_ready_load
+  after_create :set_bl_received#, :generate_invoice
 
   validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number, :bl_received_type
   validates_presence_of :work_order_number, on: :create
@@ -208,6 +208,12 @@ class Import < ActiveRecord::Base
     invoice = bill_of_lading.invoices.build(date: Date.today, customer_id: customer_id)
     invoice.save
     invoice.invoice_ready!
+  end
+
+  def update_status_to_ready_load
+    if bl_received_at && charges_received_at && charges_paid_at && do_received_at && gf_return_date && custom_entry_generated?
+      self.update_column(:status, "ready_to_load")
+    end
   end
 
 end
