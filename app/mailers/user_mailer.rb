@@ -94,6 +94,11 @@ class UserMailer < ActionMailer::Base
   def rotation_number_mail(import)
     @import = import
     mail(to: @import.customer.emails.split(","), subject: 'Rotation Number Mail')
-  end  
+  end
+
+  def bl_entry_number_reminder(customer)
+    @imports = customer.imports.where.not(:imports => {status: "ready_to_load"}).where("imports.bl_received_at IS NULL OR imports.entry_number IS NULL")
+    mail(to: customer.emails.split(","), subject: "Pending Documents – #{Date.today.to_date.try(:to_formatted_s)}")
+  end
 
 end
