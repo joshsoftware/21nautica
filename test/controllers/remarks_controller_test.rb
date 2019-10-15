@@ -14,7 +14,7 @@ class RemarksControllerTest < ActionController::TestCase
     model_info[:remark] = {model_type: "import", model_id: (FactoryGirl.create :import).id}
     get :index, model_info
     assert_response :success
-    assert_equal((JSON.parse response.body).keys, %w("internal" "external")
+    assert_equal((JSON.parse response.body).keys, %w("internal" "external"))
   end
 
   test "should create new remark record" do

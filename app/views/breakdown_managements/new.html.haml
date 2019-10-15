@@ -1,0 +1,12 @@
+%h1 New Breakdown Details
+= render :partial => 'form'
+
+:javascript
+  window.validate_form = function(){
+    $.validate({
+      form: '#add_new_breakdown_management'
+
+    });
+  }
+  
+  validate_form();

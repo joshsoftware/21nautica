@@ -6,7 +6,7 @@ class CreateBreakdownManagements < ActiveRecord::Migration
       t.string :location
       t.references :mechanic
       t.references :truck
-      t.boolean :status
+      t.string :status
       t.boolean :parts_required
       t.date :sending_date
       t.references :breakdown_reason

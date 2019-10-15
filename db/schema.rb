@@ -70,7 +70,7 @@ ActiveRecord::Schema.define(version: 20191010120919) do
     t.string   "location"
     t.integer  "mechanic_id"
     t.integer  "truck_id"
-    t.boolean  "status"
+    t.string   "status"
     t.boolean  "parts_required"
     t.date     "sending_date"
     t.integer  "breakdown_reason_id"

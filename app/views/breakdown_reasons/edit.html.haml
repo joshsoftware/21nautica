@@ -1,0 +1,10 @@
+%h3 Edit Breakdown Reason
+= render :partial => 'form'
+
+:javascript
+  window.validate_form = function(){
+    $.validate({
+      form: '#breakdown_reason_form'
+    });
+  }
+  validate_form();

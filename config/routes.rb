@@ -184,6 +184,8 @@ Rails.application.routes.draw do
   resources :transport_manager_cashes
   resources :remarks
   resources :mechanics
+  resources :breakdown_reasons
+  resources :breakdown_managements
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
