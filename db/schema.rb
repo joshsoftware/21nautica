@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 20191014052140) do
     t.string   "cheque_ocean"
     t.string   "payment_clearing"
     t.string   "cheque_clearing"
-    t.string   "remark"
+    t.string   "remarks"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "agency_fee"
@@ -247,7 +247,7 @@ ActiveRecord::Schema.define(version: 20191014052140) do
     t.integer  "invoiceable_id"
     t.string   "invoiceable_type"
     t.string   "legacy_bl"
-    t.text     "remark"
+    t.text     "remarks"
     t.boolean  "manual",              default: false
   end
 
@@ -310,7 +310,7 @@ ActiveRecord::Schema.define(version: 20191014052140) do
     t.date     "estimate_delivery"
     t.string   "movement_type"
     t.string   "custom_seal"
-    t.string   "remark"
+    t.string   "remarks"
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -349,7 +349,7 @@ ActiveRecord::Schema.define(version: 20191014052140) do
     t.integer  "amount"
     t.string   "mode_of_payment"
     t.string   "reference"
-    t.string   "remark"
+    t.string   "remarks"
     t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -495,6 +495,20 @@ ActiveRecord::Schema.define(version: 20191014052140) do
 
   create_table "suppliers", force: true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "transport_manager_cashes", force: true do |t|
+    t.integer  "sr_number"
+    t.date     "transaction_date"
+    t.string   "transaction_type"
+    t.decimal  "transaction_amount", precision: 10, scale: 2
+    t.decimal  "available_balance",  precision: 10, scale: 2
+    t.integer  "import_id"
+    t.integer  "import_item_id"
+    t.integer  "truck_id"
+    t.integer  "created_by_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

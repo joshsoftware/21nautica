@@ -27,4 +27,5 @@ class PettyCashesControllerTest < ActionController::TestCase
       post :create, petty_cash: {description: "Paid to", transaction_amount: 200.0, transaction_type: "Deposit" }
       assert_equal Date.current, PettyCash.last.date
     end
+  end
 end
