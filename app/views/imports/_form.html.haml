@@ -1,7 +1,17 @@
 .row
   = simple_nested_form_for @import , html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
     .col-md-6
-      = f.input :bl_number, label: 'BL- Number', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+      .form-group.custom-radio
+        .col-md-3
+          %label.control-label BL- Received Type
+        .col-md-6
+          %label.radio-inline
+            = f.radio_button :bl_received_type, "copy", :checked => (@import.new_record?)
+            = label :bl_received_type, 'Copy', inline: true
+          %label.radio-inline
+            = f.radio_button :bl_received_type, "original_telex"
+            = label :bl_received_type, 'Original/Telex'    
+      = f.input :bl_number, label: 'BL- Number', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}      
 
       %div{data: {for: 'customerSelect'}}
         = render '/shared/customer', customers: @customers, model: 'import'
@@ -26,19 +36,6 @@
       = f.input :rate_agreed, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
       = f.input :weight, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
       = f.input :work_order_number, label: "File Ref Number", input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
-      .form-group.custom-radio
-        .col-md-3
-          %label.control-label BL- Received Type
-        .col-md-6
-          %label.radio-inline
-            = f.radio_button :bl_received_type, "copy", :checked => (@import.new_record?)
-            = label :bl_received_type, 'Copy', inline: true
-          %label.radio-inline
-            = f.radio_button :bl_received_type, "original_telex"
-            = label :bl_received_type, 'Original/Telex'
-
-
-
 
       .form-group
         .col-sm-offset-2.col-sm-2
