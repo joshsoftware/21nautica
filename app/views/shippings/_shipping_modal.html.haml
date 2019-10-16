@@ -16,7 +16,7 @@
                 "data-eta" => "eta"}
             .col-md-4
               %input{:type => "text", :name => "import[bl_received_at]", :class => "form-control #{@import.bl_received_at.present? ? "" : "hidden"} bl_received_at",
-                :value => @import.bl_received_at.try(:to_date).try(:to_formatted_s)}
+                :value => @import.bl_received_at.present? ? @import.bl_received_at.to_formatted_s : Date.today.to_formatted_s}
           .form-group
             .col-md-4
               = label_tag 'Charges Received', nil, class: "form-check-label"
@@ -25,7 +25,7 @@
                 :class => "shipping_checkbox form-check-input", "data-column" => "charges_received_at"}
             .col-md-4
               %input{:type => "text", :name => "import[charges_received_at]", :class => "form-control #{@import.charges_received_at.present? ? "" : "hidden"} charges_received_at",
-                :value => @import.charges_received_at.try(:to_date).try(:to_formatted_s)}
+                :value => @import.charges_received_at.present? ? @import.charges_received_at.to_formatted_s : Date.today.to_formatted_s}
           .form-group
             .col-md-4
               = label_tag 'Charges Paid', nil, class: "form-check-label"
@@ -34,7 +34,7 @@
                 :class => "shipping_checkbox form-check-input", "data-column" => "charges_paid_at"}
             .col-md-4
               %input{:type => "text", :name => "import[charges_paid_at]", :class => "form-control #{@import.charges_paid_at.present? ? "" : "hidden"} charges_paid_at",
-                :value => @import.charges_paid_at.try(:to_date).try(:to_formatted_s)}
+                :value => @import.charges_paid_at.present? ? @import.charges_paid_at.to_formatted_s : Date.today.to_formatted_s}
           .form-group
             .col-md-4
               = label_tag 'Delivery Order Received', nil, class: "form-check-label"
@@ -43,7 +43,7 @@
                 :class => "shipping_checkbox form-check-input", "data-column" => "do_received_at"}
             .col-md-4
               %input{:type => "text", :name => "import[do_received_at]", :class => "form-control #{@import.do_received_at.present? ? "" : "hidden"} do_received_at",
-                :value => @import.do_received_at.try(:to_date).try(:to_formatted_s)}
+                :value => @import.do_received_at.present? ? @import.do_received_at.to_date.to_formatted_s : Date.today.to_formatted_s}
           .form-group.do-extra_field
             %hr
             .col-md-4
@@ -58,7 +58,7 @@
             .col-md-4
               %input{:type => "text", :name => "import[gf_return_date]",
                 :class => "form-control gf_return_date",
-                :value => @import.gf_return_date.try(:to_date).try(:to_formatted_s)}
+                :value => @import.gf_return_date.present? ? @import.gf_return_date.to_formatted_s : Date.today.to_formatted_s}
           =f.hidden_field :late_submission, :value => false
         .modal-footer
           = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
@@ -71,7 +71,7 @@
   server_charges_rec_date_present = #{@import.charges_received_at.present?}
 
   $('#ShippingStatusModal').on 'shown.bs.modal', (event) ->
-    bl_date = new Date("#{@import.bl_received_at.present? ? @import.bl_received_at.to_date.try(:to_formatted_s) : Date.today.to_date.try(:to_formatted_s)}")
+    bl_date = new Date("#{@import.bl_received_at.present? ? @import.bl_received_at.to_date.try(:to_formatted_s) : Date.today.to_date.to_formatted_s}")
     cr_date = new Date("#{@import.charges_received_at.present? ? @import.charges_received_at.to_date.to_formatted_s : Date.today.to_date.to_formatted_s }")
     cp_date = new Date("#{@import.charges_paid_at.present? ? @import.charges_paid_at.to_date.to_formatted_s : Date.today.to_date.to_formatted_s }")
     do_date = new Date("#{@import.do_received_at.present? ? @import.do_received_at.to_date.to_formatted_s : Date.today.to_date.to_formatted_s }")
@@ -111,6 +111,7 @@
       format: "yyyy/mm/dd",
       startDate: '-1y',
       defaultViewDate: new Date(),
+      autoclose: true,
     })
 
   initDatePicker =(date, columnName) ->
@@ -119,6 +120,7 @@
       startDate: '-1y',
       defaultViewDate: date,
       endDate: new Date(),
+      autoclose: true,
     }).on 'changeDate', (event) ->
       validateDateChronology()
       if event.currentTarget.className.includes("bl_received_at") && event.date > new Date("#{@import.estimate_arrival.try(:to_formatted_s)}")
