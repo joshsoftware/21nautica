@@ -27,6 +27,7 @@
   $('#petty_cash_truck_id').select2()
   $('#petty_cash_date').datepicker({
     format: 'dd/mm/yyyy',
+    startDate: $('#petty_cash_date').val(),
     endDate: new Date()
   })
   $(document).ready(function(){
