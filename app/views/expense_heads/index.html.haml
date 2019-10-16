@@ -2,11 +2,12 @@
 %br
 %br
 
-%table.table
+%table.table{id: 'expense_table_id'}
   %thead
     %th Name 
     %th Is Related To Truck
-    %th Is_active    
+    %th Is_active
+    %th Action    
   %tbody
     - @expense_heads.each do |expense_head|
       %tr

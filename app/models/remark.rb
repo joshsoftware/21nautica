@@ -8,9 +8,4 @@ class Remark < ActiveRecord::Base
   scope :internal, -> { where(category: 0).order(created_at: :desc) }
   scope :external, -> { where(category: 1).order(created_at: :desc) }
 
-  before_create :add_date
-
-  def add_date
-    self.date = DateTime.now
-  end
 end
