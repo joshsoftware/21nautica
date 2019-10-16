@@ -3,4 +3,12 @@ class ExpenseHead < ActiveRecord::Base
   validates :name, presence: true, length: { maximum: 30 }
   scope :active, -> { where(:is_active => true) }
   has_many :petty_cashes
+  validates_uniqueness_of :name, case_sensitive: false, on: :create, message: "Expense Head must be unique"
+  before_validation :strip_whitespaces, :only => [:name]
+
+  private
+
+    def strip_whitespaces
+      self.name = self.name.strip.squish
+    end
 end

@@ -1,2 +1,13 @@
 %h3 Edit Expense Head
+%h1 Edit Expense Head
 = render :partial => 'form'
+
+:javascript
+  window.validate_form = function(){
+    $.validate({
+      form: '#add_new_expense_head'
+
+    });
+  }
+  
+  validate_form();
