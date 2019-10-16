@@ -79,10 +79,11 @@
     initDatePicker(cr_date, "charges_received_at")
     initDatePicker(cp_date, "charges_paid_at")
     initDatePicker(do_date, "do_received_at")
+    initGFDatePicker()
     validateDateChronology()
     if "#{@import.do_received_at.present?}" == "true"
       $(".do-extra_field").show()
-      initDatePicker(do_date, "gf_return_date")
+      initGFDatePicker()
     else
       $(".do-extra_field").hide()
 
@@ -92,18 +93,25 @@
   $('.shipping_checkbox').on 'change', (event) ->
     columnName = event.target.getAttribute("data-column")
     checked = event.target.checked
-    validateDateChronology()
     if checked
       $("."+columnName).show().removeClass("hidden").val(todayDate)
       if columnName == "do_received_at"
         $(".do-extra_field").show()
-        initDatePicker(new Date("#{Date.today.to_formatted_s}"), "gf_return_date")
+        initGFDatePicker()
         $(".do_received_at").val(todayDate)
     else
       $("."+columnName).hide().val("")
       if columnName == "do_received_at"
         $(".do-extra_field").hide()
         $(".gf_return_date, .return_location").val("")
+    validateDateChronology()
+
+  initGFDatePicker = (date) ->
+    $(".gf_return_date").datepicker({
+      format: "yyyy/mm/dd",
+      startDate: '-1y',
+      defaultViewDate: new Date(),
+    })
 
   initDatePicker =(date, columnName) ->
     $("."+columnName).datepicker({
@@ -188,3 +196,4 @@
       $(".do_received_at").val("")
       $(".gf_return_date, .return_location").val("")
       $(".do-extra_field").hide()
+

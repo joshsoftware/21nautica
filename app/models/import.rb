@@ -198,9 +198,6 @@ class Import < ActiveRecord::Base
     if do_received_at && do_received_at > Date.today
       self.errors.add(:base, "Delivery order received date can not be set as future date")
     end
-    if gf_return_date && gf_return_date > Date.today
-      self.errors.add(:base, "Guarantee form return date can not be set as future date")
-    end    
   end
 
   auditable only: [:status, :updated_at, :remark]
