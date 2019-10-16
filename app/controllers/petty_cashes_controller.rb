@@ -34,7 +34,7 @@ class PettyCashesController < ApplicationController
   
 
   def set_date
-    @date = PettyCash.last.try(:date) || Date.current  
+    @date = PettyCash.last.try(:date) || Date.current.beginning_of_year-10.year 
   end
 
   def set_expense_head
