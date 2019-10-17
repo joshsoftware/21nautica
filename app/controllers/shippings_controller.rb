@@ -5,7 +5,7 @@ class ShippingsController < ApplicationController
   before_action :set_import, except: [:index, :update_column]
   def index
     destination = params[:destination] || 'Kampala'
-    @imports = Import.shipping_dates_not_present.where(to: destination)
+    @imports = Import.not_ready_to_load.shipping_dates_not_present.where(to: destination)
     @equipment = EQUIPMENT_TYPE.inject({}) { |h, x| h[x] = x; h }
   end
 
