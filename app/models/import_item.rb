@@ -104,12 +104,12 @@ class ImportItem < ActiveRecord::Base
   auditable only: [:status, :updated_at, :current_location]
 
   def update_transport_cash
-    if self.status.eql?('loaded_out_of_port') && truck.present?
-      last_balance = TransportManagerCash.last_balance
-      transport_manager_cash = self.truck.transport_manager_cashes.find_by(transaction_date:nil)
-      current_balance = last_balance - transport_manager_cash.transaction_amount.to_f
-      transport_manager_cash.update(transaction_date: Date.today, available_balance: current_balance)
-    end
+    # if self.status.eql?('loaded_out_of_port') && truck.present?
+    #   last_balance = TransportManagerCash.last_balance
+    #   transport_manager_cash = self.truck.transport_manager_cashes.find_by(transaction_date:nil)
+    #   current_balance = last_balance - transport_manager_cash.transaction_amount.to_f
+    #   transport_manager_cash.update(transaction_date: Date.today, available_balance: current_balance)
+    # end
   end
 
   def is_truck_number_assigned?
@@ -129,8 +129,8 @@ class ImportItem < ActiveRecord::Base
 
   def expiry_date_and_exit_note_received?
     if import.entry_type == "im4"
-      #should we check for the exit note received here?
-      true
+      self.errors[:base] << "Exit note should be received" unless exit_note_received
+      !self.errors.present?
     elsif import.entry_type == "wt8"
       self.errors[:base] << "Expiry date is required" if expiry_date.nil?
       self.errors[:base] << "Exit note should be received" unless exit_note_received

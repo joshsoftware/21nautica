@@ -24,13 +24,14 @@
             = f.input :truck_id, collection: reallocate_truck_numbers, include_blank: true, label: 'Truck'
             = f.input :truck_number, label: 'Truck Number', :disabled => @import_item.truck_number.present?
           = f.input :last_loading_date, as: :string, input_html: { class: "form-control last_loading_date", value: f.object.last_loading_date.try(:strftime, "%Y-%m-%d") }, label: "Last Loading date"
-          %hr
-          .form-group.custom-entry-released
-            .col-md-3
-              = f.label :exit_note_received, "Exit Note Received?"
-            .col-md-6
-              = f.check_box :exit_note_received, :class => "form-check-input exit-note-received"
-          = f.input :expiry_date, as: :string, input_html: { class: "form-control expiry_date", value: f.object.expiry_date.try(:strftime, "%Y-%m-%d") }, label: "Expiry Date"
+          .custom-entry-released
+            %hr
+            .form-group
+              .col-md-3
+                = f.label :exit_note_received, "Exit Note Received?"
+              .col-md-6
+                = f.check_box :exit_note_received, :class => "form-check-input exit-note-received"
+            = f.input :expiry_date, as: :string, input_html: { class: "form-control expiry_date custom-entry-released", value: f.object.expiry_date.try(:strftime, "%Y-%m-%d") }, label: "Expiry Date" if @import_item.import.entry_type == "wt8"
 
       .modal-footer
         = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
@@ -41,6 +42,8 @@
   $('#import_item_last_loading_date').datepicker({ format: 'yyyy/mm/dd' });
   $('#import_item_expiry_date').datepicker({ format: 'yyyy/mm/dd' });
   import_item = #{@import_item.to_json}
+  if $("#import_item_status").val() == "under_loading_process"
+    $(".custom-entry-released").hide()
   $('#statusModal').on 'show.bs.modal', (event) ->
     if #{@import_item.truck_number.present?}
       $(".import_item_truck_number").show()
@@ -65,6 +68,7 @@
       $(".import_item_truck_number").hide()
 
   $("#import_item_status").on 'change', (event) ->
-    if event.target.selectedOptions[0].value == "truck_allocated"
+    if event.target.selectedOptions[0].value == "allocate_truck"
       $(".custom-entry-released").show()
-
+    if event.target.selectedOptions[0].value == "under_loading_process"
+      $(".custom-entry-released").hide()

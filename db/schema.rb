@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 20191014052140) do
     t.string   "cheque_ocean"
     t.string   "payment_clearing"
     t.string   "cheque_clearing"
-    t.string   "remarks"
+    t.string   "remark"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "agency_fee"
@@ -247,7 +247,7 @@ ActiveRecord::Schema.define(version: 20191014052140) do
     t.integer  "invoiceable_id"
     t.string   "invoiceable_type"
     t.string   "legacy_bl"
-    t.text     "remarks"
+    t.text     "remark"
     t.boolean  "manual",              default: false
   end
 
@@ -310,7 +310,7 @@ ActiveRecord::Schema.define(version: 20191014052140) do
     t.date     "estimate_delivery"
     t.string   "movement_type"
     t.string   "custom_seal"
-    t.string   "remarks"
+    t.string   "remark"
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -349,7 +349,7 @@ ActiveRecord::Schema.define(version: 20191014052140) do
     t.integer  "amount"
     t.string   "mode_of_payment"
     t.string   "reference"
-    t.string   "remarks"
+    t.string   "remark"
     t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
