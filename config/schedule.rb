@@ -54,3 +54,11 @@ end
 every 1.day, at: '12:05 am' do
   command 'cd /www; sh backup.sh >> backup.log'
 end
+
+every 1.day, at: '05:30 am' do
+  command 'cd /www/rfs-21nautica/current && RAILS_ENV=production bundle exec rake automated_emails:bl_entry_number_reminder --silent >> log/cron.log 2>> log/cron_error.log'
+end
+
+every 1.day, at: '12:30 pm' do
+  command 'cd /www/rfs-21nautica/current && RAILS_ENV=production bundle exec rake automated_emails:bl_entry_number_reminder --silent >> log/cron.log 2>> log/cron_error.log'
+end
