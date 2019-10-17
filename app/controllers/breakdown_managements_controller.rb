@@ -1,19 +1,19 @@
+# frozen_string_literal: true
+
 class BreakdownManagementsController < ApplicationController
 
   before_action :set_breakdown_managemet, only: %i[edit update]
-  before_action :set_mechanics, :set_trucks, :set_breakdown_reasons, only: %i[new edit ]
-  
+  before_action :set_mechanics, :set_trucks, :set_breakdown_reasons, only: %i[new edit]
+
   def index
     status_params = params[:status] if params[:status].present?
-    @breakdown_managements = BreakdownManagement.order(:id).where(status: status_params || 'Open').includes(:mechanic, :breakdown_reason, :truck)
+    @breakdown_managements = BreakdownManagement.order(date: :desc)
+                                                .where(status: status_params || 'Open')
+                                                .includes(:mechanic, :breakdown_reason, :truck)
   end
 
   def new
     @breakdown_management = BreakdownManagement.new
-  end
-
-  def close_status
-    @breakdown_managements = BreakdownManagement.order(:id).where(status:'Close').includes(:mechanic, :breakdown_reason, :truck)
   end
 
   def create
@@ -35,10 +35,6 @@ class BreakdownManagementsController < ApplicationController
     end
   end
 
-  def show_close_status
-    @breakdown_managements = BreakdownManagement.order(:id).where(status: 'Close').include(:mechanic, :breakdown_reason, :truck)
-  end
-
   private
 
   def breakdown_managemet_params
@@ -50,7 +46,10 @@ class BreakdownManagementsController < ApplicationController
   end
 
   def set_trucks
-    @trucks = Truck.order(:reg_number).where.not(reg_number:'Co-Loaded Truck').where.not(reg_number:'3rd Party Truck').map { |truck| [truck.reg_number, truck.id] }
+    @trucks = Truck.order(:reg_number)
+                   .where.not(reg_number: 'Co-Loaded Truck')
+                   .where.not(reg_number: '3rd Party Truck')
+                   .map {|truck| [truck.reg_number, truck.id] }
   end
 
   def set_mechanics

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class BreakdownReasonsController < ApplicationController
   before_action :set_breakdown_reason, only: %i[edit update]
-  
+
   def index
     @breakdown_reasons = BreakdownReason.paginate(page: params[:page], per_page: 20)
   end

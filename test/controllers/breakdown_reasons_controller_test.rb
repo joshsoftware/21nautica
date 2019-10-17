@@ -34,7 +34,7 @@ class BreakdownReasonsControllerTest < ActionController::TestCase
   test 'should edit breakdown reason' do
     assert_no_difference "BreakdownReason.count" do
       put :update, breakdown_reason: { name: 'break' }, id: @breakdown_reason.id
-      @breakdown_reason.relaod!
+      @breakdown_reason.reload
       assert_equal 'break', @breakdown_reason.name
       assert_redirected_to action: 'index'
     end
