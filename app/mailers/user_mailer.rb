@@ -83,17 +83,22 @@ class UserMailer < ActionMailer::Base
     #this mail is triggered after saving the import and if import eta date is less than current date
     #nd also if bl_received_date is greater than eta date
     @import = import
-    mail(to: import.customer.emails.split(","), subject: 'Late Document Mail')
+    mail(to: import.customer.emails.split(","), subject: "Late Document -BL Number #{@import.bl_number}")
   end
 
   def late_bl_received_mail(import)
     @import = import
-    mail(to: import.customer.emails.split(","), subject: 'Late BL Received Mail')
+    mail(to: import.customer.emails.split(","), subject: "Late Document - BL Number #{@import.bl_number}")
   end
 
   def rotation_number_mail(import)
     @import = import
-    mail(to: @import.customer.emails.split(","), subject: 'Rotation Number Mail')
-  end  
+    mail(to: @import.customer.emails.split(","), subject: "Rotation Number for BL Number #{@import.bl_number}")
+  end
+
+  def bl_entry_number_reminder(customer)
+    @imports = customer.imports.where.not(:imports => {status: "ready_to_load"}).where("(imports.bl_received_at IS NULL OR imports.entry_number IS NULL) AND (imports.estimate_arrival BETWEEN ? AND ?)", Date.today, (Date.today + 5.days))
+    mail(to: customer.emails.split(","), subject: "Pending Documents – #{Date.today.to_date.try(:to_formatted_s)}")
+  end
 
 end

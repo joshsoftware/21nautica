@@ -28,7 +28,7 @@ module Report
             sheet.sheet_view.pane do |pane|
               pane.state = :frozen
               pane.y_split = 1
-              pane.x_split = 2
+              pane.x_split = 3
               pane.active_pane = :bottom_right
             end
           end
@@ -42,31 +42,35 @@ module Report
 
     def add_snapshot_report(customer, sheet, center, heading, status)
       sheet.add_row ['In Port']
-      sheet.add_row ['BL Number', 'Shipper', 'Desc', 'Equipment', 'Qty', 'ETA', 'Status', 'Remarks'],
+      sheet.add_row ['Ref Number', 'BL Number', 'Shipper', 'Desc', 'Equipment', 'Qty', 'ETA', 'Copy Doc','OBL', 'DO', 'Rotation #', 'Entry Date', 'Remarks'],
                     style: heading, height: 40
-      imports = @imports.where.not(status: 'ready_to_load')
+      imports = @imports.not_ready_to_load
+      # imports = @imports.where("imports.status!='ready_to_load' OR (imports.bl_received_at IS NULL AND imports.entry_number IS NULL AND imports.entry_type IS NULL)")
       imports.each do |import|
         estimate_arrival = import.estimate_arrival.nil? ? "" : import.estimate_arrival.try(:to_date).try(:strftime,"%d-%b-%Y").to_s
-        sheet.add_row [import.cargo_receipt, import.shipper, import.description, import.equipment,
-                       import.quantity, estimate_arrival, import.status, import.remarks.external.try(:last).try(:desc)]
+        entry_date = import.estimate_arrival.nil? ? "" : import.estimate_arrival.try(:to_date).try(:strftime,"%d-%b-%Y").to_s
+        remarks = import.remarks.external.last(3).map {|rem| rem.created_at.try(:strftime,"%d-%b-%Y").to_s + " - "+ rem.desc}
+        sheet.add_row [import.work_order_number, import.cargo_receipt, import.shipper, import.description, import.equipment,
+                       import.quantity, estimate_arrival, import.created_at.try(:to_date).try(:strftime,"%d-%b-%Y").to_s, import.bl_received_at.try(:to_date).try(:strftime,"%d-%b-%Y").to_s, import.do_received_at.try(:to_date).try(:strftime,"%d-%b-%Y").to_s, import.rotation_number, "", remarks.join("\n")]
       end
       sheet.add_row
       sheet.add_row ['In Transit']
-      sheet.add_row ['BL Number', 'Shipper', 'Desc', 'Container', 'Truck Number', 'Location', 'Status', 'Remarks'],
+      sheet.add_row ['Ref Number','BL Number', 'Shipper', 'Desc', 'Container', 'Truck Number', 'Location', 'Status','','','', '', 'Remarks'],
                     style: heading, height: 40
-      imports = @imports.where(status: 'ready_to_load')
+      imports = @imports.ready_to_load
+      # imports = @imports.where("imports.status='ready_to_load' OR (imports.bl_received_at IS NOT NULL AND imports.entry_number IS NOT NULL AND imports.entry_type IS NOT NULL)")
       imports.each do |import|
         import.import_items.each do |import_item|
           if import_item.delivered? && import_item.close_date
             start_date = Time.new(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day)
             end_date = Time.new(import_item.close_date.year, import_item.close_date.month, import_item.close_date.day)
             difference_in_days = TimeDifference.between(start_date, end_date).in_days
-            sheet.add_row [import.cargo_receipt, import.shipper, import.description, import_item.container_number,
-                           import_item.truck.try(:reg_number), import_item.truck.try(:location), import_item.status,
+            sheet.add_row [import.work_order_number, import.cargo_receipt, import.shipper, import.description, import_item.container_number,
+                           import_item.truck.try(:reg_number), import_item.truck.try(:location), import_item.status, "", "", "", "",
                            import_item.remarks.external.try(:last).try(:desc)] if difference_in_days <= 3
           else
-            sheet.add_row [import.cargo_receipt, import.shipper, import.description, import_item.container_number,
-                           import_item.truck.try(:reg_number), import_item.truck.try(:location), import_item.status, import_item.remarks.external.try(:last).try(:desc)]
+            sheet.add_row [import.work_order_number, import.cargo_receipt, import.shipper, import.description, import_item.container_number,
+                           import_item.truck.try(:reg_number), import_item.truck.try(:location), import_item.status, "", "", "", "", import_item.remarks.external.try(:last).try(:desc)]
           end
         end
       end
@@ -168,8 +172,8 @@ module Report
                      item.container_number, import.equipment, import.description,
                      import.estimate_arrival.nil? ? "" :
                      import.estimate_arrival.to_date.strftime("%d-%b-%Y"),
-                     item.truck.try(:reg_number), h["copy_documents_received"],
-                     h["original_documents_received"], h["container_discharged"],
+                     item.truck.try(:reg_number), import.created_at.to_date.strftime("%d-%b-%Y"),
+                     import.bl_received_at.try(:to_date).try(:strftime, "%d-%b-%Y" ).to_s, h["container_discharged"],
                      h["ready_to_load"], h["truck_allocated"], h["loaded_out_of_port"],
                      (h["arrived_at_border"]), (h["departed_from_border"]), (h["arrived_at_destination"]),
                      h["delivered"]],

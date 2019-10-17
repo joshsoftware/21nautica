@@ -47,8 +47,7 @@ class BreakdownManagementsController < ApplicationController
 
   def set_trucks
     @trucks = Truck.order(:reg_number)
-                   .where.not(reg_number: 'Co-Loaded Truck')
-                   .where.not(reg_number: '3rd Party Truck')
+                   .where.not(reg_number: TRUCK_REG_NUMBER)
                    .map {|truck| [truck.reg_number, truck.id] }
   end
 
