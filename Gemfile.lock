@@ -67,6 +67,7 @@ GEM
     byebug (9.0.6)
     cancan (1.6.10)
     cancancan (1.13.1)
+    chronic (0.10.2)
     codeclimate-test-reporter (0.4.6)
       simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.0)
@@ -265,6 +266,8 @@ GEM
       raindrops (~> 0.7)
     warden (1.2.3)
       rack (>= 1.0)
+    whenever (1.0.0)
+      chronic (>= 0.6.3)
     will_paginate (3.1.8)
     will_paginate-bootstrap (1.0.2)
       will_paginate (>= 3.0.3)
@@ -323,6 +326,7 @@ DEPENDENCIES
   turbolinks
   uglifier (>= 1.3.0)
   unicorn
+  whenever
   will_paginate (~> 3.1.0)
   will_paginate-bootstrap
 
