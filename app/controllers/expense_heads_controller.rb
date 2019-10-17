@@ -2,7 +2,7 @@
 class ExpenseHeadsController < ApplicationController
   before_action :set_expense_head, only: %i[edit update]
   def index
-    @expense_heads = ExpenseHead.paginate(page: params[:page], per_page: 20)
+    @expense_heads = ExpenseHead.order(:name).paginate(page: params[:page], per_page: 20)
   end
 
   def new
