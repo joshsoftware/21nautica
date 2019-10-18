@@ -32,6 +32,7 @@ class ImportItem < ActiveRecord::Base
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
   validates_presence_of :container_number
   validates_uniqueness_of :container_number
+  before_validation :strip_whitespaces, :only => [:container_number]
  
   delegate :bl_number, to: :import
   delegate :clearing_agent, to: :import, allow_nil: true
@@ -47,6 +48,10 @@ class ImportItem < ActiveRecord::Base
     ImportExpense::CATEGORIES.each do |category|
       record.import_expenses.create(category: category)
     end
+  end
+
+  def strip_whitespaces
+    self.container_number = container_number.strip.squish
   end
 
   def assignment_of_truck_number
@@ -98,10 +103,12 @@ class ImportItem < ActiveRecord::Base
 
   def update_transport_cash
     if self.status.eql?('loaded_out_of_port') && truck.present?
-      last_balance = TransportManagerCash.last_balance
+      last_balance = TransportManagerCash.try(:last_balance)
       transport_manager_cash = self.truck.transport_manager_cashes.find_by(transaction_date:nil)
-      current_balance = last_balance - transport_manager_cash.transaction_amount.to_f
-      transport_manager_cash.update(transaction_date: Date.today, available_balance: current_balance)
+      if transport_manager_cash
+        current_balance = last_balance - transport_manager_cash.try(:transaction_amount).to_f
+        transport_manager_cash.update(transaction_date: Date.today, available_balance: current_balance)
+      end
     end
   end
 

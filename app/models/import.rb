@@ -39,6 +39,7 @@ class Import < ActiveRecord::Base
   validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number, :bl_received_type
   validates_presence_of :work_order_number, on: :create
   validates_uniqueness_of :bl_number
+  before_validation :strip_whitespaces, :only => [:bl_number]
   validates_format_of :bl_received_at, :with => /\d{4}\-\d{2}\-\d{2}/, :message => "^Date must be in the following format: yyyy/mm/dd", :allow_blank => true
   validate :should_be_future_date
 
@@ -52,6 +53,10 @@ class Import < ActiveRecord::Base
   scope :custom_entry_not_generated, -> {where("entry_number IS NULL OR entry_type IS NULL")}
   scope :custom_shipping_dates_not_present, -> {where("entry_number IS NULL OR entry_type IS NULL OR bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR gf_return_date IS NULL")}
 
+
+  def strip_whitespaces
+    self.bl_number = bl_number.strip.squish
+  end
   #following code will be needed when we add new_order_flag to import table
   # scope :shipping_dates_not_present, -> {where("CASE WHEN is_new_order = TRUE THEN (bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL) ELSE TRUE END")}
   # scope :shipping_dates_present, -> {where.not("CASE WHEN is_new_order = TRUE THEN (bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL) ELSE TRUE END")}
