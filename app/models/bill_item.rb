@@ -27,7 +27,8 @@ class BillItem < ActiveRecord::Base
 
   validates_presence_of :quantity, :rate, :line_amount
   #bill_date & vendor_id asssign after save bill
-
+  scope :usd, -> {joins(:bill).where(:bills => {currency: 'USD' })}
+  scope :ugx, -> {joins(:bill).where(:bills => {currency: 'UGX' })}
   validates :charge_for, presence: true, allow_blank: false 
   validates :rate, :numericality => { :greater_than => 0 }
 

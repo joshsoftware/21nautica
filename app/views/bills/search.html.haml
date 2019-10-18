@@ -30,8 +30,14 @@
         .col-md-4
           %h5 
             %b
-              Total Vendor Invoice value: 
-              = number_with_precision(@sum_of_bl - @debit_notes_sum, precision: 2)
+              Total Vendor Invoice value(USD): 
+              = number_with_precision(@sum_of_bl_usd - @debit_notes_sum_usd, precision: 2)
+            %br
+            %b
+              Total Vendor Invoice value(UGX): 
+              = number_with_precision(@sum_of_bl_ugx - @debit_notes_sum_ugx, precision: 2)
+        
+        
         .col-md-4
           %h5 
             %b

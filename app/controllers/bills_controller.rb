@@ -135,13 +135,18 @@ class BillsController < ApplicationController
     if item_for == 'bl'
       @equipment_type = BillOfLading.where('lower(bl_number) = ?', number.downcase).first.equipment_type
       @invoice_for_bl = BillItem.where(activity_id: activity_id, activity_type: 'Import', item_for: "container")
-      @sum_of_bl = BillItem.where(activity_id: activity_id, activity_type: 'Import').sum(:line_amount) 
+      @sum_of_bl_usd = BillItem.usd.where(activity_id: activity_id, activity_type: 'Import').sum(:line_amount) 
+      @sum_of_bl_ugx = BillItem.ugx.where(activity_id: activity_id, activity_type: 'Import').sum(:line_amount)
       @debit_notes = DebitNote.where(bill_id: bill_items.pluck(:bill_id))
-      @debit_notes_sum = @debit_notes.sum(:amount)
+      @debit_notes_sum_usd = @debit_notes.usd.sum(:amount)
+      @debit_notes_sum_ugx = @debit_notes.ugx.sum(:amount)
     else
       @debit_notes = DebitNote.where(bill_id: bill_items.pluck(:bill_id), debit_note_for: 'container')
-      @debit_notes_sum = @debit_notes.sum(:amount)
-      @sum_of_bl = BillItem.where('lower(item_number) = ? and activity_type = ?', number.downcase, 'Import').sum(:line_amount) 
+      @debit_notes_sum_usd = @debit_notes.usd.sum(:amount)
+      @debit_notes_sum_ugx = @debit_notes.ugx.sum(:amount)
+      @sum_of_bl_usd = BillItem.usd.where('lower(item_number) = ? and activity_type = ?', number.downcase, 'Import').sum(:line_amount) 
+      @sum_of_bl_ugx = BillItem.ugx.where('lower(item_number) = ? and activity_type = ?', number.downcase, 'Import').sum(:line_amount) 
+
     end
   end
 
@@ -153,20 +158,27 @@ class BillsController < ApplicationController
     if item_for == 'container'
       bl_number = ExportItem.where('lower(container) = ?', number.downcase).first.movement.try(:bl_number)
       @quantity = Movement.where(bl_number: bl_number).count
-      @sum_of_bl = BillItem.where('lower(item_number) = ? and activity_type = ?', number.downcase, 'Export').sum(:line_amount) 
+      @sum_of_bl_usd = BillItem.usd.where('lower(item_number) = ? and activity_type = ?', number.downcase, 'Export').sum(:line_amount) 
+      @sum_of_bl_usd = BillItem.ugx.where('lower(item_number) = ? and activity_type = ?', number.downcase, 'Export').sum(:line_amount) 
       @debit_notes = DebitNote.where(bill_id: bill_items.pluck(:bill_id), debit_note_for: 'container')
-      @debit_notes_sum = @debit_notes.sum(:amount)
+      @debit_notes_sum_usd = @debit_notes.usd.sum(:amount)      
+      @debit_notes_sum_ugx = @debit_notes.ugx.sum(:amount)
     else
       @debit_notes = DebitNote.where(bill_id: bill_items.pluck(:bill_id))
-      @debit_notes_sum = @debit_notes.sum(:amount)
+      @debit_notes_sum_usd = @debit_notes.usd.sum(:amount)
+      @debit_notes_sum_ugx = @debit_notes.ugx.sum(:amount)
       @equipment_type = BillOfLading.where('lower(bl_number) = ?', number.downcase).first.equipment_type
       @quantity = movement.count
       containers = movement.map{|m| m.export_item.try(:container)}
       @invoice_for_bl = BillItem.where(activity_id: activity_id, activity_type: 'Export', item_for: 'container', item_number: containers)
-      sum_of_container = @invoice_for_bl.sum(:line_amount)
-      sum_of_bl = BillItem.where('lower(item_number) = ? and activity_id = ? and activity_type = ? and item_for = ?', 
+      sum_of_container_usd = @invoice_for_bl.usd.sum(:line_amount)
+      sum_of_container_ugx = @invoice_for_bl.ugx.sum(:line_amount)      
+      sum_of_bl_usd = BillItem.usd.where('lower(item_number) = ? and activity_id = ? and activity_type = ? and item_for = ?', 
                                         number.downcase, activity_id, 'Export', 'bl').sum(:line_amount)
-      @sum_of_bl = sum_of_container + sum_of_bl
+      sum_of_bl_ugx = BillItem.ugx.where('lower(item_number) = ? and activity_id = ? and activity_type = ? and item_for = ?', 
+                                        number.downcase, activity_id, 'Export', 'bl').sum(:line_amount)
+      @sum_of_bl_usd = sum_of_container_usd + sum_of_bl_usd
+      @sum_of_bl_ugx = sum_of_container_ugx + sum_of_bl_ugx    
     end
   end
 
