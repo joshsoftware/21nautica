@@ -14,20 +14,29 @@ puts 'server'
 puts server
 
 if server == 'ug'
+  set :rails_env, "production"
+  app_env = 'ug-production'
   path = '/www/ug-21nautica' 
   set :branch, 'ug_production'
 elsif server == 'erp'
+  set :rails_env, "production"
+  app_env = 'erp-production'
   path = '/www/erp-21nautica' 
   set :branch, 'erp'
 elsif server == 'int'
+  set :rails_env, "production"
+  app_env = 'int-production'
   path = '/www/int-21nautica'
   set :branch, 'int_production'
 elsif server == 'rfs'
+  set :rails_env, "production"
+  app_env = 'rfs-production'
   path = '/www/rfs-21nautica'
   set :branch, 'production'
 else
   path = '/www/staging'
   set :rails_env, 'staging'
+  app_env = 'staging'
   branch = ENV['branch'] || 'staging'
   set :branch, branch  
 end
@@ -101,7 +110,7 @@ task :deploy => :environment do
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
-    invoke :'rails:db_create'
+    # invoke :'rails:db_create'
     invoke :'rails:db_migrate'
     invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
@@ -109,6 +118,7 @@ task :deploy => :environment do
     to :launch do
       queue "mkdir -p #{deploy_to}/#{current_path}/tmp/"
       queue "touch #{deploy_to}/#{current_path}/tmp/restart.txt"
+      queue "cd #{deploy_to}/#{current_path} && bundle exec whenever --write-crontab --set 'environment=#{fetch(:rails_env)}'" if app_env == "rfs-production"
     end
   end
 end
