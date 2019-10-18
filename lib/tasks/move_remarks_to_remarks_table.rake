@@ -8,18 +8,18 @@ namespace :move_remarks_to_remarks_table do
         if audit.audited_changes.key?(:remarks)
           audit.audited_changes[:remarks].each_with_index do |remark, index|
             next if remark.to_s.blank?
-            date = Date.today
+            @date = audit.audited_changes[:updated_at][index].to_s
             begin
-              date = Date.strptime((remark.match /\d{2}\.\d{2}\.\d{2}/).to_s, '%d.%m.%Y')
+              @date = Date.strptime((remark.match /\d{2}\.\d{2}\.\d{2}/).to_s, '%d.%m.%Y')
               remark = remark.sub(/\d{2}\.\d{2}\.\d{2}/, '')
-              if date.nil?
-                date = Date.strptime((remark.match /\d{2}\/\d{2}\/\d{2}/).to_s, '%d.%m.%Y')
+              if @date.nil?
+                @date = Date.strptime((remark.match /\d{2}\/\d{2}\/\d{2}/).to_s, '%d.%m.%Y')
                 remark = remark.sub(/\d{2}\/\d{2}\/\d{2}/, '')
               end
             rescue
-              date = audit.audited_changes[:updated_at][index].to_s
+              @date = Date.today
             end
-            remarks.push({category: "external", date: date, desc: remark})
+            remarks.push({category: "external", date: @date, desc: remark})
           end
         end
       end
@@ -32,18 +32,18 @@ namespace :move_remarks_to_remarks_table do
         if audit.audited_changes.key?(:remarks)
           audit.audited_changes[:remarks].each_with_index do |remark, index|
             next if remark.to_s.blank?
-            date = Date.today
+            @date = audit.audited_changes[:updated_at][index].to_s
             begin
-              date = Date.strptime((remark.match /\d{2}\.\d{2}\.\d{2}/).to_s, '%d.%m.%Y')
+              @date = Date.strptime((remark.match /\d{2}\.\d{2}\.\d{2}/).to_s, '%d.%m.%Y')
               remark = remark.sub(/\d{2}\.\d{2}\.\d{2}/, '')
-              if date.nil?
-                date = Date.strptime((remark.match /\d{2}\/\d{2}\/\d{2}/).to_s, '%d.%m.%Y')
+              if @date.nil?
+                @date = Date.strptime((remark.match /\d{2}\/\d{2}\/\d{2}/).to_s, '%d.%m.%Y')
                 remark = remark.sub(/\d{2}\/\d{2}\/\d{2}/, '')
               end
             rescue
-              date = audit.audited_changes[:updated_at][index].to_s
+              @date = Date.today
             end
-            remarks.push({category: "external", date: date, desc: remark})
+            remarks.push({category: "external", date: @date, desc: remark})
           end
         end
       end

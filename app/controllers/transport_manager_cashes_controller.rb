@@ -15,6 +15,8 @@ class TransportManagerCashesController < ApplicationController
 
   def new
     @transport_manager_cash = TransportManagerCash.new
+    @sr_number = TransportManagerCash.where('created_at >= ? ',Date.today.beginning_of_month)
+                                     .where.not(sr_number: nil).last.sr_number
   end
 
   def create
@@ -46,10 +48,11 @@ class TransportManagerCashesController < ApplicationController
   end
 
   def set_trucks
-    @trucks = ImportItem.includes(:truck)
-                        .where.not(truck_id: nil)
-                        .where(status: 'truck_allocated')
-                        .map { |import_item| [import_item.truck.reg_number, import_item.id] }
+    # @trucks = ImportItem.includes(:truck)
+    #                     .where.not(truck_id: nil)
+    #                     .where(status: 'truck_allocated')
+    #                     .map { |import_item| [import_item.truck.reg_number, import_item.id] }
+    @trucks = Truck.order(:reg_number).where.not(reg_number:['3rd Party Truck', 'Co-Loaded Truck']).map {|truck| [truck.reg_number, truck.id]}
   end
 
   def set_transport_cash

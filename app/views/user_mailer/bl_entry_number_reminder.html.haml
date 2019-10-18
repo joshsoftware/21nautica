@@ -1,0 +1,29 @@
+!!!
+%html
+  %body
+    %p
+    %meta{content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %p
+      Dear Customer,
+    %p
+      Please be informed that we have a few incomplete documents for your shipments in our possession.
+    %p
+      %ol
+      -@imports.each do |import|
+        %li
+          BL Number: #{import.bl_number} - ETA: #{import.estimate_arrival.try(:to_date).try(:to_formatted_s)} - #{if !import.bl_received_at.present? then 'Original Missing ' end} #{if !import.entry_number.present? then ' Entry Missing' end}
+    %p
+      In the event you have sent these documents to us, please reply to this email confirming the same. Someone from our customer service team will follow up and rectify if the documents were not received by us
+    %p
+      We would request you to ensure all the documents are in place before the vessel arrival as this would help us to deliver the cargo without any delay.
+    %p 
+      We thank you for your continued support and value your business. Looking forward to serving you.
+    %p
+      Incase you have any issues please don’t hesitate to call us, or email us.
+    %p
+      %br
+      %br
+      Warm Regards
+      %br
+      Customer Service
+      %br

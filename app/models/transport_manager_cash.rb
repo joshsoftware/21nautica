@@ -2,7 +2,7 @@
 class TransportManagerCash < ActiveRecord::Base
   validates :import_item_id, :transaction_amount, presence: true, if: -> { transaction_type.include?('Withdrawal') }
   validate :cash_assigned?, if: -> { transaction_date.nil? }
-  before_save  :update_truck_id, :update_import_id, if: -> { transaction_type.include?('Withdrawal') }
+  before_save  :update_import_item_id, :update_import_id, if: -> { transaction_type.include?('Withdrawal') }
   before_create :update_sr_number, if: -> { transaction_type.include?('Withdrawal') }
   belongs_to :created_by, class_name: 'User', foreign_key: 'created_by_id'
   belongs_to :import
@@ -18,8 +18,8 @@ class TransportManagerCash < ActiveRecord::Base
     self.sr_number = last_enrty_month + 1
   end
 
-  def update_truck_id
-    self.truck_id = import_item.truck.id
+  def update_import_item_id
+    self.import_item_id = truck.import_items.truck_allocated.last.id
   end
 
   def update_import_id

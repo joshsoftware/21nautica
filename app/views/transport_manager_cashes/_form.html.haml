@@ -1,15 +1,22 @@
 .col-md-12
 = simple_form_for(@transport_manager_cash, html: { id: 'add_new_transport_cash', class: 'form-horizontal transport_manager_cash'},defaults: {input_html: {class: 'form-control'}}) do |f|
   .well
+    -if params[:action].eql?('new')
+      .row
+        .col-md-6
+          =f.input :sr_number, label: 'Trip Number', disabled: true, input_html: { value: @sr_number+1 }  
     .row
       .col-md-6
-        = f.input :import_item_id, label: 'Truck', as: :select, collection: @trucks, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Truck Number is required.", class:'truck_number'}
+        = f.input :date, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker", :'date-autoclose'=> 'true'}, value: Date.today.strftime('%d/%m/%Y')}
       .col-md-6
-        = f.input :date, disabled:true, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}, value: Date.today.strftime('%d-%m-%Y')}
+        = f.input :truck_id, label: 'Truck', as: :select, collection: @trucks, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Truck Number is required.", class:'truck_number'}
     .row
       .col-md-6
         = f.input :transaction_amount, label: 'Amount', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Amount Number is required."}
         = f.hidden_field :transaction_type,value:'Withdrawal'
+      .col-md-6
+        = label_tag 'Is truck loaded out of port '
+        = check_box_tag 'Is truck loaded out of port',true
     %br
     %br
     .center
@@ -18,3 +25,6 @@
 
 :javascript
   $('.truck_number').select2({width: '100%'})
+  $('#transport_manager_cash_date').datepicker({
+    format:'dd/mm/yyyy'
+  })
