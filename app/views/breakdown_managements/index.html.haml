@@ -19,7 +19,8 @@
     %th Parts Required
     %th Sending Date
     %th Remark
-    %th Action
+    -if params[:status].eql?('Open') || params.count == 2
+      %th Action 
   %tbody
     - @breakdown_managements.each do |breakdown_management|
       %tr
@@ -32,4 +33,5 @@
         %td= breakdown_management.parts_required ? "Yes" : "No"
         %td= breakdown_management.sending_date.to_date.strftime('%d-%m-%Y') if breakdown_management.sending_date.present?
         %td{class: 'breakdown_td'}= breakdown_management.remark
-        %td= link_to 'Edit', edit_breakdown_management_path(breakdown_management), class: 'btn btn-primary' if breakdown_management.status.eql?('Open')
+        -if breakdown_management.status.eql?('Open')
+          %td= link_to 'Edit', edit_breakdown_management_path(breakdown_management), class: 'btn btn-primary'
