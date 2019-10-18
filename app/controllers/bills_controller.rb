@@ -103,7 +103,7 @@ class BillsController < ApplicationController
   def search
     number = params[:number]
     if params[:number]
-      @bill_items = BillItem.where(item_type: params[:item_type], item_for: params[:item_for]).where('lower(item_number) = ?', params[:number].downcase).order(charge_for: :asc)
+      @bill_items = BillItem.includes(:bill).where(item_type: params[:item_type], item_for: params[:item_for]).where('lower(item_number) = ?', params[:number].downcase).order(charge_for: :asc)
       get_customer_invoices(number, params[:item_for])
 
       if @bill_items.any?
@@ -115,7 +115,7 @@ class BillsController < ApplicationController
         end
       end
     else
-      @bill_items = BillItem.where(item_type: params[:item_type], item_for: params[:item_for]).where('lower(item_number) = ?', number).order(charge_for: :asc)
+      @bill_items = BillItem.includes(:bill).where(item_type: params[:item_type], item_for: params[:item_for]).where('lower(item_number) = ?', number).order(charge_for: :asc)
     end
   end
 
@@ -134,7 +134,7 @@ class BillsController < ApplicationController
     activity_id = query.activity_id
     if item_for == 'bl'
       @equipment_type = BillOfLading.where('lower(bl_number) = ?', number.downcase).first.equipment_type
-      @invoice_for_bl = BillItem.where(activity_id: activity_id, activity_type: 'Import', item_for: "container")
+      @invoice_for_bl = BillItem.includes(:bill).where(activity_id: activity_id, activity_type: 'Import', item_for: "container")
       @sum_of_bl_usd = BillItem.usd.where(activity_id: activity_id, activity_type: 'Import').sum(:line_amount) 
       @sum_of_bl_ugx = BillItem.ugx.where(activity_id: activity_id, activity_type: 'Import').sum(:line_amount)
       @debit_notes = DebitNote.where(bill_id: bill_items.pluck(:bill_id))
@@ -170,7 +170,7 @@ class BillsController < ApplicationController
       @equipment_type = BillOfLading.where('lower(bl_number) = ?', number.downcase).first.equipment_type
       @quantity = movement.count
       containers = movement.map{|m| m.export_item.try(:container)}
-      @invoice_for_bl = BillItem.where(activity_id: activity_id, activity_type: 'Export', item_for: 'container', item_number: containers)
+      @invoice_for_bl = BillItem.includes(:bill).where(activity_id: activity_id, activity_type: 'Export', item_for: 'container', item_number: containers)
       sum_of_container_usd = @invoice_for_bl.usd.sum(:line_amount)
       sum_of_container_ugx = @invoice_for_bl.ugx.sum(:line_amount)      
       sum_of_bl_usd = BillItem.usd.where('lower(item_number) = ? and activity_id = ? and activity_type = ? and item_for = ?', 
