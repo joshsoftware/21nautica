@@ -28,3 +28,7 @@
   window.addEventListener("page:before-change", function (event) {
     $("#loader_div").show();
   });
+  window.addEventListener("page:before-unload", function (event) {
+    $("#loader_div").hide();
+  });
+  
