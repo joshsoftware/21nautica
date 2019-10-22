@@ -49,8 +49,18 @@
       async: true)
       .done((data) ->
         remarks = ""
-        for remark in data.remarks
-          remarks += "<div><span class='bold col-md-3 -ml2'>"+(if remark.category == 'internal' then 'I' else 'E')+" - "+formatDate(remark.date)+" - </span><span class='col-md-10 -ml9'>  "+remark.desc+"</span></div>"
+        if model_type == "import_item"
+          remarks += "<div class='remark-model'> On Container</div>"
+          for remark in data.container_remarks
+            remarks += "<div><span class='bold col-md-3 -ml2'>"+(if remark.category == 'internal' then 'I' else 'E')+" - "+formatDate(remark.date)+" - </span><span class='col-md-10 -ml9'>  "+remark.desc+"</span></div>"
+          if data.order_remarks.length > 0
+            remarks += "<br><br><div class='remark-model'>On Order </div>"
+          for remark in data.order_remarks
+            remarks += "<div><span class='bold col-md-3 -ml2'>"+(if remark.category == 'internal' then 'I' else 'E')+" - "+formatDate(remark.date)+" - </span><span class='col-md-10 -ml9'>  "+remark.desc+"</span></div>"
+        else
+          for remark in data.remarks
+            remarks += "<div><span class='bold col-md-3 -ml2'>"+(if remark.category == 'internal' then 'I' else 'E')+" - "+formatDate(remark.date)+" - </span><span class='col-md-10 -ml9'>  "+remark.desc+"</span></div>"        
+
         $("#all_remarks").html(remarks)
       )
 
