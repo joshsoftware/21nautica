@@ -3,7 +3,7 @@
     .row
       .col-md-3
         %label Item Type(Import/Export)
-      .col-md-5
+      .col-md-5.item_for
         = label_tag 'import', 'Import'
         = radio_button_tag 'item_type', 'Import', true 
         = label_tag 'import', 'Export'
@@ -12,7 +12,7 @@
     .row
       .col-md-3
         %label Item For(Bl/Container)
-      .col-md-5
+      .col-md-5.item_for
         = label_tag 'import', 'Container'
         = radio_button_tag 'item_for', 'container', true
         = label_tag 'bl', 'Bl'
