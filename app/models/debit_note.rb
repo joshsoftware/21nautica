@@ -15,7 +15,10 @@ class DebitNote < ActiveRecord::Base
 
   validates_presence_of :amount, :reason, :vendor_id
   validates_associated :vendor
-
+  scope :usd, -> { where(:currency => 'USD')}
+  scope :ugx, -> { where(:currency => 'ugx')}
+  # Ex:- scope :active, -> {where(:active => true)}
+  # Ex:- scope :active, -> {where(:active => true)}
   after_save :create_vendor_ledger_debit_note
 
   def create_vendor_ledger_debit_note

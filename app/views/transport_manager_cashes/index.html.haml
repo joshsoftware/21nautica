@@ -4,7 +4,7 @@
 %table.table{id: 'transport_cash_table'}
   %thead 
     %th #
-    %th Created Date
+    %th Date
     %th Transaction Date
     %th Truck Number
     %th File Number
@@ -18,7 +18,7 @@
     -@transport_manager_cashes.each do |transport_manager_cash|
       %tr
         %td= transport_manager_cash.sr_number
-        %td= transport_manager_cash.created_at.to_date.strftime('%d-%m-%Y')
+        %td= transport_manager_cash.date.to_date.strftime('%d-%m-%Y')
         %td= transport_manager_cash.transaction_date.to_date.strftime('%d-%m-%Y') if transport_manager_cash.transaction_date
         %td= transport_manager_cash.truck.reg_number if transport_manager_cash.truck_id
         %td= transport_manager_cash.import.work_order_number if transport_manager_cash.import_id

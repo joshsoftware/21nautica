@@ -65,6 +65,7 @@ gem 'sinatra', require: false
 gem 'mina'
 gem 'sparkpost_rails', git: 'git@github.com:paritoshbotre/sparkpost_rails.git', ref: 'cab71c34b8bfa83041ed0c5c83a5aa0c74653e08'
 gem 'time_difference'
+gem 'whenever', require: false
 
 group :development do
   gem 'tlsmail'

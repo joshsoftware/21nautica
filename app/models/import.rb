@@ -39,6 +39,7 @@ class Import < ActiveRecord::Base
   validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number, :bl_received_type
   validates_presence_of :work_order_number, on: :create
   validates_uniqueness_of :bl_number
+  before_validation :strip_whitespace, :only => [:bl_number]
   validates_format_of :bl_received_at, :with => /\d{4}\-\d{2}\-\d{2}/, :message => "^Date must be in the following format: yyyy/mm/dd", :allow_blank => true
   validate :should_be_future_date
 
@@ -70,6 +71,10 @@ class Import < ActiveRecord::Base
       end
     end
     !self.errors.present?
+  end
+
+  def strip_whitespace
+    self.bl_number = bl_number.strip.squish
   end
 
   def bl_number
@@ -198,9 +203,6 @@ class Import < ActiveRecord::Base
     if do_received_at && do_received_at > Date.today
       self.errors.add(:base, "Delivery order received date can not be set as future date")
     end
-    if gf_return_date && gf_return_date > Date.today
-      self.errors.add(:base, "Guarantee form return date can not be set as future date")
-    end    
   end
 
   auditable only: [:status, :updated_at, :remark]

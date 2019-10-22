@@ -55,7 +55,7 @@ class TransportManagerCashesController < ApplicationController
     #                     .where.not(truck_id: nil)
     #                     .where(status: 'truck_allocated')
     #                     .map { |import_item| [import_item.truck.reg_number, import_item.id] }
-    @trucks = Truck.order(:reg_number).where.not(reg_number:['3rd Party Truck', 'Co-Loaded Truck']).map {|truck| [truck.reg_number, truck.id]}
+    @trucks = Truck.order(:reg_number).where.not(reg_number:TRUCK_REG_NUMBER).map {|truck| [truck.reg_number, truck.id]}
   end
 
   def set_transport_cash

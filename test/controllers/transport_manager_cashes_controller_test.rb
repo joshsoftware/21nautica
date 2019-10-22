@@ -4,10 +4,10 @@ class TransportManagerCashesControllerTest < ActionController::TestCase
   setup do
     @user = FactoryGirl.create :user, role: 'Admin'
     sign_in @user
-    @transport_manager_cash = FactoryGirl.create :transport_manager_cash
-    @import_item = FactoryGirl.create :import_item
-    @truck = FactoryGirl.create :truck
     @import = FactoryGirl.create :import
+    @import_item = FactoryGirl.create :import_item, import_id: @import.id
+    @transport_manager_cash = FactoryGirl.create :transport_manager_cash, import_id: @import.id
+    @truck = FactoryGirl.create :truck
   end
 
   test 'should get new' do
@@ -38,9 +38,9 @@ class TransportManagerCashesControllerTest < ActionController::TestCase
   end
 
   test 'should  Edit Transport Manger Cash' do
-    import_item = FactoryGirl.create :import_item
+    # import_item = FactoryGirl.create :import_item
     assert_no_difference 'TransportManagerCash.count' do
-      put :update, transport_manager_cash: { import_item_id: import_item.id,
+      put :update, transport_manager_cash: { import_item_id: @import_item.id,
                                             transaction_amount: '2333',
                                             transaction_type: 'Withdrawal' }, id: @transport_manager_cash
       assert_redirected_to action: 'index'

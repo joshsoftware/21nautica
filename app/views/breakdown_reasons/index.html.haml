@@ -1,0 +1,15 @@
+= link_to "Add New Breakdown Reason", new_breakdown_reason_path, class: 'btn btn-primary pull-right'
+%br
+%br
+
+%table.table{ id: 'breakdown_reason_table_id'}
+  %thead
+    %th Name
+    %th Action 
+  %tbody
+    - @breakdown_reasons.each do |breakdown_reason|
+      %tr
+        %td= breakdown_reason.name 
+        %td= link_to 'Edit', edit_breakdown_reason_path(breakdown_reason), class: 'btn btn-primary' if breakdown_reason.name.exclude?('Trip Allowance')
+
+= will_paginate @breakdown_reasons

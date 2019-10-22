@@ -1,0 +1,12 @@
+.col-md-12
+  = simple_form_for(@breakdown_reason, html: { id: 'breakdown_reason_form', class: 'form-horizontal'},defaults: {input_html: {class: 'form-control'}}) do |f|
+    .well
+      .row
+        .col-md-6
+          = f.input :name, label: 'Reason', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Reason is required."}
+
+      .row
+        .col-md-6
+          = f.submit 'Save', class: 'btn btn-primary', id: 'breakdown_reason_save'
+          = link_to 'Back', breakdown_reasons_path, class: 'btn btn-primary'
+          

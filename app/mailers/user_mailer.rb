@@ -96,8 +96,8 @@ class UserMailer < ActionMailer::Base
     mail(to: @import.customer.emails.split(","), subject: "Rotation Number for BL Number #{@import.bl_number}")
   end
 
-  def bl_entry_number_reminder(customer)
-    @imports = customer.imports.where.not(:imports => {status: "ready_to_load"}).where("(imports.bl_received_at IS NULL OR imports.entry_number IS NULL) AND (imports.estimate_arrival BETWEEN ? AND ?)", Date.today, (Date.today + 5.days))
+  def bl_entry_number_reminder(imports, customer)
+    @imports = imports
     mail(to: customer.emails.split(","), subject: "Pending Documents – #{Date.today.to_date.try(:to_formatted_s)}")
   end
 

@@ -11,6 +11,7 @@ class Truck < ActiveRecord::Base
   has_many :transport_manager_cashes
   has_many :import_items
   has_many :location_dates
+  has_many :breakdown_managements
   belongs_to :current_import_item, class_name: "ImportItem"
   has_many :petty_cashes
   validates :type_of, inclusion: { in: TYPE }

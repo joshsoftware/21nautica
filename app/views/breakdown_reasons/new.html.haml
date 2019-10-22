@@ -1,12 +1,10 @@
-%h1 New Expense Head
+%h3 New Breakdown Reason
 = render :partial => 'form'
 
 :javascript
   window.validate_form = function(){
     $.validate({
-      form: '#add_new_expense_head'
-
+      form: '#breakdown_reason_form'
     });
   }
-  
   validate_form();

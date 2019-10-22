@@ -9,6 +9,7 @@
         %th Bl/Container 
         %th Number 
         %th Amount
+        %th Currency
 
       %tbody
         - @debit_notes.each do |debit_note|
@@ -19,4 +20,4 @@
             %td= debit_note.debit_note_for
             %td= debit_note.number
             %td= number_with_precision(debit_note.amount, precision: 2)
-
+            %td= debit_note.currency
