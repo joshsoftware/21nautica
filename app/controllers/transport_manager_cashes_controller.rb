@@ -1,10 +1,10 @@
 # Transport Manger Cash Controller
 class TransportManagerCashesController < ApplicationController
-  before_action :set_trucks, only: %i[edit new create update]
+  before_action :set_trucks, :set_date, only: %i[edit new create update]
   before_action :set_transport_cash, only: %i[edit update]
 
   def index
-    @transport_manager_cashes = TransportManagerCash.where('created_at >= ? ', Date.today.beginning_of_month)
+    @transport_manager_cashes = TransportManagerCash.where('date >= ? ', Date.today.beginning_of_month)
                                                   .order(:sr_number)
                                                   .includes(:import_item,
                                                             :import,
@@ -15,8 +15,8 @@ class TransportManagerCashesController < ApplicationController
 
   def new
     @transport_manager_cash = TransportManagerCash.new
-    @sr_number = TransportManagerCash.where('created_at >= ? ',Date.today.beginning_of_month)
-                                     .where.not(sr_number: nil).last.sr_number
+    @sr_number = TransportManagerCash.where('date >= ? ',Date.today.beginning_of_month)
+                                     .where.not(sr_number: nil).last.try(:sr_number).to_i
   end
 
   def create
@@ -42,9 +42,12 @@ class TransportManagerCashesController < ApplicationController
 
   def transport_manger_params
     params.require(:transport_manager_cash).permit(:id,
-                                                  :import_item_id,
+                                                   :date,
+                                                  :truck_id,
                                                   :transaction_type,
-                                                  :transaction_amount)
+                                                  :transaction_amount,
+                                                  :file_ref_number,
+                                                  :truck_loaded_out_of_port)
   end
 
   def set_trucks
@@ -57,5 +60,9 @@ class TransportManagerCashesController < ApplicationController
 
   def set_transport_cash
     @transport_manager_cash = TransportManagerCash.find_by(id: params[:id])
+  end
+
+  def set_date
+    @date = TransportManagerCash.last.try(:date) || Date.today.beginning_of_year-1.year
   end
 end
