@@ -36,7 +36,7 @@
       %tr
         %td= breakdown_management.date.to_date.strftime('%d/%m/%Y')
         -if breakdown_management.status.eql?('Close')
-          %td= breakdown_management.close_date.to_date.strftime('%d/%m/%Y')
+          %td= breakdown_management.close_date.to_date.strftime('%d/%m/%Y') if breakdown_management.close_date.present?
         %td= breakdown_management.truck.reg_number
         %td= breakdown_management.breakdown_reason.name
         %td= breakdown_management.location
