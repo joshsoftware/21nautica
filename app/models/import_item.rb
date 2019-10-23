@@ -323,6 +323,14 @@ class ImportItem < ActiveRecord::Base
   end
 
   def create_entry_in_tmc
-    TransportManagerCash.create(transaction_type: "withdrawal", import_id: self.import_id, import_item_id: self.id, truck_id: truck_id ) if truck.reg_number.downcase != "3rd party truck"
+    if truck.present? && self.truck.reg_number.downcase != "3rd party truck"
+      if self.transport_manager_cash.present?
+        self.transport_manager_cash.update_attributes(truck_id: self.truck_id)
+      else
+        TransportManagerCash.create(transaction_type: "Withdrawal", import_id: self.import_id, truck_id: self.truck_id, import_item: self)
+      end
+    else
+      self.transport_manager_cash.destroy if self.transport_manager_cash.present?
+    end
   end
 end

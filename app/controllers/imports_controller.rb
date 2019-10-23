@@ -23,7 +23,7 @@ class ImportsController < ApplicationController
         authorisation_pdf = authorisation_letter_pdf
         UserMailer.welcome_message_import(@import, authority_pdf, authorisation_pdf).deliver
       else
-        # UserMailer.welcome_message_import(@import).deliver()
+        UserMailer.welcome_message_import(@import).deliver()
       end
       redirect_to imports_path
     else
