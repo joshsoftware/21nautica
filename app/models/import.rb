@@ -41,27 +41,19 @@ class Import < ActiveRecord::Base
   validates_uniqueness_of :bl_number
   before_validation :strip_whitespace, :only => [:bl_number]
   validates_format_of :bl_received_at, :with => /\d{4}\-\d{2}\-\d{2}/, :message => "^Date must be in the following format: yyyy/mm/dd", :allow_blank => true
-  validate :should_be_future_date
+  validate :shouldnt_be_future_date
 
   accepts_nested_attributes_for :import_items
 
   enum entry_type: ["wt8", "im4"]
   enum bl_received_type: ["copy", "original_telex"]
+
   scope :ready_to_load, -> {where(status: 'ready_to_load')}
   scope :not_ready_to_load, -> {where.not(status: 'ready_to_load')}
   scope :shipping_dates_not_present, -> {where("bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR gf_return_date IS NULL")}
   scope :custom_entry_not_generated, -> {where("entry_number IS NULL OR entry_type IS NULL")}
   scope :custom_shipping_dates_not_present, -> {where("entry_number IS NULL OR entry_type IS NULL OR bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR gf_return_date IS NULL")}
 
-  #following code will be needed when we add new_order_flag to import table
-  # scope :shipping_dates_not_present, -> {where("CASE WHEN is_new_order = TRUE THEN (bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL) ELSE TRUE END")}
-  # scope :shipping_dates_present, -> {where.not("CASE WHEN is_new_order = TRUE THEN (bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL) ELSE TRUE END")}
-  # scope :custom_entry_not_generated, -> {where("CASE WHEN is_new_order = TRUE THEN (entry_number IS NULL OR entry_type IS NULL) ELSE TRUE END")}
-  # scope :custom_entry_generated, -> {where("CASE WHEN is_new_order = TRUE THEN (entry_number IS NOT NULL AND entry_type IS NOT NULL) ELSE TRUE END")}
-
-  # Hack: I have intentionally not used delegate here, because,
-  # in case of duplicate, the bl_number will be delegated to a non-existent BillOfLading in
-  # the `render :new` call. :allow_nil would not work, as we actually lose the bl_number then!
   def presence_of_date#going to use for date chronology
     ["bl_received_at", "charges_received_at", "charges_paid_at", "do_received_at"].each do |date|
       if self.send("#{date}_changed?".to_sym) && !self.send(date.to_sym).present?
@@ -146,7 +138,7 @@ class Import < ActiveRecord::Base
   
   def late_document_mail
     if estimate_arrival_changed? && estimate_arrival < DateTime.now
-      UserMailer.late_document_mail(self).deliver()
+      # UserMailer.late_document_mail(self).deliver()
     end
   end
 
@@ -162,7 +154,7 @@ class Import < ActiveRecord::Base
 
   def rotation_number_mail
     if rotation_number_changed? && rotation_number.present?
-      UserMailer.rotation_number_mail(self).deliver()
+      # UserMailer.rotation_number_mail(self).deliver()
     end
   end
 
@@ -190,7 +182,7 @@ class Import < ActiveRecord::Base
     end
   end
 
-  def should_be_future_date
+  def shouldnt_be_future_date
     if bl_received_at && bl_received_at > Date.today
       self.errors.add(:base, "BL received date can not be set as future date")
     end

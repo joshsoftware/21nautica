@@ -1,5 +1,4 @@
 FactoryGirl.define do
-
   factory :import_item1, class: "ImportItem" do
   	container_number	'c1'
     #transporter_name 'Mansons'
@@ -15,6 +14,7 @@ FactoryGirl.define do
 
   factory :import_item, class: "ImportItem" do
   	sequence(:container_number) { |con| "container_number_#{con}" }
+    association :import
     status 'truck_allocated'
     association :truck
   end

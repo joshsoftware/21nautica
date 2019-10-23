@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 20191022075218) do
     t.string   "cheque_ocean"
     t.string   "payment_clearing"
     t.string   "cheque_clearing"
-    t.string   "remarks"
+    t.string   "remark"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "agency_fee"
@@ -197,6 +197,11 @@ ActiveRecord::Schema.define(version: 20191022075218) do
     t.integer  "vendor_id"
     t.integer  "truck_id"
     t.datetime "last_loading_date"
+    t.boolean  "exit_note_received",    default: false
+    t.string   "dropped_location"
+    t.integer  "return_status"
+    t.date     "expiry_date"
+    t.boolean  "is_co_loaded",          default: false
   end
 
   add_index "import_items", ["container_number"], name: "index_import_items_on_container_number", using: :btree
@@ -242,6 +247,7 @@ ActiveRecord::Schema.define(version: 20191022075218) do
     t.boolean  "is_late_submission"
     t.string   "rotation_number"
     t.integer  "entry_type"
+    t.boolean  "new_import",                 default: false
   end
 
   add_index "imports", ["bill_of_lading_id"], name: "index_imports_on_bill_of_lading_id", using: :btree
@@ -261,7 +267,7 @@ ActiveRecord::Schema.define(version: 20191022075218) do
     t.integer  "invoiceable_id"
     t.string   "invoiceable_type"
     t.string   "legacy_bl"
-    t.text     "remarks"
+    t.text     "remark"
     t.boolean  "manual",              default: false
   end
 
@@ -330,7 +336,7 @@ ActiveRecord::Schema.define(version: 20191022075218) do
     t.date     "estimate_delivery"
     t.string   "movement_type"
     t.string   "custom_seal"
-    t.string   "remarks"
+    t.string   "remark"
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -369,7 +375,7 @@ ActiveRecord::Schema.define(version: 20191022075218) do
     t.integer  "amount"
     t.string   "mode_of_payment"
     t.string   "reference"
-    t.string   "remarks"
+    t.string   "remark"
     t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -498,6 +504,20 @@ ActiveRecord::Schema.define(version: 20191022075218) do
   end
 
   add_index "spare_parts", ["spare_part_category_id"], name: "index_spare_parts_on_spare_part_category_id", using: :btree
+
+  create_table "status_dates", force: true do |t|
+    t.date     "under_loading_process"
+    t.date     "truck_allocated"
+    t.date     "loaded_out_of_port"
+    t.date     "arrived_at_border"
+    t.date     "departed_from_border"
+    t.date     "arrived_at_destination"
+    t.date     "delivered"
+    t.date     "ready_to_load"
+    t.integer  "import_item_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "suppliers", force: true do |t|
     t.string   "name"

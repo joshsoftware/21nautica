@@ -22,16 +22,23 @@ class ImportItem < ActiveRecord::Base
   include MovementsHelper
   include Remarkable
 
+  enum return_status: ["Empty Returned", "Dropped at Customer"]
   has_many :transport_manager_cashes
   belongs_to :import
   belongs_to :transporter, class_name: "Vendor", foreign_key: "vendor_id"
   belongs_to :icd, class_name: "Vendor"
   belongs_to :truck
   has_many :import_expenses, dependent: :destroy
+  has_one :status_date, dependent: :destroy
 
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
   validates_presence_of :container_number
   validates_uniqueness_of :container_number
+  validate :validate_truck_number
+  # validates_presence_of :exit_note_received, :if => lambda { ["under_loading_process", "truck_allocated"].exclude?(self.status) }
+  validate :validate_expiry_date
+  validate :validate_exit_note_received
+  validate :should_not_remove_truck
  
   delegate :bl_number, to: :import
   delegate :clearing_agent, to: :import, allow_nil: true
@@ -39,6 +46,7 @@ class ImportItem < ActiveRecord::Base
   accepts_nested_attributes_for :import_expenses
 
   # before_save :add_default_date_for_remarks
+  before_save :update_dropped_location, if: :return_status_changed?
   after_save :assign_current_import_item, if: :truck_id_changed?
   after_save :update_last_loading_date, if: :last_loading_date_changed?
   after_update :update_truck_status, :update_transport_cash
@@ -64,34 +72,39 @@ class ImportItem < ActiveRecord::Base
   aasm column: 'status' do
     state :under_loading_process, initial: true
     state :truck_allocated
+    state :ready_to_load
     state :loaded_out_of_port
     state :arrived_at_border
     state :departed_from_border
     state :arrived_at_destination
     state :delivered
 
-    event :allocate_truck, :after => :check_rest_of_the_containers do
-      transitions from: :under_loading_process, to: :truck_allocated
+    event :allocate_truck, :after => [:check_rest_of_the_containers, :save_status_date] do
+      transitions from: :under_loading_process, to: :truck_allocated, guard: [:is_truck_number_assigned?]
     end
 
-    event :loaded_out_of_port, :after => [:create_rfs_invoice] do
-      transitions from: :truck_allocated, to: :loaded_out_of_port, guard: :is_truck_number_assigned?
+    event :ready_to_load, :after => [:save_status_date] do
+      transitions from: :truck_allocated, to: :ready_to_load, guard: [:expiry_date_and_exit_note_received?]
+    end    
+
+    event :loaded_out_of_port, :after => [:create_rfs_invoice, :save_status_date] do
+      transitions from: :ready_to_load, to: :loaded_out_of_port, guard: [:is_all_docs_received?]
     end
 
-    event :arrived_at_border do
+    event :arrived_at_border, :after => [:save_status_date] do
       transitions from: :loaded_out_of_port, to: :arrived_at_border
     end
 
-    event :departed_from_border do
+    event :departed_from_border, :after => [:save_status_date] do
       transitions from: :arrived_at_border, to: :departed_from_border
     end
 
-    event :arrived_at_destination do
+    event :arrived_at_destination, :after => [:save_status_date] do
       transitions from: :departed_from_border, to: :arrived_at_destination
     end
 
-    event :truck_released, :after => [:check_for_invoice, :set_delivery_date, :release_truck] do
-      transitions from: :arrived_at_destination, to: :delivered
+    event :truck_released, :after => [:check_for_invoice, :set_delivery_date, :release_truck, :save_status_date] do
+      transitions from: :arrived_at_destination, to: :delivered, guard: [:return_status_and_dropped_location_present?]
     end
   end
 
@@ -109,7 +122,30 @@ class ImportItem < ActiveRecord::Base
   def is_truck_number_assigned?
     return true if ENV['HOSTNAME'] != 'RFS'
     self.errors[:base] <<  'Add Truck Number first !' if truck.nil?
+    if Truck.find_by(id: truck_id).try(:reg_number).to_s.downcase.include?("3rd party truck") && truck_number.blank?
+      self.errors[:base] <<  "Truck number should be present if 3rd party truck is selected"
+    end
     !self.errors.present?
+  end
+
+  def is_all_docs_received? #all shipping dates present?
+    if import.status != "ready_to_load" && !(import.bl_received_at.present? && import.charges_received_at.present? && import.charges_paid_at.present? && import.do_received_at.present? && import.gf_return_date.present?)
+      self.errors[:base] << "All documents are not received yet for this order"
+      !self.errors.present?
+    else
+      true      
+    end
+  end
+
+  def expiry_date_and_exit_note_received?
+    if import.entry_type == "im4"
+      self.errors[:base] << "Exit note should be received" unless exit_note_received
+      !self.errors.present?
+    elsif import.entry_type == "wt8"
+      self.errors[:base] << "Expiry date is required" if expiry_date.nil?
+      self.errors[:base] << "Exit note should be received" unless exit_note_received
+      !self.errors.present?
+    end
   end
 
   def release_truck
@@ -235,4 +271,55 @@ class ImportItem < ActiveRecord::Base
     import.import_items.update_all(last_loading_date: loading_date)
   end
 
+  def save_status_date
+    if status_date
+      status_date.update_attributes(status.to_sym => Date.today)
+    else
+      create_status_date(status.to_sym => Date.today)
+    end
+  end
+
+  def validate_truck_number
+    if truck_id_changed? && Truck.find_by(id: truck_id).try(:reg_number).to_s.downcase.include?("3rd party truck") && truck_number.blank?
+      self.errors[:base] <<  "Truck number should be present if 3rd party truck is selected"
+    end
+    !self.errors.present?
+  end
+
+  def return_status_and_dropped_location_present?
+    self.errors[:base] << "Return status can not be empty" if return_status.nil?
+    self.errors[:base] << "Dropped location can not be empty" if return_status == ImportItem.return_statuses.keys[1] && dropped_location.to_s.empty?
+    !self.errors
+  end
+
+  def update_dropped_location
+    if return_status == ImportItem.return_statuses.keys[0]
+      self.dropped_location = self.import.return_location
+    end
+  end
+
+  def validate_expiry_date
+    if self.expiry_date.blank? && self.expiry_date_changed?
+      self.errors[:base] << "Expiry date can't be blank once set"
+      return false
+    end
+  end
+
+  def validate_exit_note_received
+    if self.exit_note_received.blank? && self.exit_note_received_changed?
+      self.errors[:base] << "Exit note received can't be blank once set"
+      return false
+    end    
+  end
+
+  def should_not_remove_truck
+    if self.truck_id.blank? && self.truck_id_changed?
+      self.errors[:base] << "You can change the truck but cannot remove"
+      return false
+    end    
+  end
+
+  def create_entry_in_tmc
+    TransportManagerCash.create(transaction_type: "withdrawal", import_id: self.import_id, import_item_id: self.id, truck_id: truck_id ) if truck.reg_number.downcase != "3rd party truck"
+  end
 end

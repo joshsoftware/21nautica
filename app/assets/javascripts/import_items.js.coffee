@@ -25,7 +25,7 @@ datatable_initialize = ->
                     "sPaginationType": "full_numbers"
                     }).makeEditable(
                       sUpdateURL: 'import_items/update',
-                      aoColumns: [null, null, null, null, null, null, null, null,
+                      aoColumns: [null, null, null, null, null, null,
                                   {
                                     type: 'datepicker2',
                                     event: 'click',

@@ -51,19 +51,23 @@ class ImportItemsController < ApplicationController
     @import = @import_item.import
     initial_status = @import_item.status
     remark_params = params[:import_item]
+    params[:import_item][:truck_number] = nil if params[:import_item][:truck_number].blank?
     @import_item.attributes = import_item_params.except('status')
     @import_item.remarks.create(desc: remark_params[:remarks], date: Date.today, category: "external") unless remark_params[:remarks].blank?
-    if initial_status == "under_loading_process"
-      @import_item.allocate_truck
-      @import_item.save
-    else
+    # if initial_status == "under_loading_process"
+      # @import_item.allocate_truck
+      # @import_item.save
+    # else
       status = import_item_params[:status].downcase.gsub(' ', '_')
       begin
-        status != @import_item.status ? @import_item.send("#{status}!".to_sym) : @import_item.save
+        @import_item.send("#{status}!".to_sym) if status != @import_item.status
+        @errors = @import_item.errors.full_messages
+        @import_item.save
       rescue
-        @errors = @import_item.errors
+        @errors = @import_item.errors.full_messages
+        @import_item.save
       end
-    end
+    # end
   end
 
   def history
@@ -94,7 +98,7 @@ class ImportItemsController < ApplicationController
 
   def import_item_params
     params.permit(:id)
-    params.require(:import_item).permit(:truck_number, :status, :context, :transporter_name, :transporter, :truck_id, :last_loading_date)
+    params.require(:import_item).permit(:truck_number, :status, :context, :transporter_name, :transporter, :truck_id, :last_loading_date, :exit_note_received, :expiry_date, :is_co_loaded, :return_status, :dropped_location)
   end
 
   def import_item_update_params

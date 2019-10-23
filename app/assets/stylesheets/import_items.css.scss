@@ -1,0 +1,73 @@
+.import-items-cust-name {
+ width: 17% !important; 
+}
+
+.import-items-bl-number {
+ width: 10% !important; 
+}
+
+.import-items-cont-number {
+ width: 8% !important;
+}
+
+.import-items-file-ref {
+  width: 6% !important;
+}
+
+.import-items-truck-number {
+  width: 7% !important;
+}
+
+.import-items-last-load-date {
+  width: 7% !important;
+}
+
+.import-items-eta {
+  width: 8% !important;
+}
+
+.import-items-location {
+  width: 7% !important;
+}
+
+.import-items-eq {
+  width: 6% !important;
+}
+
+.import-items-status {
+  width: 8% !important; 
+}
+
+.import-items-remarks {
+  width: 20% !important; 
+}
+
+.import_item_last_loading_date {
+  label {
+    display: contents;
+  }
+}
+
+.exit_note_received {
+  label {
+    display: contents;
+  }
+}
+
+#import_items_table_paginate .ui-button {
+  padding: 4px !important;
+}
+
+.import_item_dropped_location {
+  label {
+    display: contents;
+  }
+}
+
+.return_status_field {
+  display: none;
+}
+
+.dropped_location_field {
+  display: none;
+}

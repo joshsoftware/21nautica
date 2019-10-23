@@ -18,7 +18,7 @@ class Truck < ActiveRecord::Base
   validates_presence_of :reg_number
 
   scope :free, -> { where(status: FREE) }
-
+  scope :alloted, -> { where(status: ALLOTED) }
   before_validation :set_status_and_type, on: :create
 
   def is_truck?
@@ -37,5 +37,9 @@ class Truck < ActiveRecord::Base
     location = LocationDate.find_or_initialize_by(date: Date.today, truck_id: truck.id)
     location.update_attributes(location: truck_location)
     truck.update_attributes(location: truck_location)
+  end
+
+  def third_party_truck
+    
   end
 end

@@ -9,36 +9,45 @@
 %table.table{id: 'import_items_table'}
   %thead
     - if is_rfs_host?
-      %th Customer Name / Shipper Name / Consignee Name
+      %th.import-items-cust-name Customer Name / Shipper Name / Consignee Name
     - else
-      %th Customer Name
-    %th BL Number
-    %th Container Number
-    %th Display EQ
-    %th Estimate Arrival
+      %th.import-items-cust-name Customer Name
+    %th.import-items-bl-number BL # / File Ref #
+    %th.import-items-cont-number Container Number
+    %th.import-items-eq Display EQ
+    %th.import-items-eta Estimate Arrival
     - if is_rfs_host? || is_ug_host?
-      %th Truck Number
-      %th Location
-    %th File Ref Number
-    %th Last Loading Date
-    %th Status
-    %th Remarks
+      %th.import-items-truck-number Truck Number / Location
+    %th.import-items-last-load-date Last Loading Date
+    %th.shipping-line-status Shipping Line Status
+    %th.import-items-status Status
+    %th.import-items-remarks Remarks
   %tbody
     - @import_items.each do |item|
+      - import = item.import
       %tr{id: item.id}
         - if is_rfs_host?
           %td= "#{item.customer_name}" + " / " + "#{item.import.shipper}" + "/#{item.import.consignee_name}"
         - else
           %td= item.customer_name
-        %td= item.import.bl_number
+        %td= "#{item.import.bl_number} / #{item.import.work_order_number}"
         %td= item.container_number
         %td= item.import.equipment
         %td= item.import.estimate_arrival
         - if is_rfs_host? || is_ug_host?
-          %td.truck_id= item.truck.nil? ? '' : item.truck.reg_number
-          %td= item.truck.nil? ? '' : item.truck.location
-        %td= item.import.work_order_number
+          %td.truck_id= "#{item.truck.nil? ? '' : item.truck.reg_number} / #{item.truck.nil? ? '' : item.truck.location}"
         %td.last_loading_date= item.last_loading_date.nil? ? '' : item.last_loading_date.strftime('%Y-%m-%d')
+        %td.shipping-status
+          -if import.bl_received_at
+            .date.obl= "OBL: #{import.bl_received_at.to_date.to_formatted_s}"
+          -if import.charges_received_at
+            .date.cr= "C/R: #{import.charges_received_at.to_date.to_formatted_s}"
+          -if import.charges_paid_at
+            .date.cp= "C/P: #{import.charges_paid_at.to_date.to_formatted_s}"
+          -if import.do_received_at
+            .date.do= "DO: #{import.do_received_at.to_date.to_formatted_s}"
+          -if item.expiry_date
+            .date.exp= "Exp: #{item.expiry_date.to_date.to_formatted_s}"          
         %td.updatestatus{class: "text-center"}
           .updatestatus.h5
             .status_updated_at

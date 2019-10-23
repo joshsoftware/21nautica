@@ -9,15 +9,33 @@
     .modal-header
       = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
       %h1.modal-title Update Status
+      %hr
       .modal-body
         #truck_number
-        = f.label :truck_number
+        /= f.label :truck_number
         = f.input :status, collection: status, :input_html => {:class => 'select required form-control text-capitalize'}
-        = f.input :remarks, as: :text, required: false
+        /=f.input :remarks, as: :text, required: false
         - readonly = ['loaded_out_of_port', 'arrived_at_border', 'departed_from_border', 'arrived_at_destination'].include?(@import_item.status)
-        - if is_rfs_host? || is_ug_host?
-          = f.input :truck_id, collection: reallocate_truck_numbers, include_blank: true, label: 'Truck Number'
-          = f.input :last_loading_date, as: :string, input_html: { class: "form-control", value: f.object.last_loading_date.try(:strftime, "%Y-%m-%d") }
+        -if is_rfs_host? || is_ug_host?
+          -if current_user.role == "Admin"
+            = f.input :truck_id, collection: reallocate_truck_numbers[:free], include_blank: true, label: 'Truck'
+            = f.input :truck_number, label: 'Truck Number'
+          - else
+            = f.input :truck_id, collection: reallocate_truck_numbers[:free], include_blank: true, label: 'Truck', :disabled => @import_item.truck_id.present?
+            = f.input :truck_number, label: 'Truck Number', :disabled => @import_item.truck_number.present?
+          = f.input :last_loading_date, as: :string, input_html: { class: "form-control last_loading_date", value: f.object.last_loading_date.try(:strftime, "%Y-%m-%d") }, label: "Last Loading date"
+          .custom-entry-released
+            %hr
+            .form-group
+              .col-md-3
+                = f.label :exit_note_received, "Exit Note Received?"
+              .col-md-6
+                = f.check_box :exit_note_received, :class => "form-check-input exit-note-received"
+            = f.input :expiry_date, as: :string, input_html: { class: "form-control expiry_date custom-entry-released", value: f.object.expiry_date.try(:strftime, "%Y-%m-%d") }, label: "Expiry Date" if @import_item.import.entry_type == "wt8"
+          .return_status_field
+            = f.input :return_status, collection: ImportItem.return_statuses.keys, :input_html => {:class => 'select required form-control text-capitalize'}
+          .dropped_location_field
+            = f.input :dropped_location, as: :string, :input_html => {:class => "form-control text-capitalize dropped_location"}
 
       .modal-footer
         = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
@@ -26,16 +44,41 @@
 :coffeescript
   $('#import_item_truck_id').select2({allowClear: true, placeholder: "Select an truck"});
   $('#import_item_last_loading_date').datepicker({ format: 'yyyy/mm/dd' });
+  $('#import_item_expiry_date').datepicker({ format: 'yyyy/mm/dd' });
   import_item = #{@import_item.to_json}
+  if $("#import_item_status").val() == "under_loading_process"
+    $(".custom-entry-released").hide()
   $('#statusModal').on 'show.bs.modal', (event) ->
+    if #{@import_item.truck_number.present?}
+      $(".import_item_truck_number").show()
+    else
+      $(".import_item_truck_number").hide()
     statuses = ['loaded_out_of_port', 'arrived_at_border', 'departed_from_border', 'arrived_at_destination']
     if statuses.includes?(import_item.status)
       #$('#import_item_truck_id').select2('readonly', 'readonly')
     else
       #$('#import_item_truck_id').select2('readonly', false)
     $('#import_item_remarks').val('')
-
    $('#import_item_status').on 'change', ->
     # if $(this).val() == 'truck_released'
     #   $('#import_item_truck_id').select2('readonly', false)
 
+  $("#import_item_truck_id").on 'change', (event) ->
+    if event.added.text.toLowerCase().includes("3rd party truck")
+      $("#import_item_truck_number").removeAttr("disabled")
+      $(".import_item_truck_number").show()
+    else
+      $("#import_item_truck_number").val("")
+      $(".import_item_truck_number").hide()
+
+  $("#import_item_status").on 'change', (event) ->
+    if event.target.selectedOptions[0].value == "allocate_truck"
+      $(".custom-entry-released").show()
+    if event.target.selectedOptions[0].value == "under_loading_process"
+      $(".custom-entry-released").hide()
+    if event.target.selectedOptions[0].value == "truck_released"
+      $(".return_status_field").show()
+
+  $("#import_item_return_status").on 'change', (event) ->
+    if event.target.selectedOptions[0].value == "Dropped at Customer"
+      $(".dropped_location_field").show()

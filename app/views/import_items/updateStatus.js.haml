@@ -1,6 +1,8 @@
-- if @errors.present?
-  $('#statusModal .modal-body').append('<div class= "alert alert-danger"> #{@errors.full_messages.join(', ')} </div>')
-- else
+
+$('#statusModal .alert').remove();
+-if @errors.present? || @import_item.errors.full_messages.present?
+  $('#statusModal .modal-body').append("<div class= 'alert alert-danger'> #{@errors.concat(@import_item.errors.full_messages).uniq.join(' and ')}</div>")
+-else
   $('#statusModal').modal('hide')
   - @import.import_items.each do |import_item|
     - formatted_date = import_item.last_loading_date.try(:strftime, '%Y-%m-%d')
