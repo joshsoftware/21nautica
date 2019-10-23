@@ -57,3 +57,17 @@
 #import_items_table_paginate .ui-button {
   padding: 4px !important;
 }
+
+.import_item_dropped_location {
+  label {
+    display: contents;
+  }
+}
+
+.return_status_field {
+  display: none;
+}
+
+.dropped_location_field {
+  display: none;
+}

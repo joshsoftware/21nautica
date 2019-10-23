@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191014052140) do
+ActiveRecord::Schema.define(version: 20191018114111) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,6 +62,26 @@ ActiveRecord::Schema.define(version: 20191014052140) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "currency"
+  end
+
+  create_table "breakdown_managements", force: true do |t|
+    t.date     "date"
+    t.text     "remark"
+    t.string   "location"
+    t.integer  "mechanic_id"
+    t.integer  "truck_id"
+    t.string   "status"
+    t.boolean  "parts_required"
+    t.date     "sending_date"
+    t.integer  "breakdown_reason_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "breakdown_reasons", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "customers", force: true do |t|
@@ -179,7 +199,7 @@ ActiveRecord::Schema.define(version: 20191014052140) do
     t.datetime "last_loading_date"
     t.boolean  "exit_note_received",    default: false
     t.string   "dropped_location"
-    t.string   "return_status"
+    t.integer  "return_status"
     t.date     "expiry_date"
     t.boolean  "is_co_loaded",          default: false
   end

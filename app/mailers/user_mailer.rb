@@ -1,5 +1,6 @@
 class UserMailer < ActionMailer::Base
   default from: ENV['EMAIL_FROM']
+  default from: ["info@reliablefreight.co.ke"] if Rails.env == "development"
 
   def mail_report(customer,type)
     @customer = customer
