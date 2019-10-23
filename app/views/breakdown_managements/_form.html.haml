@@ -16,14 +16,17 @@
         = f.input :mechanic_id, label:'Allocate Mechanic', collection: @mechanics, input_html: { id:'mechanic_id' }
       .col-md-6{class:'status'}
       -if params[:id] 
-        = f.label 'Status :'
-        = f.collection_radio_buttons :status, [['Close', 'Close']],:last, :first
+        .col-md-3.status_width
+          = f.label 'Status :'
+          = f.collection_radio_buttons :status, [['Close', 'Close']],:last, :first
+        .col-md-3.close_date
+          = f.input :close_date,label: 'Close Date',as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker", :'date-autoclose'=> 'true'}, value: Date.today.strftime('%d/%m/%Y')}
     .row
       .col-md-6{class: 'parts_required'}
         = f.label 'Parts required'
         = f.check_box :parts_required
       .col-md-6{id: 'sending_date'}
-        = f.input :sending_date, label: 'Parts Sending date',as: :string, hidden: true, input_html: { :"data-validation" => "required", :"data-validation-error-msg" => "sending date is required.", class: 'form-control date', data: {behaviour: "datepicker",:'date-autoclose'=> 'true',:'date-format' => 'dd-mm-yyyy'}, value: "#{ f.object.sending_date.strftime('%d-%m-%Y') if f.object.sending_date.present? }"}
+        = f.input :sending_date, label: 'Parts Sending date',as: :string, hidden: true, input_html: { :"data-validation" => "required", :"data-validation-error-msg" => "sending date is required.", class: 'form-control date', data: {behaviour: "datepicker",:'date-autoclose'=> 'true',:'date-format' => 'dd/mm/yyyy'}, value: "#{ f.object.sending_date.strftime('%d/%m/%Y') if f.object.sending_date.present? }"}
     .row
       .col-md-6
         = f.input :remark, label: 'Remark'
@@ -38,22 +41,53 @@
   $('#breakdown_reason_id').select2()
   $('#mechanic_id').select2()
   $('#sending_date').hide()
+  $('#breakdown_management_sending_date').attr('disabled',true)
   if ($('#breakdown_management_parts_required').prop('checked') == true){
     $('#sending_date').show()
+    $('#breakdown_management_sending_date').attr('disabled',false)
   }
+  if($('#breakdown_management_status_close').prop('checked') == true){
+    $('.close_date').show();
+    $('#breakdown_management_close_date').attr('disabled',false)
+  }
+  else{
+    $('.close_date').hide();
+    $('#breakdown_management_close_date').attr('disabled',true)
+  }
+
+  $('#breakdown_management_close_date').datepicker({
+    format:'dd/mm/yyyy',
+    endDate: new Date(),
+    startDate: $('#breakdown_management_date').val()
+  })
 
   $(document).ready(function(){
     $('#breakdown_management_date').datepicker({
       format: 'dd/mm/yyyy',
       endDate: new Date()
     })
+    $('#breakdown_management_sending_date').datepicker({
+      format: 'dd/mm/yyyy',
+      startDate: $('#breakdown_management_date').val()
+    });
+
+    $('#breakdown_management_status_close').click(function(){
+      if($(this).prop('checked') == true)
+      {
+        $('.close_date').show();
+        $('#breakdown_management_close_date').attr('disabled',false)
+      }
+    })    
     $('#breakdown_management_parts_required').click(function(){
       if($(this).prop("checked") == true){
         $('#sending_date').show()
+        $('#breakdown_management_sending_date').attr('disabled',false) 
         $('#breakdown_management_sending_date').val($('#breakdown_management_date').val());
       }
       else {
         $('#sending_date').hide()
+        $('#breakdown_management_sending_date').attr('disabled',true)
+      
       }
     });
     $('#breakdown_management_date').change(function(){

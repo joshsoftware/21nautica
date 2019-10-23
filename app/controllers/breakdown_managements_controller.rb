@@ -42,7 +42,8 @@ class BreakdownManagementsController < ApplicationController
                                                  :truck_id, :date,
                                                  :location, :remark,
                                                  :sending_date, :mechanic_id,
-                                                 :parts_required, :status)
+                                                 :parts_required, :status,
+                                                 :close_date)
   end
 
   def set_trucks
