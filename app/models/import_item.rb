@@ -315,7 +315,11 @@ class ImportItem < ActiveRecord::Base
     if self.truck_id.blank? && self.truck_id_changed?
       self.errors[:base] << "You can change the truck but cannot remove"
       return false
-    end    
+    end
+    if self.truck_id.blank? && ["under_loading_process"].exclude?(self.status)
+      self.errors[:base] << "Please assign a truck first"
+      return false
+    end
   end
 
   def create_entry_in_tmc
