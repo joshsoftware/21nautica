@@ -288,7 +288,7 @@ class ImportItem < ActiveRecord::Base
   def return_status_and_dropped_location_present?
     self.errors[:base] << "Return status can not be empty" if return_status.nil?
     self.errors[:base] << "Dropped location can not be empty" if return_status == ImportItem.return_statuses.keys[1] && dropped_location.to_s.empty?
-    !self.errors
+    !self.errors.present?
   end
 
   def update_dropped_location
