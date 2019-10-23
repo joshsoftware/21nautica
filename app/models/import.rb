@@ -39,7 +39,7 @@ class Import < ActiveRecord::Base
   validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number, :bl_received_type
   validates_presence_of :work_order_number, on: :create
   validates_uniqueness_of :bl_number
-  before_validation :strip_whitespace, :only => [:bl_number]
+  before_validation :strip_whitespaces, :only => [:bl_number]
   validates_format_of :bl_received_at, :with => /\d{4}\-\d{2}\-\d{2}/, :message => "^Date must be in the following format: yyyy/mm/dd", :allow_blank => true
   validate :shouldnt_be_future_date
 
@@ -54,6 +54,14 @@ class Import < ActiveRecord::Base
   scope :custom_entry_not_generated, -> {where("entry_number IS NULL OR entry_type IS NULL")}
   scope :custom_shipping_dates_not_present, -> {where("entry_number IS NULL OR entry_type IS NULL OR bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR gf_return_date IS NULL")}
 
+  def strip_whitespaces
+    self.bl_number = bl_number.strip.squish
+  end
+
+  # Hack: I have intentionally not used delegate here, because,
+  # in case of duplicate, the bl_number will be delegated to a non-existent BillOfLading in
+  # the `render :new` call. :allow_nil would not work, as we actually lose the bl_number then!
+
   def presence_of_date#going to use for date chronology
     ["bl_received_at", "charges_received_at", "charges_paid_at", "do_received_at"].each do |date|
       if self.send("#{date}_changed?".to_sym) && !self.send(date.to_sym).present?
@@ -63,10 +71,6 @@ class Import < ActiveRecord::Base
       end
     end
     !self.errors.present?
-  end
-
-  def strip_whitespace
-    self.bl_number = bl_number.strip.squish
   end
 
   def bl_number
