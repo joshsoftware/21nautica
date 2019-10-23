@@ -61,6 +61,8 @@ GEM
       debug_inspector (>= 0.0.1)
     bootstrap-datepicker-rails (1.3.1.1)
       railties (>= 3.0)
+    bootstrap-daterangepicker-rails (3.0.4)
+      railties (>= 4.0)
     bootstrap-sass (3.2.0.4)
       sass (~> 3.2)
     builder (3.2.2)
@@ -151,6 +153,8 @@ GEM
       railties (~> 4.1)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
+    momentjs-rails (2.20.1)
+      railties (>= 3.1)
     multi_json (1.10.1)
     nested_form (0.3.2)
     nokogiri (1.6.6.2)
@@ -282,6 +286,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bootstrap-datepicker-rails
+  bootstrap-daterangepicker-rails
   bootstrap-sass (~> 3.2.0.4)
   byebug
   cancan
@@ -303,6 +308,7 @@ DEPENDENCIES
   minitest-around
   minitest-rails
   mocha
+  momentjs-rails
   nested_form
   numbers_in_words
   pdfkit (~> 0.6.2)

@@ -1,7 +1,12 @@
+.destination_filter_import_item.pull-left
+  = form_for(:date_filter, class: 'form-inline', url: petty_cashes_path, method: :get) do |f|
+    %div.form-group
+      = f.label :Date_filter 
+      = f.text_field :date, input_html: { class: "daterange" }, as: :string, value: date_filter_parameters
+      = f.submit 'Search', class: 'btn btn-success', id: 'search_button'
 = link_to "Add Voucher", new_petty_cash_path, class: 'btn btn-primary pull-right'
 %br
 %br
-
 %table.table{id: 'petty_cash_table', class: 'petty_cash_table'}
   %thead
     %th Date 
@@ -25,3 +30,18 @@
         %td{class: 'petty_cash_td'}= petty_cash.description
         %td= petty_cash.created_by.name
 = will_paginate @petty_cashes
+
+:javascript
+  $(document).ready(function(){
+    start_date = moment().add(-7,'day')
+    end_date = moment()
+    $('#date_filter_date').daterangepicker({
+      locale: { format: 'DD/MM/YYYY'},
+      cancelLabel: 'Clear',
+      startDate: new Date("#{params[:date_filter].present? ? params[:date_filter][:date].split('-')[0].to_date.strftime('%Y/%m/%d') : (Date.today-7.days).strftime('%Y/%m/%d').to_s}"),
+      endDate:  new Date("#{params[:date_filter].present? ? params[:date_filter][:date].split('-')[1].to_date.strftime('%Y/%m/%d') : Date.today.strftime('%Y/%m/%d').to_s}")
+    })  
+    $('#date_filter_date').on('cancel.daterangepicker', function(){
+      $(this).val(' ');
+    });
+  })

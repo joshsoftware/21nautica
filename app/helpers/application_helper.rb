@@ -51,4 +51,9 @@ module ApplicationHelper
     end
     field_divs
   end
+  def date_filter_parameters
+    if params[:date_filter].present?
+      params[:date_filter][:date]
+    end
+  end
 end

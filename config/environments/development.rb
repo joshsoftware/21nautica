@@ -41,25 +41,25 @@ Net::SMTP.enable_tls(OpenSSL::SSL::VERIFY_NONE)
   #Defined SMTP options
   #SMTP
   config.action_mailer.default_url_options = { :host => 'localhost:3000'}
-  # config.action_mailer.delivery_method = :sparkpost
-  # config.action_mailer.smtp_settings = {
-  #  :address              => 'smtp.sparkpostmail.com',
-  #  :port                 => 587,
-  #  :domain               => '21nautica.com', #you can also use google.com
-  #  :authentication       => 'AUTH LOGIN',
-  #  :user_name            =>  ENV["SPARKPOST_USERNAME"],
-  #  :password             =>  ENV["SPARKPOST_API_KEY"],
-  #  :encryption           => 'STARTTLS',
-  #  :enable_starttls_auto => true
-  #}
-
-  ActionMailer::Base.smtp_settings = {
-    :address => 'smtp.sendgrid.net',
-    :port => '587',
-    :authentication => :plain,
-    :user_name => ENV['SENDGRID_USERNAME'],
-    :password => ENV['SENDGRID_PASSWORD'],
-    :domain => ENV['DOMAIN'],
-    :enable_starttls_auto => true
+  config.action_mailer.delivery_method = :sparkpost
+  config.action_mailer.smtp_settings = {
+   :address              => 'smtp.sparkpostmail.com',
+   :port                 => 587,
+   :domain               => '21nautica.com', #you can also use google.com
+   :authentication       => 'AUTH LOGIN',
+   :user_name            =>  ENV["SPARKPOST_USERNAME"],
+   :password             =>  ENV["SPARKPOST_API_KEY"],
+   :encryption           => 'STARTTLS',
+   :enable_starttls_auto => true
   }
+
+  # ActionMailer::Base.smtp_settings = {
+  #   :address => 'smtp.sendgrid.net',
+  #   :port => '587',
+  #   :authentication => :plain,
+  #   :user_name => ENV['SENDGRID_USERNAME'],
+  #   :password => ENV['SENDGRID_PASSWORD'],
+  #   :domain => ENV['DOMAIN'],
+  #   :enable_starttls_auto => true
+  # }
 end
