@@ -22,11 +22,10 @@ module ApplicationHelper
     alloted = Truck.where(id: import_items.pluck(:truck_id).uniq!).pluck(:reg_number).uniq
     alloted.concat(import_items.pluck(:truck_number)).uniq!
     if @import_item.truck_id.present?
-      trucks = Truck.free.pluck(:reg_number, :id).uniq {|number| number[0]}
-      # trucks = trucks.select {|t| t != [@import_item.truck.reg_number, @import_item.truck_id] }
+      trucks = Truck.free.order(:reg_number).pluck(:reg_number, :id).uniq {|number| number[0]}
       trucks << [@import_item.truck.reg_number, @import_item.truck_id]
     else
-      trucks = Truck.free.pluck(:reg_number, :id).uniq {|number| number[0]}
+      trucks = Truck.free.order(:reg_number).pluck(:reg_number, :id).uniq {|number| number[0]}
     end
     {free: trucks, alloted: alloted}
   end
