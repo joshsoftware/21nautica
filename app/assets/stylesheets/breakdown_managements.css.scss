@@ -36,6 +36,9 @@
   .status{
     padding: 0 !important;
   }
+  .status_width{
+    width: 14%;
+  }
   .collection_radio_buttons {
     margin: 12px;
   }
@@ -54,4 +57,14 @@
 .breakdown_table{
   table-layout:fixed; 
   max-width: 10%;
+}
+
+.close_date{
+  .col-md-3{
+    width: 45%;
+  }
+  label{
+    margin-top: 3%;
+    width: 100%;
+  }
 }
