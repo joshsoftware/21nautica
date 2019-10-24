@@ -38,9 +38,9 @@
         -if breakdown_management.status.eql?('Close')
           %td= breakdown_management.close_date.to_date.strftime('%d/%m/%Y') if breakdown_management.close_date.present?
         %td= breakdown_management.truck.reg_number
-        %td= breakdown_management.breakdown_reason.name
+        %td= breakdown_management.breakdown_reason.name if breakdown_management.breakdown_reason.present?
         %td= breakdown_management.location
-        %td= breakdown_management.mechanic.name
+        %td= breakdown_management.mechanic.name if breakdown_management.mechanic.present?
         %td{class: "#{ breakdown_management.status.eql?('Open')? 'green' : 'red'}"}= breakdown_management.status
         %td= breakdown_management.parts_required ? "Yes" : "No"
         %td= breakdown_management.sending_date.to_date.strftime('%d/%m/%Y') if breakdown_management.sending_date.present?

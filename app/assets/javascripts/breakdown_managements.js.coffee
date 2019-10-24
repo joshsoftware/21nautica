@@ -10,7 +10,7 @@ datatable_initialize = ->
  row = 0
  id = 0
  imitemsTable = $('#breakdown_table_id').dataTable({
-                   "bJQueryUI": false,
+                   "bJQueryUI": true,
                    "bFilter": true,
                    'bPaginate': false
                    })
