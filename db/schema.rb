@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191006075952) do
+ActiveRecord::Schema.define(version: 20191023064641) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,6 +62,27 @@ ActiveRecord::Schema.define(version: 20191006075952) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "currency"
+  end
+
+  create_table "breakdown_managements", force: true do |t|
+    t.date     "date"
+    t.text     "remark"
+    t.string   "location"
+    t.integer  "mechanic_id"
+    t.integer  "truck_id"
+    t.string   "status"
+    t.boolean  "parts_required"
+    t.date     "sending_date"
+    t.integer  "breakdown_reason_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.date     "close_date"
+  end
+
+  create_table "breakdown_reasons", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "customers", force: true do |t|
@@ -283,6 +304,12 @@ ActiveRecord::Schema.define(version: 20191006075952) do
 
   add_index "location_dates", ["truck_id"], name: "index_location_dates_on_truck_id", using: :btree
 
+  create_table "make_models", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "mechanics", force: true do |t|
     t.string   "name"
     t.date     "date_of_employment"
@@ -491,6 +518,7 @@ ActiveRecord::Schema.define(version: 20191006075952) do
     t.integer  "created_by_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.date     "date"
   end
 
   create_table "trucks", force: true do |t|
@@ -503,7 +531,14 @@ ActiveRecord::Schema.define(version: 20191006075952) do
     t.string   "status"
     t.string   "location"
     t.integer  "current_import_item_id"
+    t.integer  "fuel_capacity"
+    t.string   "trailer_reg_number"
+    t.decimal  "insurance_premium_amt_yearly",            precision: 10, scale: 2
+    t.string   "driver_name",                  limit: 50
+    t.integer  "make_model_id"
   end
+
+  add_index "trucks", ["make_model_id"], name: "index_trucks_on_make_model_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "",   null: false

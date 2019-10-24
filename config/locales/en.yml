@@ -32,7 +32,12 @@ en:
   expense_head:
     'saved' : 'Expense Head Saved Successfully'
     'update' : 'Expense Head Updated Successfully'
-    
   mechanic:
     'saved' : 'Mechanic Saved Successfully'
     'update' : 'Mechanic Updated Successfully'
+  breakdown_reason:
+    'saved' : 'Breadown Reason Saved Successfully'
+    'update' : 'Breakdown Reason Updated Successfully'
+  breakdown_details:
+    'saved' : 'Breakdown Details Saved Successfully'
+    'update' : 'Breakdown Details Updated Successfully'

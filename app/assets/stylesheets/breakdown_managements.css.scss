@@ -1,0 +1,70 @@
+// Place all the styles related to the breakdown_managements controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.breakdown_management{
+
+  input[type="radio"]{
+    margin: 14px 0 0;
+    margin-top: 1px \9;
+    line-height: normal;
+  }
+  .col-md-3 {
+    padding-left: 0;
+    }
+    
+  #breakdown_management_parts_required{
+    margin-left: 15%;
+    zoom: 1.7;
+  }
+  #breakdown_management_status_open{
+    margin-left: 120px;
+  }
+  #breakdown_management_status_close{
+    margin-left: 20px;
+  }
+  .breakdown_lable {
+    .col-md-3 {
+      padding: 0 !important;
+    }
+    
+  }
+  .parts_required{
+      padding: 0 !important;
+  }
+  
+  .status{
+    padding: 0 !important;
+  }
+  .status_width{
+    width: 14%;
+  }
+  .collection_radio_buttons {
+    margin: 12px;
+  }
+  .breakdown_management_status_open {
+    margin-left: 5px;
+  }
+}
+
+.breakdown_td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  width: 10%;
+  height: auto;
+}
+.breakdown_table{
+  table-layout:fixed; 
+  max-width: 10%;
+}
+
+.close_date{
+  .col-md-3{
+    width: 45%;
+  }
+  label{
+    margin-top: 3%;
+    width: 100%;
+  }
+}
