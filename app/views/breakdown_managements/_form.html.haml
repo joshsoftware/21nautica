@@ -8,7 +8,7 @@
         = f.input :truck_id, label:'Truck Number', collection: @trucks, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Truck is required.", id:'truck_id'}
     .row 
       .col-md-6
-        = f.input :breakdown_reason_id, label:'Reason', collection: @breakdown_reasons, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Reason is required.",id: 'breakdown_reason_id'}
+        = f.input :breakdown_reason_id, label:'Reason', collection: @breakdown_reasons, input_html: { id: 'breakdown_reason_id' }
       .col-md-6{class: 'breakdown_lable'}
         = f.input :location, label: ' Breakdown Location', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "BreakDown Location is required."}
     .row
