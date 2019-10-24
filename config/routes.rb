@@ -112,6 +112,7 @@ Rails.application.routes.draw do
       post 'updateContext'
       get 'edit-close-date'
       post 'update-close-date'
+      get 'show_info'
     end
     collection do
       post :update_loading_date

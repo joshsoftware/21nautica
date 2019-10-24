@@ -35,6 +35,8 @@ class Import < ActiveRecord::Base
   before_save :strip_container_number_bl_number, :save_entry_type, :shipping_date_chronology
   after_save :late_document_mail, :rotation_number_mail, :update_status_to_ready_load
   after_create :set_bl_received#, :generate_invoice
+  before_save :set_entry_date, if: :entry_number_changed?
+  after_save :update_gf_expiry_date, if: :gf_return_date_changed?
 
   validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number, :bl_received_type
   validates_presence_of :work_order_number, on: :create
@@ -158,7 +160,7 @@ class Import < ActiveRecord::Base
   end
 
   def save_entry_type
-    if entry_number && entry_number.downcase.start_with?("c")
+    if entry_number && entry_number.downcase.strip.squish.start_with?("c")
       self.entry_type = 1
     elsif entry_number
       self.entry_type = 0
@@ -207,4 +209,11 @@ class Import < ActiveRecord::Base
     end
   end
 
+  def set_entry_date
+    self.entry_date = Date.today
+  end
+
+  def update_gf_expiry_date
+    
+  end
 end

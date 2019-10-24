@@ -102,4 +102,9 @@ class UserMailer < ActionMailer::Base
     mail(to: customer.emails.split(","), subject: "Pending Documents – #{Date.today.to_date.try(:to_formatted_s)}")
   end
 
+  def container_dropped_mail(import_item)
+    @import_item = import_item
+    mail(to: @import_item.import.customer.emails.split(","), subject: "Container Dropped")
+  end
+
 end
