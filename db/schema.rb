@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191024100618) do
+ActiveRecord::Schema.define(version: 20191024105019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -249,6 +249,7 @@ ActiveRecord::Schema.define(version: 20191024100618) do
     t.string   "rotation_number"
     t.integer  "entry_type"
     t.boolean  "new_import",                 default: false
+    t.date     "entry_date"
   end
 
   add_index "imports", ["bill_of_lading_id"], name: "index_imports_on_bill_of_lading_id", using: :btree

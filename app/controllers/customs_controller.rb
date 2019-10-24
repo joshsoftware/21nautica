@@ -10,6 +10,7 @@ class CustomsController < ApplicationController
 
   def update
     params[:import][:entry_number]= nil if params[:import][:entry_number].empty?
+    params[:import][:rotation_number]= nil if params[:import][:rotation_number].empty?
     @import.update(update_params)
   end
 

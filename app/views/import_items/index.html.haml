@@ -5,6 +5,8 @@
 
 #statusModal.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
   .modal-dialog
+#infoModal.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
 
 %table.table{id: 'import_items_table'}
   %thead
@@ -19,7 +21,7 @@
     - if is_rfs_host? || is_ug_host?
       %th.import-items-truck-number Truck Number / Location
     %th.import-items-last-load-date Last Loading Date
-    %th.shipping-line-status Shipping Line Status
+    %th.shipping-line-status DO Received?
     %th.import-items-status Status
     %th.import-items-remarks Remarks
   %tbody
@@ -38,24 +40,13 @@
           %td.truck_id= "#{item.truck.nil? ? '' : item.truck.reg_number} / #{item.truck.nil? ? '' : item.truck.location}"
         %td.last_loading_date= item.last_loading_date.nil? ? '' : item.last_loading_date.strftime('%Y-%m-%d')
         %td.shipping-status
-          -if import.bl_received_at
-            .date.obl= "OBL: #{import.bl_received_at.to_date.to_formatted_s}"
-          -if import.charges_received_at
-            .date.cr= "C/R: #{import.charges_received_at.to_date.to_formatted_s}"
-          -if import.charges_paid_at
-            .date.cp= "C/P: #{import.charges_paid_at.to_date.to_formatted_s}"
-          -if import.do_received_at
-            .date.do= "DO: #{import.do_received_at.to_date.to_formatted_s}"
-          -if item.expiry_date
-            .date.exp= "Exp: #{item.expiry_date.to_date.to_formatted_s}"          
+          = link_to "#{import.do_received_at.present? ? 'Yes' : 'No'}", show_info_import_item_path(item), remote: true, class: 'btn btn-link'
         %td.updatestatus{class: "text-center"}
           .updatestatus.h5
             .status_updated_at
               = status_updated_at(item).to_date
             .status.text.capatilize
               = item.status.titleize
-          - truck_number = item.truck ? "#{item.truck.reg_number}, #{item.truck_id}" : ''
-          //%button.btn.btn-small.btn-primary{'data-importitem-id' => "#{item.id}", 'data-target' => '#statusModal', 'data-toggle' => 'modal', 'data-states' => item.status + ',' + item.aasm.events.join(','), 'data-truck-number' => truck_number,'truck-number-alloted'=> :false} Update
           = link_to 'Update', edit_import_item_path(item), remote: true, :data => { states: item.status + ',' + item.aasm.events.join(',') },
             class: 'btn btn-small btn-primary'
         %td.remarks.h5

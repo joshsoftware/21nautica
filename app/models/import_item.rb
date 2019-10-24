@@ -45,11 +45,11 @@ class ImportItem < ActiveRecord::Base
 
   accepts_nested_attributes_for :import_expenses
 
-  # before_save :add_default_date_for_remarks
   before_save :update_dropped_location, if: :return_status_changed?
   after_save :assign_current_import_item, if: :truck_id_changed?
-  after_save :update_last_loading_date, if: :last_loading_date_changed?
+  after_save :update_last_loading_date , if: :last_loading_date_changed?
   after_update :update_truck_status
+  after_save :container_dropped_mail, if: :return_status_changed?
 
   after_create do |record|
     ImportExpense::CATEGORIES.each do |category|
@@ -245,12 +245,6 @@ class ImportItem < ActiveRecord::Base
     self.truck.update_column(:status, Truck::ALLOTED) if self.truck && truck_id_changed?
   end
 
-  def add_default_date_for_remarks
-    return unless remarks.present?
-    default_date = "#{Time.zone.now.strftime('%d/%m')} : "
-    self.remarks = remarks.prepend(default_date)
-  end
-
   def assign_current_import_item
     prev_truck_id, latest_truck_id = changes['truck_id']
     truck.update_column(:current_import_item_id, id) if latest_truck_id.present?
@@ -301,7 +295,7 @@ class ImportItem < ActiveRecord::Base
 
   def validate_exit_note_received
     if self.exit_note_received.blank? && self.exit_note_received_changed?
-      self.errors[:base] << "Exit note received can't be blank once set"
+      self.errors[:base] << "Exit note received can't be uncheck once checked"
       return false
     end    
   end
@@ -318,6 +312,20 @@ class ImportItem < ActiveRecord::Base
   end
 
   def create_entry_in_tmc
-    TransportManagerCash.create(transaction_type: "withdrawal", import_id: self.import_id, import_item_id: self.id, truck_id: truck_id ) if truck.reg_number.downcase != "3rd party truck"
+    if truck.present? && self.truck.reg_number.downcase != "3rd party truck"
+      if self.transport_manager_cash.present?
+        self.transport_manager_cash.update_attributes(truck_id: self.truck_id)
+      else
+        TransportManagerCash.create(transaction_type: "Withdrawal", import_id: self.import_id, truck_id: self.truck_id, import_item: self)
+      end
+    else
+      self.transport_manager_cash.destroy if self.transport_manager_cash.present?
+    end
+  end
+
+  def container_dropped_mail
+    if return_status == ImportItem.return_statuses.keys[1]
+      UserMailer.container_dropped_mail(self).deliver()
+    end
   end
 end

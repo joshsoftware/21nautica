@@ -72,10 +72,6 @@
       $(".import_item_truck_number").hide()
 
   $("#import_item_status").on 'change', (event) ->
-    if event.target.selectedOptions[0].value == "allocate_truck"
-      $(".custom-entry-released").show()
-    if event.target.selectedOptions[0].value == "under_loading_process"
-      $(".custom-entry-released").hide()
     if event.target.selectedOptions[0].value == "truck_released"
       $(".return_status_field").show()
 
