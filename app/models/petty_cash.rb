@@ -14,13 +14,6 @@ class PettyCash < ActiveRecord::Base
                                current_balance - transaction_amount
                              end
   end
-
-  def self.update_transport_cash(current_user, transaction_amount)
-    last_balance = TransportManagerCash.last_balance
-    current_balance = last_balance + transaction_amount.to_f
-    transport_manager_cash = current_user.transport_manager_cashes.new(date:Date.today,transaction_date: Date.today, transaction_type: 'Deposite',transaction_amount: transaction_amount, available_balance: current_balance)
-    transport_manager_cash.save
-  end
   
   private
 
