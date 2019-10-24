@@ -3,9 +3,10 @@
   .well
     .row
       .col-md-6
-        = f.input :import_item_id, label: 'Truck', as: :select, collection: @trucks, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Truck Number is required.", class:'truck_number'}
+        
+        = f.input :truck_id, label: 'Truck', as: :select, collection: @trucks, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Truck Number is required.", class:'truck_number'}
       .col-md-6
-        = f.input :date, disabled:true, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}, value: Date.today.strftime('%d-%m-%Y')}
+        = f.input :date, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker", :'date-autoclose'=> 'true'}, value: @date.strftime('%d/%m/%Y')}
     .row
       .col-md-6
         = f.input :transaction_amount, label: 'Amount', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Amount Number is required."}
@@ -18,3 +19,7 @@
 
 :javascript
   $('.truck_number').select2({width: '100%'})
+  $('#transport_manager_cash_date').datepicker({
+    format: 'dd/mm/yyyy',
+    startDate: $('#transport_manager_cash_date').val()
+  })

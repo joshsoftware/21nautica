@@ -19,8 +19,9 @@
 //= require bootstrap-datepicker/core
 //= require jquery.form-validator
 //= require jquery_nested_form
-//= require_tree .
-
+//= require moment
+//= require daterangepicker
+//= require_tree
  $(document).on("page:load ready", function(){
    $("input.datepicker").datepicker();
  });
