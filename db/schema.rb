@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191023064641) do
+ActiveRecord::Schema.define(version: 20191024100618) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -198,6 +198,11 @@ ActiveRecord::Schema.define(version: 20191023064641) do
     t.integer  "vendor_id"
     t.integer  "truck_id"
     t.datetime "last_loading_date"
+    t.boolean  "exit_note_received",    default: false
+    t.string   "dropped_location"
+    t.integer  "return_status"
+    t.date     "expiry_date"
+    t.boolean  "is_co_loaded",          default: false
   end
 
   add_index "import_items", ["container_number"], name: "index_import_items_on_container_number", using: :btree
@@ -500,25 +505,24 @@ ActiveRecord::Schema.define(version: 20191023064641) do
 
   add_index "spare_parts", ["spare_part_category_id"], name: "index_spare_parts_on_spare_part_category_id", using: :btree
 
-  create_table "suppliers", force: true do |t|
-    t.string   "name"
+  create_table "status_dates", force: true do |t|
+    t.date     "under_loading_process"
+    t.date     "truck_allocated"
+    t.date     "loaded_out_of_port"
+    t.date     "arrived_at_border"
+    t.date     "departed_from_border"
+    t.date     "arrived_at_destination"
+    t.date     "delivered"
+    t.date     "ready_to_load"
+    t.integer  "import_item_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "transport_manager_cashes", force: true do |t|
-    t.integer  "sr_number"
-    t.date     "transaction_date"
-    t.string   "transaction_type"
-    t.decimal  "transaction_amount", precision: 10, scale: 2
-    t.decimal  "available_balance",  precision: 10, scale: 2
-    t.integer  "import_id"
-    t.integer  "import_item_id"
-    t.integer  "truck_id"
-    t.integer  "created_by_id"
+  create_table "suppliers", force: true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.date     "date"
   end
 
   create_table "trucks", force: true do |t|

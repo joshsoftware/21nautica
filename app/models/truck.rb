@@ -8,7 +8,6 @@ class Truck < ActiveRecord::Base
   TRUCK = 'Truck'
 
   has_many :job_cards
-  has_many :transport_manager_cashes
   has_many :import_items
   has_many :location_dates
   has_many :breakdown_managements
