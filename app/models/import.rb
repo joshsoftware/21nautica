@@ -34,37 +34,31 @@ class Import < ActiveRecord::Base
   before_save :strip_container_number_bl_number, :save_entry_type, :shipping_date_chronology
   after_save :late_document_mail, :rotation_number_mail, :update_status_to_ready_load
   after_create :set_bl_received#, :generate_invoice
+  before_save :set_entry_date, if: :entry_number_changed?
+  after_save :update_gf_expiry_date, if: :gf_return_date_changed?
 
   validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number, :bl_received_type
   validates_presence_of :work_order_number, on: :create
   validates_uniqueness_of :bl_number
   before_validation :strip_whitespaces, :only => [:bl_number]
   validates_format_of :bl_received_at, :with => /\d{4}\-\d{2}\-\d{2}/, :message => "^Date must be in the following format: yyyy/mm/dd", :allow_blank => true
-  validate :should_be_future_date
+  validate :shouldnt_be_future_date
 
   accepts_nested_attributes_for :import_items
 
   enum entry_type: ["wt8", "im4"]
   enum bl_received_type: ["copy", "original_telex"]
+
   scope :ready_to_load, -> {where(status: 'ready_to_load')}
   scope :not_ready_to_load, -> {where.not(status: 'ready_to_load')}
   scope :shipping_dates_not_present, -> {where("bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR gf_return_date IS NULL")}
   scope :custom_entry_not_generated, -> {where("entry_number IS NULL OR entry_type IS NULL")}
   scope :custom_shipping_dates_not_present, -> {where("entry_number IS NULL OR entry_type IS NULL OR bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR gf_return_date IS NULL")}
 
-
   def strip_whitespaces
     self.bl_number = bl_number.strip.squish
   end
-  #following code will be needed when we add new_order_flag to import table
-  # scope :shipping_dates_not_present, -> {where("CASE WHEN is_new_order = TRUE THEN (bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL) ELSE TRUE END")}
-  # scope :shipping_dates_present, -> {where.not("CASE WHEN is_new_order = TRUE THEN (bl_received_at IS NULL OR charges_received_at IS NULL OR charges_paid_at IS NULL OR do_received_at IS NULL OR pl_received_at IS NULL OR gf_return_date IS NULL) ELSE TRUE END")}
-  # scope :custom_entry_not_generated, -> {where("CASE WHEN is_new_order = TRUE THEN (entry_number IS NULL OR entry_type IS NULL) ELSE TRUE END")}
-  # scope :custom_entry_generated, -> {where("CASE WHEN is_new_order = TRUE THEN (entry_number IS NOT NULL AND entry_type IS NOT NULL) ELSE TRUE END")}
 
-  # Hack: I have intentionally not used delegate here, because,
-  # in case of duplicate, the bl_number will be delegated to a non-existent BillOfLading in
-  # the `render :new` call. :allow_nil would not work, as we actually lose the bl_number then!
   def presence_of_date#going to use for date chronology
     ["bl_received_at", "charges_received_at", "charges_paid_at", "do_received_at"].each do |date|
       if self.send("#{date}_changed?".to_sym) && !self.send(date.to_sym).present?
@@ -170,7 +164,7 @@ class Import < ActiveRecord::Base
   end
 
   def save_entry_type
-    if entry_number && entry_number.downcase.start_with?("c")
+    if entry_number && entry_number.downcase.strip.squish.start_with?("c")
       self.entry_type = 1
     elsif entry_number
       self.entry_type = 0
@@ -189,7 +183,7 @@ class Import < ActiveRecord::Base
     end
   end
 
-  def should_be_future_date
+  def shouldnt_be_future_date
     if bl_received_at && bl_received_at > Date.today
       self.errors.add(:base, "BL received date can not be set as future date")
     end
@@ -219,4 +213,11 @@ class Import < ActiveRecord::Base
     end
   end
 
+  def set_entry_date
+    self.entry_date = Date.today
+  end
+
+  def update_gf_expiry_date
+    
+  end
 end
