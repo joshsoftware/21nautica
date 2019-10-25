@@ -49,7 +49,7 @@ class ImportItem < ActiveRecord::Base
   after_save :assign_current_import_item, if: :truck_id_changed?
   after_save :update_last_loading_date, if: :last_loading_date_changed?
   after_update :update_truck_status
-  after_save :container_dropped_mail, if: :return_status_changed?
+  #after_save :container_dropped_mail, if: :return_status_changed?
 
   after_create do |record|
     ImportExpense::CATEGORIES.each do |category|
