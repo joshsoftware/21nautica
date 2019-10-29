@@ -9,11 +9,11 @@ class PettyCashesController < ApplicationController
       @petty_cashes = PettyCash.having_records_between(start_date, end_date)
                                .order(date: :desc)
                                .includes(:truck, :expense_head, :created_by)
-                               .paginate(page: params[:page], per_page: 20)
+                               .paginate(page: params[:page], per_page: 1000)
     else        
       @petty_cashes = PettyCash.having_records_between(Date.today-7.days, Date.today).order(id: :desc)
                               .includes(:truck, :expense_head, :created_by)
-                              .paginate(page: params[:page], per_page: 20)
+                              .paginate(page: params[:page], per_page: 1000)
   
     end
   end
