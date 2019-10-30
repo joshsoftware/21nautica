@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191024105019) do
+ActiveRecord::Schema.define(version: 20191030062450) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 20191024105019) do
     t.string   "cheque_ocean"
     t.string   "payment_clearing"
     t.string   "cheque_clearing"
-    t.string   "remark"
+    t.string   "remarks"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "agency_fee"
@@ -248,7 +248,6 @@ ActiveRecord::Schema.define(version: 20191024105019) do
     t.boolean  "is_late_submission"
     t.string   "rotation_number"
     t.integer  "entry_type"
-    t.boolean  "new_import",                 default: false
     t.date     "entry_date"
   end
 
@@ -269,7 +268,7 @@ ActiveRecord::Schema.define(version: 20191024105019) do
     t.integer  "invoiceable_id"
     t.string   "invoiceable_type"
     t.string   "legacy_bl"
-    t.text     "remark"
+    t.text     "remarks"
     t.boolean  "manual",              default: false
   end
 
@@ -338,7 +337,7 @@ ActiveRecord::Schema.define(version: 20191024105019) do
     t.date     "estimate_delivery"
     t.string   "movement_type"
     t.string   "custom_seal"
-    t.string   "remark"
+    t.string   "remarks"
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -377,7 +376,7 @@ ActiveRecord::Schema.define(version: 20191024105019) do
     t.integer  "amount"
     t.string   "mode_of_payment"
     t.string   "reference"
-    t.string   "remark"
+    t.string   "remarks"
     t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -400,6 +399,7 @@ ActiveRecord::Schema.define(version: 20191024105019) do
     t.integer  "expense_head_id"
     t.integer  "truck_id"
     t.integer  "created_by_id"
+    t.string   "account_type"
   end
 
   add_index "petty_cashes", ["created_by_id"], name: "index_petty_cashes_on_created_by_id", using: :btree

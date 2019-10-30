@@ -6,7 +6,8 @@ class PettyCash < ActiveRecord::Base
   validates_length_of :description, within: 0..100, on: :create, message: "Description should be within 100 char" 
   validates  :transaction_type, :transaction_amount, presence: true
   before_create :update_balance
-  scope :having_records_between, ->(start_date, end_date) { where(date: start_date..end_date) }  
+  scope :having_records_between, ->(start_date, end_date) { where(date: start_date..end_date) }
+  scope :of_account_type, -> (value) { where(:account_type => value)}
   def update_balance
     self.available_balance = if transaction_type.eql?('Deposit')
                                current_balance + transaction_amount
@@ -18,6 +19,10 @@ class PettyCash < ActiveRecord::Base
   private
 
   def current_balance
-    PettyCash.last.try(:available_balance).to_f
+    if self.account_type.eql?('Cash')
+      PettyCash.of_account_type(self.account_type).last.try(:available_balance).to_f
+    else
+      PettyCash.of_account_type(self.account_type).last.try(:available_balance).to_f
+    end
   end
 end

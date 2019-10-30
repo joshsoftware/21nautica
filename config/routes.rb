@@ -182,6 +182,8 @@ Rails.application.routes.draw do
   get '/coming_soon' => "welcome#coming_soon"
   resources :expense_heads, except: :destroy
   resources :petty_cashes, except: [:destroy, :edit, :update]
+  get '/mpesaes' => 'petty_cashes#index', as: 'mpesaes'
+  get '/mpesaes/new' => 'petty_cashes#new', as: 'new_mpesaes'
   resources :remarks
   resources :mechanics
   resources :breakdown_reasons
