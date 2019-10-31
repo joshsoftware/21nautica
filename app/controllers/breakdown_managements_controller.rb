@@ -7,9 +7,19 @@ class BreakdownManagementsController < ApplicationController
 
   def index
     status_params = params[:status] if params[:status].present?
-    @breakdown_managements = BreakdownManagement.order(date: :desc)
+    if params[:date_filter] && params[:date_filter][:date].present?
+      start_date, end_date = params[:date_filter][:date].split(' - ')
+      start_date = start_date.to_date.strftime('%Y/%m/%d')
+      end_date = end_date.to_date.strftime('%Y/%m/%d')
+      @breakdown_managements = BreakdownManagement.having_date_records(start_date,end_date).order(date: :desc)
                                                 .where(status: status_params || 'Open')
                                                 .includes(:mechanic, :breakdown_reason, :truck)
+    else 
+     @breakdown_managements = BreakdownManagement.having_date_records(Date.today.beginning_of_month,Date.today).order(date: :desc)
+                                                .where(status: status_params || 'Open')
+                                                .includes(:mechanic, :breakdown_reason, :truck)
+  
+    end
   end
 
   def new
