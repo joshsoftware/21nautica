@@ -2,9 +2,20 @@
 class PettyCashesController < ApplicationController
   before_action :set_date, :set_expense_head, :set_trucks ,only: %i[new create]
   def index
-    @petty_cashes = PettyCash.order(id: :desc)
-                             .includes(:truck, :expense_head, :created_by)
-                             .paginate(page: params[:page], per_page: 20)
+    if params[:date_filter] && params[:date_filter][:date].present?
+      start_date, end_date = params[:date_filter][:date].split(' - ')
+      start_date = start_date.to_date.strftime('%Y/%m/%d')
+      end_date = end_date.to_date.strftime('%Y/%m/%d')
+      @petty_cashes = PettyCash.having_records_between(start_date, end_date)
+                               .order(date: :desc)
+                               .includes(:truck, :expense_head, :created_by)
+                               .paginate(page: params[:page], per_page: 1000)
+    else        
+      @petty_cashes = PettyCash.having_records_between(Date.today-7.days, Date.today).order(id: :desc)
+                              .includes(:truck, :expense_head, :created_by)
+                              .paginate(page: params[:page], per_page: 1000)
+  
+    end
   end
 
   def new

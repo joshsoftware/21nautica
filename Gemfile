@@ -24,7 +24,8 @@ gem 'jquery-turbolinks'
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0',          group: :doc
-
+gem 'bootstrap-daterangepicker-rails'
+gem 'momentjs-rails'
 # Simple helps you with powerful components to create your forms.
 gem 'simple_form'
 gem 'nested_form'
