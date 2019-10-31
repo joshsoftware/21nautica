@@ -113,6 +113,7 @@ Rails.application.routes.draw do
       get 'edit-close-date'
       post 'update-close-date'
       get 'show_info'
+      post 'update_empty_container'
     end
     collection do
       post :update_loading_date

@@ -75,13 +75,7 @@ history_datatable_initialize = ->
                     }).makeEditable(
                       aoColumns: [
                                   null, null, null, null, null, null, null, 
-                                  null, null, null, null,
-                                  {name: 'close_date', submit: 'okay', tooltip: "yyyy-mm-dd",
-                                  sUpdateURL:  "../import_items/update",
-                                  type: 'datepicker2', event: 'click',
-                                  fnOnCellUpdated: (sValue) ->
-                                    return sValue
-                                  }
+                                  null, null, null, null
                                  ]
                   )
 
@@ -95,10 +89,9 @@ datatable_initialize = ->
                     }).makeEditable(
                       aoColumns: [
                                   null,null,null,
-                                  {name: 'g_f_expiry', submit: 'okay', tooltip: "yyyy-mm-dd", sUpdateURL:  "import_items/update"
-                                  ,type: 'datepicker2', event: 'click'},
+                                  {name: 'g_f_expiry', submit: 'okay', tooltip: "yyyy-mm-dd", sUpdateURL:  "import_items/update", type: 'datepicker2', event: 'click'},
                                   null,
-                                  null, null
+                                  null, null, null, null
                                  ]
                   )
 $(document).ready datatable_initialize

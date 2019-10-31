@@ -44,7 +44,7 @@
         %td.updatestatus{class: "text-center"}
           .updatestatus.h5
             .status_updated_at
-              = status_updated_at(item).to_date
+              = item.try(:status_date).try(:send, item.status.to_sym).nil? ? status_updated_at(item).to_date : item.status_date.send(item.status.to_sym).to_date
             .status.text.capatilize
               = item.status.titleize
           = link_to 'Update', edit_import_item_path(item), remote: true, :data => { states: item.status + ',' + item.aasm.events.join(',') },

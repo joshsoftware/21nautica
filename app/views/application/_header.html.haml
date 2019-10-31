@@ -23,7 +23,7 @@
               %li= link_to 'Custom',customs_path              
               %li= link_to 'Import Tracking', import_items_path
               %li= link_to 'Import History', import_history_path
-              %li= link_to 'Empty Container Import', import_empty_containers_path
+              %li= link_to 'Outstanding Empty Container', import_empty_containers_path
               %li= link_to 'Import/Download Location', import_location_trucks_path
         - if user_signed_in? && ['Admin', 'Operations', 'Accounts', 'Transport'].include?(current_user.role)
           %li.dropdown

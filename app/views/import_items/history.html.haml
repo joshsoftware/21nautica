@@ -1,9 +1,9 @@
-.row.streaming_div
-  .col-md-1
-    %h4 streaming...
-  .col-md-2
-    %h4
-    = image_tag("streaming.gif", class: "progress")
+/ .row.streaming_div
+/   .col-md-1
+/     %h4 streaming...
+/   .col-md-2
+/     %h4
+/     = image_tag("streaming.gif", class: "progress")
 .row
   .col-md-5
     .col-md-5
@@ -29,14 +29,12 @@
     %th File Ref Number
     %th Truck Number
     %th Customer Name
-    %th Clearing Agent Name
     %th Transporter Name
     %th Equipment
     %th Delivery Date
     %th After Delivery Status
     %th Context
     %th Close Date
-    %th Action
   %tbody
 
 %script#import_history_template.table.table-striped{:type => 'text/html'}
@@ -47,19 +45,10 @@
     %td {{record.work_order_number}}
     %td {{record.rfs_truck_number}}
     %td {{record.customer_name}}
-    %td {{record.clearing_agent}}
     %td {{record.transporter_name}}
     %td {{record.equipment_type}}
     %td {{record.delivery_date}}
     %td {{record.after_delivery_status}}
     %td {{record.context}}
     %td.close_date {{record.formatted_close_date}}
-    %td= link_to "Edit", '{{record.edit_close_date_import_item_path}}', data: {id: '{{record.id}}' }, class: 'btn btn-primary',remote: true #, id: 'history_edit' 
 
-#import_item_edit_history.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
-  .modal-dialog
-
-:javascript
-  var import_items = #{@import_items.to_json}
-  var count = #{@count}
-  load_history_stream()

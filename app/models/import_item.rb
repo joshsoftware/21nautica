@@ -38,7 +38,9 @@ class ImportItem < ActiveRecord::Base
   # validates_presence_of :exit_note_received, :if => lambda { ["under_loading_process", "truck_allocated"].exclude?(self.status) }
   validate :validate_expiry_date
   validate :validate_exit_note_received
-  validate :should_not_remove_truck
+  validate :should_not_remove_truck, unless: :g_f_expiry_changed?
+  #gf_expiry is skipped because it is updated on empty container report
+  validate :validate_interchange_number
  
   delegate :bl_number, to: :import
   delegate :clearing_agent, to: :import, allow_nil: true
@@ -136,7 +138,7 @@ class ImportItem < ActiveRecord::Base
       self.errors[:base] << "Exit note should be received" unless exit_note_received
       !self.errors.present?
     elsif import.entry_type == "wt8"
-      self.errors[:base] << "Expiry date is required" if expiry_date.nil?
+      self.errors[:base] << "Expiry date is required" if g_f_expiry.nil?
       self.errors[:base] << "Exit note should be received" unless exit_note_received
       !self.errors.present?
     end
@@ -287,7 +289,7 @@ class ImportItem < ActiveRecord::Base
   end
 
   def validate_expiry_date
-    if self.expiry_date.blank? && self.expiry_date_changed?
+    if self.g_f_expiry.blank? && self.g_f_expiry_changed?
       self.errors[:base] << "Expiry date can't be blank once set"
       return false
     end
@@ -327,5 +329,24 @@ class ImportItem < ActiveRecord::Base
     if return_status == ImportItem.return_statuses.keys[1]
       UserMailer.container_dropped_mail(self).deliver()
     end
+  end
+
+  def validate_interchange_number
+    if interchange_number_changed? && !interchange_number.to_s.empty? && status != "delivered"
+      self.errors[:base] << "You can not assign the interchange number until container is delivered"
+    end
+    !self.errors
+  end
+
+  def show_status
+    container_status = status.humanize
+    if status == "delivered" && !return_status.blank?
+      if return_status == ImportItem.return_statuses.keys[0]#empty returned
+        container_status = "Empty Returned / #{truck.try(:reg_number).to_s}"
+      elsif return_status == ImportItem.return_statuses.keys[1] #dropped
+        container_status = "Dropped / #{dropped_location} / #{status_date.send(status.to_sym)}"
+      end
+    end
+    container_status
   end
 end

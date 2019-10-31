@@ -1,0 +1,12 @@
+
+$('#container_info .alert').remove();
+-if @errors.present? || @import_item.errors.full_messages.present?
+  $("#container_info .modal-body").append("<div class= 'alert alert-danger'> #{@import_item.errors.full_messages.uniq.join(' and ')}</div>")
+-elsif !@import_item.interchange_number.to_s.empty?
+  $("#container_info").modal('hide')
+  $("#import_empty_containers_table tr##{@import_item.id}").hide()
+-else
+  $("#container_info").modal('hide')
+  - div = "Close Date: #{@import_item.close_date.try(:strftime, '%Y-%m-%d')}" if @import_item.close_date
+  $("#import_empty_containers_table tr##{@import_item.id} td .status_updated_at").text("#{div}")
+  

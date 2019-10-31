@@ -1,5 +1,5 @@
 class ImportItemsController < ApplicationController
-  before_action :set_import_item, only: [:edit, :update_loading_date, :updateContext, :updateStatus, :edit_close_date, :show_info]
+  before_action :set_import_item, only: [:edit, :update_loading_date, :updateContext, :updateStatus, :edit_close_date, :show_info, :update_close_date]
 
   def index
     param = params[:destination_item] if params[:destination_item].present?
@@ -44,6 +44,13 @@ class ImportItemsController < ApplicationController
     @import_item.save
   end
 
+  def update_empty_container
+    @import_item = ImportItem.find(params[:id])
+    params[:import_item][:interchange_number] = nil if params[:import_item][:interchange_number].to_s.empty?
+    @import_item.attributes = empty_container_params
+    @import_item.save
+  end
+
   def updateStatus
     @import = @import_item.import
     initial_status = @import_item.status
@@ -56,7 +63,7 @@ class ImportItemsController < ApplicationController
       @import_item.allocate_truck
       @import_item.save
     elsif @import_item.status == "truck_allocated" && @import_item.exit_note_received
-      if @import_item.import.entry_type == "wt8" && @import_item.expiry_date
+      if @import_item.import.entry_type == "wt8" && @import_item.g_f_expiry
         @import_item.ready_to_load
         @errors = @import_item.errors.full_messages
         @import_item.save
@@ -80,8 +87,8 @@ class ImportItemsController < ApplicationController
   end
 
   def history
-    @import_items = ImportItem.where(status: "delivered").order(updated_at: :asc).limit(params[:limit] || 100).offset(params[:offset] || 0)
-    @count = ImportItem.where(status: 'delivered').count
+    @import_items = ImportItem.where(status: "delivered").where.not(interchange_number: nil).order(updated_at: :asc).limit(params[:limit] || 100).offset(params[:offset] || 0)
+    # @count = ImportItem.where(status: 'delivered').where.not(interchange_number: nil).count
     respond_to do |format|
       format.html{}
       format.json { render json: @import_items }
@@ -97,7 +104,7 @@ class ImportItemsController < ApplicationController
   end
 
   def empty_containers
-    @import_items = ImportItem.includes(:import).where(:status => "delivered", :after_delivery_status => nil)
+    @import_items = ImportItem.where("import_items.after_delivery_status IS NULL AND import_items.interchange_number IS NULL").includes(:import).where("(imports.status='ready_to_load' OR (imports.bl_received_at IS NOT NULL AND imports.entry_number IS NOT NULL AND imports.entry_type IS NOT NULL))").order("import_items.created_at DESC").references(:import)
   end
 
   def show_info
@@ -108,7 +115,7 @@ class ImportItemsController < ApplicationController
 
   def import_item_params
     params.permit(:id)
-    params.require(:import_item).permit(:truck_number, :status, :context, :transporter_name, :transporter, :truck_id, :last_loading_date, :exit_note_received, :expiry_date, :is_co_loaded, :return_status, :dropped_location)
+    params.require(:import_item).permit(:truck_number, :status, :context, :transporter_name, :transporter, :truck_id, :last_loading_date, :exit_note_received, :g_f_expiry, :is_co_loaded, :return_status, :dropped_location)
   end
 
   def import_item_update_params
@@ -117,5 +124,9 @@ class ImportItemsController < ApplicationController
 
   def set_import_item
     @import_item = ImportItem.find params[:id]
+  end
+
+  def empty_container_params
+    params.require(:import_item).permit(:id, :interchange_number, :close_date)
   end
 end
