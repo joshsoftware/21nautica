@@ -25,6 +25,7 @@
               %li= link_to 'Import History', import_history_path
               %li= link_to 'Empty Container Import', import_empty_containers_path
               %li= link_to 'Import/Download Location', import_location_trucks_path
+              %li= link_to 'Breakdown Mng', breakdown_managements_path
         - if user_signed_in? && ['Admin', 'Operations', 'Accounts', 'Transport'].include?(current_user.role)
           %li.dropdown
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
@@ -73,7 +74,6 @@
               %li= link_to 'Req Sheet', req_sheets_path 
               %li= link_to 'Purchase Order', purchase_orders_path
               %li= link_to 'Fuel Mngt', coming_soon_path
-              %li= link_to 'Breakdown Mng', breakdown_managements_path
               %li= link_to 'Spare Parts ledger', coming_soon_path
               %li= link_to 'Job Card Mngt', job_cards_path
         - if user_signed_in? && current_user.is?('Admin')
