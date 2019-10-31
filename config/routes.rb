@@ -112,6 +112,7 @@ Rails.application.routes.draw do
       post 'updateContext'
       get 'edit-close-date'
       post 'update-close-date'
+      get 'show_info'
     end
     collection do
       post :update_loading_date
@@ -181,7 +182,6 @@ Rails.application.routes.draw do
   get '/coming_soon' => "welcome#coming_soon"
   resources :expense_heads, except: :destroy
   resources :petty_cashes, except: [:destroy, :edit, :update]
-  resources :transport_manager_cashes
   resources :remarks
   resources :mechanics
   resources :breakdown_reasons

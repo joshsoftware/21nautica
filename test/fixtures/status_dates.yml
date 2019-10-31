@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  under_loading_process: 2019-10-11
+  truck_allocated: 2019-10-11
+  loaded_out_of_port: 2019-10-11
+  arrived_at_border: 2019-10-11
+  departed_from_border: 2019-10-11
+  arrived_at_destination: 2019-10-11
+  delivered: 2019-10-11
+
+two:
+  under_loading_process: 2019-10-11
+  truck_allocated: 2019-10-11
+  loaded_out_of_port: 2019-10-11
+  arrived_at_border: 2019-10-11
+  departed_from_border: 2019-10-11
+  arrived_at_destination: 2019-10-11
+  delivered: 2019-10-11

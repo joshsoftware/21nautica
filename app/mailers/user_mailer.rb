@@ -1,5 +1,6 @@
 class UserMailer < ActionMailer::Base
   default from: ENV['EMAIL_FROM']
+  default from: ["info@reliablefreight.co.ke"] if Rails.env == "development"
 
   def mail_report(customer,type)
     @customer = customer
@@ -96,9 +97,14 @@ class UserMailer < ActionMailer::Base
     mail(to: @import.customer.emails.split(","), subject: "Rotation Number for BL Number #{@import.bl_number}")
   end
 
-  def bl_entry_number_reminder(customer)
-    @imports = customer.imports.where.not(:imports => {status: "ready_to_load"}).where("(imports.bl_received_at IS NULL OR imports.entry_number IS NULL) AND (imports.estimate_arrival BETWEEN ? AND ?)", Date.today, (Date.today + 5.days))
+  def bl_entry_number_reminder(imports, customer)
+    @imports = imports
     mail(to: customer.emails.split(","), subject: "Pending Documents – #{Date.today.to_date.try(:to_formatted_s)}")
+  end
+
+  def container_dropped_mail(import_item)
+    @import_item = import_item
+    mail(to: @import_item.import.customer.emails.split(","), subject: "Container Dropped")
   end
 
 end

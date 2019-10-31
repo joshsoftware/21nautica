@@ -11,6 +11,7 @@
         %th Quantity
         %th Rate 
         %th Amount 
+        %th Currency
 
       %tbody
         - @invoice_for_bl.each do |inv_bl|
@@ -23,3 +24,4 @@
             %td= inv_bl.quantity
             %td= number_with_precision(inv_bl.rate, precision: 2)
             %td= number_with_precision(inv_bl.line_amount, precision: 2)
+            %td= inv_bl.bill.currency

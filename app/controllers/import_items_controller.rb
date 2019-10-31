@@ -1,4 +1,5 @@
 class ImportItemsController < ApplicationController
+  before_action :set_import_item, only: [:edit, :update_loading_date, :updateContext, :updateStatus, :edit_close_date, :show_info]
 
   def index
     param = params[:destination_item] if params[:destination_item].present?
@@ -8,7 +9,6 @@ class ImportItemsController < ApplicationController
   end
 
   def edit
-    @import_item = ImportItem.find params[:id]
   end
 
   def update
@@ -23,7 +23,6 @@ class ImportItemsController < ApplicationController
   end
 
   def update_loading_date
-    @import_item = ImportItem.find(params[:id])
     @import = @import_item.import
     @import.import_items.update_all(last_loading_date: params[:last_loading_date])
     respond_to do |format|
@@ -32,7 +31,6 @@ class ImportItemsController < ApplicationController
   end
 
   def updateContext
-    @import_item = ImportItem.find(params[:id])
     after_delivery = params[:after_delivery]
     date = Date.today
     @import_item[:after_delivery_status] = after_delivery.humanize
@@ -47,21 +45,36 @@ class ImportItemsController < ApplicationController
   end
 
   def updateStatus
-    @import_item = ImportItem.find(params[:id])
     @import = @import_item.import
     initial_status = @import_item.status
     remark_params = params[:import_item]
+    params[:import_item][:truck_number] = nil if params[:import_item][:truck_number].blank?
     @import_item.attributes = import_item_params.except('status')
     @import_item.remarks.create(desc: remark_params[:remarks], date: Date.today, category: "external") unless remark_params[:remarks].blank?
-    if initial_status == "under_loading_process"
+    status = import_item_params[:status].downcase.gsub(' ', '_')
+    if @import_item.status == "under_loading_process" && @import_item.truck
       @import_item.allocate_truck
       @import_item.save
+    elsif @import_item.status == "truck_allocated" && @import_item.exit_note_received
+      if @import_item.import.entry_type == "wt8" && @import_item.expiry_date
+        @import_item.ready_to_load
+        @errors = @import_item.errors.full_messages
+        @import_item.save
+      elsif @import_item.import.entry_type == "im4"
+        @import_item.ready_to_load
+        @errors = @import_item.errors.full_messages
+        @import_item.save
+      else
+        @import_item.save
+      end
     else
-      status = import_item_params[:status].downcase.gsub(' ', '_')
       begin
-        status != @import_item.status ? @import_item.send("#{status}!".to_sym) : @import_item.save
+        @import_item.send("#{status}!".to_sym) if status != @import_item.status
+        @errors = @import_item.errors.full_messages
+        @import_item.save
       rescue
-        @errors = @import_item.errors
+        @errors = @import_item.errors.full_messages
+        @import_item.save
       end
     end
   end
@@ -72,17 +85,14 @@ class ImportItemsController < ApplicationController
     respond_to do |format|
       format.html{}
       format.json { render json: @import_items }
-      #format.json{ render json: {data: ImportItem.where(status: "delivered") } }
     end
   end
 
   def edit_close_date
-    @import_item = ImportItem.find(params[:id])
     @import = @import_item.import
   end
 
   def update_close_date
-    @import_item = ImportItem.find(params[:id]) 
     @import_item.update_attributes(close_date: params[:close_date])
   end
 
@@ -90,14 +100,22 @@ class ImportItemsController < ApplicationController
     @import_items = ImportItem.includes(:import).where(:status => "delivered", :after_delivery_status => nil)
   end
 
+  def show_info
+    
+  end
+
   private
 
   def import_item_params
     params.permit(:id)
-    params.require(:import_item).permit(:truck_number, :status, :context, :transporter_name, :transporter, :truck_id, :last_loading_date)
+    params.require(:import_item).permit(:truck_number, :status, :context, :transporter_name, :transporter, :truck_id, :last_loading_date, :exit_note_received, :expiry_date, :is_co_loaded, :return_status, :dropped_location)
   end
 
   def import_item_update_params
     params.permit(:id, :columnName, :value,:g_f_expiry,:close_date)
+  end
+
+  def set_import_item
+    @import_item = ImportItem.find params[:id]
   end
 end

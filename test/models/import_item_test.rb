@@ -21,6 +21,7 @@ require 'test_helper'
 class ImportItemTest < ActiveSupport::TestCase
   setup do
     @import_item1 = FactoryGirl.create :import_item1
+    @import_item = FactoryGirl.create :import_item
   end
 
   test "should not assign truck which is not free" do
@@ -53,5 +54,12 @@ class ImportItemTest < ActiveSupport::TestCase
   end
   
   test "READY invoice if loaded out of port and invoice not already present and BL has only one container" do
+  end
+
+  test "Truck number must be exists if 3rd party truck is selected" do
+    truck = Truck.create(reg_number: "3rd Party Truck")
+    @import_item.truck = truck
+    @import_item.save
+    assert_equal ["Truck number should be present if 3rd party truck is selected"], @import_item.errors.full_messages
   end
 end

@@ -8,7 +8,14 @@ class RemarksController < ApplicationController
   end
 
   def index
-    render json: {remarks: @model_instance.remarks.order(created_at: :desc)}
+    if remarks_params[:model_type] == "import_item"
+      render json: {
+                    order_remarks: @model_instance.import.remarks.order(created_at: :desc),
+                    container_remarks: @model_instance.remarks.order(created_at: :desc)
+                   }
+    else
+      render json: {remarks: @model_instance.remarks.order(created_at: :desc)}
+    end
   end
 
   private

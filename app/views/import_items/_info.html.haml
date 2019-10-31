@@ -1,0 +1,50 @@
+
+.modal-content
+  -import = @import_item.import
+  .modal-header
+    = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+    %h2.modal-title Custom and Shipping Status
+    %hr
+    .modal-body.fw600
+      %h3.modal-title.underline Shipping Status
+      -if import.bl_received_at
+        .row
+          .col-md-6 Original BL Received :
+          .col-md-6 #{import.bl_received_at.to_date.to_formatted_s}
+      -if import.charges_received_at
+        .row
+          .col-md-6 Cash Received Date :
+          .col-md-6 #{import.charges_received_at.to_date.to_formatted_s}
+      -if import.charges_paid_at
+        .row
+          .col-md-6 Charges Paid Date :
+          .col-md-6 #{import.charges_paid_at.to_date.to_formatted_s}
+      -if import.do_received_at
+        .row
+          .col-md-6 DO Received Date :
+          .col-md-6 #{import.do_received_at.to_date.to_formatted_s}
+      -if !import.return_location.to_s.empty?
+        .row
+          .col-md-6 Container return location :
+          .col-md-6 #{import.return_location}
+      -if import.gf_return_date
+        .row
+          .col-md-6 Gf return date :
+          .col-md-6 #{import.gf_return_date.to_date.to_formatted_s}
+      %hr
+      %h3.modal-title.underline Custom Status
+      -if @import_item.expiry_date
+        .row
+          .col-md-6 Expiry Date :
+          .col-md-6 #{@import_item.expiry_date.to_date.to_formatted_s}
+      -if import.entry_number
+        .row
+          .col-md-6 Entry Number :
+          .col-md-6 #{import.entry_number}
+      -if import.rotation_number
+        .row
+          .col-md-6 Rotation Number :
+          .col-md-6 #{import.rotation_number}
+
+    .modal-footer
+      = link_to 'Close', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
