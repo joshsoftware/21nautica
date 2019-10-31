@@ -10,26 +10,26 @@
 %br
 %table.table{ id: 'breakdown_table_id', class: 'breakdown_table' }
   %thead
-    %th Date 
+    %th.breakdown_date Date 
     -if params[:status].eql?('Open') || params.count == 2
-      %th Truck Number
+      %th.breakdown_date Truck Number
       %th Reason
-      %th Location
-      %th Allocated Mechanic
-      %th Status
-      %th Parts Required
-      %th Sending Date
+      %th.breakdown_location Location
+      %th.breakdown_mechanic_name Allocated Mechanic
+      %th.breakdown_part Status
+      %th.breakdown_part Parts Required
+      %th.breakdown_date Sending Date
       %th Remark
-      %th Action
+      %th.breakdown_action Action
     -else
-      %th Close Date
-      %th Truck Number
+      %th.breakdown_date Close Date
+      %th.breakdown_date Truck Number
       %th Reason
-      %th Location
-      %th Allocated Mechanic
-      %th Status
-      %th Parts Required
-      %th Sending Date
+      %th.breakdown_location Location
+      %th.breakdown_mechanic_name Allocated Mechanic
+      %th.breakdown_part Status
+      %th.breakdown_part Parts Required
+      %th.breakdown_date Sending Date
       %th Remark
   %tbody
     - @breakdown_managements.each do |breakdown_management|

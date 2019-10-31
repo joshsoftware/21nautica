@@ -48,17 +48,30 @@
 }
 
 .breakdown_td {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; 
-  width: 10%;
+  word-wrap: break-word;
   height: auto;
+}
+.breakdown_part{
+  width: 65px;
+}
+.breakdown_date{
+  width:80px;
+}
+.breakdown_location{
+  width:100px;
+}
+.breakdown_action{
+  width: 45px;
 }
 .breakdown_table{
   table-layout:fixed; 
   max-width: 10%;
 }
-
+.breakdown_mechanic_name{
+  height: auto;
+  width: 150px;
+  word-wrap: break-word;
+}
 .close_date{
   .col-md-3{
     width: 45%;
