@@ -15,7 +15,7 @@ class BreakdownManagementsController < ApplicationController
                                                 .where(status: status_params || 'Open')
                                                 .includes(:mechanic, :breakdown_reason, :truck)
     else 
-     @breakdown_managements = BreakdownManagement.having_date_records(Date.today.beginning_of_month,Date.today).order(date: :desc)
+     @breakdown_managements = BreakdownManagement.order(date: :desc)
                                                 .where(status: status_params || 'Open')
                                                 .includes(:mechanic, :breakdown_reason, :truck)
   
