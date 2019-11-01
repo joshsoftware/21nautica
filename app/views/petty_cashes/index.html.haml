@@ -1,4 +1,4 @@
-%h3.pull-left="#{request.original_url.split('/').include?('petty_cashes') ? 'Petty Cash' : 'Mpesa'}"
+%h3.pull-left="#{request.original_url.split(/[\/,?]/).include?('petty_cashes') ? 'Petty Cash' : 'Mpesa'}"
 = link_to "Add Voucher", "#{request.original_url.split('/').include?('petty_cashes') ? new_petty_cash_path : new_mpesaes_path }", class: 'btn btn-primary pull-right'
 .pull-left.date-filter
   = form_for(:date_filter, class: 'form-inline', url: "#{request.original_url.split('/').include?('petty_cashes') ? petty_cashes_path : mpesaes_path }", method: :get) do |f|
