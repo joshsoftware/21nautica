@@ -56,7 +56,7 @@ class PettyCashesController < ApplicationController
     @trucks = Truck.order(:reg_number).pluck(:reg_number, :id).uniq {|truck| truck[0]}
   end
 
-  def set_records_with_date(key,set_date, end_date)
+  def set_records_with_date(key,start_date, end_date)
     PettyCash.of_account_type(key).having_records_between(start_date, end_date)
                       .order(date: :desc)
                       .includes(:truck, :expense_head, :created_by)
