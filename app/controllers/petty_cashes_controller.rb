@@ -6,9 +6,9 @@ class PettyCashesController < ApplicationController
       start_date, end_date = params[:date_filter][:date].split(' - ')
       start_date = start_date.to_date
       end_date = end_date.to_date
-      @petty_cashes = request.original_url.split('/').include?('petty_cashes') ? set_records_with_date('Cash',start_date,end_date) : set_records_with_date('Bank',start_date, end_date)
+      @petty_cashes = request.original_url.split(/[\/,?]/).include?('petty_cashes') ? set_records_with_date('Cash',start_date,end_date) : set_records_with_date('Bank',start_date, end_date)
     else
-      @petty_cashes = request.original_url.split('/').include?('petty_cashes') ? set_records_with_default_date('Cash') : set_records_with_default_date('Bank')
+      @petty_cashes = request.original_url.split(/[\/,?]/).include?('petty_cashes') ? set_records_with_default_date('Cash') : set_records_with_default_date('Bank')
     end
   end
 
@@ -44,7 +44,7 @@ class PettyCashesController < ApplicationController
   
 
   def set_date
-    key = request.original_url.split('/').include?('petty_cashes') ? 'Cash' : 'Bank'
+    key = request.original_url.split(/[\/,?]/).include?('petty_cashes') ? 'Cash' : 'Bank'
     @date = PettyCash.of_account_type(key).last.try(:date) || Date.current.beginning_of_year-10.year
   end
 
