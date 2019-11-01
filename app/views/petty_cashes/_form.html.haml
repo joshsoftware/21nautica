@@ -1,6 +1,7 @@
 .col-md-12
 = simple_form_for(@petty_cash, html: { id: 'add_new_petty_cash', class: 'form-horizontal petty_cash'},defaults: {input_html: {class: 'form-control petty_cash'}}) do |f|
   .well
+    = f.hidden_field :account_type, value:"#{request.original_url.split('/').include?('petty_cashes') ? 'Cash' : 'Bank'}"
     .row
       .col-md-6
         = f.input :expense_head_id, label: 'Expense Head', collection: @expense_heads, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Expense Head is required."}
@@ -19,7 +20,7 @@
     .row
       .col-md-6
         = f.submit 'save', class: 'btn btn-primary'
-        = link_to 'Back', petty_cashes_path, class: 'btn btn-primary'
+        = link_to 'Back',"#{request.original_url.split('/').include?('petty_cashes') ? petty_cashes_path : mpesaes_path }", class: 'btn btn-primary'
 
        
 :javascript
