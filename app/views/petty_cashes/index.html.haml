@@ -10,6 +10,7 @@
 %br
 %table.table{id: 'petty_cash_table', class: 'petty_cash_table'}
   %thead
+    %th.hidden id
     %th Date 
     %th Expense head
     %th Truck Number
@@ -21,6 +22,7 @@
   %tbody
     - @petty_cashes.each do |petty_cash|
       %tr
+        %td{class: 'hidden'}= petty_cash.id
         %td= petty_cash.date.to_date.strftime('%d-%m-%Y')
         %td= petty_cash.expense_head.name
         %td= petty_cash.truck.reg_number if petty_cash.truck_id
