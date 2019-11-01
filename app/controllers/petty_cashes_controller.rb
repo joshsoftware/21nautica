@@ -6,9 +6,9 @@ class PettyCashesController < ApplicationController
       start_date, end_date = params[:date_filter][:date].split(' - ')
       start_date = start_date.to_date
       end_date = end_date.to_date
-      @petty_cashes = request.original_url.split('/').include?('petty_cashes') ? set_records_with_date('Cash',start_date,end_date) : set_records_with_date('Bank',start_date, end_date)
+      @petty_cashes = request.original_url.split(/[\/,?]/).include?('petty_cashes') ? set_records_with_date('Cash',start_date,end_date) : set_records_with_date('Bank',start_date, end_date)
     else
-      @petty_cashes = request.original_url.split('/').include?('petty_cashes') ? set_records_with_default_date('Cash') : set_records_with_default_date('Bank')
+      @petty_cashes = request.original_url.split(/[\/,?]/).include?('petty_cashes') ? set_records_with_default_date('Cash') : set_records_with_default_date('Bank')
     end
   end
 
@@ -44,7 +44,7 @@ class PettyCashesController < ApplicationController
   
 
   def set_date
-    key = request.original_url.split('/').include?('petty_cashes') ? 'Cash' : 'Bank'
+    key = request.original_url.split(/[\/,?]/).include?('petty_cashes') ? 'Cash' : 'Bank'
     @date = PettyCash.of_account_type(key).last.try(:date) || Date.current.beginning_of_year-10.year
   end
 
@@ -56,15 +56,15 @@ class PettyCashesController < ApplicationController
     @trucks = Truck.order(:reg_number).pluck(:reg_number, :id).uniq {|truck| truck[0]}
   end
 
-  def set_records_with_date(key,set_date, end_date)
+  def set_records_with_date(key,start_date, end_date)
     PettyCash.of_account_type(key).having_records_between(start_date, end_date)
-                      .order(date: :desc)
+                      .order(:id)
                       .includes(:truck, :expense_head, :created_by)
                       .paginate(page: params[:page], per_page: 1000)
   end
 
   def set_records_with_default_date(key)
-    PettyCash.of_account_type(key).having_records_between(Date.today-7.days, Date.today).order(date: :desc)
+    PettyCash.of_account_type(key).having_records_between(Date.today-7.days, Date.today).order(id: :desc)
     .includes(:truck, :expense_head, :created_by)
     .paginate(page: params[:page], per_page: 1000)    
   end
