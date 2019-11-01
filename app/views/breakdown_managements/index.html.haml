@@ -1,35 +1,38 @@
 = link_to "Add New Breakdown Details", new_breakdown_management_path, class: 'btn btn-primary pull-right'
 
-.status_filter.pull-left
-  = form_tag breakdown_managements_path, method: :get do |f|  
-    = label_tag 'Status '
-    = select_tag 'status', options_for_select( ["Open", "Close"], params[:status] || 'Open')
-
+.destination_filter_import_item.pull-left
+  = form_for(:date_filter, class: 'form-inline', url: breakdown_managements_path, method: :get) do |f|
+    %div.form-group
+      = label_tag 'Status '
+      = select_tag 'status', options_for_select( ["Open", "Close"], params[:status] || 'Open')
+      = f.label :Date_filter 
+      = f.text_field :date, input_html: { class: "daterange" }, as: :string, value: date_filter_parameters
+      = f.submit 'Search', class: 'btn btn-success', id: 'search_button'
 
 %br
 %br
 %table.table{ id: 'breakdown_table_id', class: 'breakdown_table' }
   %thead
-    %th Date 
+    %th.breakdown_date Date 
     -if params[:status].eql?('Open') || params.count == 2
-      %th Truck Number
+      %th.breakdown_date Truck Number
       %th Reason
-      %th Location
-      %th Allocated Mechanic
-      %th Status
-      %th Parts Required
-      %th Sending Date
+      %th.breakdown_location Location
+      %th.breakdown_mechanic_name Allocated Mechanic
+      %th.breakdown_part Status
+      %th.breakdown_part Parts Required
+      %th.breakdown_date Sending Date
       %th Remark
-      %th Action
+      %th.breakdown_action Action
     -else
-      %th Close Date
-      %th Truck Number
+      %th.breakdown_date Close Date
+      %th.breakdown_date Truck Number
       %th Reason
-      %th Location
-      %th Allocated Mechanic
-      %th Status
-      %th Parts Required
-      %th Sending Date
+      %th.breakdown_location Location
+      %th.breakdown_mechanic_name Allocated Mechanic
+      %th.breakdown_part Status
+      %th.breakdown_part Parts Required
+      %th.breakdown_date Sending Date
       %th Remark
   %tbody
     - @breakdown_managements.each do |breakdown_management|
@@ -47,3 +50,18 @@
         %td{class: 'breakdown_td'}= breakdown_management.remark
         -if breakdown_management.status.eql?('Open')
           %td= link_to 'Edit', edit_breakdown_management_path(breakdown_management), class: 'btn btn-primary'
+
+:javascript
+  $(document).ready(function(){
+    start_date = moment().add(-7,'day')
+    end_date = moment()
+    $('#date_filter_date').daterangepicker({
+      locale: { format: 'DD/MM/YYYY'},
+      cancelLabel: 'Clear',
+      startDate: new Date("#{params[:date_filter].present? ? params[:date_filter][:date].split('-')[0].to_date.strftime('%Y/%m/%d') : (Date.today.beginning_of_month).strftime('%Y/%m/%d').to_s}"),
+      endDate:  new Date("#{params[:date_filter].present? ? params[:date_filter][:date].split('-')[1].to_date.strftime('%Y/%m/%d') : Date.today.strftime('%Y/%m/%d').to_s}")
+    })  
+    $('#date_filter_date').on('cancel.daterangepicker', function(){
+      $(this).val(' ');
+    });
+  })
