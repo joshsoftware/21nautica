@@ -3,7 +3,7 @@
     .row
       .col-md-3
         %label Item Type(Import/Export)
-      .col-md-5
+      .col-md-5.item_for
         = label_tag 'import', 'Import'
         = radio_button_tag 'item_type', 'Import', true 
         = label_tag 'import', 'Export'
@@ -12,7 +12,7 @@
     .row
       .col-md-3
         %label Item For(Bl/Container)
-      .col-md-5
+      .col-md-5.item_for
         = label_tag 'import', 'Container'
         = radio_button_tag 'item_for', 'container', true
         = label_tag 'bl', 'Bl'
@@ -30,8 +30,7 @@
         .col-md-4
           %h5 
             %b
-              Total Vendor Invoice value: 
-              = number_with_precision(@sum_of_bl - @debit_notes_sum, precision: 2)
+              Total Vendor Invoice value:         
         .col-md-4
           %h5 
             %b
@@ -46,6 +45,13 @@
             %b
               Total Customer Invoice value:
               = number_with_precision(@sum_of_customer_invoice, precision: 2)
+    .row
+      - if @bill_items.any?
+        .col-md-6
+          .col-md-3
+            %b=" UGX:  #{number_with_precision(@sum_of_bl_ugx - @debit_notes_sum_ugx, precision: 2)}"
+          .col-md-3
+            %b= "USD:  #{number_with_precision(@sum_of_bl_usd - @debit_notes_sum_usd, precision: 2)}"
 
 
 %table.table.table-stripped
@@ -56,7 +62,8 @@
     %th Charge for
     %th Quantity
     %th Rate 
-    %th Amount 
+    %th Amount
+    %th Currency
 
   %tbody
     - if @bill_items.count != 0
@@ -69,6 +76,7 @@
           %td= bill_item.quantity
           %td= number_with_precision(bill_item.rate, precision: 2)
           %td= number_with_precision(bill_item.line_amount, precision: 2)
+          %td= bill_item.bill.currency
     - else
       %h2 No Item found
 

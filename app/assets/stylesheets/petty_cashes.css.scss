@@ -38,3 +38,13 @@
   table-layout:fixed; 
   max-width: 10%;
 }
+.daterangepicker td.in-range{
+  background-color: #b6daf9 !important;
+}
+.daterangepicker td.active.end-date.in-range{
+  background-color: #357EBD !important;
+}
+
+.date-filter{
+  margin-left:200px;
+}
