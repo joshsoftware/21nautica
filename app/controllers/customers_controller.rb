@@ -38,6 +38,9 @@ class CustomersController < ApplicationController
     @customer = Customer.find(params[:id])
   end
 
+  def customer_ledger
+  end
+
   def update
     @customer = Customer.find(params[:id])
     if @customer.update(customer_params)

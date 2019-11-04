@@ -62,7 +62,7 @@ Rails.application.routes.draw do
   post '/imports/update'
   post '/import_items/update'
   get '/manual_invoices' => 'invoices#manual_invoices'
-  
+  get 'customer_ledger' => 'customers#customer_ledger', as: 'customer_ledger'
   resources :bill_of_ladings, only: [:update] do
     collection do
       get 'search'
