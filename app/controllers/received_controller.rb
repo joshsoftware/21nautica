@@ -1,21 +1,28 @@
 class ReceivedController < ApplicationController
   require 'numbers_in_words/duck_punch'
+  before_action :set_customers, :set_count, only: %i[new fetch_form_partial]
   def new
     @received = Received.new
-    @customers =  Customer.order(:name).pluck(:name,:id).to_h
   end
 
-  def create
+  def save_data(paid_params)
     @received = Received.new(paid_params)
     if @received.save
       flash[:notice] = "Payment entry saved sucessfully"
       receipt = generate_receipt
       #UserMailer.payment_received_receipt(@received.customer.emails, receipt).deliver()
-      UserMailer.payment_received_receipt(@received.customer, receipt).deliver()
-      redirect_to new_received_path
+      # UserMailer.payment_received_receipt(@received.customer, receipt).deliver()
     else
       render 'new'
     end
+  end
+
+  def create
+    params[:received].each do |param_received|
+      print param_received[1]
+      save_data(param_received[1])
+    end
+    redirect_to new_received_path
   end
 
   def outstanding
@@ -36,6 +43,13 @@ class ReceivedController < ApplicationController
     respond_to do |format|
       format.js {}
       format.html {redirect_to :root}
+    end
+  end
+
+  def fetch_form_partial
+    @count = params[:count].present? ? params[:count].to_i + 1 : 0
+    respond_to do |format|
+      format.js {  }
     end
   end
 
@@ -67,10 +81,10 @@ class ReceivedController < ApplicationController
 
   private
 
-  def paid_params
-    params.require(:received).permit(:date_of_payment, :amount, 
-      :mode_of_payment, :reference, :remarks, :customer_id)
-  end
+  # def paid_params
+  #   params.require(:received).permit(:received => %i[customer_id
+  #     date_of_payment])
+  # end
 
   def generate_receipt
     date = Date.current.strftime("%y%d%m")
@@ -82,4 +96,11 @@ class ReceivedController < ApplicationController
     file = kit.to_file("#{Rails.root}/tmp/payment_receipt_#{@receipt_number}.pdf")
   end
 
+  def set_customers
+    @customers =  Customer.order(:name).pluck(:name,:id).to_h
+  end
+
+  def set_count
+    # @count = try(@count).
+  end
 end

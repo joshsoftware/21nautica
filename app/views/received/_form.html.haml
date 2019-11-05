@@ -1,0 +1,31 @@
+%div#initial_div
+  .well
+    .row
+      .col-md-6
+        = label_tag "Date"
+        = text_field_tag "received[#{@count}][date_of_payment]",Date.today.strftime('%d/%m/%Y'),class:'date_of_payment'
+      .col-md-6
+        = label_tag "Customer Name"
+        = select_tag("received[#{@count}][customer_id]",options_from_collection_for_select(Customer.order(:name), 'id', 'name'), prompt: "Select Customer", class: 'customer_id')
+    %br
+    .row
+      .col-md-6
+        = label_tag "Amount"
+        = number_field_tag "received[#{@count}][amount]", nil,class: 'amount'
+      .col-md-6
+        =label_tag "Payment Mode"
+        = select_tag "received[#{@count}][mode_of_payment]",options_for_select(PAYMENT_MODES),prompt: "Select Payment Mode",class:'payment_mode'
+    %br
+    .row
+      .col-md-6
+        = label_tag "References"
+        = text_field_tag "received[#{@count}][reference]",nil,:placeholder => "cheque number / cash", class: 'references'
+      .col-md-6
+        = label_tag "Remark"
+        = text_area_tag "received[#{@count}][remarks]",nil,class:'remarks', rows:3,cols:35
+:javascript
+  $("#received_#{@count}_date_of_payment").datepicker({
+    format: 'dd/mm/yyyy'
+  })
+  $("#received_#{@count}_customer_id").select2({width: '50%'})
+  $("#received_#{@count}_mode_of_payment").select2({width: '50%'})

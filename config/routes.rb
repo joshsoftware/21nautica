@@ -135,6 +135,8 @@ Rails.application.routes.draw do
   resources :received, only: [:new, :show, :create, :index] do
     collection do
       get :outstanding
+      get :new
+      get 'fetch_form_partial', as:'fetch_form'
     end
   end
   resources :invoices, only: [:edit, :update] do

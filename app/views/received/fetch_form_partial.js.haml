@@ -1,0 +1,2 @@
+$('.cloned_class').append("#{escape_javascript(render :partial => 'form', :locals => {:@customer => @customer, :@count => @count})}")
+$('#add_more').attr('href',"/received/fetch_form_partial?count=#{@count}")
