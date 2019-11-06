@@ -32,9 +32,7 @@
             .status_updated_at
               -if item.interchange_number
                 .interchange_number= "IC #: #{item.interchange_number}"
-              -if item.close_date
-                .date.cd= "Close Date: #{item.close_date.try(:to_date).try(:to_formatted_s)}"
-          %button.btn.btn-small.btn-primary{"data-target" => "#container_info", "data-toggle"=>"modal", "data-item-id"=> "#{item.id}", "data-close-date"=> "#{item.close_date.try(:to_date).try(:to_formatted_s)}", "data-status" => "#{item.status}"} Update
+          %button.btn.btn-small.btn-primary{"data-target" => "#container_info", "data-toggle"=>"modal", "data-item-id"=> "#{item.id}", "data-status" => "#{item.status}"} Update
 
 
 #container_info.modal{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
@@ -47,7 +45,6 @@
             %h1.modal-title Update
         .modal-body
           = f.input :interchange_number, required: true
-          = f.input :close_date, required: true
         .modal-footer
           = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
           = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
@@ -63,16 +60,7 @@
       $("#container_info form :input").prop("disabled", true);
     else
       $("#container_info form :input").prop("disabled", false);
-    closeDate = link_tag.attr('data-close-date')
     $("#import_item_interchange_number").val("")
-    $("#import_item_close_date").val("")
-    if closeDate
-      $("#import_item_close_date").val(closeDate)
-    $("#import_item_close_date").datepicker({
-      format: "yyyy/mm/dd",
-      startDate: '-1y',
-      autoclose: true,
-    })
     id = link_tag.attr('data-item-id')
     $("#container_info form").attr("action", "/import_items/"+id+"/update_empty_container")
 

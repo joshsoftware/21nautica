@@ -3,8 +3,8 @@ class ImportItemsController < ApplicationController
 
   def index
     param = params[:destination_item] if params[:destination_item].present?
-    imports = Import.where("imports.status='ready_to_load' OR (imports.bl_received_at IS NOT NULL AND imports.entry_number IS NOT NULL AND imports.entry_type IS NOT NULL)").where(to: param || 'Kampala').select("id")
-    @import_items = ImportItem.where(import_id: imports).where.not(status: "delivered")
+    imports = Import.where("imports.status='ready_to_load' OR (imports.bl_received_at IS NOT NULL AND imports.entry_number IS NOT NULL AND imports.entry_type IS NOT NULL)").where(to: param || 'Kampala').select("id")#this query will not be needed as we are fetching data by interchange number, confirm
+    @import_items = ImportItem.where(import_id: imports).where(interchange_number: nil)
     @transporters = Vendor.transporters.pluck(:name).inject({}) {|h, x| h[x] = x; h}
   end
 
@@ -63,7 +63,7 @@ class ImportItemsController < ApplicationController
       @import_item.allocate_truck
       @import_item.save
     elsif @import_item.status == "truck_allocated" && @import_item.exit_note_received
-      if @import_item.import.entry_type == "wt8" && @import_item.g_f_expiry
+      if @import_item.import.entry_type == "wt8" && @import_item.expiry_date
         @import_item.ready_to_load
         @errors = @import_item.errors.full_messages
         @import_item.save
@@ -87,11 +87,16 @@ class ImportItemsController < ApplicationController
   end
 
   def history
-    @import_items = ImportItem.where(status: "delivered").where.not(interchange_number: nil).order(updated_at: :asc).limit(params[:limit] || 100).offset(params[:offset] || 0)
-    # @count = ImportItem.where(status: 'delivered').where.not(interchange_number: nil).count
+    if !params[:searchValue].blank? || !params[:daterange].blank?
+      @import_items = ImportItem.select("imports.bl_number, import_items.container_number, imports.work_order_number, trucks.reg_number, customers.name, imports.equipment, import_items.close_date, import_items.vendor_id, import_items.after_delivery_status, import_items.return_status").includes(:truck, import: [:customer]).where.not(interchange_number: nil).order(created: :asc).references(:import)
+      @import_items = @import_items.where("imports.bl_number LIKE :query OR import_items.container_number ILIKE :query OR imports.work_order_number ILIKE :query OR trucks.reg_number ILIKE :query OR import_items.truck_number ILIKE :query", query: "%#{params[:searchValue]}%") unless params[:searchValue].blank?
+      @import_items = @import_items.where(:import_items =>{:created_at => Date.parse(params[:daterange].split("-")[0])..Date.parse(params[:daterange].split("-")[1])}) unless params[:daterange].blank?
+    else
+      @import_items = ImportItem.none
+    end
     respond_to do |format|
       format.html{}
-      format.json { render json: @import_items }
+      format.json { render json: { :data => @import_items.offset(params[:start]).limit(params[:length] || 10), "recordsTotal" => @import_items.count("import_items.id"), "recordsFiltered" => @import_items.count("import_items.id") } }
     end
   end
 
@@ -115,7 +120,7 @@ class ImportItemsController < ApplicationController
 
   def import_item_params
     params.permit(:id)
-    params.require(:import_item).permit(:truck_number, :status, :context, :transporter_name, :transporter, :truck_id, :last_loading_date, :exit_note_received, :g_f_expiry, :is_co_loaded, :return_status, :dropped_location)
+    params.require(:import_item).permit(:truck_number, :status, :context, :transporter_name, :transporter, :truck_id, :last_loading_date, :exit_note_received, :expiry_date, :is_co_loaded, :return_status, :dropped_location)
   end
 
   def import_item_update_params

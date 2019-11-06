@@ -49,7 +49,7 @@ Rails.application.routes.draw do
   get 'export/history' => 'movements#history'
   post 'export/movements/update' => 'movements#update'
   post 'import/import_items/update' => 'import_items#update'
-  get 'import/history' => 'import_items#history'
+  match 'import/history' => 'import_items#history', :via => [:get, :post]
   get 'import/empty_containers' => 'import_items#empty_containers'
   get '/import_expenses/search' => "import_expenses#index"
 

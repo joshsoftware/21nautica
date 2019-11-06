@@ -51,6 +51,7 @@ class ImportItem < ActiveRecord::Base
   after_save :assign_current_import_item, if: :truck_id_changed?
   after_save :update_last_loading_date, if: :last_loading_date_changed?
   after_update :update_truck_status
+  before_save :add_close_date, if: :interchange_number_changed?
   #after_save :container_dropped_mail, if: :return_status_changed?
 
   after_create do |record|
@@ -108,7 +109,7 @@ class ImportItem < ActiveRecord::Base
       transitions from: :departed_from_border, to: :arrived_at_destination
     end
 
-    event :truck_released, :after => [:check_for_invoice, :set_delivery_date, :release_truck, :save_status_date] do
+    event :truck_released, :after => [:check_for_invoice, :release_truck, :save_status_date] do
       transitions from: :arrived_at_destination, to: :delivered, guard: [:return_status_and_dropped_location_present?]
     end
   end
@@ -138,7 +139,7 @@ class ImportItem < ActiveRecord::Base
       self.errors[:base] << "Exit note should be received" unless exit_note_received
       !self.errors.present?
     elsif import.entry_type == "wt8"
-      self.errors[:base] << "Expiry date is required" if g_f_expiry.nil?
+      self.errors[:base] << "Expiry date is required" if expiry_date.nil?
       self.errors[:base] << "Exit note should be received" unless exit_note_received
       !self.errors.present?
     end
@@ -146,10 +147,6 @@ class ImportItem < ActiveRecord::Base
 
   def release_truck
     self.truck.update_attributes(status: Truck::FREE, current_import_item_id: nil) if truck.present?
-  end
-
-  def set_delivery_date
-    update_attribute(:close_date, Time.zone.now)
   end
 
   def transporter_name
@@ -188,7 +185,7 @@ class ImportItem < ActiveRecord::Base
     super(only: [:container_number, :id, :after_delivery_status, :context, :truck_number, :status],
             methods: [:bl_number, :customer_name, :work_order_number, :truck_number, :rfs_truck_number,
               :equipment_type, :DT_RowId, :formatted_close_date, :delivery_date,
-              :transporter_name, :clearing_agent, :edit_close_date_import_item_path])
+              :transporter_name, :clearing_agent, :edit_close_date_import_item_path, :return_status])
   end
 
   def edit_close_date_import_item_path
@@ -348,5 +345,11 @@ class ImportItem < ActiveRecord::Base
       end
     end
     container_status
+  end
+
+  def add_close_date
+    unless interchange_number.nil?
+      self.close_date = Date.today
+    end
   end
 end
