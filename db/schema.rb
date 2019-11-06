@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191030062450) do
+ActiveRecord::Schema.define(version: 20191030095945) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -203,6 +203,7 @@ ActiveRecord::Schema.define(version: 20191030062450) do
     t.integer  "return_status"
     t.date     "expiry_date"
     t.boolean  "is_co_loaded",          default: false
+    t.string   "interchange_number"
   end
 
   add_index "import_items", ["container_number"], name: "index_import_items_on_container_number", using: :btree
@@ -309,12 +310,6 @@ ActiveRecord::Schema.define(version: 20191030062450) do
   end
 
   add_index "location_dates", ["truck_id"], name: "index_location_dates_on_truck_id", using: :btree
-
-  create_table "make_models", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "mechanics", force: true do |t|
     t.string   "name"
@@ -537,14 +532,7 @@ ActiveRecord::Schema.define(version: 20191030062450) do
     t.string   "status"
     t.string   "location"
     t.integer  "current_import_item_id"
-    t.integer  "fuel_capacity"
-    t.string   "trailer_reg_number"
-    t.decimal  "insurance_premium_amt_yearly",            precision: 10, scale: 2
-    t.string   "driver_name",                  limit: 50
-    t.integer  "make_model_id"
   end
-
-  add_index "trucks", ["make_model_id"], name: "index_trucks_on_make_model_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "",   null: false

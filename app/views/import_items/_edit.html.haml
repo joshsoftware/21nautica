@@ -54,14 +54,17 @@
     else
       $(".import_item_truck_number").hide()
     statuses = ['loaded_out_of_port', 'arrived_at_border', 'departed_from_border', 'arrived_at_destination']
-    if statuses.includes?(import_item.status)
-      #$('#import_item_truck_id').select2('readonly', 'readonly')
-    else
-      #$('#import_item_truck_id').select2('readonly', false)
     $('#import_item_remarks').val('')
-   $('#import_item_status').on 'change', ->
-    # if $(this).val() == 'truck_released'
-    #   $('#import_item_truck_id').select2('readonly', false)
+    if #{@import_item.status == "delivered"}
+      $("#edit_import_item_#{@import_item.id} :input").prop("disabled", true);
+      $(".return_status_field").show()
+      if #{@import_item.return_status == "Dropped at Customer"}
+        $(".dropped_location_field").show()
+      else
+        $(".dropped_location_field").hide()
+    else
+      $(".return_status_field").hide()
+      $(".dropped_location_field").hide()
 
   $("#import_item_truck_id").on 'change', (event) ->
     if event.added.text.toLowerCase().includes("3rd party truck")

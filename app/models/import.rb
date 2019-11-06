@@ -59,10 +59,6 @@ class Import < ActiveRecord::Base
     self.bl_number = bl_number.strip.squish
   end
 
-  # Hack: I have intentionally not used delegate here, because,
-  # in case of duplicate, the bl_number will be delegated to a non-existent BillOfLading in
-  # the `render :new` call. :allow_nil would not work, as we actually lose the bl_number then!
-
   def presence_of_date#going to use for date chronology
     ["bl_received_at", "charges_received_at", "charges_paid_at", "do_received_at"].each do |date|
       if self.send("#{date}_changed?".to_sym) && !self.send(date.to_sym).present?
@@ -222,6 +218,6 @@ class Import < ActiveRecord::Base
   end
 
   def update_gf_expiry_date
-    
+    import_items.update_all(g_f_expiry: gf_return_date)
   end
 end
