@@ -73,9 +73,9 @@
 
   $('#remarkModal').on 'submit', (event) ->
     toReturn = true
-    if $("#remark_desc").val().length < 1 
-      $("#remark_desc").siblings(".remark-error").remove()
-      $("<label class='remark-error text-danger'>Should not be empty</label>").insertAfter("#remark_desc")
+    if $("#remark_textarea").val().length < 1 
+      $("#remark_textarea").siblings(".remark-error").remove()
+      $("<label class='remark-error text-danger'>Should not be empty</label>").insertAfter("#remark_textarea")
       return false
     else
-      $("#remark_desc").siblings(".remark-error").remove()
+      $("#remark_textarea").siblings(".remark-error").remove()
