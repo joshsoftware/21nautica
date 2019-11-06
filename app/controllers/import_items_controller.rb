@@ -108,7 +108,7 @@ class ImportItemsController < ApplicationController
   end
 
   def empty_containers
-    @import_items = ImportItem.where("import_items.after_delivery_status IS NULL AND import_items.interchange_number IS NULL").includes(:import).where("(imports.status='ready_to_load' OR (imports.bl_received_at IS NOT NULL AND imports.entry_number IS NOT NULL AND imports.entry_type IS NOT NULL))").order("import_items.created_at DESC").references(:import)
+    @import_items = ImportItem.where("import_items.interchange_number IS NULL").includes(:import).where("(imports.status='ready_to_load' OR (imports.bl_received_at IS NOT NULL AND imports.entry_number IS NOT NULL AND imports.entry_type IS NOT NULL))").order("import_items.created_at DESC").references(:import)
   end
 
   def show_info
