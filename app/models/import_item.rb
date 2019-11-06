@@ -338,9 +338,9 @@ class ImportItem < ActiveRecord::Base
   def show_status
     container_status = status.humanize
     if status == "delivered" && !return_status.blank?
-      if return_status == ImportItem.return_statuses.keys[0]#empty returned
-        container_status = "Empty Returned / #{truck.try(:reg_number).to_s}"
-      elsif return_status == ImportItem.return_statuses.keys[1] #dropped
+      if return_status == ImportItem.return_statuses.keys[0] # empty returned
+        container_status = "Empty Returned / #{truck.try(:reg_number)}"
+      elsif return_status == ImportItem.return_statuses.keys[1] # dropped
         container_status = "Dropped / #{dropped_location} / #{status_date.send(status.to_sym)}"
       end
     end
@@ -348,8 +348,6 @@ class ImportItem < ActiveRecord::Base
   end
 
   def add_close_date
-    unless interchange_number.nil?
-      self.close_date = Date.today
-    end
+    !interchange_number.nil? && self.close_date = Time.zone.today
   end
 end

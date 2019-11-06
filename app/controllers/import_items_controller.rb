@@ -3,9 +3,8 @@ class ImportItemsController < ApplicationController
 
   def index
     param = params[:destination_item] if params[:destination_item].present?
-    imports = Import.where("imports.status='ready_to_load' OR (imports.bl_received_at IS NOT NULL AND imports.entry_number IS NOT NULL AND imports.entry_type IS NOT NULL)").where(to: param || 'Kampala').select("id")#this query will not be needed as we are fetching data by interchange number, confirm
+    imports = Import.where("imports.status='ready_to_load' OR (imports.bl_received_at IS NOT NULL AND imports.entry_number IS NOT NULL AND imports.entry_type IS NOT NULL)").where(to: param || 'Kampala').select("id")
     @import_items = ImportItem.where(import_id: imports).where(interchange_number: nil)
-    @transporters = Vendor.transporters.pluck(:name).inject({}) {|h, x| h[x] = x; h}
   end
 
   def edit
