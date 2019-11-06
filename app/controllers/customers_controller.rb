@@ -79,7 +79,8 @@ class CustomersController < ApplicationController
 
   private
   def customer_params
-    params.require(:customer).permit(:name, :emails, :sales_rep_name)
+    params.require(:customer).permit(:name, :emails, :sales_rep_name, 
+      :account_emails, :management_emails, :operation_emails)
   end
 
 end

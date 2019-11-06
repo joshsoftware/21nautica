@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191030062450) do
+ActiveRecord::Schema.define(version: 20191106125545) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 20191030062450) do
     t.string   "cheque_ocean"
     t.string   "payment_clearing"
     t.string   "cheque_clearing"
-    t.string   "remarks"
+    t.string   "remark"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "agency_fee"
@@ -91,6 +91,9 @@ ActiveRecord::Schema.define(version: 20191030062450) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "sales_rep_name"
+    t.string   "account_emails"
+    t.string   "operation_emails"
+    t.string   "management_emails"
   end
 
   create_table "debit_notes", force: true do |t|
@@ -203,6 +206,7 @@ ActiveRecord::Schema.define(version: 20191030062450) do
     t.integer  "return_status"
     t.date     "expiry_date"
     t.boolean  "is_co_loaded",          default: false
+    t.string   "interchange_number"
   end
 
   add_index "import_items", ["container_number"], name: "index_import_items_on_container_number", using: :btree
@@ -248,6 +252,7 @@ ActiveRecord::Schema.define(version: 20191030062450) do
     t.boolean  "is_late_submission"
     t.string   "rotation_number"
     t.integer  "entry_type"
+    t.boolean  "new_import",                 default: false
     t.date     "entry_date"
   end
 
@@ -268,7 +273,7 @@ ActiveRecord::Schema.define(version: 20191030062450) do
     t.integer  "invoiceable_id"
     t.string   "invoiceable_type"
     t.string   "legacy_bl"
-    t.text     "remarks"
+    t.text     "remark"
     t.boolean  "manual",              default: false
   end
 
@@ -310,12 +315,6 @@ ActiveRecord::Schema.define(version: 20191030062450) do
 
   add_index "location_dates", ["truck_id"], name: "index_location_dates_on_truck_id", using: :btree
 
-  create_table "make_models", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "mechanics", force: true do |t|
     t.string   "name"
     t.date     "date_of_employment"
@@ -337,7 +336,7 @@ ActiveRecord::Schema.define(version: 20191030062450) do
     t.date     "estimate_delivery"
     t.string   "movement_type"
     t.string   "custom_seal"
-    t.string   "remarks"
+    t.string   "remark"
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -376,7 +375,7 @@ ActiveRecord::Schema.define(version: 20191030062450) do
     t.integer  "amount"
     t.string   "mode_of_payment"
     t.string   "reference"
-    t.string   "remarks"
+    t.string   "remark"
     t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -527,6 +526,20 @@ ActiveRecord::Schema.define(version: 20191030062450) do
     t.datetime "updated_at"
   end
 
+  create_table "transport_manger_cashes", force: true do |t|
+    t.integer  "sr_number"
+    t.date     "transaction_date"
+    t.string   "transaction_type"
+    t.decimal  "transaction_amount", precision: 10, scale: 2
+    t.decimal  "available_balance",  precision: 10, scale: 2
+    t.integer  "import_id"
+    t.integer  "import_item_id"
+    t.integer  "truck_id"
+    t.integer  "created_by_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "trucks", force: true do |t|
     t.string   "type_of"
     t.string   "reg_number"
@@ -537,14 +550,7 @@ ActiveRecord::Schema.define(version: 20191030062450) do
     t.string   "status"
     t.string   "location"
     t.integer  "current_import_item_id"
-    t.integer  "fuel_capacity"
-    t.string   "trailer_reg_number"
-    t.decimal  "insurance_premium_amt_yearly",            precision: 10, scale: 2
-    t.string   "driver_name",                  limit: 50
-    t.integer  "make_model_id"
   end
-
-  add_index "trucks", ["make_model_id"], name: "index_trucks_on_make_model_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "",   null: false

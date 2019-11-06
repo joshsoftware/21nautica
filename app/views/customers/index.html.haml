@@ -6,7 +6,10 @@
   %thead
     %th Name 
     %th Sales Representative Name
-    %th Emails
+    %th Default Emails
+    %th Account Emails
+    %th Management Emails
+    %th Operation Emails
     %th Action
   %tbody
     - @customers.each do |customer|
@@ -14,4 +17,7 @@
         %td= customer.name 
         %td= customer.sales_rep_name
         %td= customer.emails
+        %td= customer.account_emails
+        %td= customer.management_emails
+        %td= customer.operation_emails
         %td= link_to 'Edit', edit_customer_path(customer), class: 'btn btn-primary'
