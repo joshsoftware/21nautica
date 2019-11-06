@@ -58,13 +58,13 @@ class PettyCashesController < ApplicationController
 
   def set_records_with_date(key,start_date, end_date)
     PettyCash.of_account_type(key).having_records_between(start_date, end_date)
-                      .order(date: :desc)
+                      .order(:id)
                       .includes(:truck, :expense_head, :created_by)
                       .paginate(page: params[:page], per_page: 1000)
   end
 
   def set_records_with_default_date(key)
-    PettyCash.of_account_type(key).having_records_between(Date.today-7.days, Date.today).order(date: :desc)
+    PettyCash.of_account_type(key).having_records_between(Date.today-7.days, Date.today).order(id: :desc)
     .includes(:truck, :expense_head, :created_by)
     .paginate(page: params[:page], per_page: 1000)    
   end
