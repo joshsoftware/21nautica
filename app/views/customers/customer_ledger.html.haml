@@ -5,8 +5,8 @@
       = select_tag('customer_id', options_from_collection_for_select(Customer.order(:name), 'id', 'name'), prompt: "Select Customer")
   .row
     .col-md-12
-      %div#received_details_table.scroll-table
-      #payment_details_result
+    %div#received_details_table
+    #payment_details_result
       %h4
         Invoiced:
         %span.invoiced 0
@@ -14,4 +14,7 @@
       %h4
         Received:
         %span.received 0
-        USD    
+        USD
+
+:javascript
+  $("#customer_id").select2({width:'50%'})

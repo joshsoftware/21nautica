@@ -2,29 +2,16 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.cloned_class{
-  label{
-    padding-left: 0 !important;
-  }
-  .date_of_payment{
-    margin-left: 10%;
-    width: 50%;
-  }
-  .amount{
-    margin-left: 6%;
-    width: 50%;
-  }
-  .references{
-    margin-left: 2%;
-    width: 50%;
-  }
-  .customer_id{
-    margin-left: 5%;
-  }
-  .payment_mode{
-    margin-left: 5%;
-  }
-  .remarks{
-    margin-left: 13%;
-  }
+
+.date_of_payment{
+  width: 75px !important;
+}
+.customer_name{
+  width:300px !important;
+}
+.amount{
+  width: 75px;
+}
+.references{
+  width: 75px;
 }

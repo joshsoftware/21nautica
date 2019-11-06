@@ -7,6 +7,7 @@ class ReceivedController < ApplicationController
 
   def save_data(paid_params)
     @received = Received.new(paid_params)
+    byebug
     if @received.save
       flash[:notice] = "Payment entry saved sucessfully"
       receipt = generate_receipt
@@ -76,7 +77,7 @@ class ReceivedController < ApplicationController
       payment.create_ledger(amount: payment.amount, customer: payment.customer, date: payment.date_of_payment)
     end
 
-    redirect_to new_received_path
+    redirect_to customer_ledger_path
   end
 
   private
