@@ -178,7 +178,7 @@ class ImportItem < ActiveRecord::Base
   end
 
   def rfs_truck_number
-    truck && truck.reg_number
+    truck.present? ? truck.reg_number : truck_number
   end
 
   def as_json(options= {})
