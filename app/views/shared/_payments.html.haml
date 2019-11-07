@@ -1,17 +1,10 @@
-.row
-  .col-md-6
-    = f.input :date_of_payment, as: :string, input_html: { class: 'form-control date date_validation', id: "#{controller_name}_payment_date"}
-  .col-md-6
-    = f.input :amount, input_html: {:"data-validation" => "number required", :min => 0, :"data-validation-error-msg" => "Quantity Should be a valid Positive Number."}
-.row
-  .col-md-6
-    = f.input :mode_of_payment, collection: PAYMENT_MODES, as: :select, label: 'Type' , include_blank: false
-  .col-md-6
-    = f.input :reference, label: 'Reference', input_html: { :"Placeholder" => "cheque number / cash"}
-.row
-  .col-md-6
-    = f.input :remarks, label: 'Remark'
+
+= f.input :date_of_payment, as: :string, input_html: { class: 'form-control date date_validation', id: "#{controller_name}_payment_date"}
+= f.input :amount, input_html: {:"data-validation" => "number required", :min => 0, :"data-validation-error-msg" => "Quantity Should be a valid Positive Number."}
+= f.input :mode_of_payment, collection: PAYMENT_MODES, as: :select, label: 'Type' , include_blank: false
+= f.input :reference, label: 'Reference', input_html: { :"Placeholder" => "cheque number / cash"}
+= f.input :remarks, label: 'Remark'
 
 .form-group
-  .col-sm-offset-2.col-sm-2
-    = f.submit 'Save', class: 'btn btn-primary payments'
+.col-sm-offset-2.col-sm-2
+  = f.submit 'Save', class: 'btn btn-primary payments'

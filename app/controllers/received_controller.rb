@@ -1,20 +1,17 @@
 class ReceivedController < ApplicationController
   require 'numbers_in_words/duck_punch'
-  before_action :set_customers, :set_count, only: %i[new fetch_form_partial]
+  before_action :set_customers, only: %i[new fetch_form_partial]
   def new
     @received = Received.new
   end
 
   def save_data(paid_params)
     @received = Received.new(paid_params)
-    byebug
     if @received.save
       flash[:notice] = "Payment entry saved sucessfully"
       receipt = generate_receipt
-      #UserMailer.payment_received_receipt(@received.customer.emails, receipt).deliver()
+      # UserMailer.payment_received_receipt(@received.customer.emails, receipt).deliver()
       # UserMailer.payment_received_receipt(@received.customer, receipt).deliver()
-    else
-      render 'new'
     end
   end
 
@@ -62,6 +59,9 @@ class ReceivedController < ApplicationController
     redirect_to readjust_customer_path(customer_id)
   end
 
+  def customer_ledger
+  end
+
   def readjust
     customer = Customer.find(params[:id])
 
@@ -82,11 +82,6 @@ class ReceivedController < ApplicationController
 
   private
 
-  # def paid_params
-  #   params.require(:received).permit(:received => %i[customer_id
-  #     date_of_payment])
-  # end
-
   def generate_receipt
     date = Date.current.strftime("%y%d%m")
     count = Received.where("created_at > ?", Date.current).count
@@ -101,7 +96,4 @@ class ReceivedController < ApplicationController
     @customers =  Customer.order(:name).pluck(:name,:id).to_h
   end
 
-  def set_count
-    # @count = try(@count).
-  end
 end

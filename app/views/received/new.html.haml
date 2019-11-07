@@ -3,7 +3,7 @@
   -# %a.glyphicon.glyphicon-download-alt{href: "#{outstanding_received_index_path}"} Outstanding
 .row
   = simple_form_for @received , html: {class: 'form-horizontal'},url: url_for(action: 'create', :controller => 'received'), method: 'post', defaults: {input_html: {class: 'form-control'}} do |f|
-    %table.table{id: 'received_table'}
+    %table.table{id: 'received_table',class:'received_table_class'}
       %thead
         %th.date_of_payment Date
         %th.customer_name Customer Name
@@ -14,9 +14,8 @@
         %tbody
           %div.cloned_class
             = render 'form', :@count => 1
-    = f.submit 'Save', class: 'btn btn-primary payments'
+    = f.submit 'Save', class: 'btn btn-primary payments', id:'save_form'
     = link_to "Add More", fetch_form_received_index_path(count: @count),id: 'add_more', :remote => true, :class => "btn btn-success"
-    = button_tag  'Remove ', class:'btn btn-danger', id:'remove_button'
 
 :javascript
   window.validate_form = function(){
@@ -28,28 +27,72 @@
   $(document).ready(function(){
     var count = 1
     toggle_button()
-    console.log(count)
+    $(document).on("submit",function(){
+      $("#loader_div").show()
+    })
+    $(".customers").select2({width:'100%'})
+    $(".date").datepicker({
+      format: 'dd/mm/yyyy',
+      autoclose: true
+    })
     $('#add_more').on('click',function(){
       count += 1;
       toggle_button();
+      setTimeout(function(){
+        $(".date").datepicker({
+          format: 'dd/mm/yyyy',
+          autoclose: true
+        })
+        $("select.customers").each(function (i, select){
+           if (!$(select).data('select2'))
+          {
+            $(select).select2({width:'100%'});
+          } 
+        })
+      }, 100)
     })
     function toggle_button(){
       if(count == 1)
       {
-        console.log("in if",count)
-        $("#remove_button").hide()
+        $(".remove_button").hide()
       }
       else{
-        console.log('in else',count)
-        $("#remove_button").show()
+        $(".remove_button").show()
       }
     }
-    $('#remove_button').on('click',function(e){
+    $(document).on('click', ".remove_button", function(e){
       e.preventDefault()
-      $('#received_table tr:last').remove()
+      $(this).closest("tr").remove();
       count -= 1 ;
       toggle_button();
     })
+    $(document).on('change', "select.customers",function(e){
+      if($(this).closest('td').hasClass('has-error'))
+      {
+        $(this).closest('td').removeClass('has-error')
+        $(this).removeClass('error')
+        $(this).siblings(".form-error").remove()      }
+    })
+    $(document).on('change', "select.payment",function(e){
+      if($(this).closest('td').hasClass('has-error'))
+      {
+        $(this).removeAttr("style");
+        $(this).closest('td').removeClass('has-error')
+        $(this).removeClass('error')
+        $(this).siblings(".form-error").remove()      }
+    })
+    $(document).on('input', "input.amount_class",function(e){
+      if($(this).closest('td').hasClass('has-error'))
+      {
+        if($(this).val()!= ''){
+          $(this).removeAttr("style");
+          $(this).closest('td').removeClass('has-error')
+          $(this).removeClass('error')
+          $(this).siblings(".form-error").remove()
+        }
+      }
+    })
   })
-  $('#received_customer_id').select2()
+   
+  //$('#received_customer_id').select2({width:'100%'})
   validate_form();
