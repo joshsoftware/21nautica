@@ -43,13 +43,13 @@ class SparePartsController < ApplicationController
                     purchase_order_items.price, suppliers.name supplier_name,
                     purchase_order_items.purchase_order_id")
                     .joins(:purchase_order => [:supplier])
-                    .where("purchase_order_items.created_at > ? AND purchase_order_items.spare_part_id= ?", Time.zone.now - 3.months, params[:spare_part_id])
+                    .where("purchase_order_items.created_at > ? AND purchase_order_items.spare_part_id= ?", Time.zone.now - 3.months, params[:spare_part_id]).order(created_at: :desc)
       data = po_history.offset(params[:start]).limit(params[:length] || 10)
       json_data = {"data" => data, "recordsTotal" => po_history.count("purchase_order_items.id"), "recordsFiltered" => po_history.count("purchase_order_items.id") }
     elsif params[:history_type] == "req"
       req_history = ReqPart.select(:created_at, :price, :quantity)
                     .where("created_at >= ? AND req_parts.spare_part_id=?",
-                    Time.zone.now - 3.months, params[:spare_part_id])
+                    Time.zone.now - 3.months, params[:spare_part_id]).order(created_at: :desc)
       data = req_history.offset(params[:start]).limit(params[:length] || 10)
       json_data = {:data => data, "recordsTotal" => req_history.count("req_parts.id"), "recordsFiltered" => req_history.count("req_parts.id") }
     end

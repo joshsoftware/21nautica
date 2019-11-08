@@ -20,7 +20,7 @@
           %td.mechanic_id= part.input :mechanic_id, collection: Mechanic.order(:name).pluck(:name, :id), wrapper: :vertical_form, label: false,
             input_html: {class: 'select2' }
           %td.quantity_req= part.input :quantity, wrapper: :vertical_form, label: false, input_html: {class: 'req_quantity'}
-          %td.price_req= part.input :price, wrapper: :vertical_form, label: false, input_html: {class: 'req_price'}
+          %td.price_req= part.input :price, wrapper: :vertical_form, label: false, input_html: {class: 'req_price', min: "1"}
           %td.req_total_cost= part.input :total_cost, wrapper: :vertical_form, label: false, readonly: true, input_html: {class: 'total_cost'}
           %td
             = part.link_to_remove method: :delete, class: 'delete pull-left' do

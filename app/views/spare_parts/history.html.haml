@@ -5,11 +5,11 @@
   .col-sm-2.well.right-border
     =label_tag :spare_part_id, "Select Spare Part: "
   .col-sm-3.well.left-border
-    =select_tag "spare_part_id", options_from_collection_for_select(SparePart.order(:product_name), "id", "product_name")
+    =select_tag "spare_part_id", options_from_collection_for_select(SparePart.order('LOWER(product_name)'), "id", "product_name")
 %h3 Purchase Order
 %table.table{id: 'po_history_table'}
   %thead
-    %th.po-created-at Created Date
+    %th.po-created-at Purchase Order Date
     %th.po-price Price
     %th.po-quantity Quantity
     %th.po-supplier Supplier
@@ -19,7 +19,7 @@
 %h3 Requisition
 %table.table{id: 'req_history_table'}
   %thead
-    %th.req-created-at Created Date
+    %th.req-created-at Requisition Date
     %th.req-price Price
     %th.req-quantity Quantity
 
