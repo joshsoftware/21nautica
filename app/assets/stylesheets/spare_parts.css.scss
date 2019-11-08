@@ -1,3 +1,14 @@
 // Place all the styles related to the spare_parts controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.left-border {
+  //border-top-left-radius: 0px !important;
+  //border-bottom-left-radius: 0px !important;
+  border-left: none !important;
+}
+.right-border {
+  //border-top-right-radius: 0px !important;
+  //border-bottom-right-radius: 0px !important;
+  border-right: none !important;
+}
