@@ -1,0 +1,101 @@
+%h1 Spare Part History
+%br
+.row
+  .col-sm-3
+  .col-sm-2.well.right-border
+    =label_tag :spare_part_id, "Select Spare Part: "
+  .col-sm-3.well.left-border
+    =select_tag "spare_part_id", options_from_collection_for_select(SparePart.order('LOWER(product_name)'), "id", "product_name")
+%h3 Purchase Order
+%table.table{id: 'po_history_table'}
+  %thead
+    %th.po-created-at Purchase Order Date
+    %th.po-price Price
+    %th.po-quantity Quantity
+    %th.po-supplier Supplier
+
+%br
+%br
+%h3 Requisition
+%table.table{id: 'req_history_table'}
+  %thead
+    %th.req-created-at Requisition Date
+    %th.req-price Price
+    %th.req-quantity Quantity
+
+:javascript
+  $(document).ready(function() {
+    $('#spare_part_id').select2({width: "100%"});
+    if($.fn.DataTable.isDataTable("#po_history_table") == false)  
+      po_history_table = $('#po_history_table').DataTable( {
+          "bJQueryUI": true,
+          "processing": true,
+          "serverSide": true,
+          "paging": true,
+          "ordering": false,
+          "pageLength": 10,
+          "searching": false,
+          "ajax": {
+            url: "history",
+            type: "POST",
+            "data": function( result ) {
+                  var newresult = { start: result.start,
+                                    length: result.length,
+                                    history_type: "po",
+                                    spare_part_id: $("#spare_part_id").val() }
+                  return newresult;
+                },
+            "dataSrc": function ( json ) {
+                data = json.data
+                data.forEach(function(data, index){
+                  data.created_at = new Date(data.created_at).toLocaleDateString();
+                })
+                return data
+            }
+          },
+          "columns": [
+              { "data": "created_at", "bSortable": false},
+              { "data": "price", "bSortable": false },
+              { "data": "quantity", "bSortable": false },
+              { "data": "supplier_name", "bSortable": false }
+          ]
+      });
+    if($.fn.DataTable.isDataTable("#req_history_table") == false)
+      req_history_table = $('#req_history_table').DataTable( {
+          "bJQueryUI": true,
+          "processing": true,
+          "serverSide": true,
+          "paging": true,
+          "ordering": false,
+          "pageLength": 10,
+          "searching": false,
+          "ajax": {
+            url: "history",
+            type: "POST",
+            "data": function( result ) {
+                  var newresult = { start: result.start,
+                                    length: result.length,
+                                    history_type: "req",
+                                    spare_part_id: $("#spare_part_id").val() }
+                  return newresult;
+                },
+            "dataSrc": function ( json ) {
+                data = json.data
+                data.forEach(function(data, index){
+                  data.created_at = new Date(data.created_at).toLocaleDateString();
+                })
+                return data
+            }
+          },
+          "columns": [
+              { "data": "created_at", "bSortable": false},
+              { "data": "price", "bSortable": false },
+              { "data": "quantity", "bSortable": false }
+          ]
+      });
+    $("#spare_part_id").on("change", function () { 
+      po_history_table.ajax.reload();
+      req_history_table.ajax.reload();
+    });
+  });
+

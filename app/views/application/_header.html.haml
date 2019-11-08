@@ -63,7 +63,7 @@
               %li= link_to 'Report(Margin)', customer_analysis_path 
               %li= link_to 'List Users', users_path 
               %li= link_to 'Report', report_purchase_orders_path
-              %li= link_to 'Spare Part History', coming_soon_path
+              %li= link_to 'Spare Part History', history_spare_parts_path
               %li= link_to 'Freez P&L', coming_soon_path
               %li= link_to 'Truck P&L', coming_soon_path
         - if user_signed_in? && (current_user.is?('Admin') || current_user.is?('Yard'))

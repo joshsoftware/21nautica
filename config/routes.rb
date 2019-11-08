@@ -153,6 +153,7 @@ Rails.application.routes.draw do
   resources :spare_parts do
     collection do
       get :load_sub_categories
+      match :history, via: [:get, :post]
     end
   end
   resources :req_sheets do
