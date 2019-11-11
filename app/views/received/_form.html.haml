@@ -4,7 +4,7 @@
   %td{class:'amount'}= number_field_tag "received[#{@count}][amount]", nil,class:'amount_class', data: {"validation" => "required", "validation-error-msg" => "amount is required."}
   %td= select_tag "received[#{@count}][mode_of_payment]",options_for_select(PAYMENT_MODES),class:'payment',prompt: "Payment Mode",:"data-validation" => "required", :"data-validation-error-msg" => "Payment Mode is required."
   %td{class: "reference"}= text_field_tag "received[#{@count}][reference]",nil,:placeholder => "cheque number / cash"
-  %td= text_area_tag "received[#{@count}][remarks]",nil, rows:3,cols:35
+  %td= text_area_tag "received[#{@count}][remarks]",nil, rows:1,cols:35
   %td 
     %a.btn.btn-danger.btn-xs{ "data-toggle" => "tooltip", "title" =>"delete","class" => "remove_button"}
       %span.glyphicon.glyphicon-remove	

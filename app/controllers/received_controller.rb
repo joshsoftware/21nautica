@@ -36,7 +36,7 @@ class ReceivedController < ApplicationController
 
   def index
     customer = Customer.where(id: params[:customer_id]).first
-    @payments = customer.ledgers.order(date: :desc).to_json
+    @payments = customer.ledgers.order(id: :desc).to_json
     @header = customer
     respond_to do |format|
       format.js {}
@@ -66,7 +66,7 @@ class ReceivedController < ApplicationController
     customer = Customer.find(params[:id])
 
     # Remove all legders for this customer
-    Ledger.where(customer: customer).destroy_all
+    Ledger.where(customer: customer).delete_all
     # Add all invoice ledgers first
     customer.invoices.order(date: :asc).sent.each do |inv|
       inv.create_ledger(amount: inv.amount, customer: inv.customer, date: inv.date, received: 0)
