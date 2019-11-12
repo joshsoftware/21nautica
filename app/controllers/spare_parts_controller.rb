@@ -52,6 +52,7 @@ class SparePartsController < ApplicationController
                     purchase_order_items.purchase_order_id, trucks.reg_number truck_name")
                     .joins(:truck, :purchase_order => [:supplier])
                     .where(:purchase_order_items => {spare_part_id: params[:spare_part_id] || [0]})
+                    .where("purchase_order_items.created_at >= ?",Time.zone.now - 3.months)
                     .order("purchase_order_items.created_at DESC")
       data = po_history.offset(params[:start]).limit(params[:length] || 10)
       json_data = {"data" => data, "recordsTotal" => po_history.count("purchase_order_items.id"), "recordsFiltered" => po_history.count("purchase_order_items.id") }
