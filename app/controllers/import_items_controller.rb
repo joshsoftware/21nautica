@@ -1,5 +1,5 @@
 class ImportItemsController < ApplicationController
-  before_action :set_import_item, only: [:edit, :update_loading_date, :updateContext, :updateStatus, :edit_close_date, :show_info, :update_close_date]
+  before_action :set_import_item, only: [:edit, :update_loading_date, :updateContext, :updateStatus, :edit_close_date, :show_info, :update_close_date, :history_info]
 
   def index
     param = params[:destination_item] if params[:destination_item].present?
@@ -112,7 +112,9 @@ class ImportItemsController < ApplicationController
   end
 
   def show_info
-    
+  end
+
+  def history_info
   end
 
   private

@@ -10,6 +10,10 @@
     %th Delivery Date
     %th After Delivery Status
     %th Close Date
+    %th
+
+#historyInfoModal.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
 
 :javascript
   $(document).ready(function() {
@@ -53,6 +57,7 @@
                 data.forEach(function(data, index){
                   if(data.return_status)
                     data.after_delivery_status = data.return_status
+                    data.info_link = "<a class='btn btn-link' data-remote='true' href='/import_items/"+data.id+"/history_info'>Info</a>"
                 })
                 return data
             }
@@ -66,7 +71,8 @@
               { "data": "equipment_type", "bSortable": false },
               { "data": "delivery_date", "bSortable": false },
               { "data": "after_delivery_status", "bSortable": false },
-              { "data": "formatted_close_date", "bSortable": false }
+              { "data": "formatted_close_date", "bSortable": false },
+              { "data": "info_link", "bSortable": false }
           ]
       } );
     }
