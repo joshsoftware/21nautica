@@ -13,25 +13,31 @@
   border-right: none !important;
 }
 .req-created-at {
-  width: 33%;
+  width: 25%;
 }
 .req-price {
-  width: 33%;
+  width: 25%;
+}
+.req-truck {
+  width: 25%;
 }
 .req-quantity {
-  width: 33%;
+  width: 25%;
 }
 .po-created-at {
-  width: 25%;
+  width: 20%;
 }
 .po-price {
-  width: 25%;
+  width: 20%;
 }
 .po-quantity {
-  width: 25%;
+  width: 20%;
 }
 .po-supplier {
-  width: 25%;
+  width: 20%;
+}
+.po-truck {
+  width: 20%;
 }
 #req_history_table_paginate .ui-button {
   padding: 4px !important;

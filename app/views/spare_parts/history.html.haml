@@ -2,14 +2,15 @@
 %br
 .row
   .col-sm-3
-  .col-sm-2.well.right-border
-    =label_tag :spare_part_id, "Select Spare Part: "
-  .col-sm-3.well.left-border
-    =select_tag "spare_part_id", options_from_collection_for_select(SparePart.order('LOWER(product_name)'), "id", "product_name")
+  .col-sm-2.h4
+    =label_tag :spare_part_ids, "Select Spare Part: "
+  .col-sm-3
+    %input{:type => "hidden", :id=> "spare_part_ids", :name => "spare_parts[]"}
 %h3 Purchase Order
 %table.table{id: 'po_history_table'}
   %thead
     %th.po-created-at Purchase Order Date
+    %th.po-truck Truck
     %th.po-price Price
     %th.po-quantity Quantity
     %th.po-supplier Supplier
@@ -20,12 +21,33 @@
 %table.table{id: 'req_history_table'}
   %thead
     %th.req-created-at Requisition Date
+    %th.req-truck Truck
     %th.req-price Price
     %th.req-quantity Quantity
 
 :javascript
   $(document).ready(function() {
-    $('#spare_part_id').select2({width: "100%"});
+    $('#spare_part_ids').select2({
+      width: "100%",
+      multiple: true,
+      ajax: {
+        url: '/spare_parts',
+        dataType: 'json',
+        data: function (params) {
+          var query = {
+            searchTerm: params
+          }
+          return query;
+        },
+        results: function(data, page) {
+          return { 
+            results: $.map( data, function(part, i) { 
+              return { id: part.id, text: part.product_name } 
+            } )
+          }
+        }
+      }
+    });
     if($.fn.DataTable.isDataTable("#po_history_table") == false)  
       po_history_table = $('#po_history_table').DataTable( {
           "bJQueryUI": true,
@@ -42,7 +64,7 @@
                   var newresult = { start: result.start,
                                     length: result.length,
                                     history_type: "po",
-                                    spare_part_id: $("#spare_part_id").val() }
+                                    spare_part_id: $("#spare_part_ids").val().split(",") }
                   return newresult;
                 },
             "dataSrc": function ( json ) {
@@ -55,6 +77,7 @@
           },
           "columns": [
               { "data": "created_at", "bSortable": false},
+              { "data": "truck_name", "bSortable": false},
               { "data": "price", "bSortable": false },
               { "data": "quantity", "bSortable": false },
               { "data": "supplier_name", "bSortable": false }
@@ -68,15 +91,17 @@
           "paging": true,
           "ordering": false,
           "pageLength": 10,
-          "searching": false,
           "ajax": {
             url: "history",
             type: "POST",
             "data": function( result ) {
+                  console.log(result)
                   var newresult = { start: result.start,
                                     length: result.length,
                                     history_type: "req",
-                                    spare_part_id: $("#spare_part_id").val() }
+                                    spare_part_id: $("#spare_part_ids").val().split(","),
+                                    truck: result.search.value
+                                  }
                   return newresult;
                 },
             "dataSrc": function ( json ) {
@@ -89,11 +114,12 @@
           },
           "columns": [
               { "data": "created_at", "bSortable": false},
+              { "data": "truck_name", "bSortable": false},
               { "data": "price", "bSortable": false },
               { "data": "quantity", "bSortable": false }
           ]
       });
-    $("#spare_part_id").on("change", function () { 
+    $("#spare_part_ids  ").on("change", function () { 
       po_history_table.ajax.reload();
       req_history_table.ajax.reload();
     });
