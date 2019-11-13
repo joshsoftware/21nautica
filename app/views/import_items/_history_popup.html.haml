@@ -21,10 +21,10 @@
         .row
           .col-md-6 Date of DO :
           .col-md-6 #{import.do_received_at.to_date.to_formatted_s}
-      /-if import.do_received_at #Not known
-      /  .row
-      /    .col-md-6 Date of T1 :
-      /    .col-md-6 #{import.do_received_at.to_date.to_formatted_s}
+      -if @import_item.try(:status_date).try(:ready_to_load)
+        .row
+          .col-md-6 Date of T1 :
+          .col-md-6 #{@import_item.status_date.ready_to_load.to_date.to_formatted_s}
       -if @import_item.try(:status_date).try(:loaded_out_of_port)
         .row
           .col-md-6 Date of Loaded out of port :
