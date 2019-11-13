@@ -11,13 +11,12 @@ class ReceivedController < ApplicationController
       flash[:notice] = "Payment entry saved sucessfully"
       receipt = generate_receipt
       # UserMailer.payment_received_receipt(@received.customer.emails, receipt).deliver()
-      # UserMailer.payment_received_receipt(@received.customer, receipt).deliver()
+      UserMailer.payment_received_receipt(@received.customer, receipt).deliver()
     end
   end
 
   def create
     params[:received].each do |param_received|
-      print param_received[1]
       save_data(param_received[1])
     end
     redirect_to new_received_path
