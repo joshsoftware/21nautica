@@ -1,7 +1,6 @@
 FactoryGirl.define do
   factory :import_item1, class: "ImportItem" do
   	container_number	'c1'
-    #transporter_name 'Mansons'
   end
 
   factory :import_item2, class: "ImportItem" do

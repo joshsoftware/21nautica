@@ -1,65 +1,89 @@
-.row.streaming_div
-  .col-md-1
-    %h4 streaming...
-  .col-md-2
-    %h4
-    = image_tag("streaming.gif", class: "progress")
-.row
-  .col-md-5
-    .col-md-5
-      %input#table-search.form-control{:placeholder => "Search here...", :type => "text"}
 
-    .col-sm-3
-      %select.st_per_page.form-control
-        %option{:value => "10"}
-          10  
-        %option{:value => "20"}
-          20  
-        %option{:value => "30"}
-          30  
-        %option{:value => "50"}
-          50  
-    .col-md-4  
-      %h5#records_found
-
-%table.table#import_history_table.table-striped
+%table.table{id: 'import_history_table'}
   %thead
     %th BL Number
     %th Container Number
     %th File Ref Number
     %th Truck Number
     %th Customer Name
-    %th Clearing Agent Name
-    %th Transporter Name
     %th Equipment
     %th Delivery Date
     %th After Delivery Status
-    %th Context
     %th Close Date
-    %th Action
-  %tbody
-
-%script#import_history_template.table.table-striped{:type => 'text/html'}
-  {{record}}
-  %tr{"data-link" => "{{record.id}}" }
-    %td {{record.bl_number}}
-    %td {{record.container_number}}
-    %td {{record.work_order_number}}
-    %td {{record.rfs_truck_number}}
-    %td {{record.customer_name}}
-    %td {{record.clearing_agent}}
-    %td {{record.transporter_name}}
-    %td {{record.equipment_type}}
-    %td {{record.delivery_date}}
-    %td {{record.after_delivery_status}}
-    %td {{record.context}}
-    %td.close_date {{record.formatted_close_date}}
-    %td= link_to "Edit", '{{record.edit_close_date_import_item_path}}', data: {id: '{{record.id}}' }, class: 'btn btn-primary',remote: true #, id: 'history_edit' 
-
-#import_item_edit_history.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
-  .modal-dialog
 
 :javascript
-  var import_items = #{@import_items.to_json}
-  var count = #{@count}
-  load_history_stream()
+  $(document).ready(function() {
+    if ( $.fn.dataTable.isDataTable( '#import_history_table' ) ) {
+    }
+    else {
+      $('#import_history_table').DataTable( {
+          initComplete : function() {
+              var input = $('.dataTables_filter input').unbind(),
+                  self = this.api(),
+                  $searchButton = $('<button class="search-button">')
+                             .text('search')
+                             .click(function() {
+                                self.search(input.val()).draw();
+                             }),
+                  $clearButton = $('<button class="clear-button">')
+                             .text('clear')
+                             .click(function() {
+                                input.val('');
+                                $('#daterange').val('')
+                                $searchButton.click(); 
+                             })
+                  $dateRange = "<label> DateRange: <input id='daterange' name='daterange' type='text' value='' placeholder='Select Date Range' class = 'daterange' data-provide='daterangepicker'> </label>"
+              $('.dataTables_filter').prepend($dateRange)    
+              $('.dataTables_filter').append($searchButton, $clearButton);
+          },
+          "bJQueryUI": true,
+          "processing": true,
+          "serverSide": true,
+          "paging": true,
+          "pageLength": 25,
+          "ajax": {
+            url: "history",
+            type: "POST",
+            "data": function( result ) {
+                  var newresult = {"searchValue": result.search.value, daterange: $('#daterange').val(), start: result.start, "length": result.length}
+                  return newresult;
+                },
+            "dataSrc": function ( json ) {
+                data = json.data
+                data.forEach(function(data, index){
+                  if(data.return_status)
+                    data.after_delivery_status = data.return_status
+                })
+                return data
+            }
+          },
+          "columns": [
+              { "data": "bl_number", "bSortable": false},
+              { "data": "container_number", "bSortable": false },
+              { "data": "work_order_number", "bSortable": false },
+              { "data": "rfs_truck_number", "bSortable": false },
+              { "data": "customer_name", "bSortable": false },
+              { "data": "equipment_type", "bSortable": false },
+              { "data": "delivery_date", "bSortable": false },
+              { "data": "after_delivery_status", "bSortable": false },
+              { "data": "formatted_close_date", "bSortable": false }
+          ]
+      } );
+    }
+
+    setTimeout( function(){
+      $('#daterange').daterangepicker({
+        locale: { 
+          format: 'DD/MM/YYYY',
+          cancelLabel: 'Clear'
+        },
+        cancelLabel: 'Clear',
+        startDate: new Date(),
+        endDate:  new Date(),
+        autoUpdateInput: false,
+      }, function(first_date, second_date){
+        $("#daterange").val(first_date.format('DD/MM/YYYY')+" - "+ second_date.format('DD/MM/YYYY'));
+      })}, 1000)  
+  });
+
+

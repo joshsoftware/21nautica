@@ -28,7 +28,6 @@
         |
         = link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'
 = render 'loader'
-
 :javascript
   if(#{is_rfs_host?}){
     $('.navbar-static-top').css({"backgroundColor":"#002366"})
