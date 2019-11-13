@@ -1,6 +1,6 @@
 require 'csv'
 class TrucksController < ApplicationController
-
+  before_action :set_make_model, only: %i[edit new create update]
   def index
     @trucks = Truck.includes(current_import_item: [import: [:customer]]).all
   end
@@ -73,6 +73,13 @@ class TrucksController < ApplicationController
   private
 
   def trucks_params
-    params.require(:truck).permit(:reg_number)
+    params.require(:truck).permit(:reg_number, :trailer_reg_number,
+                                  :driver_name, :fuel_capacity,
+                                  :make_model_id, :insurance_expiry,
+                                  :insurance_premium_amt_yearly)
+  end
+
+  def set_make_model
+    @make_models = MakeModel.order(:name).map { |make_model| [make_model.name, make_model.id] }
   end
 end
