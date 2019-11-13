@@ -1,6 +1,25 @@
-= simple_form_for @truck, html: {class: 'form-horizontal', id: 'req_invoice'}, defaults: {input_html: {class: 'form-control'}}, wrapper: :horizontal_form do |f|
+= simple_form_for @truck, html: {class: 'form-horizontal truck', id: 'req_invoice'}, defaults: {input_html: {class: 'form-control'}}, wrapper: :horizontal_form do |f|
   .row
-    .col-md-4
-      = f.input :reg_number, label: 'Truck Number'
+    .col-md-6
+      = f.input :reg_number, label: 'Truck Number',input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Truck Number is required."}
+    .col-md-6
+      = f.input :trailer_reg_number, label: 'Trailer Reg Number'
+  .row
+    .col-md-6
+      = f.input :make_model_id, label:'Make-Model', collection: @make_models
+    .col-md-6
+      = f.input :fuel_capacity, label: 'Fuel Capacity'
+  .row
+    .col-md-6
+      = f.input :driver_name, label: 'Driver Name'
+  .row
+    .col-md-6
+      = f.input :insurance_premium_amt_yearly, label: 'Yearly Insurance Amount'
+    .col-md-6
+      = f.input :insurance_expiry, label: 'Insurance Expiry Date',as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker", :'date-autoclose'=> 'true'}}
+
   = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
   = link_to 'Cancel', trucks_path, class: 'btn btn-primary', data: {dismiss: 'modal'}
+
+:javascript
+  $('#truck_make_model_id').select2()
