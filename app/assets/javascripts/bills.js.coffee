@@ -55,7 +55,7 @@ $(document).ready ->
   #******************* 
   
   if $('#bill_vendor_id').val() == ''
-    $('#add_bill_items').addClass('disabled', true)
+    $('#add_bBillsController#validate_item_numberill_items').addClass('disabled', true)
     $('#add_debit_notes').addClass('disabled', true)
 
   check_if_vendor_present = ->
@@ -153,11 +153,20 @@ $(document).ready ->
 
     $.get('/bills/validate_item_number', {vendor_id: vendor_id, item_type: item_type, item_for: item_for, item_number: item_number
                                          }).done (data) ->
+      console.table(data)
+      if current_row_item_number.parent('div').children('span').length > 0
+        current_row_item_number.parent('div').removeClass('has-error')
+        current_row_item_number.parent('div').find('span').remove()
       if data.result is null
         if current_row_item_number.parent('div').children('span').length > 0
         else
           current_row_item_number.parent('div').addClass('has-error')
           current_row_item_number.parent('div').append("<span class='help-block form-error'> Bl or Container not found </span>")
+      else if data.freez == "This bl is freezed"
+        if current_row_item_number.parent('div').children('span').length > 0
+        else
+          current_row_item_number.parent('div').addClass('has-error')
+          current_row_item_number.parent('div').append("<span class='help-block form-error'> this bl is freezed</span>")
       else
         current_row_item_number.parent('div').removeClass('has-error')
         current_row_item_number.parent('div').find('span').remove()

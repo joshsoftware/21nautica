@@ -188,6 +188,7 @@ Rails.application.routes.draw do
   resources :mechanics
   resources :breakdown_reasons
   resources :breakdown_managements
+  resources :freezpls
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
