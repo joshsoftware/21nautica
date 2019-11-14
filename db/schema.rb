@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191114072657) do
+ActiveRecord::Schema.define(version: 20191119114052) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -427,6 +427,7 @@ ActiveRecord::Schema.define(version: 20191114072657) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "of_type"
+    t.integer  "original_id"
   end
 
   add_index "purchase_order_items", ["purchase_order_id"], name: "index_purchase_order_items_on_purchase_order_id", using: :btree
@@ -473,6 +474,7 @@ ActiveRecord::Schema.define(version: 20191114072657) do
     t.integer  "req_sheet_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "original_id"
   end
 
   add_index "req_parts", ["mechanic_id"], name: "index_req_parts_on_mechanic_id", using: :btree
@@ -513,6 +515,8 @@ ActiveRecord::Schema.define(version: 20191114072657) do
     t.integer  "spare_part_sub_category_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "parent_id"
+    t.boolean  "is_deleted"
   end
 
   add_index "spare_parts", ["spare_part_category_id"], name: "index_spare_parts_on_spare_part_category_id", using: :btree

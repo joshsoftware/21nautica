@@ -23,7 +23,7 @@
               %li= link_to 'Custom',customs_path              
               %li= link_to 'Import Tracking', import_items_path
               %li= link_to 'Import History', import_history_path
-              %li= link_to 'Empty Container Import', import_empty_containers_path
+              %li= link_to 'Outstanding Empty Container', import_empty_containers_path
               %li= link_to 'Import/Download Location', import_location_trucks_path
               %li= link_to 'Breakdown Mng', breakdown_managements_path
         - if user_signed_in? && ['Admin', 'Operations', 'Accounts', 'Transport'].include?(current_user.role)
@@ -63,7 +63,7 @@
               %li= link_to 'Report(Margin)', customer_analysis_path 
               %li= link_to 'List Users', users_path 
               %li= link_to 'Report', report_purchase_orders_path
-              %li= link_to 'Spare Part History', coming_soon_path
+              %li= link_to 'Spare Part History', history_spare_parts_path
               %li= link_to 'Freez P&L', new_freezpl_path
               %li= link_to 'Truck P&L', coming_soon_path
         - if user_signed_in? && (current_user.is?('Admin') || current_user.is?('Yard'))

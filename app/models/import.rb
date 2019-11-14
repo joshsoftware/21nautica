@@ -218,6 +218,6 @@ class Import < ActiveRecord::Base
   end
 
   def update_gf_expiry_date
-    
+    import_items.update_all(g_f_expiry: gf_return_date)
   end
 end

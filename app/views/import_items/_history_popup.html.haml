@@ -1,0 +1,45 @@
+.modal-content
+  -import = @import_item.import
+  .modal-header
+    = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+    %h2.modal-title History
+    %hr
+    .modal-body.fw600
+      -if import.created_at
+        .row
+          .col-md-6 Date of copy Docs :
+          .col-md-6 #{import.created_at.to_date.to_formatted_s}
+      -if import.bl_received_at
+        .row
+          .col-md-6 Date of Original Docs :
+          .col-md-6 #{import.bl_received_at.to_date.to_formatted_s}
+      -if import.entry_date
+        .row
+          .col-md-6 Date of Entry :
+          .col-md-6 #{import.entry_date.to_date.to_formatted_s}
+      -if import.do_received_at
+        .row
+          .col-md-6 Date of DO :
+          .col-md-6 #{import.do_received_at.to_date.to_formatted_s}
+      -if @import_item.try(:status_date).try(:ready_to_load)
+        .row
+          .col-md-6 Date of T1 :
+          .col-md-6 #{@import_item.status_date.ready_to_load.to_date.to_formatted_s}
+      -if @import_item.try(:status_date).try(:loaded_out_of_port)
+        .row
+          .col-md-6 Date of Loaded out of port :
+          .col-md-6 #{@import_item.status_date.loaded_out_of_port.to_date.to_formatted_s}
+      -if @import_item.try(:status_date).try(:arrived_at_border)
+        .row
+          .col-md-6 Date of arrival at Border :
+          .col-md-6 #{@import_item.status_date.arrived_at_border.to_date.to_formatted_s}
+      -if @import_item.try(:status_date).try(:arrived_at_destination)
+        .row
+          .col-md-6 Date of Reaching at clients premises :
+          .col-md-6 #{@import_item.status_date.arrived_at_destination.to_date.to_formatted_s}
+      -if @import_item.return_status
+        .row
+          .col-md-6 Status of the empty :
+          .col-md-6 #{@import_item.return_status.humanize}
+    .modal-footer
+      = link_to 'Close', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}

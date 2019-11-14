@@ -20,7 +20,11 @@ class CustomersControllerTest < ActionController::TestCase
 
 	test "should create customer" do
     assert_difference('Customer.count') do
-    	xhr  :post, :create, customer: {name: 'Some Name', emails: 'some@example.com'}
+    	xhr  :post, :create, customer: {name: 'Some Name',
+          emails: 'default@example.com',
+          account_emails: "account@example.com",
+          management_emails: "management@example.com",
+          operation_emails: "operation@example.com"}
     	assert_response :success
   	end
   end

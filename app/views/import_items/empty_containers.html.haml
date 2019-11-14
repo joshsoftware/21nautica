@@ -1,76 +1,72 @@
 %table.table{id: 'import_empty_containers_table'}
   %thead
-    %th BL Number
-    %th Container Number
-    %th Customer Name
+    %th.ec-name Customer Name / Consignee Name
+    %th.ec-bl-number BL Number
+    %th.ec-container-number Container Number
     %th G/F Expiry
     - if is_rfs_host? || is_ug_host?
-      %th File Ref. #
+      %th.ec-file-ref File Ref. #
       %th ETA
-    %th
-    %th
-    %th
+    %th Current Status
+    %th Return Location
+    %th 
   %tbody
     - @import_items.each do |item|
-      -# updated_at = status_updated_at(item).strftime("%Y-%m-%d")
       - if item.g_f_expiry.nil?
         - g_f_expiry = item.g_f_expiry
       - else
         - g_f_expiry = item.g_f_expiry.strftime("%Y-%m-%d")
       %tr{id: item.id}
+        %td= "#{item.customer_name}"+ " / "+ "#{item.import.consignee_name}"
         %td= item.import.bl_number
         %td= item.container_number
-        %td= item.customer_name
         %td= g_f_expiry
         - if is_rfs_host? || is_ug_host?
           %td= item.work_order_number
           - eta = item.import.estimate_arrival
           %td= eta.nil? ? "" : eta.strftime('%Y-%m-%d')
+        %td= item.show_status
+        %td= item.import.return_location.to_s
+        %td.Status{class: "text-center"}
+          .h5
+            .status_updated_at
+              -if item.interchange_number
+                .interchange_number= "IC #: #{item.interchange_number}"
+          %button.btn.btn-small.btn-primary{"data-target" => "#container_info", "data-toggle"=>"modal", "data-item-id"=> "#{item.id}", "data-status" => "#{item.status}"} Update
 
-        %td.emptyReturn{class: "text-center"}
-          %button.btn.btn-small.btn-primary{"data-target" => "#context", "data-toggle"=>"modal", "data-after-delivery"=>"empty_return", "data-item-id"=> "#{item.id}"}  Empty Return
-        %td.exportReuse{class: "text-center"}
-          %button.btn.btn-small.btn-primary{"data-target" => "#context", "data-toggle"=>"modal", "data-after-delivery"=>"export_reuse", "data-item-id"=> "#{item.id}"} Export Reuse
-        %td.dropOff{class: "text-center"}
-          %button.btn.btn-small.btn-primary{"data-target" => "#context", "data-toggle"=>"modal", "data-after-delivery"=>"drop_off", "data-item-id"=> "#{item.id}"} Drop Off
 
-
-#context.modal{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
+#container_info.modal{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog
     = simple_form_for(:import_item, url: '', html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
       .modal-content
         .modal-header
           = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}
           #title_modal
-            %h1.modal-title  
+            %h1.modal-title Update
         .modal-body
-          #common
-            = f.input :context, required: false
-          #some_field.hide
-            = f.input :transporter_name, required: false
+          = f.input :interchange_number, required: true
         .modal-footer
           = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
           = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
 
         
 :coffeescript
-  $('#context').on 'show.bs.modal', (event) ->
+  $('#container_info').on 'shown.bs.modal', (event) ->
     link_tag = $(event.relatedTarget)
-    after_delivery = link_tag.attr('data-after-delivery').toString()
-    id = link_tag.attr('data-item-id')
-    title = after_delivery.replace('_',' ').toUpperCase()
-    $('#title_modal .modal-title').html(title)
-    if (after_delivery == "export_reuse")
-      $('#some_field').addClass("hide")
-      $('#context .control-label').html('Customer Name')
-    else if(after_delivery == "drop_off")
-      $('#some_field').addClass("hide")
-      $('#context .control-label').html('Yard Name')
+    status = link_tag.attr('data-status')
+    $("#container_info form .alert").remove()
+    if status != "delivered"
+      $("#container_info .modal-body").append("<div class= 'alert alert-danger'> You can not assign Interchange Number as truck is not delivered yet.</div>")
+      $("#container_info form :input").prop("disabled", true);
     else
-      $('#some_field').removeClass("hide")
-      $('#some_field .control-label').text("Transporter name")
-      $('#common  .control-label').html('Truck Number')
-  
-    $('#context form').attr('action', "/import_items/" + id + "/updateContext?after_delivery=" + after_delivery)
+      $("#container_info form :input").prop("disabled", false);
+    $("#import_item_interchange_number").val("")
+    id = link_tag.attr('data-item-id')
+    $("#container_info form").attr("action", "/import_items/"+id+"/update_empty_container")
 
-
+  todayDate = () ->
+    today = new Date()
+    dd = today.getDate()
+    mm = today.getMonth() + 1
+    yyyy = today.getFullYear()
+    return yyyy+"/"+mm+"/"+dd

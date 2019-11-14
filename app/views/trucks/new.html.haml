@@ -1,3 +1,12 @@
 %h3 New Truck
 %br
 = render 'form'
+
+:javascript
+  window.validate_form = function(){
+    $.validate({
+    form: '#req_invoice'
+    })
+  };
+  
+  validate_form()
