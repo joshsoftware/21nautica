@@ -191,6 +191,10 @@ Rails.application.routes.draw do
   resources :mechanics
   resources :breakdown_reasons
   resources :breakdown_managements
+  resources :truck_pls, expect: [:show]
+  get '/download' => 'truck_pls#download', as: :truck_pls_download
+
+  
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

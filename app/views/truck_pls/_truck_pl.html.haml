@@ -1,0 +1,6 @@
+- @trucks.each do |truck|
+  %tr
+    %td= truck[:truck_number]
+    %td= truck[:income]
+    %td= truck[:expense]
+    %td{class:"#{truck[:diff] >=0 ? 'green' : 'red'}"}= truck[:diff]
