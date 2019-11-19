@@ -17,17 +17,13 @@ class TruckPlsController < ApplicationController
       end
       expense = truck.petty_cashes.where('extract(month from date)=?',month).where('extract(year from date)=?',year).sum(:transaction_amount)
       expense += truck.req_sheets.where('extract(month from date)=?',month).where('extract(year from date)=?',year).sum(:value)
-      @trucks << {truck_number: truck.reg_number, income: income, expense: expense, diff: income-expense}
+      expense += truck.fuel_entries.where('extract(month from date)=?',month).where('extract(year from date)=?',year).sum(:cost)
+      expense += truck.try(:insurance_premium_amt_yearly).to_i / 12 if truck.try(:insurance_premium_amt_yearly)
+      @trucks << {truck_number: truck.reg_number, income: income, expense: expense.round(2), diff: (income-expense).round(2)}
     end
     respond_to do |format|
       format.html
       format.js
     end
-  end
-
-  def download
-    html = render_to_string(:action => 'index')
-    kit = PDFKit.new(html)
-    send_file '/new.pdf', :type => 'text/html; charset=utf-8', :status => 404
   end
 end
