@@ -1,0 +1,78 @@
+%h1 Spare Part Ledger
+%br
+.row
+  .col-sm-3
+  .col-sm-2.h4
+    =label_tag :spare_part_ids, "Select Spare Part: "
+  .col-sm-3
+    %input{:type => "hidden", :id=> "spare_part_ids", :name => "spare_parts[]"}
+  .col-sm-4
+    = link_to "Adjust Physical Stock", new_spare_part_ledger_path, class: 'btn btn-primary pull-right'
+%table.table{id: 'spare_part_ledger_table'}
+  %thead
+    %th.spl-created-at Date
+    %th.spl-price Inward/Outward
+    %th.spl-quantity Quantity
+    %th.spl-quantity Balance
+    %th.spl-adjustment Is Adjustment
+
+:javascript
+  $(document).ready(function() {
+    $('#spare_part_ids').select2({
+      width: "100%",
+      ajax: {
+        url: 'spare_parts',
+        dataType: 'json',
+        data: function (params) {
+          var query = {
+            searchTerm: params
+          }
+          return query;
+        },
+        results: function(data, page) {
+          return { 
+            results: $.map( data, function(part, i) { 
+              return { id: part.id, text: part.product_name } 
+            } )
+          }
+        }
+      }
+    });
+    if($.fn.DataTable.isDataTable("#spare_part_ledger_table") == false)  
+      spare_part_ledger_table = $('#spare_part_ledger_table').DataTable( {
+          "bJQueryUI": true,
+          "processing": true,
+          "serverSide": true,
+          "paging": false,
+          "ordering": false,
+          "searching": false,
+          "ajax": {
+            url: "spare_part_ledgers",
+            type: "GET",
+            "data": function( result ) {
+                  var newresult = { start: result.start,
+                                    length: result.length,
+                                    spare_part_id: $("#spare_part_ids").val().split(",") }
+                  return newresult;
+                },
+            "dataSrc": function ( data ) {
+              data = data.data;
+              data.forEach(function(data, index){
+                data.date = new Date(data.date).toLocaleDateString();
+                data.is_adjustment = data.is_adjustment == "null" ? "Yes" : "No";
+              })
+              return data
+            }
+          },
+          "columns": [
+              { "data": "date", "bSortable": false},
+              { "data": "inward_outward", "bSortable": false},
+              { "data": "quantity", "bSortable": false },
+              { "data": "balance", "bSortable": false },
+              { "data": "is_adjustment", "bSortable": false }
+          ]
+      });
+    $("#spare_part_ids").on("change", function () { 
+      spare_part_ledger_table.ajax.reload();
+    });
+  });

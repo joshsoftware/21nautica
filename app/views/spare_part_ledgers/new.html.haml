@@ -1,0 +1,12 @@
+%h1 New Spare Part Ledger Entry
+= render 'form'
+
+:javascript
+  window.validate_form = function(){
+    $.validate({
+      form: '#add_new_spare_part_ledger'
+
+    });
+  }
+  
+  validate_form();

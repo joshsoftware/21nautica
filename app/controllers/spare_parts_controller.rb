@@ -2,7 +2,15 @@ class SparePartsController < ApplicationController
   before_action :find_spare_part, only: [:edit, :update]
 
   def index
-    @spare_parts = SparePart.all
+    if params[:searchTerm].present?
+      @spare_parts = SparePart.where(search_query)
+    else
+      @spare_parts = SparePart.all
+    end
+    respond_to do |format|
+      format.html{}
+      format.json { render json: @spare_parts.order(:product_name) }
+    end
   end
 
   def create
@@ -44,4 +52,10 @@ class SparePartsController < ApplicationController
   def find_spare_part
     @spare_part = SparePart.find(params[:id]) 
   end
+
+  def search_query
+    terms = params[:searchTerm].split(" ").map {|term| term.prepend("'%")+"%'"}
+    terms = terms.join(",")
+    query = "lower(product_name) ILIKE ALL(ARRAY[#{terms}])"
+  end  
 end
