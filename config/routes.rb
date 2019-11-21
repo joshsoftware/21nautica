@@ -154,6 +154,9 @@ Rails.application.routes.draw do
   resources :spare_parts do
     collection do
       get :load_sub_categories
+      match :merge, via: [:get, :post]
+      match :merge_content, via: [:get, :post]
+      match :set_parent, via: [:get, :post]
       match :history, via: [:get, :post]
     end
   end

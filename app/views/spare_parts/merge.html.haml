@@ -1,0 +1,21 @@
+#confirmModal.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+%h1 Merge Spare Parts
+%div.container
+  = form_tag merge_content_spare_parts_path, remote: true, method: :get do |f|  
+    = select_tag "spare_parts",options_for_select(@spare_parts),multiple:true
+    %br
+    = submit_tag 'Merge',class:'btn btn-primary'
+:javascript
+  $("#spare_parts").multiSelect({
+    selectableHeader: "<input type='text' id='myInput' class='search-input' autocomplete='off' placeholder='Search Spare part'>",
+  })
+  $(document).ready(function(){
+  $(".ms-list").prop('id','ml')
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#ml li.ms-elem-selectable:not(.ms-selected)").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      })
+    }) 
+  })

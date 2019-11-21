@@ -21,7 +21,9 @@
 //= require jquery_nested_form
 //= require moment
 //= require daterangepicker
+//= require multi-select
 //= require_tree
+
  $(document).on("page:load ready", function(){
    $("input.datepicker").datepicker();
  });

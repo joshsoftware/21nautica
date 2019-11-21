@@ -29,6 +29,36 @@ class SparePartsController < ApplicationController
   def edit
   end
 
+  def merge
+    p params
+    @spare_parts = SparePart.where(parent_id:nil).map { |spare_part| [spare_part.product_name, spare_part.id]}
+  end
+  
+  def merge_content
+    if params[:parent_spare] || params[:spare_part]
+      if params[:parent_spare].present?
+        parent_spare = params[:parent_spare]
+        child_spare = params[:spare_parts].remove(parent_spare).split(' ')
+        @child_parts = SparePart.where(id:child_spare)
+        byebug
+        if @child_parts.update_all(parent_id:parent_spare, is_deleted: true)
+         flash[:notice] ="succesfull update"
+        end
+      else
+        byebug
+      end
+      redirect_to :merge_spare_parts
+    else
+      @spare_parts = SparePart.where(id: params[:spare_parts]) if params[:spare_parts].present?
+      @spare_part = SparePart.new
+    end
+  end
+
+  def set_parent
+    byebug
+    redirect_to :merge_spare_parts
+  end
+
   def update
     if @spare_part.update(spare_part_params)
       redirect_to spare_parts_path
