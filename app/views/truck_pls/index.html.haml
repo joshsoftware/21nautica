@@ -22,15 +22,20 @@
       year = d.getFullYear()
       window.date = month+'-'+year
     }
-    $('#truck_pl_table').DataTable( {
-          initComplete : function() {
-            $dateRange = "<label> SelectMonth: <input id='month' name='daterange' type='text' value='' placeholder='Select Date Range' class = 'daterange' data-provide='daterangepicker' data-date-autoclose='true'> </label>"
-            $('.dataTables_filter').prepend($dateRange)
-          },
-          "bJQueryUI": true,
-          "processing": true,
-          "paging": false
-    })
+    if($.fn.dataTable.isDataTable( '#truck_pl_table' ) )
+    { 
+    }
+    else{
+      $('#truck_pl_table').DataTable( {
+            initComplete : function() {
+              $dateRange = "<label> SelectMonth: <input id='month' name='daterange' type='text' value='' placeholder='Select Date Range' class = 'daterange' data-provide='daterangepicker' data-date-autoclose='true'> </label>"
+              $('.dataTables_filter').prepend($dateRange)
+            },
+            "bJQueryUI": true,
+            "processing": true,
+            "paging": false
+      })
+    }
     setTimeout( function(){
       $("#month").datepicker({
         format: 'mm-yyyy',
