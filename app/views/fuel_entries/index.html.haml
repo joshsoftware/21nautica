@@ -1,0 +1,63 @@
+%h1 Fuel Entries
+=link_to "Make Entry", new_fuel_entry_path, class: "pull-right btn btn-primary"
+%br
+%br
+%table.table{id: 'fuel_entries_table'}
+  %thead
+    %th.fl-issued-at Purchase / Dispense Date
+    %th.fl-inward-outward Purchase / Dispense
+    %th.fl-quantity Quantity
+    %th.fl-available Total Available Fuel
+    %th.fl-truck Truck
+    %th.fl-office-veh Office Vehicle
+    %th.fl-cost Fuel Cost($)
+    %th.fl-is_adjustment Physical Stock Adjustment
+
+:javascript
+  $(document).ready(function() {
+    if($.fn.DataTable.isDataTable("#fuel_entries_table") == false)  
+      fuel_entries_table = $('#fuel_entries_table').DataTable( {
+          "bJQueryUI": true,
+          "processing": true,
+          "serverSide": true,
+          "paging": true,
+          "ordering": false,
+          "pageLength": 10,
+          "ajax": {
+            url: "fuel_entries",
+            type: "GET",
+            "data": function( result ) {
+                  var newresult = { 
+                                    start: result.start,
+                                    length: result.length,
+                                    term: result.search.value,
+                                  }
+                  return newresult;
+                },
+            "dataSrc": function ( json ) {
+                data = json.data
+                data.forEach(function(data, index){
+                  data.created_at = new Date(data.created_at).toLocaleDateString();
+                  data.is_adjustment = data.is_adjustment == true ? "Yes" : "No";
+                })
+                return data
+            }
+          },
+          createdRow: function (row, data, index) {
+            if(data.purchased_dispensed == "purchase")
+              $(row).addClass("success");
+            else
+              $(row).addClass("danger");
+          },
+          "columns": [
+              { "data": "date", "bSortable": false},
+              { "data": "purchased_dispensed", "bSortable": false},
+              { "data": "quantity", "bSortable": false },
+              { "data": "available", "bSortable": false },
+              { "data": "truck_number", "bSortable": false },
+              { "data": "office_vehicle", "bSortable": false },
+              { "data": "cost", "bSortable": false },
+              { "data": "is_adjustment", "bSortable": false },
+          ]
+      });
+  });
