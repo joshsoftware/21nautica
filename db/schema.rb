@@ -91,9 +91,6 @@ ActiveRecord::Schema.define(version: 20191114072640) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "sales_rep_name"
-    t.string   "account_emails"
-    t.string   "operation_emails"
-    t.string   "management_emails"
   end
 
   create_table "debit_notes", force: true do |t|
@@ -235,7 +232,6 @@ ActiveRecord::Schema.define(version: 20191114072640) do
     t.integer  "return_status"
     t.date     "expiry_date"
     t.boolean  "is_co_loaded",          default: false
-    t.string   "interchange_number"
   end
 
   add_index "import_items", ["container_number"], name: "index_import_items_on_container_number", using: :btree

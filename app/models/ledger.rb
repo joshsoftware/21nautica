@@ -13,7 +13,7 @@ class Ledger < ActiveRecord::Base
   end
 
   def update_ledger_if_payment_made
-    unpaid = Ledger.where(voucher_type: "Invoice", customer: self.customer).where("received < amount").order(date: :asc)
+    unpaid = Ledger.where(voucher_type: "Invoice", customer: self.customer).where("received < amount").order(date: :asc,id: :asc)
     adjust_ledger(unpaid)
   end
 

@@ -22,8 +22,8 @@ Rails.application.routes.draw do
   match '/paid/delete/Payment/:id' => 'paid#delete_ledger', via: [:delete] 
 
   # readjustment payment received
-  match '/received/delete/Invoice/:id' => 'invoices#delete_ledger', via: [:delete]
-  match '/received/delete/Payment/:id' => 'received#delete_ledger', via: [:delete]
+  match 'delete/Invoice/:id' => 'invoices#delete_ledger', via: [:delete]
+  match 'delete/Payment/:id' => 'received#delete_ledger', via: [:delete]
 
   # readjust payments
   match '/payments/readjust/:id' => 'paid#readjust', as: :readjust, via: [:get]
@@ -62,7 +62,7 @@ Rails.application.routes.draw do
   post '/imports/update'
   post '/import_items/update'
   get '/manual_invoices' => 'invoices#manual_invoices'
-  
+  get 'customer_ledger' => 'received#customer_ledger', as: 'customer_ledger'
   resources :bill_of_ladings, only: [:update] do
     collection do
       get 'search'
@@ -137,6 +137,7 @@ Rails.application.routes.draw do
   resources :received, only: [:new, :show, :create, :index] do
     collection do
       get :outstanding
+      get 'fetch_form_partial', as:'fetch_form'
     end
   end
   resources :invoices, only: [:edit, :update] do
