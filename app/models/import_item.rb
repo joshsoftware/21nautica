@@ -153,7 +153,7 @@ class ImportItem < ActiveRecord::Base
     bill_of_lading = self.find_bill_of_lading
     statuses = self.find_all_containers_status
     invoice = bill_of_lading.invoices.where(previous_invoice_id: nil).first
-    return if invoice && invoice.status.eql?('ready')
+    return if invoice && (invoice.ready? || invoice.sent?)
     invoice.invoice_ready! if (!statuses.include?("under_loading_process") && invoice.present?)
   end
 
