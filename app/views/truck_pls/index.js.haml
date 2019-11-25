@@ -1,0 +1,5 @@
+$('#truck_pl_table').dataTable().fnClearTable();
+$('#truck_pl_table').dataTable().fnDestroy();
+$("#loader_div").hide()
+$("#truck_pl_table tbody").html("#{escape_javascript(render :partial => 'truck_pl', :locals => {:@trucks => @trucks})}")
+initData()

@@ -65,7 +65,7 @@
               %li= link_to 'Report', report_purchase_orders_path
               %li= link_to 'Spare Part History', history_spare_parts_path
               %li= link_to 'Freez P&L', new_freezpl_path
-              %li= link_to 'Truck P&L', coming_soon_path
+              %li= link_to 'Truck P&L', truck_pls_path
         - if user_signed_in? && (current_user.is?('Admin') || current_user.is?('Yard'))
           %li.dropdown
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
