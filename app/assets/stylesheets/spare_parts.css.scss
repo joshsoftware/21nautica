@@ -1,3 +1,47 @@
 // Place all the styles related to the spare_parts controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.left-border {
+  //border-top-left-radius: 0px !important;
+  //border-bottom-left-radius: 0px !important;
+  border-left: none !important;
+}
+.right-border {
+  //border-top-right-radius: 0px !important;
+  //border-bottom-right-radius: 0px !important;
+  border-right: none !important;
+}
+.req-created-at {
+  width: 25%;
+}
+.req-price {
+  width: 25%;
+}
+.req-truck {
+  width: 25%;
+}
+.req-quantity {
+  width: 25%;
+}
+.po-created-at {
+  width: 20%;
+}
+.po-price {
+  width: 20%;
+}
+.po-quantity {
+  width: 20%;
+}
+.po-supplier {
+  width: 20%;
+}
+.po-truck {
+  width: 20%;
+}
+#req_history_table_paginate .ui-button {
+  padding: 4px !important;
+}
+#po_history_table_paginate .ui-button {
+  padding: 4px !important;
+}

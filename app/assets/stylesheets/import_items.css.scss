@@ -80,3 +80,37 @@
 .underline {
   text-decoration: underline;
 }
+
+.ec-name {
+  width: 16% !important;
+}
+
+.ec-bl-number {
+  width: 12% !important;
+}
+
+.ec-container-number {
+  width: 11% !important;
+}
+
+.ec-file-ref {
+  width: 7% !important;
+}
+
+.daterange {
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 167px;
+}
+
+.search-button {
+  margin-left: 10px;
+}
+
+.clear-button {
+  margin-left: 10px;
+}
+
+#import_history_table_paginate .ui-button {
+  padding: 4px !important;
+}

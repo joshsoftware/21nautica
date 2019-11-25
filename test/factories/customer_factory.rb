@@ -3,6 +3,9 @@ FactoryGirl.define do
 	factory :customer do
 		name { Faker::Name.name }
 		sequence(:emails) { |emails| "cust_#{emails}@gmail.com" }
+    sequence(:account_emails) { |emails| "acc_cust_#{emails}@gmail.com" }
+    sequence(:management_emails) { |emails| "mng_cust_#{emails}@gmail.com" }
+    sequence(:operation_emails) { |emails| "ops_cust_#{emails}@gmail.com" }
 
     transient do
       customer_ledger_count 1

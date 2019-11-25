@@ -27,7 +27,7 @@ class ImportItemTest < ActiveSupport::TestCase
   test "should not assign truck which is not free" do
     @import_item1.truck_number = "TR123"
     @import_item1.save!
-    import_item2 = ImportItem.new
+    import_item2 = ImportItem.new(container_number: "12121")
     import_item2.truck_number = "TR123"
     assert_not import_item2.save
     assert import_item2.errors.messages[:truck_number].include?(
@@ -62,4 +62,19 @@ class ImportItemTest < ActiveSupport::TestCase
     @import_item.save
     assert_equal ["Truck number should be present if 3rd party truck is selected"], @import_item.errors.full_messages
   end
+
+  test "should fail if container status is not delivered and adding interchange_number" do
+    @import_item.interchange_number = "1234"
+    @import_item.save
+    assert_equal @import_item.errors.full_messages, ["You can not assign the interchange number until container is delivered"]
+  end
+
+  test "should add close date when we update interchange number" do
+    truck = Truck.create(reg_number: "MH12 WW 1234")
+    import_item = ImportItem.new(container_number: "12121", status: "delivered")
+    import_item.interchange_number = "1234"
+    import_item.truck = truck
+    import_item.save
+    assert_equal Date.today, import_item.close_date
+  end  
 end

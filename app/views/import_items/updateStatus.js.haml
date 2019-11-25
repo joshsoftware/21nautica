@@ -11,12 +11,8 @@ $('#statusModal .alert').remove();
     $("#import_items_table tr##{@import_item.id} td.truck_id").text("#{@import_item.truck.reg_number}")
   - else
     $("#import_items_table tr##{@import_item.id} td.truck_id").text("")
-  - if @import_item.status == "delivered"
-    oTable = $("#import_items_table").dataTable()
-    oTable.fnDeleteRow("tr##{@import_item.id}")
-  - else
-    $("#import_items_table tr##{@import_item.id} td.updatestatus button").attr('data-states', "#{@import_item.status},#{@import_item.aasm.events.join(',')}")
-    $("#import_items_table tr##{@import_item.id} td.updatestatus .updatestatus .status").text("#{@import_item.status.titleize}")
-    $("#import_items_table tr##{@import_item.id} td.updatestatus .updatestatus .status_updated_at").text("#{status_updated_at(@import_item).to_date.try(:to_formatted_s)}")
-    $("#import_items_table tr##{@import_item.id} td.remarks .desc").text("#{@import_item.remarks.try(:last).try(:desc)}")
-    $("#import_items_table tr##{@import_item.id} td.updatestatus button").attr('data-truck-number',"#{@import_item.truck_number}")
+  $("#import_items_table tr##{@import_item.id} td.updatestatus button").attr('data-states', "#{@import_item.status},#{@import_item.aasm.events.join(',')}")
+  $("#import_items_table tr##{@import_item.id} td.updatestatus .updatestatus .status").text("#{@import_item.status.titleize}")
+  $("#import_items_table tr##{@import_item.id} td.updatestatus .updatestatus .status_updated_at").text("#{status_updated_at(@import_item).to_date.try(:to_formatted_s)}")
+  $("#import_items_table tr##{@import_item.id} td.remarks .desc").text("#{@import_item.remarks.try(:last).try(:desc)}")
+  $("#import_items_table tr##{@import_item.id} td.updatestatus button").attr('data-truck-number',"#{@import_item.truck_number}")

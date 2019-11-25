@@ -4,6 +4,8 @@
 %table.table#trucks_table
   %thead
     %th Truck Number
+    %th Trailer Reg Number
+    %th Driver Name
     %th Location
     %th Status
     %th Client
@@ -14,6 +16,8 @@
     - @trucks.each do |truck|
       %tr
         %td= truck.reg_number
+        %td= truck.trailer_reg_number
+        %td= truck.driver_name
         %td= truck.location
         - current_import_item = truck.current_import_item
         %td= current_import_item.nil? ? 'Un Allocated' : current_import_item.status.titleize

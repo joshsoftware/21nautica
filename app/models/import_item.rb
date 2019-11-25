@@ -33,12 +33,14 @@ class ImportItem < ActiveRecord::Base
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
   validates_presence_of :container_number
   validates_uniqueness_of :container_number
-  before_validation :strip_whitespaces, :only => [:container_number]
   validate :validate_truck_number
   # validates_presence_of :exit_note_received, :if => lambda { ["under_loading_process", "truck_allocated"].exclude?(self.status) }
   validate :validate_expiry_date
   validate :validate_exit_note_received
-  validate :should_not_remove_truck
+  validate :should_not_remove_truck, unless: :g_f_expiry_changed?
+  before_validation :strip_whitespaces, :only => [:container_number]
+  #gf_expiry is skipped because it is updated on empty container report
+  validate :validate_interchange_number
  
   delegate :bl_number, to: :import
   delegate :clearing_agent, to: :import, allow_nil: true
@@ -49,6 +51,7 @@ class ImportItem < ActiveRecord::Base
   after_save :assign_current_import_item, if: :truck_id_changed?
   after_save :update_last_loading_date, if: :last_loading_date_changed?
   after_update :update_truck_status
+  before_save :add_close_date, if: :interchange_number_changed?
   #after_save :container_dropped_mail, if: :return_status_changed?
 
   after_create do |record|
@@ -106,7 +109,7 @@ class ImportItem < ActiveRecord::Base
       transitions from: :departed_from_border, to: :arrived_at_destination
     end
 
-    event :truck_released, :after => [:check_for_invoice, :set_delivery_date, :release_truck, :save_status_date] do
+    event :truck_released, :after => [:check_for_invoice, :release_truck, :save_status_date] do
       transitions from: :arrived_at_destination, to: :delivered, guard: [:return_status_and_dropped_location_present?]
     end
   end
@@ -146,10 +149,6 @@ class ImportItem < ActiveRecord::Base
     self.truck.update_attributes(status: Truck::FREE, current_import_item_id: nil) if truck.present?
   end
 
-  def set_delivery_date
-    update_attribute(:close_date, Time.zone.now)
-  end
-
   def transporter_name
     self.transporter.try(:name)
   end
@@ -179,14 +178,14 @@ class ImportItem < ActiveRecord::Base
   end
 
   def rfs_truck_number
-    truck && truck.reg_number
+    truck.present? ? truck.reg_number : truck_number
   end
 
   def as_json(options= {})
     super(only: [:container_number, :id, :after_delivery_status, :context, :truck_number, :status],
             methods: [:bl_number, :customer_name, :work_order_number, :truck_number, :rfs_truck_number,
               :equipment_type, :DT_RowId, :formatted_close_date, :delivery_date,
-              :transporter_name, :clearing_agent, :edit_close_date_import_item_path])
+              :transporter_name, :clearing_agent, :edit_close_date_import_item_path, :return_status])
   end
 
   def edit_close_date_import_item_path
@@ -287,7 +286,7 @@ class ImportItem < ActiveRecord::Base
   end
 
   def validate_expiry_date
-    if self.expiry_date.blank? && self.expiry_date_changed?
+    if self.g_f_expiry.blank? && self.g_f_expiry_changed?
       self.errors[:base] << "Expiry date can't be blank once set"
       return false
     end
@@ -327,5 +326,28 @@ class ImportItem < ActiveRecord::Base
     if return_status == ImportItem.return_statuses.keys[1]
       UserMailer.container_dropped_mail(self).deliver()
     end
+  end
+
+  def validate_interchange_number
+    if interchange_number_changed? && !interchange_number.to_s.empty? && status != "delivered"
+      self.errors[:base] << "You can not assign the interchange number until container is delivered"
+    end
+    !self.errors
+  end
+
+  def show_status
+    container_status = status.humanize
+    if status == "delivered" && !return_status.blank?
+      if return_status == ImportItem.return_statuses.keys[0] # empty returned
+        container_status = "Empty Returned / #{truck.try(:reg_number)}"
+      elsif return_status == ImportItem.return_statuses.keys[1] # dropped
+        container_status = "Dropped / #{dropped_location} / #{status_date.send(status.to_sym)}"
+      end
+    end
+    container_status
+  end
+
+  def add_close_date
+    !interchange_number.nil? && self.close_date = Time.zone.today
   end
 end

@@ -49,7 +49,7 @@ Rails.application.routes.draw do
   get 'export/history' => 'movements#history'
   post 'export/movements/update' => 'movements#update'
   post 'import/import_items/update' => 'import_items#update'
-  get 'import/history' => 'import_items#history'
+  match 'import/history' => 'import_items#history', :via => [:get, :post]
   get 'import/empty_containers' => 'import_items#empty_containers'
   get '/import_expenses/search' => "import_expenses#index"
 
@@ -113,6 +113,8 @@ Rails.application.routes.draw do
       get 'edit-close-date'
       post 'update-close-date'
       get 'show_info'
+      get 'history_info'
+      post 'update_empty_container'
     end
     collection do
       post :update_loading_date
@@ -152,6 +154,7 @@ Rails.application.routes.draw do
   resources :spare_parts do
     collection do
       get :load_sub_categories
+      match :history, via: [:get, :post]
     end
   end
   resources :req_sheets do
