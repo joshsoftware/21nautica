@@ -3,7 +3,7 @@ class ImportItemsController < ApplicationController
 
   def index
     param = params[:destination_item] if params[:destination_item].present?
-    @import_items = ImportItem.includes(:status_date, :remarks, :import, :truck).where("imports.status='ready_to_load' OR (imports.bl_received_at IS NOT NULL AND imports.entry_number IS NOT NULL AND imports.entry_type IS NOT NULL)").where("imports.to=?", param || 'Kampala').where("import_items.interchange_number IS NULL").references(:import)
+    @import_items = ImportItem.includes(:status_date, :remarks, :import, :truck).where("imports.status='ready_to_load' OR (imports.bl_received_at IS NOT NULL AND imports.entry_number IS NOT NULL AND imports.entry_type IS NOT NULL)").where("imports.to=?", param || 'Kampala').where("import_items.status != 'delivered'").references(:import)
   end
 
   def edit
