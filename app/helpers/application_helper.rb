@@ -19,13 +19,13 @@ module ApplicationHelper
 
   def reallocate_truck_numbers
     import_items = ImportItem.where(:status => [:under_loading_process, :truck_allocated, :ready_to_load], is_co_loaded: false)
-    alloted = Truck.where(id: import_items.pluck(:truck_id).uniq!).pluck(:reg_number).uniq
+    alloted = Truck.where(id: import_items.pluck(:truck_id).uniq!).active.pluck(:reg_number).uniq
     alloted.concat(import_items.pluck(:truck_number)).uniq!
     if @import_item.truck_id.present?
-      trucks = Truck.free.order(:reg_number).pluck(:reg_number, :id).uniq {|number| number[0]}
+      trucks = Truck.free.order(:reg_number).active.pluck(:reg_number, :id).uniq {|number| number[0]}
       trucks << [@import_item.truck.reg_number, @import_item.truck_id]
     else
-      trucks = Truck.free.order(:reg_number).pluck(:reg_number, :id).uniq {|number| number[0]}
+      trucks = Truck.free.ative.order(:reg_number).pluck(:reg_number, :id).uniq {|number| number[0]}
     end
     {free: trucks, alloted: alloted}
   end

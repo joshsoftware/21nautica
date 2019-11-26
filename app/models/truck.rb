@@ -19,6 +19,7 @@ class Truck < ActiveRecord::Base
   scope :free, -> { where(status: FREE) }
   scope :alloted, -> { where(status: ALLOTED) }
   before_validation :set_status_and_type, on: :create
+  scope :active, -> { where(is_active: true) }
 
   def is_truck?
     type_of == TRUCK 
