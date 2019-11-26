@@ -30,33 +30,46 @@ class SparePartsController < ApplicationController
   end
 
   def merge
-    p params
-    @spare_parts = SparePart.where(parent_id:nil).map { |spare_part| [spare_part.product_name, spare_part.id]}
+    @spare_parts = SparePart.where(is_parent:nil,parent_id:nil).order(:product_name).map { |spare_part| [spare_part.product_name , spare_part.id]}
   end
   
   def merge_content
     if params[:parent_spare] || params[:spare_part]
-      if params[:parent_spare].present?
-        parent_spare = params[:parent_spare]
-        child_spare = params[:spare_parts].remove(parent_spare).split(' ')
-        @child_parts = SparePart.where(id:child_spare)
-        byebug
-        if @child_parts.update_all(parent_id:parent_spare, is_deleted: true)
-         flash[:notice] ="succesfull update"
+      if params[:parent_spare].eql?("New Spare")
+        @spare_part = SparePart.new(spare_part_params)
+        child_part_ids = params[:spare_parts].split(' ')
+        if @spare_part.save
+          parent_spare_id = @spare_part.id
+          @spare_part.update_attribute(:is_parent, true)
+          @child_parts = SparePart.where(id:child_part_ids)
+          if @child_parts.update_all(parent_id:parent_spare_id)
+            @child_parts.each do|child_part|
+              child_part.purchase_order_items.update_all(spare_part_id:parent_spare_id, original_id:child_part.id) if child_part.purchase_order_items
+              child_part.req_parts.update_all(spare_part_id:parent_spare_id, original_id:child_part.id) if child_part.req_parts
+            end
+            flash[:notice] ="succesfull update"
+          end
         end
       else
-        byebug
+        parent_spare_id = params[:parent_spare]
+        child_spare_ids = params[:spare_parts].remove(parent_spare_id).split(' ')
+        @parent_spare = SparePart.where(id:parent_spare_id)[0]
+        @parent_spare.update_attribute(:is_parent,true)
+        @child_parts = SparePart.where(id:child_spare_ids)
+        if @child_parts.update_all(parent_id:parent_spare_id)
+          @child_parts.each do|child_part|
+            child_part.purchase_order_items.update_all(spare_part_id:parent_spare_id, original_id:child_part.id) if child_part.purchase_order_items
+            child_part.req_parts.update_all(spare_part_id:parent_spare_id, original_id:child_part.id) if child_part.req_parts
+          end
+          flash[:notice] ="succesfull update"
+        end
       end
       redirect_to :merge_spare_parts
     else
       @spare_parts = SparePart.where(id: params[:spare_parts]) if params[:spare_parts].present?
       @spare_part = SparePart.new
+      @parent_spares=SparePart.where(is_parent:true).order(:product_name).pluck(:product_name,:id)
     end
-  end
-
-  def set_parent
-    byebug
-    redirect_to :merge_spare_parts
   end
 
   def update
@@ -113,6 +126,14 @@ class SparePartsController < ApplicationController
     end    
   end
 
+  def search
+    terms = params[:searchTerm].split(" ").map {|term| term.prepend("'%")+"%'"}
+    terms = terms.join(",")
+    query = "lower(product_name) ILIKE ALL(ARRAY[#{terms}])"
+    @spare_parts = SparePart.where(parent_id:nil).where(query)
+    render json: @spare_parts.pluck(:product_name, :id)
+  end
+  
   private
 
   def spare_part_params

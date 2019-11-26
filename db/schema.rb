@@ -466,6 +466,7 @@ ActiveRecord::Schema.define(version: 20191119114052) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "of_type"
+    t.integer  "original_id"
   end
 
   add_index "purchase_order_items", ["purchase_order_id"], name: "index_purchase_order_items_on_purchase_order_id", using: :btree
@@ -481,7 +482,6 @@ ActiveRecord::Schema.define(version: 20191119114052) do
     t.integer  "supplier_id"
     t.string   "inv_number"
     t.date     "inv_date"
-    t.integer  "original_id"
   end
 
   add_index "purchase_orders", ["supplier_id"], name: "index_purchase_orders_on_supplier_id", using: :btree
@@ -555,7 +555,7 @@ ActiveRecord::Schema.define(version: 20191119114052) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "parent_id"
-    t.boolean  "is_deleted"
+    t.boolean  "is_parent"
   end
 
   add_index "spare_parts", ["spare_part_category_id"], name: "index_spare_parts_on_spare_part_category_id", using: :btree

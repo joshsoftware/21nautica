@@ -1,6 +1,0 @@
-afterSelect: function(){
-      $("#ml li.ms-selected").css('color','green')
-    },
-    afterDeselect: function(){
-      $("#ml li.ms-elem-selectable").css('color','#555')
-    }

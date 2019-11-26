@@ -156,7 +156,7 @@ Rails.application.routes.draw do
       get :load_sub_categories
       match :merge, via: [:get, :post]
       match :merge_content, via: [:get, :post]
-      match :set_parent, via: [:get, :post]
+      match :search, via: [:get, :post]
       match :history, via: [:get, :post]
     end
   end

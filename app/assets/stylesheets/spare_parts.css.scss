@@ -46,11 +46,19 @@
   padding: 4px !important;
 }
 .ms-container .ms-list{
-  height: 400px;
+  height: 350px;
 }
 .ms-container {
   width: 100%
 }
 .search-input{
   width: 100%
+}
+#content_div{
+  overflow:scroll;
+  height:400px;
+}
+#form_div{
+  overflow:scroll;
+  height:400px;
 }

@@ -5,17 +5,38 @@
   = form_tag merge_content_spare_parts_path, remote: true, method: :get do |f|  
     = select_tag "spare_parts",options_for_select(@spare_parts),multiple:true
     %br
-    = submit_tag 'Merge',class:'btn btn-primary'
+    = submit_tag 'Merge',class:'btn btn-primary',id:"merge"
 :javascript
-  $("#spare_parts").multiSelect({
-    selectableHeader: "<input type='text' id='myInput' class='search-input' autocomplete='off' placeholder='Search Spare part'>",
-  })
+
   $(document).ready(function(){
-  $(".ms-list").prop('id','ml')
-  $("#myInput").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#ml li.ms-elem-selectable:not(.ms-selected)").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    var count=0
+    $("#merge").hide()
+    $("#spare_parts").multiSelect({
+    selectableHeader: "<input type='text' id='myInput' class='search-input' autocomplete='off' placeholder='Search Spare part'>",
+    afterSelect:function(){
+        count= count+1
+        $("#merge").toggle(count>=2)
+      },
+      afterDeselect:function(){
+       count=count-1
+       $("#merge").toggle(count>=2)
+      }
+    })
+    $(".ms-list").prop('id','ml')
+    $("#myInput").on("keyup", function() {
+      var values = $(this).val().toLowerCase().split("+");
+      values = values.join("|")
+      regx = new RegExp(values,"g")
+      $("#ml li.ms-elem-selectable:not(.ms-selected)").each(function() {
+        var ma = $(this).text().toLowerCase().match(regx)
+        if(ma && ma.length)
+        {
+          $(this).toggle(true)
+        }
+        else{
+          $(this).toggle(false)
+        }
+        
       })
-    }) 
+    })  
   })
