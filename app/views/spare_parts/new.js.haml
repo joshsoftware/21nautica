@@ -1,0 +1,18 @@
+- if request.get?
+  $("[data-for='newSparePart']").html('#{escape_javascript(render "new_spare")}')
+  $("[data-is='modelName']").val(window.location.pathname.replace('s/new', '').replace(/\//, ''))
+  $("[data-is='newSparePartModal']").modal('show')
+  :plain
+    $("[data-is='newSparePartModal']").bind('shown.bs.modal', function(){
+      validate_form();
+    })
+- else
+  $('.modal-user .alert').remove();
+  - if @errors.present?
+    -@errors.each do |msg|
+      $('.modal-user .modal-body').append("<div class='alert alert-danger'>#{msg}</div>");
+  - else
+    var newOption = new Option("#{@spare_part.product_name}","#{@spare_part.id}", false, false);
+    $("[data-for='select']").append(newOption).trigger('change')
+    $("[data-is='newSparePartModal']").modal('hide');
+    

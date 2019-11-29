@@ -15,15 +15,29 @@ class SparePartsController < ApplicationController
 
   def create
     @spare_part = SparePart.new(spare_part_params)
-    if @spare_part.save
-       redirect_to spare_parts_path
-    else
+    if request.xhr?
+      if @spare_part.save 
+        @spare_parts = SparePart.where(parent_id:nil).order(:product_name)
+        @req_sheet=ReqSheet.new
+      else
+        @errors = spare_part.errors.messages.values.flatten
+      end
       render 'new'
+    else
+      if @spare_part.save
+        redirect_to spare_parts_path
+      else
+        render 'new'
+      end
     end
   end
 
   def new
     @spare_part = SparePart.new
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def edit
