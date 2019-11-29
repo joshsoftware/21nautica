@@ -5,7 +5,7 @@
     .col-md-12
       = simple_form_for @spare_part, :url => merge_content_spare_parts_path, html: {id: 'new_spare_part', class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
         %div#content_div
-          %h1 Select Parent
+          %h3 Select Spare Part To Merge Into
           = radio_button_tag "parent_spare","New Spare"
           = label_tag "Create New Spare"
           %br
@@ -13,8 +13,12 @@
           = label_tag "Merge_with Existing"
           = select_tag "parent_spare",options_for_select(@parent_spares)
           %br
+          = radio_button_tag "parent_spare","select from below"
+          = label_tag "Select Parent form below list"
+          %br
+          %hr.hr_class
           -@spare_parts.each do |spare_part|
-            = radio_button_tag "parent_spare","#{spare_part.id}"
+            = radio_button_tag "parent_spare","#{spare_part.id}",false,class:"parent"
             = label_tag "#{spare_part.product_name}"
             %br         
         %div.hidden#form_div
@@ -34,13 +38,13 @@
         = hidden_field_tag "spare_parts", @spare_parts.pluck(:id)
     .modal-footer
       = button_tag 'Next',class:'btn btn-primary',id:'next'
-      -# = button_tag 'Create New Spare', class: 'btn btn-primary',id:'new_form'
       = submit_tag "Save&Merge",class:"btn btn-primary", id:"content_merge"
       = link_to 'Cancle', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
 
 :javascript
   $("#spare_part_category_id").select2()
   $("#next").hide()
+  $(".parent").prop("disabled",true)
   $("#parent_spare").select2({
       width:'50%'
     })
@@ -55,6 +59,7 @@
     $("input[type='radio']").click(function(){
       if($(this).val()=="New Spare")
       {
+         $(".parent").prop("disabled",true)
         $("#next").show()
         $("#s2id_parent_spare").hide()
         $("#content_merge").hide()
@@ -63,6 +68,7 @@
       }
       else if($(this).val()=="Merge With")
       {
+        $(".parent").prop("disabled",true)
         $("#s2id_parent_spare").show()
         $("#content_merge").show()
         $("#next").hide()
@@ -70,6 +76,7 @@
         $("#spare_part_spare_part_category_id").prop("disabled",true)
       }
       else{
+        $(".parent").prop("disabled",false)
         $("#content_merge").show()
         $("#s2id_parent_spare").hide()
         $("#next").hide()

@@ -1,0 +1,40 @@
+%h1 Reverse Merge Spare Parts
+%div.container
+  = form_tag undo_merge_spare_parts_path, method: :get do |f|  
+    = select_tag "spare_parts",options_for_select(@spare_parts),multiple:true
+    %br
+    = submit_tag 'Reverse Merge',class:'btn btn-primary',id:"merge"
+:javascript
+
+  $(document).ready(function(){
+    var count=0
+    $("#merge").hide()
+    $("#spare_parts").multiSelect({
+    selectableHeader: "<input type='text' id='myInput' class='search-input' autocomplete='off' placeholder='Search Spare part'>",
+    afterSelect:function(){
+        count= count+1
+        $("#merge").toggle(count>=1)
+      },
+      afterDeselect:function(){
+       count=count-1
+       $("#merge").toggle(count>=1)
+      }
+    })
+    $(".ms-list").prop('id','ml')
+    $("#myInput").on("keyup", function() {
+      var values = $(this).val().toLowerCase().split("+");
+      values = values.join("|")
+      regx = new RegExp(values,"g")
+      $("#ml li.ms-elem-selectable:not(.ms-selected)").each(function() {
+        var ma = $(this).text().toLowerCase().match(regx)
+        if(ma && ma.length)
+        {
+          $(this).toggle(true)
+        }
+        else{
+          $(this).toggle(false)
+        }
+        
+      })
+    })  
+  })

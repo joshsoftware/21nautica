@@ -32,7 +32,33 @@ class SparePartsController < ApplicationController
   def merge
     @spare_parts = SparePart.where(is_parent:nil,parent_id:nil).order(:product_name).map { |spare_part| [spare_part.product_name , spare_part.id]}
   end
-  
+
+  def undo_merge
+    if params[:spare_parts].present?
+      child_part_ids = params[:spare_parts].split(" ")[0]
+      @spare_parts = SparePart.where(id:child_part_ids)
+      parent_ids=@spare_parts.pluck(:parent_id)
+      if @spare_parts.update_all(parent_id:nil)
+        @spare_parts.each do|spare_part|
+          @purchase_order_items=PurchaseOrderItem.where(original_id:spare_part.id)
+          @req_parts = ReqPart.where(original_id:spare_part.id)
+          @purchase_order_items.update_all(original_id:nil,spare_part_id:spare_part.id) if @purchase_order_items
+          @req_parts.update_all(original_id:nil,spare_part_id:spare_part.id) if @req_parts
+        end
+      end
+      parent_ids.each do|id|
+        child_spare=SparePart.where(parent_id:id)
+        if child_spare.empty?
+          parent_spare = SparePart.where(id:id)[0].update_attribute(:is_parent,nil)
+        end
+      end
+      flash[:notice] = "Parts successfully Unmerged"
+      redirect_to action: "undo_merge"
+    else
+      @spare_parts =SparePart.where.not(parent_id:nil).order(:product_name).pluck(:product_name,:id)
+    end
+  end
+
   def merge_content
     if params[:parent_spare] || params[:spare_part]
       if params[:parent_spare].eql?("New Spare")

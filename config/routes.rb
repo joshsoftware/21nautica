@@ -157,6 +157,7 @@ Rails.application.routes.draw do
       match :merge, via: [:get, :post]
       match :merge_content, via: [:get, :post]
       match :search, via: [:get, :post]
+      match :undo_merge,  via: [:get,:post]
       match :history, via: [:get, :post]
     end
   end
