@@ -6,7 +6,7 @@ class Remark < ActiveRecord::Base
   enum category: ["internal", "external"]
   scope :internal, -> { where(category: 0).order(created_at: :desc) }
   scope :external, -> { where(category: 1).order(created_at: :desc) }
-  #before_create :add_date
+  before_create :add_date
 
   def add_date
     self.date = Date.today
