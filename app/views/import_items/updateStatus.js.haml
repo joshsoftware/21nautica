@@ -1,13 +1,15 @@
 
 $('#statusModal .alert').remove();
 -if @errors.present? || @import_item.errors.full_messages.present?
-  $('#statusModal .modal-body').append("<div class= 'alert alert-danger'> #{@errors.concat(@import_item.errors.full_messages).uniq.join(' and ')}</div>")
+  $('#statusModal .modal-body').append("<div class= 'alert alert-danger'> #{@errors.to_a.concat(@import_item.errors.full_messages.to_a).uniq.join(' and ')}</div>")
 -else
   $('#statusModal').modal('hide')
   - @import.import_items.each do |import_item|
     - formatted_date = import_item.last_loading_date.try(:strftime, '%Y-%m-%d')
     $("#import_items_table tr##{import_item.id} td.last_loading_date").text("#{formatted_date}")
-  - if @import_item.truck_id.present?
+  - if @import_item.truck_id.present? && @import_item.truck_id == 0
+    $("#import_items_table tr##{@import_item.id} td.truck_id").text("#{@import_item.truck_number}")
+  - elsif @import_item.truck_id.present?
     $("#import_items_table tr##{@import_item.id} td.truck_id").text("#{@import_item.truck.reg_number}")
   - else
     $("#import_items_table tr##{@import_item.id} td.truck_id").text("")

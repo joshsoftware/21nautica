@@ -37,7 +37,8 @@
         %td= item.import.equipment
         %td= item.import.estimate_arrival
         - if is_rfs_host? || is_ug_host?
-          %td.truck_id= "#{item.truck.nil? ? '' : item.truck.reg_number} / #{item.truck.nil? ? '' : item.truck.location}"
+          %td.truck_id
+            = "#{item.truck.nil? ? '' : (item.truck_id == 0 ? item.truck_number : item.truck.reg_number)} / #{item.truck.nil? ? '' : item.truck.location}"
         %td.last_loading_date= item.last_loading_date.nil? ? '' : item.last_loading_date.strftime('%Y-%m-%d')
         %td.shipping-status
           = link_to "#{import.do_received_at.present? ? 'Yes' : 'No'}", show_info_import_item_path(item), remote: true, class: 'btn btn-link'

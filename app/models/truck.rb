@@ -18,8 +18,10 @@ class Truck < ActiveRecord::Base
 
   scope :free, -> { where(status: FREE) }
   scope :alloted, -> { where(status: ALLOTED) }
-  before_validation :set_status_and_type, on: :create
   scope :active, -> { where(is_active: true) }
+  before_validation :set_status_and_type, on: :create
+  after_save :reset_third_party_truck_status
+
 
   def is_truck?
     type_of == TRUCK 
@@ -39,7 +41,11 @@ class Truck < ActiveRecord::Base
     truck.update_attributes(location: truck_location)
   end
 
-  def third_party_truck
-    
+  def reset_third_party_truck_status
+    #0 is id of third party truck and should always be free
+    if self.id == 0
+      self.update_column(:status, FREE)
+    end
   end
 end
+
