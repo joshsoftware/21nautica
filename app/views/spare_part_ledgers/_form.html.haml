@@ -1,0 +1,56 @@
+.col-md-12
+= simple_form_for(@spare_part_ledger, html: { id: 'add_new_spare_part_ledger', class: 'form-horizontal'},defaults: {input_html: {class: 'form-control'}}) do |f|
+  .well
+    .row
+      .col-md-12.h4.spare_part_ledger-error #{@spare_part_ledger.errors.full_messages.join(" and ") }
+    .row
+      .col-md-6.form-group
+        =f.input :date, label:'Date',as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker", :'date-autoclose'=> 'true'}, value: Date.today.try(:strftime, '%d/%m/%Y')}
+      .col-md-6.form-group
+        =f.collection_radio_buttons :inward_outward, [['Inward', 'inward'], ['Outward', 'outward'] ],:last, :first, checked: 'inward'
+    .row
+      .col-md-6.form-group
+        .col-md-3
+          =label_tag :spare_part_id, "Select Spare Part: "
+        .col-md-6 
+          %input{:type => "hidden", :id=> "spare_part_ids", :name => "spare_part_ledger[spare_part_id]"}
+      .col-md-6.form-group
+        = f.input :quantity, label: 'Quantity', as: :string, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Quantity is required."}
+    .row
+      .col-md-6
+        = f.submit 'save', class: 'btn btn-primary'
+        = link_to 'Back',spare_part_ledgers_path, class: 'btn btn-primary'
+
+       
+:javascript
+  $('#fuel_entry_truck_id').select2({
+    allowClear: true,
+  }).on("change", function(){
+    disable_enable_truck_vehicles();
+  })
+
+  $("#fuel_entry_office_vehicle").on("change", function(){
+    disable_enable_truck_vehicles();
+  })
+  $(document).ready(function() {
+    $('#spare_part_ids').select2({
+      width: "100%",
+      ajax: {
+        url: '/spare_parts',
+        dataType: 'json',
+        data: function (params) {
+          var query = {
+            searchTerm: params
+          }
+          return query;
+        },
+        results: function(data, page) {
+          return { 
+            results: $.map( data, function(part, i) { 
+              return { id: part.id, text: part.product_name } 
+            } )
+          }
+        }
+      }
+    });
+  })

@@ -73,7 +73,6 @@ class SparePartsController < ApplicationController
               child_part.purchase_order_items.update_all(spare_part_id:parent_spare_id, original_id:child_part.id) if child_part.purchase_order_items
               child_part.req_parts.update_all(spare_part_id:parent_spare_id, original_id:child_part.id) if child_part.req_parts
             end
-            flash[:notice] ="succesfull update"
           end
         end
       else
@@ -87,9 +86,11 @@ class SparePartsController < ApplicationController
             child_part.purchase_order_items.update_all(spare_part_id:parent_spare_id, original_id:child_part.id) if child_part.purchase_order_items
             child_part.req_parts.update_all(spare_part_id:parent_spare_id, original_id:child_part.id) if child_part.req_parts
           end
-          flash[:notice] ="succesfull update"
         end
       end
+      SparePartLedger.where(spare_part_id:params[:spare_parts]).delete_all
+      SparePartLedger.adjust_whole_ledger(parent_spare_id)
+      flash[:notice] ="spare parts merged successfully"
       redirect_to :merge_spare_parts
     else
       @spare_parts = SparePart.where(id: params[:spare_parts]) if params[:spare_parts].present?

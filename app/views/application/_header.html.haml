@@ -77,7 +77,7 @@
               %li= link_to 'Req Sheet', req_sheets_path 
               %li= link_to 'Purchase Order', purchase_orders_path
               %li= link_to 'Fuel Mngt', coming_soon_path
-              %li= link_to 'Spare Parts ledger', coming_soon_path
+              %li= link_to 'Spare Parts ledger', spare_part_ledgers_path
               %li= link_to 'Job Card Mngt', job_cards_path
         - if user_signed_in? && current_user.is?('Admin')
           %li.dropdown
