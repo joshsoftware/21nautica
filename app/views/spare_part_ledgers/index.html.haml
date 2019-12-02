@@ -59,7 +59,7 @@
               data = data.data;
               data.forEach(function(data, index){
                 data.date = new Date(data.date).toLocaleDateString();
-                data.is_adjustment = data.is_adjustment == "null" ? "Yes" : "No";
+                data.is_adjustment = data.is_adjustment == true ? "Yes" : "No";
               })
               return data
             }

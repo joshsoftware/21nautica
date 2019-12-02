@@ -1,7 +1,7 @@
 class ReqSheetsController < ApplicationController
 
   def index
-    @req_sheets = ReqSheet.order('created_at desc')
+    @req_sheets = ReqSheet.includes(:truck).order('created_at desc')
   end
 
   def new
