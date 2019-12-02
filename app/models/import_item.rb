@@ -54,6 +54,7 @@ class ImportItem < ActiveRecord::Base
   #after_save :container_dropped_mail, if: :return_status_changed?
   after_save :mark_unmark_coload_truck
   before_save :free_truck, if: :truck_id_changed?
+  after_save :change_coloaded_truck_status, if: :status_changed?
 
   after_create do |record|
     ImportExpense::CATEGORIES.each do |category|
@@ -72,7 +73,7 @@ class ImportItem < ActiveRecord::Base
   end
 
   def mark_unmark_coload_truck
-    #this will mark is_coloaded as true for the truck from which the truck is added
+    #this will mark is_coloaded as true for the container from which the truck is added
     prev_truck, current_truck = changes['truck_id']
     prev_truck_number, current_truck_number = changes['truck_number']
     if prev_truck_number
@@ -155,12 +156,20 @@ class ImportItem < ActiveRecord::Base
   end
 
   def is_all_docs_received? #all shipping dates present?
-    if import.status != "ready_to_load" && !(import.bl_received_at.present? && import.charges_received_at.present? && import.charges_paid_at.present? && import.do_received_at.present? && import.gf_return_date.present?)
-      self.errors[:base] << "All documents are not received yet for this order"
-      !self.errors.present?
-    else
-      true      
+    if is_co_loaded #check all documents for coloaded container
+      if truck_id == 0 && truck_number
+        associate_import = ImportItem.where.not(id: self.id).where(status: [:under_loading_process, :truck_allocated, :ready_to_load], truck_number: truck_number).try(:first).try(:import)
+      elsif truck_id
+        associate_import = ImportItem.where.not(id: self.id).where(status: [:under_loading_process, :truck_allocated, :ready_to_load], truck_id: truck_id).try(:first).try(:import)
+      end
+      if associate_import && associate_import.status != "ready_to_load" && !(associate_import.bl_received_at.present? && associate_import.charges_received_at.present? && associate_import.charges_paid_at.present? && associate_import.do_received_at.present? && associate_import.gf_return_date.present?)
+        self.errors[:base] << "All documents are not received yet for coloaded  container"
+      end
     end
+    if self.import.status != "ready_to_load" && !(self.import.bl_received_at.present? && self.import.charges_received_at.present? && self.import.charges_paid_at.present? && self.import.do_received_at.present? && self.import.gf_return_date.present?)
+      self.errors[:base] << "All documents are not received yet for this order"
+    end
+    !self.errors.present?
   end
 
   def expiry_date_and_exit_note_received?
@@ -384,5 +393,24 @@ class ImportItem < ActiveRecord::Base
 
   def add_close_date
     !interchange_number.nil? && self.close_date = Time.zone.today
+  end
+
+  def change_coloaded_truck_status
+    #it will change the status of coloaded truck auto, till out of border
+    statuses_to_change = ["ready_to_load", "loaded_out_of_port", "arrived_at_border"]
+    if is_co_loaded
+      if truck_number.present?
+        associated_container = ImportItem.where.not(:status => "delivered", id: self.id).where(truck_number: self.truck_number).try(:first)
+      elsif truck_id.present?
+        associated_container = ImportItem.where.not(:status => "delivered", id: self.id).where(truck_id: self.truck_id).try(:first)
+      end
+      if associated_container && associated_container.status != self.status && statuses_to_change.include?(associated_container.status)
+        begin
+          associated_container.send("#{self.status}!".to_sym)
+        rescue
+          self.errors[:base] << "Cant change the status of associated container"
+        end
+      end
+    end
   end
 end
