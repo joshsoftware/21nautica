@@ -34,7 +34,7 @@ class ReqSheetsController < ApplicationController
 
   def load_spare_part
     return unless params[:spare_part_id]
-    spare_part = SparePart.find params[:spare_part_id]
+    spare_part = SparePart.where(parent_id: nil).find params[:spare_part_id]
     render json: spare_part.to_json
   end
 

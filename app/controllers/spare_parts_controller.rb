@@ -3,9 +3,9 @@ class SparePartsController < ApplicationController
 
   def index
     if params[:searchTerm].present?
-      @spare_parts = SparePart.where(search_query)
+      @spare_parts = SparePart.where(parent_id:nil).where(search_query).includes(:spare_part_category,:spare_part_sub_category)
     else
-      @spare_parts = SparePart.all
+      @spare_parts = SparePart.where(parent_id:nil).includes(:spare_part_category,:spare_part_sub_category)
     end
     respond_to do |format|
       format.html{}
