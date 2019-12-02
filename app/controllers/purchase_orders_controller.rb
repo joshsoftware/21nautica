@@ -51,6 +51,7 @@ class PurchaseOrdersController < ApplicationController
     @start_date = report_search[:start_date].to_date
     @end_date = report_search[:end_date].to_date
     @results = report_search[:report_type] == 'LPO' ? search_by_purchase_order : search_by_req_sheet
+    @total = @results.sum(:price)
   end
 
   def get_search_value(report_search)
@@ -71,9 +72,9 @@ class PurchaseOrdersController < ApplicationController
     purchase_orders = PurchaseOrder.where(date: @start_date..@end_date)
     purchase_orders = purchase_orders.where("#{@field}" => @value) if PurchaseOrder.column_names.include?(@field)
     if PurchaseOrderItem.column_names.include?(@field)
-      PurchaseOrderItem.includes(:purchase_order).where(purchase_order_id: purchase_orders.pluck(:id), "#{@field}" => @value)
+      PurchaseOrderItem.includes(:truck,:spare_part,purchase_order:[:supplier]).where(purchase_order_id: purchase_orders.pluck(:id), "#{@field}" => @value)
     else
-      PurchaseOrderItem.includes(:purchase_order).where(purchase_order_id: purchase_orders.pluck(:id))
+      PurchaseOrderItem.includes(:truck,:spare_part,purchase_order:[:supplier]).where(purchase_order_id: purchase_orders.pluck(:id))
     end
   end
 
@@ -81,9 +82,9 @@ class PurchaseOrdersController < ApplicationController
     req_sheets = ReqSheet.where(date: @start_date..@end_date)
     req_sheets = req_sheets.where("#{@field}" => @value) if ReqSheet.column_names.include?(@field)
     if ReqPart.column_names.include?(@field)
-      ReqPart.includes(:req_sheet).where(req_sheet_id: req_sheets.pluck(:id), "#{@field}" => @value)
+      ReqPart.includes(:spare_part, req_sheet:[:truck]).where(req_sheet_id: req_sheets.pluck(:id), "#{@field}" => @value)
     else
-      ReqPart.includes(:req_sheet).where(req_sheet_id: req_sheets.pluck(:id))
+      ReqPart.includes(:spare_part, req_sheet:[:truck]).where(req_sheet_id: req_sheets.pluck(:id))
     end
   end
 
