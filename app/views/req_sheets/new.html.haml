@@ -1,3 +1,13 @@
 %h3 New Req Sheet
 %br
 = render 'form'
+
+%div{data: {for: 'newSparePart'}}
+:javascript
+ window.validate_form = function(){
+    $.validate({
+      form: '#new_spare',
+      scrollToTopOnError : false
+    });
+  }
+  validate_form();

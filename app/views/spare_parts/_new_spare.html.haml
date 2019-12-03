@@ -1,0 +1,16 @@
+.modal.fade{data: {is: 'newSparePartModal'}, tabindex: '-1', role: 'dialog', aria: {labelledby: 'newSparePartModel'}}
+  .modal-dialog
+    = simple_form_for @spare_part, remote: true, html: {class: 'form-horizontal', id:"new_spare"}, defaults: {input_html: {class: 'form-control'}} do |f|
+      .modal-content
+        .modal-header
+          = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+          %h1.modal-title Add new Spare Part
+        .modal-body
+          = f.input :product_name,input_html: {:"data-validation" => "required", :"data-validation-error-msg" => " Product Name is required."}
+          = f.input :description, as: :text
+          = f.input :spare_part_category_id, collection: SparePartCategory.main.pluck(:name, :id), include_blank: true,input_html: {:"data-validation" => "required", :"data-validation-error-msg" => " Category is required."}
+          = f.input :spare_part_sub_category_id, collection: spare_part_sub_categories, selected: @spare_part.spare_part_sub_category_id
+          = hidden_field_tag 'model', nil, data: {is: 'modelName'}
+        .modal-footer
+          = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
+          = link_to 'Close', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
