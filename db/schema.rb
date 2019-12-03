@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191114072640) do
+ActiveRecord::Schema.define(version: 20191126053820) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -162,19 +162,12 @@ ActiveRecord::Schema.define(version: 20191114072640) do
 
   add_index "exports", ["customer_id"], name: "index_exports_on_customer_id", using: :btree
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-  create_table "freezpls", force: true do |t|
-    t.date     "date"
-=======
-=======
   create_table "freezpls", force: true do |t|
     t.date     "date"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
->>>>>>> origin/pb_truck_pl
   create_table "fuel_entries", force: true do |t|
     t.float    "quantity"
     t.float    "cost"
@@ -190,27 +183,11 @@ ActiveRecord::Schema.define(version: 20191114072640) do
 
   add_index "fuel_entries", ["truck_id"], name: "index_fuel_entries_on_truck_id", using: :btree
 
-  create_table "fuel_managements", force: true do |t|
-    t.float    "quantity"
-    t.float    "cost"
-    t.date     "date"
-    t.float    "available"
-    t.boolean  "is_adjustment"
-    t.integer  "truck_id"
-    t.string   "vehicle_number"
-    t.string   "purchased_dispensed"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "fuel_managements", ["truck_id"], name: "index_fuel_managements_on_truck_id", using: :btree
-
   create_table "fuel_stocks", force: true do |t|
     t.float    "quantity"
     t.float    "rate"
     t.date     "date"
     t.float    "balance"
->>>>>>> staging
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -543,6 +520,19 @@ ActiveRecord::Schema.define(version: 20191114072640) do
     t.datetime "updated_at"
   end
 
+  create_table "spare_part_ledgers", force: true do |t|
+    t.date     "date"
+    t.integer  "spare_part_id"
+    t.integer  "quantity"
+    t.string   "inward_outward"
+    t.string   "receipt_type"
+    t.integer  "receipt_id"
+    t.boolean  "is_adjustment"
+    t.integer  "balance"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "spare_part_vendors", force: true do |t|
     t.string   "name"
     t.string   "address"
@@ -599,6 +589,7 @@ ActiveRecord::Schema.define(version: 20191114072640) do
     t.decimal  "insurance_premium_amt_yearly",            precision: 10, scale: 2
     t.string   "driver_name",                  limit: 50
     t.integer  "make_model_id"
+    t.boolean  "is_active",                                                        default: true
   end
 
   add_index "trucks", ["make_model_id"], name: "index_trucks_on_make_model_id", using: :btree

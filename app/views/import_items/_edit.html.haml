@@ -12,17 +12,22 @@
       %hr
       .modal-body
         #truck_number
-        /= f.label :truck_number
         = f.input :status, collection: status, :input_html => {:class => 'select required form-control text-capitalize'}
-        /=f.input :remarks, as: :text, required: false
         - readonly = ['loaded_out_of_port', 'arrived_at_border', 'departed_from_border', 'arrived_at_destination'].include?(@import_item.status)
         -if is_rfs_host? || is_ug_host?
-          -if current_user.role == "Admin"
+          .co-loaded.form-group
+            .col-md-3
+              = f.label :is_co_loaded, "Is Co-loaded?"
+            .col-md-6
+              = f.check_box :is_co_loaded
+          .free-trucks
             = f.input :truck_id, collection: reallocate_truck_numbers[:free], include_blank: true, label: 'Truck'
-            = f.input :truck_number, label: 'Truck Number'
-          - else
-            = f.input :truck_id, collection: reallocate_truck_numbers[:free], include_blank: true, label: 'Truck', :disabled => @import_item.truck_id.present?
-            = f.input :truck_number, label: 'Truck Number', :disabled => @import_item.truck_number.present?
+            = f.input :truck_number, label: 'Truck Number', input_html: {class: "import_item_truck_number form-control"}
+          .allotted-trucks
+            = f.input :truck_id, collection: reallocate_truck_numbers[:alloted], include_blank: true, label: 'Alloted Truck', input_html: { id: "allotted_trucks"}
+            .import_item_truck_number
+              = f.input :truck_number, collection: reallocate_truck_numbers[:third_party_allotted_trucks], label: 'Allotted Trucks', input_html: {class: "import_item_truck_number11", id: "allotted_truck_numbers"}
+
           = f.input :last_loading_date, as: :string, input_html: { class: "form-control last_loading_date", value: f.object.last_loading_date.try(:strftime, "%Y-%m-%d") }, label: "Last Loading date"
           .custom-entry-released
             %hr
@@ -42,18 +47,24 @@
         = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
 
 :coffeescript
-  $('#import_item_truck_id').select2({allowClear: true, placeholder: "Select an truck"});
+  $('#import_item_truck_id, #allotted_trucks, #allotted_truck_numbers').select2({allowClear: true, placeholder: "Select an truck"});
   $('#import_item_last_loading_date').datepicker({ format: 'yyyy/mm/dd' });
   $('#import_item_expiry_date').datepicker({ format: 'yyyy/mm/dd' });
   import_item = #{@import_item.to_json}
   if $("#import_item_status").val() == "under_loading_process"
     $(".custom-entry-released").hide()
   $('#statusModal').on 'show.bs.modal', (event) ->
-    if #{@import_item.truck_number.present?}
-      $(".import_item_truck_number").show()
+    if $("#import_item_is_co_loaded").is(":checked")
+      $(".free-trucks").hide().find('*').attr('disabled', true);
+      $(".allotted-trucks").show().find('*').attr('disabled', false);
     else
-      $(".import_item_truck_number").hide()
-    statuses = ['loaded_out_of_port', 'arrived_at_border', 'departed_from_border', 'arrived_at_destination']
+      $(".free-trucks").show().find('*').attr('disabled', false);
+      $(".allotted-trucks").hide().find('*').attr('disabled', true);
+    if #{@import_item.truck_number.present?}
+      toggleTruckNumber(true)
+    else
+      toggleTruckNumber(false)
+    
     $('#import_item_remarks').val('')
     if #{@import_item.status == "delivered"}
       $("#edit_import_item_#{@import_item.id} :input").prop("disabled", true);
@@ -66,13 +77,16 @@
       $(".return_status_field").hide()
       $(".dropped_location_field").hide()
 
-  $("#import_item_truck_id").on 'change', (event) ->
-    if event.added.text.toLowerCase().includes("3rd party truck")
-      $("#import_item_truck_number").removeAttr("disabled")
-      $(".import_item_truck_number").show()
+  $("#import_item_truck_id, #allotted_trucks").on 'change', (event) ->
+    if event.added
+      if event.added.text.toLowerCase().includes("3rd party truck")
+        $("#import_item_truck_number").removeAttr("disabled")
+        toggleTruckNumber(true)
+      else
+        $("#import_item_truck_number").val("")
+        toggleTruckNumber(false)
     else
-      $("#import_item_truck_number").val("")
-      $(".import_item_truck_number").hide()
+      toggleTruckNumber(true)
 
   $("#import_item_status").on 'change', (event) ->
     if event.target.selectedOptions[0].value == "truck_released"
@@ -81,3 +95,26 @@
   $("#import_item_return_status").on 'change', (event) ->
     if event.target.selectedOptions[0].value == "Dropped at Customer"
       $(".dropped_location_field").show()
+
+  $("#import_item_is_co_loaded").on 'change', (event) ->
+    # following if is for clearing the values of trucks and allotted trucks
+    # when switched the coloaded checkbox
+    if ("#{@import_item.is_co_loaded}" == "true")
+      $("#import_item_truck_id").val(null).trigger("change")
+    else
+      $("#allotted_trucks").val(null).trigger("change")
+    # following if is for hide/show free trucks and allotted trucks
+    # As we have two different divs for allotted nd free trucks
+    if $("#import_item_is_co_loaded").is(":checked")
+      $(".free-trucks").hide().find('*').attr('disabled', true);
+      $(".allotted-trucks").show().find('*').attr('disabled', false);
+    else
+      $(".free-trucks").show().find('*').attr('disabled', false);
+      $(".allotted-trucks").hide().find('*').attr('disabled', true);
+    toggleTruckNumber($("#allotted_trucks").val() =="0")
+
+  toggleTruckNumber = (flag) -> 
+    if flag
+      $(".import_item_truck_number").show().children("input select").prop("disabled", false)
+    else
+      $(".import_item_truck_number").hide().children("input select").prop("disabled", true)

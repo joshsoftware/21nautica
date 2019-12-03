@@ -34,7 +34,6 @@ class ImportItem < ActiveRecord::Base
   validates_presence_of :container_number
   validates_uniqueness_of :container_number
   validate :validate_truck_number
-  # validates_presence_of :exit_note_received, :if => lambda { ["under_loading_process", "truck_allocated"].exclude?(self.status) }
   validate :validate_expiry_date
   validate :validate_exit_note_received
   validate :should_not_remove_truck, unless: :g_f_expiry_changed?
@@ -53,6 +52,9 @@ class ImportItem < ActiveRecord::Base
   after_update :update_truck_status
   before_save :add_close_date, if: :interchange_number_changed?
   #after_save :container_dropped_mail, if: :return_status_changed?
+  after_save :mark_unmark_coload_truck
+  before_save :free_truck, if: :truck_id_changed?
+  after_save :change_coloaded_truck_status, if: :status_changed?
 
   after_create do |record|
     ImportExpense::CATEGORIES.each do |category|
@@ -60,13 +62,41 @@ class ImportItem < ActiveRecord::Base
     end
   end
 
+  def free_truck
+    if !truck_id.zero? && !(ImportItem.where.not(:status => "delivered").where(truck_id: self.truck_id).count > 0)
+      truck.update_column(:status, "free")
+    end
+  end
+
   def strip_whitespaces
     self.container_number = container_number.strip.squish
   end
 
+  def mark_unmark_coload_truck
+    #this will mark is_coloaded as true for the container from which the truck is added
+    prev_truck, current_truck = changes['truck_id']
+    prev_truck_number, current_truck_number = changes['truck_number']
+    if prev_truck_number
+      associated_containers = ImportItem.where.not(:status => "delivered").where(truck_number: prev_truck_number)
+      associated_containers.update_all(is_co_loaded: false)
+    end
+    if prev_truck
+      associated_containers = ImportItem.where.not(:status => "delivered").where(truck_id: prev_truck)
+      associated_containers.update_all(is_co_loaded: false)
+    end
+    if truck_id == 0 && truck_number
+      import_items = ImportItem.where.not(:status => "delivered").where(is_co_loaded: !is_co_loaded).where(truck_number: truck_number)
+      import_items.update_all(is_co_loaded: is_co_loaded) if import_items
+    elsif truck_id
+      import_items = ImportItem.where.not(:status => "delivered").where(is_co_loaded: !is_co_loaded).where(truck_id: truck_id)
+      #only two trucks will be updated
+      import_items.update_all(is_co_loaded: is_co_loaded) if import_items
+    end
+  end
+
   def assignment_of_truck_number
     count = ImportItem.where(truck_number: truck_number).where.not(status: 'delivered').count
-    if count > 0 && truck_number != nil
+    if count > 0 && truck_number != nil && is_co_loaded == false
       errors.add(:truck_number," #{truck_number} is not free !")
     end
   end
@@ -126,12 +156,20 @@ class ImportItem < ActiveRecord::Base
   end
 
   def is_all_docs_received? #all shipping dates present?
-    if import.status != "ready_to_load" && !(import.bl_received_at.present? && import.charges_received_at.present? && import.charges_paid_at.present? && import.do_received_at.present? && import.gf_return_date.present?)
-      self.errors[:base] << "All documents are not received yet for this order"
-      !self.errors.present?
-    else
-      true      
+    if is_co_loaded #check all documents for coloaded container
+      if truck_id == 0 && truck_number
+        associate_import = ImportItem.where.not(id: self.id).where(status: [:under_loading_process, :truck_allocated, :ready_to_load], truck_number: truck_number).try(:first).try(:import)
+      elsif truck_id
+        associate_import = ImportItem.where.not(id: self.id).where(status: [:under_loading_process, :truck_allocated, :ready_to_load], truck_id: truck_id).try(:first).try(:import)
+      end
+      if associate_import && associate_import.status != "ready_to_load" && !(associate_import.bl_received_at.present? && associate_import.charges_received_at.present? && associate_import.charges_paid_at.present? && associate_import.do_received_at.present? && associate_import.gf_return_date.present?)
+        self.errors[:base] << "All documents are not received yet for coloaded  container"
+      end
     end
+    if self.import.status != "ready_to_load" && !(self.import.bl_received_at.present? && self.import.charges_received_at.present? && self.import.charges_paid_at.present? && self.import.do_received_at.present? && self.import.gf_return_date.present?)
+      self.errors[:base] << "All documents are not received yet for this order"
+    end
+    !self.errors.present?
   end
 
   def expiry_date_and_exit_note_received?
@@ -146,7 +184,13 @@ class ImportItem < ActiveRecord::Base
   end
 
   def release_truck
-    self.truck.update_attributes(status: Truck::FREE, current_import_item_id: nil) if truck.present?
+    if self.is_co_loaded
+      if ImportItem.where(truck_id: truck_id).where.not(status: "delivered").count == 0
+        self.truck.update_attributes(status: Truck::FREE, current_import_item_id: nil) if truck.present?
+      end  
+    else
+      self.truck.update_attributes(status: Truck::FREE, current_import_item_id: nil) if truck.present?
+    end
   end
 
   def transporter_name
@@ -241,7 +285,7 @@ class ImportItem < ActiveRecord::Base
       prev_truck = Truck.find(changes['truck_id'][0])
       prev_truck.update_column(:status, Truck::FREE)
     end
-    self.truck.update_column(:status, Truck::ALLOTED) if self.truck && truck_id_changed?
+    self.truck.update_column(:status, Truck::ALLOTED) if self.truck && truck_id_changed? && truck_id != 0
   end
 
   def assign_current_import_item
@@ -349,5 +393,24 @@ class ImportItem < ActiveRecord::Base
 
   def add_close_date
     !interchange_number.nil? && self.close_date = Time.zone.today
+  end
+
+  def change_coloaded_truck_status
+    #it will change the status of coloaded truck auto, till out of border
+    statuses_to_change = ["ready_to_load", "loaded_out_of_port", "arrived_at_border"]
+    if is_co_loaded
+      if truck_number.present?
+        associated_container = ImportItem.where.not(:status => "delivered", id: self.id).where(truck_number: self.truck_number).try(:first)
+      elsif truck_id.present?
+        associated_container = ImportItem.where.not(:status => "delivered", id: self.id).where(truck_id: self.truck_id).try(:first)
+      end
+      if associated_container && associated_container.status != self.status && statuses_to_change.include?(associated_container.status)
+        begin
+          associated_container.send("#{self.status}!".to_sym)
+        rescue
+          self.errors[:base] << "Cant change the status of associated container"
+        end
+      end
+    end
   end
 end
