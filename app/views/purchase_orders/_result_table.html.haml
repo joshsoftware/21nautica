@@ -24,12 +24,17 @@
             %td= data.part_make
           %td= data.spare_part.try(:product_name)
           %td= data.quantity
-          %td= data.price
+          %td{class:"amount"}= data.price
 - else
   %h4 No Data found
 
 :javascript
   $('#report_table').dataTable({
+    initComplete : function() {
+      $total="<span class='red' style='margin-left:350px'>Total : #{@total.round(2)}</span>",
+      $('.dataTables_length').append($total)  
+    },
+    "bJQueryUI": true,
     "lengthMenu": [10, 25, 50, 100, 1000],
-    "pageLength": 1000
+    "pageLength": 1000 
   })
