@@ -15,7 +15,7 @@
         %tr.fields
           %td= part.input :of_type, collection: [['Truck', 'Truck'], ['Stock', 'Stock']], label: false, wrapper: :vertical_form, include_blank: false, input_html: {class: 'type_of'}
           %td.truck_number_id= part.input :truck_id, collection: Truck.pluck(:reg_number, :id), label: false, include_blank: true, wrapper: :vertical_form, input_html: { class: 'select2-class'}
-          %td= part.input :spare_part_id, collection: SparePart.where(parent_id:nil).pluck(:product_name, :id), label: false, include_blank: true, wrapper: :vertical_form, input_html: {data: {for: 'select'},class: 'select2-class' }
+          %td= part.input :spare_part_id, collection: SparePart.where(parent_id:nil).pluck(:product_name, :id), label: false, include_blank: true, wrapper: :vertical_form, input_html: { class: 'select2-class' }
           %td.part_make= part.input :part_make, label: false
           %td.quantity= part.input :quantity, label: false, wrapper: :vertical_form, label: false, input_html: {class: 'purchase_order_quantity'}
           %td.price= part.input :price, label: false, wrapper: :vertical_form, label: false, input_html: {class: 'purchase_order_price'}

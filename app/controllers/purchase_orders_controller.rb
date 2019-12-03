@@ -91,7 +91,7 @@ class PurchaseOrdersController < ApplicationController
   private
 
   def load_reports_data
-    @spare_parts = SparePart.pluck(:id, :product_name)
+    @spare_parts = SparePart.where(parent_id:nil).pluck(:id, :product_name)
     @suppliers = Supplier.pluck(:id, :name)
     @trucks = Truck.pluck(:id, :reg_number)
   end

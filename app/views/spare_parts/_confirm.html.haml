@@ -1,0 +1,107 @@
+.modal-content
+  .modal-header
+    = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+  .modal-body.fw600#modal_body
+    .col-md-12
+      = simple_form_for @spare_part, :url => merge_content_spare_parts_path, html: {id: 'new_spare_part', class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
+        %div#content_div
+          %h3 Select Spare Part To Merge Into
+          = radio_button_tag "parent_spare","New Spare"
+          = label_tag "Create New Spare"
+          %br
+          = radio_button_tag "parent_spare","Merge With"
+          = label_tag "Merge_with Existing"
+          = select_tag "parent_spare",options_for_select(@parent_spares)
+          %br
+          = radio_button_tag "parent_spare","select from below"
+          = label_tag "Select Parent form below list"
+          %br
+          %hr.hr_class
+          -@spare_parts.each do |spare_part|
+            = radio_button_tag "parent_spare","#{spare_part.id}",false,class:"parent"
+            = label_tag "#{spare_part.product_name}"
+            %br         
+        %div.hidden#form_div
+          .well
+            .row
+              .col-md-12
+                = f.input :product_name, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => " Product Name is required."}
+            .row
+              .col-md-12
+                = f.input :description, as: :text
+            .row
+              .col-md-12
+                = f.input :spare_part_category_id, collection: SparePartCategory.main.pluck(:name, :id), include_blank: false,id:"spare_part_category_id",input_html: {:"data-validation" => "required", :"data-validation-error-msg" => " Category is required."}
+            .row
+              .col-md-12
+                = f.input :spare_part_sub_category_id, collection: spare_part_sub_categories, selected: @spare_part.spare_part_sub_category_id
+        = hidden_field_tag "spare_parts", @spare_parts.pluck(:id)
+    .modal-footer
+      = button_tag 'Next',class:'btn btn-primary',id:'next'
+      = submit_tag "Save&Merge",class:"btn btn-primary", id:"content_merge"
+      = link_to 'Cancle', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+
+:javascript
+  $("#spare_part_category_id").select2()
+  $("#next").hide()
+  $(".parent").prop("disabled",true)
+  $("#parent_spare").select2({
+      width:'50%'
+    })
+  $("#s2id_parent_spare").hide()
+  $("#spare_part_spare_part_category_id").select2({
+    width:'100%'
+  })
+  $("#spare_part_spare_part_sub_category_id").select2({
+    width:'100%'
+  })
+  $(document).ready(function(){
+    $("input[type='radio']").click(function(){
+      if($(this).val()=="New Spare")
+      {
+         $(".parent").prop("disabled",true)
+        $("#next").show()
+        $("#s2id_parent_spare").hide()
+        $("#content_merge").hide()
+        $("#spare_part_product_name").prop("disabled",false)
+        $("#spare_part_spare_part_category_id").prop("disabled",false)
+      }
+      else if($(this).val()=="Merge With")
+      {
+        $(".parent").prop("disabled",true)
+        $("#s2id_parent_spare").show()
+        $("#content_merge").show()
+        $("#next").hide()
+        $("#spare_part_product_name").prop("disabled",true)
+        $("#spare_part_spare_part_category_id").prop("disabled",true)
+      }
+      else{
+        $(".parent").prop("disabled",false)
+        $("#content_merge").show()
+        $("#s2id_parent_spare").hide()
+        $("#next").hide()
+        $("#spare_part_product_name").prop("disabled",true)
+        $("#spare_part_spare_part_category_id").prop("disabled",true)
+       
+      }
+    })
+    $("#content_merge").on("click",function(){
+      var return_val =confirm("Are You Sure to merge this parts")
+      if(return_val)
+      {
+        $("#new_spare_part").submit()
+      }
+    })
+    $("#next").on("click",function(){
+      $("#next").hide()
+      $("#content_merge").show()
+      $("#form_div").removeClass("hidden")
+      $("#content_div").addClass("hidden")
+    })
+  })
+  window.validate_form = function(){
+    $.validate({
+      form: '#new_spare_part'
+    });
+  }
+  validate_form();

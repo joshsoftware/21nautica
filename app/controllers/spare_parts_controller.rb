@@ -3,9 +3,9 @@ class SparePartsController < ApplicationController
 
   def index
     if params[:searchTerm].present?
-      @spare_parts = SparePart.where(search_query)
+      @spare_parts = SparePart.where(parent_id:nil).where(search_query).includes(:spare_part_category,:spare_part_sub_category)
     else
-      @spare_parts = SparePart.all
+      @spare_parts = SparePart.where(parent_id:nil).includes(:spare_part_category,:spare_part_sub_category)
     end
     respond_to do |format|
       format.html{}
@@ -41,6 +41,82 @@ class SparePartsController < ApplicationController
   end
 
   def edit
+  end
+
+  def merge
+    @spare_parts = SparePart.where(is_parent:nil,parent_id:nil).order(:product_name).map { |spare_part| [spare_part.product_name , spare_part.id]}
+  end
+
+  def undo_merge
+    if params[:spare_parts].present?
+      child_part_ids = params[:spare_parts].split(" ")[0]
+      @spare_parts = SparePart.where(id:child_part_ids)
+      parent_ids=@spare_parts.pluck(:parent_id).uniq
+      if @spare_parts.update_all(parent_id:nil)
+        @spare_parts.each do|spare_part|
+          @purchase_order_items=PurchaseOrderItem.where(original_id:spare_part.id)
+          @req_parts = ReqPart.where(original_id:spare_part.id)
+          @spare_part_ledgers = SparePartLedger.where(original_id:spare_part.id)
+          @purchase_order_items.update_all(original_id:nil,spare_part_id:spare_part.id) if @purchase_order_items
+          @req_parts.update_all(original_id:nil,spare_part_id:spare_part.id) if @req_parts
+          @spare_part_ledgers.update_all(original_id:nil,spare_part_id:spare_part.id) if @spare_part_ledgers
+        end
+      end
+      parent_ids.each do|id|
+        child_spare=SparePart.where(parent_id:id)
+        if child_spare.empty?
+          parent_spare = SparePart.where(id:id)[0].update_attribute(:is_parent,nil)
+        end
+      end
+      unmerged_spare_ids = parent_ids + params[:spare_parts]
+      unmerged_spare_ids.each do |u_id|
+        SparePartLedger.adjust_balance(u_id)
+      end
+      flash[:notice] = "Parts successfully Unmerged"
+      redirect_to action: "undo_merge"
+    else
+      @spare_parts =SparePart.where.not(parent_id:nil).order(:product_name).pluck(:product_name,:id)
+    end
+  end
+
+  def merge_content
+    if params[:parent_spare] || params[:spare_part]
+      if params[:parent_spare].eql?("New Spare")
+        @spare_part = SparePart.new(spare_part_params)
+        child_part_ids = params[:spare_parts].split(' ')
+        if @spare_part.save
+          parent_spare_id = @spare_part.id
+          @spare_part.update_attribute(:is_parent, true)
+          @child_parts = SparePart.where(id:child_part_ids)
+          if @child_parts.update_all(parent_id:parent_spare_id)
+            @child_parts.each do|child_part|
+              child_part.purchase_order_items.update_all(spare_part_id:parent_spare_id, original_id:child_part.id) if child_part.purchase_order_items
+              child_part.req_parts.update_all(spare_part_id:parent_spare_id, original_id:child_part.id) if child_part.req_parts
+            end
+          end
+        end
+      else
+        parent_spare_id = params[:parent_spare]
+        child_spare_ids = params[:spare_parts].remove(parent_spare_id).split(' ')
+        @parent_spare = SparePart.where(id:parent_spare_id)[0]
+        @parent_spare.update_attribute(:is_parent,true)
+        @child_parts = SparePart.where(id:child_spare_ids)
+        if @child_parts.update_all(parent_id:parent_spare_id)
+          @child_parts.each do|child_part|
+            child_part.purchase_order_items.update_all(spare_part_id:parent_spare_id, original_id:child_part.id) if child_part.purchase_order_items
+            child_part.req_parts.update_all(spare_part_id:parent_spare_id, original_id:child_part.id) if child_part.req_parts
+            child_part.spare_part_ledgers.update_all(spare_part_id:parent_spare_id,original_id:child_part.id) if child_part.spare_part_ledgers
+          end
+        end
+      end
+      SparePartLedger.adjust_balance(parent_spare_id)
+      flash[:notice] ="spare parts merged successfully"
+      redirect_to :merge_spare_parts
+    else
+      @spare_parts = SparePart.where(id: params[:spare_parts]) if params[:spare_parts].present?
+      @spare_part = SparePart.new
+      @parent_spares=SparePart.where(is_parent:true).order(:product_name).pluck(:product_name,:id)
+    end
   end
 
   def update
@@ -97,6 +173,14 @@ class SparePartsController < ApplicationController
     end    
   end
 
+  def search
+    terms = params[:searchTerm].split(" ").map {|term| term.prepend("'%")+"%'"}
+    terms = terms.join(",")
+    query = "lower(product_name) ILIKE ALL(ARRAY[#{terms}])"
+    @spare_parts = SparePart.where(parent_id:nil).where(query)
+    render json: @spare_parts.pluck(:product_name, :id)
+  end
+  
   private
 
   def spare_part_params

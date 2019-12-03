@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191126053820) do
+ActiveRecord::Schema.define(version: 20191119122314) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -182,6 +182,21 @@ ActiveRecord::Schema.define(version: 20191126053820) do
   end
 
   add_index "fuel_entries", ["truck_id"], name: "index_fuel_entries_on_truck_id", using: :btree
+
+  create_table "fuel_managements", force: true do |t|
+    t.float    "quantity"
+    t.float    "cost"
+    t.date     "date"
+    t.float    "available"
+    t.boolean  "is_adjustment"
+    t.integer  "truck_id"
+    t.string   "vehicle_number"
+    t.string   "purchased_dispensed"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "fuel_managements", ["truck_id"], name: "index_fuel_managements_on_truck_id", using: :btree
 
   create_table "fuel_stocks", force: true do |t|
     t.float    "quantity"
@@ -523,6 +538,7 @@ ActiveRecord::Schema.define(version: 20191126053820) do
   create_table "spare_part_ledgers", force: true do |t|
     t.date     "date"
     t.integer  "spare_part_id"
+    t.integer  "original_id"
     t.integer  "quantity"
     t.string   "inward_outward"
     t.string   "receipt_type"
@@ -549,7 +565,7 @@ ActiveRecord::Schema.define(version: 20191126053820) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "parent_id"
-    t.boolean  "is_deleted"
+    t.boolean  "is_parent"
   end
 
   add_index "spare_parts", ["spare_part_category_id"], name: "index_spare_parts_on_spare_part_category_id", using: :btree

@@ -12,7 +12,7 @@
     %tbody
       = f.simple_fields_for :req_parts, @req_sheet.req_parts , wrapper: false do |part|
         %tr.fields
-          %td.spare_part_id= part.input :spare_part_id, collection: SparePart.order(:product_name).pluck(:product_name, :id), label: false, include_blank: true, wrapper: :vertical_form, input_html: {data: {for: 'select'},class: 'spare_part select2' }
+          %td.spare_part_id= part.input :spare_part_id, collection: SparePart.where(parent_id:nil).order(:product_name).pluck(:product_name, :id), label: false, include_blank: true, wrapper: :vertical_form, input_html: { class: 'spare_part select2' }
           - if @req_sheet.persisted?
             %td.description= part.input :description, wrapper: :vertical_form, label: false, readonly: true, input_html: { value: part.object.spare_part.try(:description), class: 'req_part_description' }
           - else

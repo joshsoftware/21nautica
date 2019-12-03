@@ -155,6 +155,10 @@ Rails.application.routes.draw do
   resources :spare_parts do
     collection do
       get :load_sub_categories
+      match :merge, via: [:get, :post]
+      match :merge_content, via: [:get, :post]
+      match :search, via: [:get, :post]
+      match :undo_merge,  via: [:get,:post]
       match :history, via: [:get, :post]
     end
   end
@@ -195,6 +199,11 @@ Rails.application.routes.draw do
   resources :breakdown_managements
   resources :freezpls
   resources :truck_pls
+  resources :spare_part_ledgers do
+    collection do
+     match :readjust, via: [:get]
+    end
+  end
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
