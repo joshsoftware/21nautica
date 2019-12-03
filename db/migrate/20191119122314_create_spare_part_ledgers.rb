@@ -3,6 +3,7 @@ class CreateSparePartLedgers < ActiveRecord::Migration
     create_table :spare_part_ledgers do |t|
       t.date :date
       t.integer :spare_part_id
+      t.integer :original_id
       t.integer :quantity
       t.string :inward_outward
       t.string :receipt_type

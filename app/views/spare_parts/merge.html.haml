@@ -2,7 +2,7 @@
   .modal-dialog
 %h1 Merge Spare Parts
 %div.container
-  = form_tag merge_content_spare_parts_path, remote: true, method: :get do |f|  
+  = form_tag merge_content_spare_parts_path, remote: true, method: :post do |f|  
     = select_tag "spare_parts",options_for_select(@spare_parts),multiple:true
     %br
     = submit_tag 'Merge',class:'btn btn-primary',id:"merge"

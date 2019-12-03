@@ -37,13 +37,15 @@ class SparePartsController < ApplicationController
     if params[:spare_parts].present?
       child_part_ids = params[:spare_parts].split(" ")[0]
       @spare_parts = SparePart.where(id:child_part_ids)
-      parent_ids=@spare_parts.pluck(:parent_id)
+      parent_ids=@spare_parts.pluck(:parent_id).uniq
       if @spare_parts.update_all(parent_id:nil)
         @spare_parts.each do|spare_part|
           @purchase_order_items=PurchaseOrderItem.where(original_id:spare_part.id)
           @req_parts = ReqPart.where(original_id:spare_part.id)
+          @spare_part_ledgers = SparePartLedger.where(original_id:spare_part.id)
           @purchase_order_items.update_all(original_id:nil,spare_part_id:spare_part.id) if @purchase_order_items
           @req_parts.update_all(original_id:nil,spare_part_id:spare_part.id) if @req_parts
+          @spare_part_ledgers.update_all(original_id:nil,spare_part_id:spare_part.id) if @spare_part_ledgers
         end
       end
       parent_ids.each do|id|
@@ -51,6 +53,10 @@ class SparePartsController < ApplicationController
         if child_spare.empty?
           parent_spare = SparePart.where(id:id)[0].update_attribute(:is_parent,nil)
         end
+      end
+      unmerged_spare_ids = parent_ids + params[:spare_parts]
+      unmerged_spare_ids.each do |u_id|
+        SparePartLedger.adjust_balance(u_id)
       end
       flash[:notice] = "Parts successfully Unmerged"
       redirect_to action: "undo_merge"
@@ -85,11 +91,11 @@ class SparePartsController < ApplicationController
           @child_parts.each do|child_part|
             child_part.purchase_order_items.update_all(spare_part_id:parent_spare_id, original_id:child_part.id) if child_part.purchase_order_items
             child_part.req_parts.update_all(spare_part_id:parent_spare_id, original_id:child_part.id) if child_part.req_parts
+            child_part.spare_part_ledgers.update_all(spare_part_id:parent_spare_id,original_id:child_part.id) if child_part.spare_part_ledgers
           end
         end
       end
-      SparePartLedger.where(spare_part_id:params[:spare_parts]).delete_all
-      SparePartLedger.adjust_whole_ledger(parent_spare_id)
+      SparePartLedger.adjust_balance(parent_spare_id)
       flash[:notice] ="spare parts merged successfully"
       redirect_to :merge_spare_parts
     else
