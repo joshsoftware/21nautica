@@ -9,4 +9,10 @@ namespace :automated_emails do
       UserMailer.bl_entry_number_reminder(customer_imports, customer).deliver
     end
   end
+
+  task container_returned_date_report: :environment do
+    p "Sending Container returned date report email #{Date.today}"
+    Report::DailyReport.new.container_returned_date_report
+    p "Sending Container returned date report email done for #{Date.today}"
+  end  
 end

@@ -107,4 +107,16 @@ class UserMailer < ActionMailer::Base
     mail(to: @import_item.import.customer.emails.split(","), subject: "Container Dropped")
   end
 
+  def container_returned_date_report(customer_id)
+    @customer = Customer.find(customer_id)
+    emails = if ENV['HOSTNAME'] == 'RFS'
+               @customer.emails
+             else
+               @customer.add_default_emails_to_customer
+             end
+    time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
+    attachments["ContainerReturned_#{@customer.name.tr(" ", "_")}_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/ContainerReturned_#{@customer.name.tr(" ", "_")}_#{time}.xlsx")
+    mail(to: emails, subject: "Container Returned Report - #{@customer.name}")
+    File.delete("#{Rails.root}/tmp/ContainerReturned_#{@customer.name.tr(" ", "_")}_#{time}.xlsx")
+  end
 end

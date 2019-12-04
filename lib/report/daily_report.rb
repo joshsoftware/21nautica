@@ -86,5 +86,20 @@ module Report
 
       UserMailer.mail_report_status('import').deliver
     end
+
+    def container_returned_date_report
+      date = Date.today + 7.days
+      import_items = ImportItem.includes(import: [:customer])
+                     .select("import_items.container_number, import_items.g_f_expiry, import_items.return_status, import_items.dropped_location, imports.customer_id customer_id")
+                     .where("import_items.g_f_expiry < ?", date)
+                     .where(interchange_number: nil).references(:import)
+      customer_ids = import_items.pluck("customer_id").uniq
+      customer_ids.each do |customer_id|
+        customer_import_items = import_items.where("customer_id=#{customer_id}")
+        daily_report = Report::DailyContainerReturned.new
+        daily_report.create(customer_id, customer_import_items)
+        UserMailer.container_returned_date_report(customer_id).deliver
+      end
+    end
   end
 end
