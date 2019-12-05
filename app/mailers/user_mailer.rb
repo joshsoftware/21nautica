@@ -124,8 +124,17 @@ class UserMailer < ActionMailer::Base
     #set internal emails to emails variables
     emails = "kiranmahale@joshsoftware.com"
     time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
-    attachments["Truck_Allocation_#{@customer.name.tr(" ", "_")}_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/Truck_Allocation_#{@customer.name.tr(" ", "_")}_#{time}.xlsx")
+    attachments["Truck_Allocation_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/Truck_Allocation_#{time}.xlsx")
     mail(to: emails, subject: "Non Truck Allocation")
     File.delete("#{Rails.root}/tmp/Truck_Allocation_#{time}.xlsx")
-  end  
+  end
+
+  def purchase_order_status_report
+    #set internal emails to emails variables
+    emails = "kiranmahale@joshsoftware.com"
+    time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
+    attachments["PurchaseOrderStatus_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/PurchaseOrderStatus_#{time}.xlsx")
+    mail(to: emails, subject: "Purchase Order Status")
+    File.delete("#{Rails.root}/tmp/PurchaseOrderStatus_#{time}.xlsx")
+  end
 end

@@ -20,5 +20,11 @@ namespace :automated_emails do
     p "Sending Container returned date report email #{Date.today}"
     Report::TruckAllocation.new.create_and_send
     p "Sending Container returned date report email done for #{Date.today}"
+  end
+
+  task purchase_order_status: :environment do
+    p "Sending Container returned date report email #{Date.today}"
+    Report::TruckAllocation.new.create_and_send
+    p "Sending Container returned date report email done for #{Date.today}"
   end  
 end
