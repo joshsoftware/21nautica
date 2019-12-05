@@ -14,5 +14,12 @@ namespace :automated_emails do
     p "Sending Container returned date report email #{Date.today}"
     Report::DailyReport.new.container_returned_date_report
     p "Sending Container returned date report email done for #{Date.today}"
-  end  
+  end
+
+  task daily_petty_cash_ledger: :environment do
+    p "sending petty cash ledger #{Date.yesterday}"
+    Report::DailyPettyCashLedger.new.petty_cash_ledger
+    # UserMailer.petty_cash_ledger
+    p "sending petty cash ledger done for #{Date.yesterday} "
+  end
 end

@@ -119,4 +119,12 @@ class UserMailer < ActionMailer::Base
     mail(to: emails, subject: "Container Returned Report - #{@customer.name}")
     File.delete("#{Rails.root}/tmp/ContainerReturned_#{@customer.name.tr(" ", "_")}_#{time}.xlsx")
   end
+
+  def petty_cash_ledger
+    email="prashant.bangar@joshsoftware.com"
+    attachments["Petty Cash Ledger_#{Date.yesterday}.xlsx"] = File.read("#{Rails.root}/tmp/Petty Cash Ledger_#{Date.yesterday}.xlsx")
+    mail(to:email,subject:"Petty Cash Ledger_#{Date.yesterday}")
+    File.delete("#{Rails.root}/tmp/Petty Cash Ledger_#{Date.yesterday}.xlsx")
+  end
+
 end
