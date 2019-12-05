@@ -9,4 +9,10 @@ namespace :automated_emails do
       UserMailer.bl_entry_number_reminder(customer_imports, customer).deliver
     end
   end
+
+  task daily_fuel_ledger: :environment do
+    p "sendinf fuel ledger #{Date.yesterday}"
+    Report::DailyFuelLedger.new.fuel_ledger
+    p "sended fuel ledger #{Date.yesterday}"
+  end
 end

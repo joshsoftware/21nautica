@@ -39,3 +39,7 @@ end
 every '30 7,13 * * 1-6' do
   command 'cd /www/rfs-21nautica/current && RAILS_ENV=production bundle exec rake automated_emails:bl_entry_number_reminder --silent >> log/cron.log 2>> log/cron_error.log'
 end
+
+every '30 7,13 * * 1-6' do
+  command 'cd /www/rfs-21nautica/current && RAILS_ENV=production bundle exec rake automated_emails:daily_fuel_ledger --silent >> log/cron.log 2>> log/cron_error.log'
+end
