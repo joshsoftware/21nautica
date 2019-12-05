@@ -2,6 +2,7 @@ class FreezplsController < ApplicationController
 
   def new
     @freezpl = Freezpl.new
+    @date = Freezpl.last.try(:date) || Date.today.end_of_month
   end
 
   def create
