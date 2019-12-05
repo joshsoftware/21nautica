@@ -42,10 +42,8 @@
     item_for = $(this).closest('tr').find('.item_for').val()
     item_number = $(this).closest('tr').find('.item_number').val()
     role = "#{@current_user.role}"
-    console.log(role)
     $.get('/bills/validate_item_number', {vendor_id: vendor_id, item_type: item_type, item_for: item_for, item_number: item_number
                                          }).done (data) ->
-      console.table(data)
       if current_row_item_number.parent('div').children('span').length > 0
         current_row_item_number.parent('div').removeClass('has-error')
         current_row_item_number.parent('div').find('span').remove()
@@ -55,7 +53,6 @@
           current_row_item_number.parent('div').addClass('has-error')
           current_row_item_number.parent('div').append("<span class='help-block form-error'> Bl or Container not found </span>")
       else if data.freez == "This bl is frozen" && role !='Admin'
-        console.log(role)
         if current_row_item_number.parent('div').children('span').length > 0
         else
           current_row_item_number.parent('div').addClass('has-error')
