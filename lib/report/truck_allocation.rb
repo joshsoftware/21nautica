@@ -19,7 +19,7 @@ module Report
       end
       package.use_shared_strings = true
       package.serialize("#{Rails.root}/tmp/Truck_Allocation_#{time}.xlsx")
-      # UserMailer.non_truck_allocated_container_report.deliver
+      UserMailer.non_truck_allocated_container_report.deliver
     end
 
     def add_data(sheet, center, heading)
