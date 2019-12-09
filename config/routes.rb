@@ -191,6 +191,7 @@ Rails.application.routes.draw do
   resources :expense_heads, except: :destroy
   resources :petty_cashes, except: [:destroy, :edit, :update]
   resources :fuel_entries, except: [:destroy, :edit, :update]
+  get '/tabular_partial' => 'petty_cashes#tabular_partial'
   get '/mpesaes' => 'petty_cashes#index', as: 'mpesaes'
   get '/mpesaes/new' => 'petty_cashes#new', as: 'new_mpesaes'
   resources :remarks

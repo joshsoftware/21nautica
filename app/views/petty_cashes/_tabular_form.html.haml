@@ -1,0 +1,10 @@
+%tr
+  %td= text_field_tag "petty_cash[#{@count}][date]", @date.strftime('%d/%m/%Y'),class:"date"
+  %td.expense= select_tag "petty_cash[#{@count}][expense_head_id]",options_for_select(@expense_heads),class:'expense_heads',include_blank: true, data: {"validation" => "required", "validation-error-msg" => "Expense Head is required."}
+  %td.truck= select_tag "petty_cash[#{@count}][truck_id]",options_for_select(@trucks),class:"petty_cash_trucks",include_blank: true, data: {"validation" => "required", "validation-error-msg" => "Truck Number is required."}
+  %td= select_tag "petty_cash[#{@count}][transaction_type]", options_for_select([['Expense', 'Withdrawal'] ,['Inward', 'Deposit']]),class:'type'
+  %td= number_field_tag "petty_cash[#{@count}][transaction_amount]",nil,class:"amount",data: {"validation" => "required", "validation-error-msg" => "Amount is required."}
+  %td= text_area_tag "petty_cash[#{@count}][description]",nil,rows:1,cols:25,maxlength:99
+  %td 
+    %a.btn.btn-danger.btn-xs{ "data-toggle" => "tooltip", "title" =>"delete","class" => "remove_button"}
+      %span.glyphicon.glyphicon-remove
