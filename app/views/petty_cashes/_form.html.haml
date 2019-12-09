@@ -17,7 +17,7 @@
       .col-md-6
         = f.submit 'save', class: 'btn btn-primary'
         =link_to "Add More",tabular_partial_path(count:@count,key:"#{request.original_url.split(/[\/,?]/).include?('petty_cashes') ? 'Cash' : 'Bank'}"),class:"btn btn-success",id:"add_more",:remote => true
-        = link_to 'Back',"#{request.original_url.split(/[\/,?]/).include?('petty_cashes') ? petty_cashes_path : mpesaes_path }", class: 'btn btn-primary'
+        = link_to 'Cancel',"#{request.original_url.split(/[\/,?]/).include?('petty_cashes') ? petty_cashes_path : mpesaes_path }", class: 'btn btn-primary'
 
        
 :javascript
@@ -35,29 +35,17 @@
       endDate: new Date(),
       autoclose: true
     })
-    $('#add_more').on('click',function(){
+    $('#add_more').on("ajax:success",function(){
       count += 1;
       toggle_button();
-      setTimeout(function(){
         $(".date").datepicker({
           format: 'dd/mm/yyyy',
           startDate: $('.date').val(),
           endDate: new Date(),
           autoclose: true
         })
-        $("select.expense_heads").each(function (i, select){
-           if (!$(select).data('select2'))
-          {
-            $(select).select2({width:'100%'});
-          } 
-        })
-        $("select.petty_cash_trucks").each(function (i, select){
-           if (!$(select).data('select2'))
-          {
-            $(select).select2({width:'100%'});
-          } 
-        })
-      }, 800)
+        $("select.expense_heads").select2({width:'100%'})
+        $("select.petty_cash_trucks").select2({width:'100%'})
     })
     function toggle_button(){
       if(count == 1)

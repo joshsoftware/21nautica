@@ -13,7 +13,6 @@ class PettyCash < ActiveRecord::Base
 
   def self.adjust_balance(key)
     @petty_cashes = PettyCash.of_account_type(key).where(available_balance:nil).order(:id)
-    # current_balance = PettyCash.of_account_type(key).where.not(available_balance:nil).order(:id).last.try(:available_balance).to_f
     @petty_cashes.each do|petty_cash|
       current_balance = PettyCash.of_account_type(key).where.not(available_balance:nil).order(:id).last.try(:available_balance).to_f
       available_balance = if petty_cash.transaction_type.eql?('Deposit')
