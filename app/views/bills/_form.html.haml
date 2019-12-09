@@ -52,7 +52,7 @@
         else
           current_row_item_number.parent('div').addClass('has-error')
           current_row_item_number.parent('div').append("<span class='help-block form-error'> Bl or Container not found </span>")
-      else if data.freez == "This bl is frozen" && role !='Admin'
+      else if data.freez is true && role !='Admin'
         if current_row_item_number.parent('div').children('span').length > 0
         else
           current_row_item_number.parent('div').addClass('has-error')
