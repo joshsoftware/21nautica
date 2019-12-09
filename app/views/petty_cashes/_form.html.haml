@@ -2,54 +2,116 @@
 = simple_form_for(@petty_cash, html: { id: 'add_new_petty_cash', class: 'form-horizontal petty_cash'},defaults: {input_html: {class: 'form-control petty_cash'}}) do |f|
   .well
     = f.hidden_field :account_type, value:"#{request.original_url.split(/[\/,?]/).include?('petty_cashes') ? 'Cash' : 'Bank'}"
-    .row
-      .col-md-6
-        = f.input :expense_head_id, label: 'Expense Head', collection: @expense_heads, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Expense Head is required."}
-      .col-md-6
-        =f.input :date, label:'Date',as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker", :'date-autoclose'=> 'true'}, value: @date.strftime('%d/%m/%Y')}
-    .row
-      .col-md-6
-        = f.input :truck_id, label: 'Truck Number', collection: @trucks, include_blank: true, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Truck Number is required."}
-      .col-md-6
-        =f.collection_radio_buttons :transaction_type, [['Expense', 'Withdrawal'] ,['Inward', 'Deposit']],:last, :first, checked: 'Withdrawal'
-    .row  
-      .col-md-6
-        = f.input :transaction_amount,label: 'Amount',input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Amount is required."}
-      .col-md-6
-        = f.input :description, label: 'Remark'
+    %table.table{id: 'petty_cash_form_table',class:'petty_cash_form_class'}
+      %thead
+        %th.date_of_payment Date
+        %th Expense Head
+        %th Truck Number
+        %th Transaction Type
+        %th Amount
+        %th Remark
+        %tbody
+          %div.tabular_partial
+            = render 'tabular_form', :@count => 1
     .row
       .col-md-6
         = f.submit 'save', class: 'btn btn-primary'
+        =link_to "Add More",tabular_partial_path(count:@count,key:"#{request.original_url.split(/[\/,?]/).include?('petty_cashes') ? 'Cash' : 'Bank'}"),class:"btn btn-success",id:"add_more",:remote => true
         = link_to 'Back',"#{request.original_url.split(/[\/,?]/).include?('petty_cashes') ? petty_cashes_path : mpesaes_path }", class: 'btn btn-primary'
 
        
 :javascript
-  $('#petty_cash_expense_head_id').select2()
-  $('#petty_cash_truck_id').select2()
-  $('#petty_cash_date').datepicker({
-    format: 'dd/mm/yyyy',
-    startDate: $('#petty_cash_date').val(),
-    endDate: new Date()
-  })
   $(document).ready(function(){
-    $('#petty_cash_expense_head_id').change(function(){
-      if (this.selectedOptions[0].getAttribute('data-is_related_to_truck' )=== 'true') {
-        $('#petty_cash_truck_id').attr('disabled',false);
-        $('#petty_cash_truck_id').select2()
-      } else {
-        var petty_cash_truck_id = $("#petty_cash_truck_id")
-        petty_cash_truck_id.select2('destroy')
-        petty_cash_truck_id.closest('div').removeClass('')
-        petty_cash_truck_id.attr("disabled",true)
-        petty_cash_truck_id.val('')
-        petty_cash_truck_id.removeAttr("style");
-        if (petty_cash_truck_id.closest('div').hasClass('has-success')) {
-          petty_cash_truck_id.closest('div').removeClass('has-success')
-        } else {
-          petty_cash_truck_id.closest('div').removeClass('has-error')
-          petty_cash_truck_id.siblings(".form-error").remove()
+    var count = 1
+    toggle_button()
+    $(document).on("submit",function(){
+      $("#loader_div").show()
+    })
+    $(".expense_heads").select2({width:'100%'})
+    $(".petty_cash_trucks").select2({width:'100%'})
+    $(".date").datepicker({
+      format: 'dd/mm/yyyy',
+      startDate: $('.date').val(),
+      endDate: new Date(),
+      autoclose: true
+    })
+    $('#add_more').on('click',function(){
+      count += 1;
+      toggle_button();
+      setTimeout(function(){
+        $(".date").datepicker({
+          format: 'dd/mm/yyyy',
+          startDate: $('.date').val(),
+          endDate: new Date(),
+          autoclose: true
+        })
+        $("select.expense_heads").each(function (i, select){
+           if (!$(select).data('select2'))
+          {
+            $(select).select2({width:'100%'});
+          } 
+        })
+        $("select.petty_cash_trucks").each(function (i, select){
+           if (!$(select).data('select2'))
+          {
+            $(select).select2({width:'100%'});
+          } 
+        })
+      }, 500)
+    })
+    function toggle_button(){
+      if(count == 1)
+      {
+        $(".remove_button").hide()
+      }
+      else{
+        $(".remove_button").show()
+      }
+    }
+    $(document).on('click', ".remove_button", function(e){
+      e.preventDefault()
+      $(this).closest("tr").remove();
+      count -= 1 ;
+      toggle_button();
+    })
+    $(document).on('change', "select.expense_heads",function(e){
+      if($(this).closest('td').hasClass('has-error'))
+      {
+        $(this).closest('td').removeClass('has-error')
+        $(this).removeClass('error')
+        $(this).siblings(".form-error").remove()      }
+    })
+    $(document).on('change', "select.petty_cash_trucks",function(e){
+      if($(this).closest('td').hasClass('has-error'))
+      {
+        $(this).closest('td').removeClass('has-error')
+        $(this).removeClass('error')
+        $(this).siblings(".form-error").remove()      }
+    })
+    $(document).on('input', "input.amount",function(e){
+      if($(this).closest('td').hasClass('has-error'))
+      {
+        if($(this).val()!= ''){
+          $(this).removeAttr("style");
+          $(this).closest('td').removeClass('has-error')
+          $(this).removeClass('error')
+          $(this).siblings(".form-error").remove()
         }
       }
+    })
+    $(document).on('change','.expense_heads',function(){
+      var truck = $(this).closest('tr').find("select.petty_cash_trucks")
+      if (this.selectedOptions[0].getAttribute('data-is_related_to_truck' )=== 'true') {
+        truck.attr('disabled',false);
+        truck.show()
+        truck.select2({width:'100%'})
+      } else {
+        truck.attr("disabled",true)
+        truck.removeAttr("style");
+        truck.closest('td').removeClass('has-error')
+        truck.siblings(".form-error").remove()
+        }
+        truck.hide()
       })
   })
   

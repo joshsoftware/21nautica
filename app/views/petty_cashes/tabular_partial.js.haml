@@ -1,0 +1,2 @@
+$('#petty_cash_form_table').append("#{escape_javascript(render :partial => 'tabular_form', :locals => {:@expense_heads => @expense_heads,:@trucks =>@trucks, :@count => @count, :@date => @date,:@key =>@key})}")
+$('#add_more').attr('href',"/tabular_partial?count=#{@count}&key=#{@key}")
