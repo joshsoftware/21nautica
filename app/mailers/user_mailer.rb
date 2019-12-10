@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default from: ENV['EMAIL_FROM']
+  #default from: ENV['EMAIL_FROM']
   default from: ["info@reliablefreight.co.ke"] if Rails.env == "development"
 
   def mail_report(customer,type)
@@ -136,5 +136,13 @@ class UserMailer < ActionMailer::Base
     attachments["PurchaseOrderStatus_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/PurchaseOrderStatus_#{time}.xlsx")
     mail(to: emails, subject: "Purchase Order Status")
     File.delete("#{Rails.root}/tmp/PurchaseOrderStatus_#{time}.xlsx")
+  end
+
+  def purchase_order_summary
+    beg_month = Date.today.beginning_of_month
+    @purchase_order_hash = PurchaseOrder.where(date: [beg_month..Date.today]).group(:date).sum(:total_cost)
+    #set internal emails to emails variables
+    emails = "kiranmahale@joshsoftware.com"
+    mail(to: emails, subject: "Purchase Order Summary")
   end
 end

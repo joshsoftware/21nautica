@@ -17,14 +17,20 @@ namespace :automated_emails do
   end
 
   task truck_not_allotted_report: :environment do
-    p "Sending Container returned date report email #{Date.today}"
+    p "Sending truck not allocated containers report email #{Date.today}"
     Report::TruckAllocation.new.create_and_send
-    p "Sending Container returned date report email done for #{Date.today}"
+    p "Sent truck not allocated containers report email #{Date.today}"
   end
 
   task purchase_order_status: :environment do
-    p "Sending Container returned date report email #{Date.today}"
-    Report::TruckAllocation.new.create_and_send
-    p "Sending Container returned date report email done for #{Date.today}"
-  end  
+    p "Sending purchase order status report email #{Date.today}"
+    Report::PurchaseStatus.new.create_and_send
+    p "Sent purchase order status report email #{Date.today}"
+  end
+
+  task purchase_order_summary: :environment do
+    p "Sending purchase order summary report email #{Date.today}"
+    UserMailer.purchase_order_summary.deliver
+    p "Sent purchase order summary report email #{Date.today}"
+  end    
 end

@@ -23,7 +23,7 @@ module Report
     end
 
     def add_data(sheet, center, heading)
-      date = Date.today
+      date = Date.yesterday #we are going to send this mail at 1 am so checking for yesterday
       purchase_order_items = PurchaseOrderItem.select("purchase_orders.number po_number,
                              purchase_orders.date po_date, suppliers.name supplier_name,
                              spare_parts.product_name part_name, purchase_order_items.quantity,
