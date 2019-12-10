@@ -32,5 +32,11 @@ namespace :automated_emails do
     p "Sending purchase order summary report email #{Date.today}"
     UserMailer.purchase_order_summary.deliver
     p "Sent purchase order summary report email #{Date.today}"
-  end    
+  end
+
+  task new_order_summary: :environment do
+    p "Sending new order summary report email #{Date.today}"
+    UserMailer.new_order_summary.deliver
+    p "Sent new order summary report email #{Date.today}"
+  end
 end

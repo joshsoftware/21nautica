@@ -53,6 +53,7 @@ class ImportItem < ActiveRecord::Base
   after_update :update_truck_status
   before_save :add_close_date, if: :interchange_number_changed?
   #after_save :container_dropped_mail, if: :return_status_changed?
+  scope :non_third_party_container, -> { where.not(truck_id: [0, nil]) }
 
   after_create do |record|
     ImportExpense::CATEGORIES.each do |category|

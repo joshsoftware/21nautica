@@ -35,11 +35,26 @@ every 1.day, at: '12:05 am' do
   command 'cd /www; sh backup.sh >> backup.log'
 end
 
-#Every day except Sunday at 7:30 and 13:30
-every '30 7,13 * * 1-6' do
+every '0 1 * * 1-6' do #Every day except Sunday at 01:01
   command 'cd /www/rfs-21nautica/current && RAILS_ENV=production bundle exec rake automated_emails:bl_entry_number_reminder --silent >> log/cron.log 2>> log/cron_error.log'
 end
 
-every '20 10 * * 1-6' do #every 1.day, at: '10:20 am' do
+every '1 1 * * 1-6' do #Every day except Sunday at 1:01
   command 'cd /www/rfs-21nautica/current && RAILS_ENV=production bundle exec rake automated_emails:container_returned_date_report --silent >> log/cron.log 2>> log/cron_error.log'
+end
+
+every '2 1 * * 1-6' do #Every day except Sunday at 1:02
+  command 'cd /www/rfs-21nautica/current && RAILS_ENV=production bundle exec rake automated_emails:truck_not_allotted_report --silent >> log/cron.log 2>> log/cron_error.log'
+end
+
+every '3 1 * * 1-6' do #Every day except Sunday at 1:02
+  command 'cd /www/rfs-21nautica/current && RAILS_ENV=production bundle exec rake automated_emails:purchase_order_status --silent >> log/cron.log 2>> log/cron_error.log'
+end
+
+every '4 1 * * 1-6' do #Every day except Sunday at 1:02
+  command 'cd /www/rfs-21nautica/current && RAILS_ENV=production bundle exec rake automated_emails:purchase_order_summary --silent >> log/cron.log 2>> log/cron_error.log'
+end
+
+every '5 1 * * 1-6' do #Every day except Sunday at 1:02
+  command 'cd /www/rfs-21nautica/current && RAILS_ENV=production bundle exec rake automated_emails:new_order_summary --silent >> log/cron.log 2>> log/cron_error.log'
 end

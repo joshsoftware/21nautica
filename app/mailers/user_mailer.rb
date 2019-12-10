@@ -143,6 +143,20 @@ class UserMailer < ActionMailer::Base
     @purchase_order_hash = PurchaseOrder.where(date: [beg_month..Date.today]).group(:date).sum(:total_cost)
     #set internal emails to emails variables
     emails = "kiranmahale@joshsoftware.com"
-    mail(to: emails, subject: "Purchase Order Summary")
+    if @purchase_order_hash.count > 1
+      mail(to: emails, subject: "Purchase Order Summary")
+    end
+  end
+
+  def new_order_summary
+    yesterday = Date.yesterday
+    beg_month = Date.today.beginning_of_month
+    @orders_opened = Import.where(created_at: Date.today)
+    daily_import_items = ImportItem.where(created_at: Date.today).non_third_party_container.count
+    monthly_import_items = ImportItem.where(created_at: [beg_month..Date.today]).non_third_party_container.count
+    subject = "New Order - #{daily_import_items}/#{monthly_import_items}"
+    #set internal emails to emails variables
+    emails = "kiranmahale@joshsoftware.com"
+    mail(to: emails, subject: subject)
   end
 end
