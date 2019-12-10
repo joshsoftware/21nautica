@@ -1,0 +1,11 @@
+%h1 Fuel Entry
+= render 'form'
+
+:javascript
+  window.validate_form = function(){
+    $.validate({
+      form: '#add_new_entry',
+    });
+  }
+  
+  validate_form();

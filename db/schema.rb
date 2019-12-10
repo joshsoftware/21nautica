@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191010102807) do
+ActiveRecord::Schema.define(version: 20191114072640) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 20191010102807) do
     t.string   "cheque_ocean"
     t.string   "payment_clearing"
     t.string   "cheque_clearing"
-    t.string   "remark"
+    t.string   "remarks"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "agency_fee"
@@ -165,6 +165,35 @@ ActiveRecord::Schema.define(version: 20191010102807) do
 
   add_index "exports", ["customer_id"], name: "index_exports_on_customer_id", using: :btree
 
+<<<<<<< HEAD
+  create_table "freezpls", force: true do |t|
+    t.date     "date"
+=======
+  create_table "fuel_entries", force: true do |t|
+    t.float    "quantity"
+    t.float    "cost"
+    t.date     "date"
+    t.float    "available"
+    t.boolean  "is_adjustment"
+    t.integer  "truck_id"
+    t.string   "office_vehicle"
+    t.string   "purchased_dispensed"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "fuel_entries", ["truck_id"], name: "index_fuel_entries_on_truck_id", using: :btree
+
+  create_table "fuel_stocks", force: true do |t|
+    t.float    "quantity"
+    t.float    "rate"
+    t.date     "date"
+    t.float    "balance"
+>>>>>>> staging
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "import_expenses", force: true do |t|
     t.integer  "import_item_id"
     t.string   "category"
@@ -252,7 +281,6 @@ ActiveRecord::Schema.define(version: 20191010102807) do
     t.boolean  "is_late_submission"
     t.string   "rotation_number"
     t.integer  "entry_type"
-    t.boolean  "new_import",                 default: false
     t.date     "entry_date"
   end
 
@@ -273,7 +301,7 @@ ActiveRecord::Schema.define(version: 20191010102807) do
     t.integer  "invoiceable_id"
     t.string   "invoiceable_type"
     t.string   "legacy_bl"
-    t.text     "remark"
+    t.text     "remarks"
     t.boolean  "manual",              default: false
   end
 
@@ -315,12 +343,6 @@ ActiveRecord::Schema.define(version: 20191010102807) do
 
   add_index "location_dates", ["truck_id"], name: "index_location_dates_on_truck_id", using: :btree
 
-  create_table "make_models", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "mechanics", force: true do |t|
     t.string   "name"
     t.date     "date_of_employment"
@@ -342,7 +364,7 @@ ActiveRecord::Schema.define(version: 20191010102807) do
     t.date     "estimate_delivery"
     t.string   "movement_type"
     t.string   "custom_seal"
-    t.string   "remark"
+    t.string   "remarks"
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -381,7 +403,7 @@ ActiveRecord::Schema.define(version: 20191010102807) do
     t.integer  "amount"
     t.string   "mode_of_payment"
     t.string   "reference"
-    t.string   "remark"
+    t.string   "remarks"
     t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -422,6 +444,7 @@ ActiveRecord::Schema.define(version: 20191010102807) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "of_type"
+    t.integer  "original_id"
   end
 
   add_index "purchase_order_items", ["purchase_order_id"], name: "index_purchase_order_items_on_purchase_order_id", using: :btree
@@ -468,6 +491,7 @@ ActiveRecord::Schema.define(version: 20191010102807) do
     t.integer  "req_sheet_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "original_id"
   end
 
   add_index "req_parts", ["mechanic_id"], name: "index_req_parts_on_mechanic_id", using: :btree
@@ -508,6 +532,8 @@ ActiveRecord::Schema.define(version: 20191010102807) do
     t.integer  "spare_part_sub_category_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "parent_id"
+    t.boolean  "is_deleted"
   end
 
   add_index "spare_parts", ["spare_part_category_id"], name: "index_spare_parts_on_spare_part_category_id", using: :btree
@@ -542,14 +568,7 @@ ActiveRecord::Schema.define(version: 20191010102807) do
     t.string   "status"
     t.string   "location"
     t.integer  "current_import_item_id"
-    t.integer  "fuel_capacity"
-    t.string   "trailer_reg_number"
-    t.decimal  "insurance_premium_amt_yearly",            precision: 10, scale: 2
-    t.string   "driver_name",                  limit: 50
-    t.integer  "make_model_id"
   end
-
-  add_index "trucks", ["make_model_id"], name: "index_trucks_on_make_model_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "",   null: false

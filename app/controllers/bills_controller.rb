@@ -69,10 +69,17 @@ class BillsController < ApplicationController
   # Validate the Item Number 
   def validate_item_number
     result = nil
+    freez = nil
     case params[:item_type] 
     when 'Import'
       if params[:item_for] == 'bl'
-        result = Import.where('lower(bl_number) = ?', params[:item_number].strip.downcase).first.try(:id) 
+        import = Import.where('lower(bl_number) = ?', params[:item_number].strip.downcase).first
+        result = import.try(:id)
+        bl_invoice_date = import.bill_of_lading.invoices.last.try(:date) if import
+        freez_date = Freezpl.last.try(:date) 
+        if bl_invoice_date
+          freez = bl_invoice_date <= freez_date ? true : false
+        end
       else
         result = ImportItem.where('lower(container_number) = ? ', params[:item_number].strip.downcase).first.try(:import_id)
       end
@@ -85,7 +92,7 @@ class BillsController < ApplicationController
     else
     end
 
-    render json: { result: result }
+    render json: { result: result, freez: freez }
   end
 
   def validate_debit_note_number
