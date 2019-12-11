@@ -41,7 +41,6 @@ class SparePartLedger < ActiveRecord::Base
   end
 
   def adjust_physical_stock
-    Rails.logger.info "Checking physical stock in adjust_physical_stock - #{spare_part_id}"
     if inward_outward == "inward"
       PurchaseOrderItem.create(spare_part_id: spare_part_id, quantity: quantity)
     elsif inward_outward == "outward"
