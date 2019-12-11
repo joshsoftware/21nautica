@@ -21,5 +21,27 @@ namespace :automated_emails do
     Report::DailyPettyCashLedger.new.petty_cash_ledger
     # UserMailer.petty_cash_ledger
     p "sending petty cash ledger done for #{Date.yesterday} "
+  task truck_not_allotted_report: :environment do
+    p "Sending truck not allocated containers report email #{Date.today}"
+    Report::TruckAllocation.new.create_and_send
+    p "Sent truck not allocated containers report email #{Date.today}"
+  end
+
+  task purchase_order_status: :environment do
+    p "Sending purchase order status report email #{Date.today}"
+    Report::PurchaseStatus.new.create_and_send
+    p "Sent purchase order status report email #{Date.today}"
+  end
+
+  task purchase_order_summary: :environment do
+    p "Sending purchase order summary report email #{Date.today}"
+    UserMailer.purchase_order_summary.deliver
+    p "Sent purchase order summary report email #{Date.today}"
+  end
+
+  task new_order_summary: :environment do
+    p "Sending new order summary report email #{Date.today}"
+    UserMailer.new_order_summary.deliver
+    p "Sent new order summary report email #{Date.today}"
   end
 end

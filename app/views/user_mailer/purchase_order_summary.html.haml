@@ -1,0 +1,31 @@
+!!!
+%html
+  %body
+    %p
+    %meta{content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %p
+      Hello,
+    %p
+      Following is the purchase summary for this month till today
+    %br
+      %table
+        %tr
+          %th Date
+          %th Total PO
+        -@purchase_order_hash.each do |key, value|
+          %tr
+            %td=key
+            %td=value
+    %p
+      Incase you have any issues please don’t hesitate to call us, or email us.
+    %p
+      %br
+      %br
+      Warm Regards
+      %br
+      Customer Service
+      %br
+:css
+  td {
+   text-align: center;
+  }

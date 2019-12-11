@@ -1,0 +1,35 @@
+!!!
+%html
+  %body
+    %p
+    %meta{content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %p
+      Hello,
+    %p
+      Following is the new order summary for this month till today
+    %br
+      %table
+        %tr
+          %th Customer Name
+          %th BL Number
+          %th Equipment
+          %th Quantity
+        -@orders_opened.each do |order|
+          %tr
+            %td=order.try(:customer).try(:name)
+            %td=order.bl_number
+            %td=order.equipment
+            %td=order.quantity
+    %p
+      Incase you have any issues please don’t hesitate to call us, or email us.
+    %p
+      %br
+      %br
+      Warm Regards
+      %br
+      Customer Service
+      %br
+:css
+  td {
+   text-align: center;
+  }

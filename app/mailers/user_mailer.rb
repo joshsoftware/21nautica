@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default from: ENV['EMAIL_FROM']
+  #default from: ENV['EMAIL_FROM']
   default from: ["info@reliablefreight.co.ke"] if Rails.env == "development"
 
   def mail_report(customer,type)
@@ -127,4 +127,43 @@ class UserMailer < ActionMailer::Base
     File.delete("#{Rails.root}/tmp/Petty Cash Ledger_#{Date.yesterday}.xlsx")
   end
 
+  def non_truck_allocated_container_report
+    #set internal emails to emails variables
+    emails = "kiranmahale@joshsoftware.com"
+    time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
+    attachments["Truck_Allocation_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/Truck_Allocation_#{time}.xlsx")
+    mail(to: emails, subject: "Non Truck Allocation")
+    File.delete("#{Rails.root}/tmp/Truck_Allocation_#{time}.xlsx")
+  end
+
+  def purchase_order_status_report
+    #set internal emails to emails variables
+    emails = "kiranmahale@joshsoftware.com"
+    time = DateTime.parse(Time.now.to_s).strftime("%d_%b_%Y")
+    attachments["PurchaseOrderStatus_#{time}.xlsx"] = File.read("#{Rails.root}/tmp/PurchaseOrderStatus_#{time}.xlsx")
+    mail(to: emails, subject: "Purchase Order Status")
+    File.delete("#{Rails.root}/tmp/PurchaseOrderStatus_#{time}.xlsx")
+  end
+
+  def purchase_order_summary
+    beg_month = Date.today.beginning_of_month
+    @purchase_order_hash = PurchaseOrder.where(date: [beg_month..Date.today]).group(:date).sum(:total_cost)
+    #set internal emails to emails variables
+    emails = "kiranmahale@joshsoftware.com"
+    if @purchase_order_hash.count > 1
+      mail(to: emails, subject: "Purchase Order Summary")
+    end
+  end
+
+  def new_order_summary
+    yesterday = Date.yesterday
+    beg_month = Date.today.beginning_of_month
+    @orders_opened = Import.where(created_at: Date.today)
+    daily_import_items = ImportItem.where(created_at: Date.today).non_third_party_container.count
+    monthly_import_items = ImportItem.where(created_at: [beg_month..Date.today]).non_third_party_container.count
+    subject = "New Order - #{daily_import_items}/#{monthly_import_items}"
+    #set internal emails to emails variables
+    emails = "kiranmahale@joshsoftware.com"
+    mail(to: emails, subject: subject)
+  end
 end
