@@ -43,7 +43,6 @@ var callbacks = {
       else {
         recv = $(this).parent().children("td.received").html()
         amount = $(this).parent().children("td.amount").html()
-        console.log(recv, amount)
         if(recv == amount) {
           $(this).parent().addClass("success")
         }
@@ -53,6 +52,9 @@ var callbacks = {
     // Consolidated results
     var received = 0
     var invoiced = 0
+    var opening_balance = 0
+    var closing_balance = 0
+
     for (i in result) {
       if(result[i].voucher_type == "Invoice") {
         invoiced = invoiced + result[i].amount
@@ -64,6 +66,8 @@ var callbacks = {
 
     $("#payment_details_result .invoiced").html(invoiced)
     $("#payment_details_result .received").html(-received)
+    $("#payment_details_result .opening_balance").html(opening_balance)
+    $("#payment_details_result .closing_balance").html(closing_balance)
   }
 }
 
@@ -73,5 +77,5 @@ function PaymentFilterInit(){
     callbacks: callbacks,
     search: {}
   });
-  FJS.addCriteria({field: 'date', ele: '#filter_by_days_select', type: 'range'});
+  FJS.addCriteria({field: 'date', ele: '#filter_by_date_select', type: 'range'});
 }
