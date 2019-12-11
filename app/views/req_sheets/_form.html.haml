@@ -1,3 +1,5 @@
+.pull-right
+  = link_to "Add New Spare Part",new_spare_part_path, remote: true, class:'btn btn-primary'
 = simple_nested_form_for @req_sheet, html: {class: 'form-horizontal', id: 'req_invoice'}, defaults: {input_html: {class: 'form-control'}}, wrapper: :horizontal_form do |f|
   .row
     .col-md-4
@@ -13,7 +15,8 @@
       - else
         = f.input :km
   .row
-    = render partial: 'req_parts', locals: { f:f, req_sheet: @req_sheet }
+    %div{data: {for: 'spare_partSelect'}}
+      = render partial: 'req_parts', locals: { f:f, req_sheet: @req_sheet, spare_parts: @spare_parts }
   .row
     .col-md-6
     .col-md-3

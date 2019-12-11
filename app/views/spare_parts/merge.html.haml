@@ -1,0 +1,42 @@
+#confirmModal.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+%h1 Merge Spare Parts
+%div.container
+  = form_tag merge_content_spare_parts_path, remote: true, method: :post do |f|  
+    = select_tag "spare_parts",options_for_select(@spare_parts),multiple:true
+    %br
+    = submit_tag 'Merge',class:'btn btn-primary',id:"merge"
+:javascript
+
+  $(document).ready(function(){
+    var count=0
+    $("#merge").hide()
+    $("#spare_parts").multiSelect({
+    selectableHeader: "<input type='text' id='myInput' class='search-input' autocomplete='off' placeholder='Search Spare part'>",
+    afterSelect:function(){
+        count= count+1
+        $("#merge").toggle(count>=2)
+      },
+      afterDeselect:function(){
+       count=count-1
+       $("#merge").toggle(count>=2)
+      }
+    })
+    $(".ms-list").prop('id','ml')
+    $("#myInput").on("keyup", function() {
+      var values = $(this).val().toLowerCase().split("+");
+      values = values.join("|")
+      regx = new RegExp(values,"g")
+      $("#ml li.ms-elem-selectable:not(.ms-selected)").each(function() {
+        var ma = $(this).text().toLowerCase().match(regx)
+        if(ma && ma.length)
+        {
+          $(this).toggle(true)
+        }
+        else{
+          $(this).toggle(false)
+        }
+        
+      })
+    })  
+  })

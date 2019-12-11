@@ -1,0 +1,116 @@
+.col-md-12
+= simple_form_for(@fuel_entry, html: { id: 'add_new_entry', class: 'form-horizontal'},defaults: {input_html: {class: 'form-control'}}) do |f|
+  .well
+    .row
+      .col-md-12.h4.fuel-entry-error #{@fuel_entry.errors.full_messages.join(" and ") }
+    .row
+      .col-md-6
+        =f.input :date, label:'Date',as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker", :'date-autoclose'=> 'true'}, value: @last_transaction_date.try(:strftime, '%d/%m/%Y')}
+      .col-md-6
+        =f.collection_radio_buttons :purchased_dispensed, [['Dispense', 'dispense'], ['Purchase', 'purchase'] ],:last, :first, checked: 'dispense'
+    .row
+      .col-md-6
+        = f.input :quantity, label: 'Quantity', as: :string, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Quantity is required."}
+      .col-md-6
+        .form-group
+          .col-md-3
+            = f.label :is_adjustment, "Physical Stock Adjustment"
+          .col-md-6
+            = f.check_box :is_adjustment, class: 'custom-control-input'
+    .row.purchase-item
+      .col-md-6
+        .form-group
+          .col-md-3
+            %label.control-label Rate
+          .col-md-6
+            = number_field_tag "fuel_entry[rate]", "", { class: 'custom-control-input form-control'}
+    .row.non-purchase-item
+      .col-md-6
+        = f.input :truck_id, label: 'Truck Number', collection: @trucks, include_blank: true, input_html: { :placeholder => "Select Truck"}
+      .col-md-6
+        = f.input :office_vehicle, as: :string, label: 'Office Vehicle Number', as: :string, input_html: { reqired: "required"}
+      
+
+    .row
+      .col-md-6
+        = f.submit 'save', class: 'btn btn-primary'
+        = link_to 'Back',fuel_entries_path, class: 'btn btn-primary'
+
+       
+:javascript
+  $('#fuel_entry_truck_id').select2({
+    allowClear: true,
+  }).on("change", function(){
+    disable_enable_truck_vehicles();
+  })
+
+  $("#fuel_entry_office_vehicle").on("change", function(){
+    disable_enable_truck_vehicles();
+  })
+
+  $('#fuel_entry_date').datepicker({
+    format: 'dd/mm/yyyy',
+    startDate: $('#fuel_entry_date').val(),
+    endDate: new Date()
+  })
+
+  $("#fuel_entry_is_adjustment").change(function() {
+    if(this.checked) {
+      truck_vehicle("hide")
+      $(".purchase-item").hide();
+    } else if($("input[name='fuel_entry[purchased_dispensed]']:checked").val() == "dispense") {
+      truck_vehicle("show")
+    } else if($("input[name='fuel_entry[purchased_dispensed]']:checked").val() == "purchase") {
+      truck_vehicle("hide")
+      $(".purchase-item").show();
+    }
+  });
+
+  $("input[name='fuel_entry[purchased_dispensed]']").change(function() {
+    if($(this).val() == "purchase") {
+      truck_vehicle("hide")
+      if($("#fuel_entry_is_adjustment").is(":checked") == true) {
+        $(".purchase-item").hide();
+      } else {
+        $(".purchase-item").show();
+      }
+
+    } else {
+      if($("#fuel_entry_is_adjustment").is(":checked") == true) {
+        truck_vehicle("hide")
+      } else {
+        truck_vehicle("show")
+      }
+      $(".purchase-item").hide();
+    }
+  });  
+
+  function truck_vehicle(show_hide) {
+    if(show_hide == "show") {
+      $("#fuel_entry_office_vehicle").removeAttr("disabled")
+      $("#fuel_entry_truck_id").removeAttr("disabled")
+      $(".non-purchase-item").show();
+    } else if (show_hide == "hide") {
+      $(".non-purchase-item").hide();
+      $("#fuel_entry_truck_id").attr("disabled", "disabled")
+      $("#fuel_entry_truck_id").select2("val", "")
+      $("#fuel_entry_office_vehicle").attr("disabled", "disabled")
+      $("#fuel_entry_office_vehicle").val("")
+    }
+  }
+
+  function disable_enable_truck_vehicles(){
+    if($('#fuel_entry_office_vehicle').val() == "") {
+      $("#fuel_entry_truck_id").removeAttr("disabled")
+    } else {
+      $("#fuel_entry_truck_id").attr("disabled", "disabled")
+    }
+    if($('#fuel_entry_truck_id').val() == "") {
+      $("#fuel_entry_office_vehicle").removeAttr("disabled")
+    } else {
+      $("#fuel_entry_office_vehicle").attr("disabled", "disabled")
+    }
+  }
+
+  
+

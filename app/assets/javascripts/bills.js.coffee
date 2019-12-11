@@ -55,7 +55,7 @@ $(document).ready ->
   #******************* 
   
   if $('#bill_vendor_id').val() == ''
-    $('#add_bill_items').addClass('disabled', true)
+    $('#add_bBillsController#validate_item_numberill_items').addClass('disabled', true)
     $('#add_debit_notes').addClass('disabled', true)
 
   check_if_vendor_present = ->
@@ -143,27 +143,7 @@ $(document).ready ->
     add_bill_items(event)  #***** Add bill_items
 
   #********* Validate Item Number
-  $('body').on 'focusout','.item_number', ->
-    current_row_item_number = $(this).closest('tr').find('.item_number')
-    current_row = $(this).closest('tr')
-    vendor_id = $('#bill_vendor_id').val()
-    item_type = $(this).closest('tr').find('.item_type').val()
-    item_for = $(this).closest('tr').find('.item_for').val()
-    item_number = $(this).closest('tr').find('.item_number').val()
-
-    $.get('/bills/validate_item_number', {vendor_id: vendor_id, item_type: item_type, item_for: item_for, item_number: item_number
-                                         }).done (data) ->
-      if data.result is null
-        if current_row_item_number.parent('div').children('span').length > 0
-        else
-          current_row_item_number.parent('div').addClass('has-error')
-          current_row_item_number.parent('div').append("<span class='help-block form-error'> Bl or Container not found </span>")
-      else
-        current_row_item_number.parent('div').removeClass('has-error')
-        current_row_item_number.parent('div').find('span').remove()
-        type = current_row.find('.item_type').val()
-        current_row.find('.activity_id').val(data.result)
-        current_row.find('.activity_type').val(type)
+ 
 
   $('body').on 'change', '.item_type', -> #Import OR EXPORT
     # ******** Reinitialize the Row 

@@ -45,3 +45,29 @@
 #po_history_table_paginate .ui-button {
   padding: 4px !important;
 }
+.ms-container .ms-list{
+  height: 350px;
+}
+.ms-container {
+  width: 100%
+}
+.search-input{
+  width: 100%
+}
+#content_div{
+  overflow:scroll;
+  height:400px;
+}
+#form_div{
+  overflow:scroll;
+  height:400px;
+}
+.hr_class{
+  display: block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: inset;
+  border-width: 1px;
+}

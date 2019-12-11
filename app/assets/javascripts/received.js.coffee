@@ -12,8 +12,5 @@ show_received_index_table = ->
         customer_id: customer_id
 
 $(document).on "page:load ready", ->
-  $("#received_customer_id").change(show_received_index_table)
-  $("#received_payment_date").datepicker(
-    format :"dd-mm-yyyy")
-  $("#received_payment_date").datepicker('setDate', new Date())
+  $("#customer_id").change(show_received_index_table)
   return

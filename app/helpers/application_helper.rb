@@ -18,16 +18,26 @@ module ApplicationHelper
   end
 
   def reallocate_truck_numbers
-    import_items = ImportItem.where(:status => [:under_loading_process, :truck_allocated, :ready_to_load], is_co_loaded: false)
-    alloted = Truck.where(id: import_items.pluck(:truck_id).uniq!).pluck(:reg_number).uniq
-    alloted.concat(import_items.pluck(:truck_number)).uniq!
-    if @import_item.truck_id.present?
-      trucks = Truck.free.order(:reg_number).pluck(:reg_number, :id).uniq {|number| number[0]}
-      trucks << [@import_item.truck.reg_number, @import_item.truck_id]
-    else
-      trucks = Truck.free.order(:reg_number).pluck(:reg_number, :id).uniq {|number| number[0]}
+    allotted_not_coloaded = ImportItem.where(:status => [:under_loading_process, :truck_allocated, :ready_to_load], is_co_loaded: false)
+
+    third_party_allotted_trucks = allotted_not_coloaded.where.not(truck_number: nil).order(:truck_number).map {|item| [item.truck_number, item.truck_number]}
+
+    alloted = Truck.joins(:import_items).where(import_items: {id: allotted_not_coloaded.pluck(:id)}).active.pluck(:reg_number, :id).uniq
+
+    free_trucks = Truck.free.order(:reg_number).active.pluck(:reg_number, :id).uniq {|number| number[0]}
+    if @import_item.truck_id.present? && @import_item.truck_id != 0
+      free_trucks << [@import_item.truck.reg_number, @import_item.truck_id] unless @import_item.is_co_loaded
+      alloted << [@import_item.truck.reg_number, @import_item.truck_id] if @import_item.is_co_loaded
     end
-    {free: trucks, alloted: alloted}
+    if @import_item.truck_id == 0
+      third_party_allotted_trucks << [@import_item.truck_number, @import_item.truck_number]
+    end
+    third_party_truck = ["3rd Party Truck", 0]
+    { 
+      free: free_trucks.prepend(third_party_truck).sort_by{|t| t[0]},
+      alloted: alloted.prepend(third_party_truck).sort_by{|t| t[0]},
+      third_party_allotted_trucks: third_party_allotted_trucks.sort_by{|t| t[0]} 
+    }
   end
 
   def shipping_date_divs(import)

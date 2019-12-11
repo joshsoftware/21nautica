@@ -22,8 +22,8 @@ Rails.application.routes.draw do
   match '/paid/delete/Payment/:id' => 'paid#delete_ledger', via: [:delete] 
 
   # readjustment payment received
-  match '/received/delete/Invoice/:id' => 'invoices#delete_ledger', via: [:delete]
-  match '/received/delete/Payment/:id' => 'received#delete_ledger', via: [:delete]
+  match 'delete/Invoice/:id' => 'invoices#delete_ledger', via: [:delete]
+  match 'delete/Payment/:id' => 'received#delete_ledger', via: [:delete]
 
   # readjust payments
   match '/payments/readjust/:id' => 'paid#readjust', as: :readjust, via: [:get]
@@ -62,7 +62,7 @@ Rails.application.routes.draw do
   post '/imports/update'
   post '/import_items/update'
   get '/manual_invoices' => 'invoices#manual_invoices'
-  
+  get 'customer_ledger' => 'received#customer_ledger', as: 'customer_ledger'
   resources :bill_of_ladings, only: [:update] do
     collection do
       get 'search'
@@ -137,6 +137,7 @@ Rails.application.routes.draw do
   resources :received, only: [:new, :show, :create, :index] do
     collection do
       get :outstanding
+      get 'fetch_form_partial', as:'fetch_form'
     end
   end
   resources :invoices, only: [:edit, :update] do
@@ -154,6 +155,10 @@ Rails.application.routes.draw do
   resources :spare_parts do
     collection do
       get :load_sub_categories
+      match :merge, via: [:get, :post]
+      match :merge_content, via: [:get, :post]
+      match :search, via: [:get, :post]
+      match :undo_merge,  via: [:get,:post]
       match :history, via: [:get, :post]
     end
   end
@@ -185,12 +190,20 @@ Rails.application.routes.draw do
   get '/coming_soon' => "welcome#coming_soon"
   resources :expense_heads, except: :destroy
   resources :petty_cashes, except: [:destroy, :edit, :update]
+  resources :fuel_entries, except: [:destroy, :edit, :update]
   get '/mpesaes' => 'petty_cashes#index', as: 'mpesaes'
   get '/mpesaes/new' => 'petty_cashes#new', as: 'new_mpesaes'
   resources :remarks
   resources :mechanics
   resources :breakdown_reasons
   resources :breakdown_managements
+  resources :freezpls
+  resources :truck_pls
+  resources :spare_part_ledgers do
+    collection do
+     match :readjust, via: [:get]
+    end
+  end
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

@@ -47,7 +47,7 @@
               %li.divider{:role => "separator"} 
               %li= link_to 'Vendor Invoices', bills_path
               %li= link_to 'Payments Made', new_paid_path
-              %li= link_to 'Customer Ledger', coming_soon_path
+              %li= link_to 'Customer Ledger', customer_ledger_path
               %li= link_to 'Manual Invoice(customer)', manual_invoices_path
               %li= link_to 'Petty Cash', petty_cashes_path
               %li= link_to 'Mpesa', mpesaes_path
@@ -64,8 +64,10 @@
               %li= link_to 'List Users', users_path 
               %li= link_to 'Report', report_purchase_orders_path
               %li= link_to 'Spare Part History', history_spare_parts_path
-              %li= link_to 'Freez P&L', coming_soon_path
-              %li= link_to 'Truck P&L', coming_soon_path
+              %li= link_to 'Freez P&L', new_freezpl_path
+              %li= link_to 'Truck P&L', truck_pls_path
+              %li= link_to 'Merge Spare Part',merge_spare_parts_path
+              %li= link_to 'Reverse Merge Spare Part',undo_merge_spare_parts_path
         - if user_signed_in? && (current_user.is?('Admin') || current_user.is?('Yard'))
           %li.dropdown
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
@@ -74,8 +76,8 @@
             %ul.dropdown-menu
               %li= link_to 'Req Sheet', req_sheets_path 
               %li= link_to 'Purchase Order', purchase_orders_path
-              %li= link_to 'Fuel Mngt', coming_soon_path
-              %li= link_to 'Spare Parts ledger', coming_soon_path
+              %li= link_to 'Fuel Mngt', fuel_entries_path
+              %li= link_to 'Spare Parts ledger', spare_part_ledgers_path
               %li= link_to 'Job Card Mngt', job_cards_path
         - if user_signed_in? && current_user.is?('Admin')
           %li.dropdown

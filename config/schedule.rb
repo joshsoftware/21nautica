@@ -60,3 +60,6 @@ end
 every '5 1 * * 1-6' do #Every day except Sunday at 1:02
   command 'cd /www/rfs-21nautica/current && RAILS_ENV=production bundle exec rake automated_emails:new_order_summary --silent >> log/cron.log 2>> log/cron_error.log'
 end
+every '30 7,13 * * 1-6' do
+  command 'cd /www/rfs-21nautica/current && RAILS_ENV=production bundle exec rake automated_emails:daily_fuel_ledger --silent >> log/cron.log 2>> log/cron_error.log'
+end
