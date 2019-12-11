@@ -27,7 +27,7 @@ class SparePartLedgersController < ApplicationController
     params[:is_adjustment] = true
     @spare_part_ledger = SparePartLedger.new(spare_part_ledger_params)
     if @spare_part_ledger.save
-      puts "physical stock entry saved - #{@spare_part_ledger.spare_part_id}"
+      Rails.logger.info "physical stock entry saved - #{@spare_part_ledger.spare_part_id}"
       @spare_part_ledger.adjust_physical_stock
       redirect_to spare_part_ledgers_path
     else

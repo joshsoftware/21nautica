@@ -8,7 +8,7 @@ class PurchaseOrderItem < ActiveRecord::Base
   after_destroy :adjust_ledger
 
   def adjust_ledger
-    puts "calling callback in purchase order item for #{self.spare_part_id}"
+    Rails.logger.info "calling callback in purchase order item for #{self.spare_part_id}"
     SparePartLedger.adjust_whole_ledger(self.spare_part_id)
   end  
 end
