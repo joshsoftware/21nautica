@@ -20,7 +20,7 @@
 
 FactoryGirl.define do
   factory :import do |import|
-    sequence(:bl_number) { |bl_number| "BL_#{Time.now.to_i}"}		   
+    sequence(:bl_number) { |bl_number| "BL_#{Time.now.to_i} #{bl_number}"}		   
     to        		   'location 2'
     from      		   'location 1'
     estimate_arrival '10-10-2014'
