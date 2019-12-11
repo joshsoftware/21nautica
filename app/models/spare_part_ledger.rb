@@ -42,7 +42,7 @@ class SparePartLedger < ActiveRecord::Base
 
   def adjust_physical_stock
     if inward_outward == "inward"
-      PurchaseOrderItem.create(spare_part_id: spare_part_id, quantity: quantity)
+      PurchaseOrderItem.create(spare_part_id: spare_part_id, quantity: quantity, price: 0)
     elsif inward_outward == "outward"
       ReqPart.create(spare_part_id: spare_part_id, quantity: quantity, price: 0, mechanic_id: 0)
     end
