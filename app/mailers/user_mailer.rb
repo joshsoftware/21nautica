@@ -127,6 +127,13 @@ class UserMailer < ActionMailer::Base
     File.delete("#{Rails.root}/tmp/Petty Cash Ledger_#{Date.yesterday}.xlsx")
   end
 
+  def fuel_ledger
+    email="prashant.bangar@joshsoftware.com"
+    attachments["Fuel_Ledger_#{Date.yesterday}.xlsx"] = File.read("#{Rails.root}/tmp/Fuel_Ledger_#{Date.yesterday}.xlsx")
+    mail(to:email,subject:"Fuel_Ledger_#{Date.yesterday}")
+    File.delete("#{Rails.root}/tmp/Fuel_Ledger#{Date.yesterday}.xlsx")
+  end
+
   def non_truck_allocated_container_report
     #set internal emails to emails variables
     emails = "kiranmahale@joshsoftware.com"
