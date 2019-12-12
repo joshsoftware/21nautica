@@ -43,15 +43,20 @@
     $("#filter_by_date_select").daterangepicker({
     locale: { format: 'YYYY-MM-DD',
               separator: ','},
+    autoUpdate:false,
     cancelLabel: 'Clear',
     ranges:#{get_date_range(controller)},
     },
     function(start, end, label) {
       custom_label = label
-    }).on("apply.daterangepicker",function(){
+    })
+    $("#filter_by_date_select").val("All Time")
+    $(".ranges ul li")
+    $("#filter_by_date_select").on("apply.daterangepicker",function(){
       if(custom_label != 'Custom Range'){
         $(this).val(custom_label)
       } 
     })
+
   })
   
