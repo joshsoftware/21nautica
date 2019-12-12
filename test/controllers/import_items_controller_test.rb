@@ -32,18 +32,54 @@ class ImportItemsControllerTest < ActionController::TestCase
   test "should update import item status" do
     get :index
     assert_response :success
+    @import_item1.import_id = (FactoryGirl.create :import_with_dates).id
     @import_item1.save!
-    @import_item1.truck_id = 0
-    @import_item1.truck_number = 'TR2345'
+    truck = FactoryGirl.create :truck
 
-    xhr :post, :updateStatus, import_item: {status: "allocate_truck", "remarks"=>"okay", truck_number: 'TR1'}, id: @import_item1.id
+    xhr :post, :updateStatus, import_item: {status: "allocate_truck", truck_id: truck.id}, id: @import_item1.id
+    assert_equal "truck_allocated", @import_item1.reload.status
+    xhr :post, :updateStatus, import_item: { status: "ready_to_load",
+                exit_note_received: "1", expiry_date: Date.today.to_s
+              }, id: @import_item1.id
+    assert_equal "ready_to_load", @import_item1.reload.status
     xhr :post, :updateStatus, import_item: {status: "loaded_out_of_port", "remarks"=>"okay"}, id: @import_item1.id
-    xhr :post, :updateStatus, import_item: {status: "arrived_at_malaba", "remarks"=>"okay"}, id: @import_item1.id
-    xhr :post, :updateStatus, import_item: {status: "departed_from_malaba", "remarks"=>"okay"}, id: @import_item1.id
-    xhr :post, :updateStatus, import_item: {status: "arrived_at_kampala", "remarks"=>"okay"}, id: @import_item1.id
-    xhr :post, :updateStatus, import_item: {status: "truck_released", "remarks"=>"okay"}, id: @import_item1.id
+    assert_equal "loaded_out_of_port", @import_item1.reload.status
+    xhr :post, :updateStatus, import_item: {status: "arrived_at_border"}, id: @import_item1.id
+    assert_equal "arrived_at_border", @import_item1.reload.status
+    xhr :post, :updateStatus, import_item: {status: "departed_from_border"}, id: @import_item1.id
+    assert_equal "departed_from_border", @import_item1.reload.status
+    xhr :post, :updateStatus, import_item: {status: "arrived_at_destination"}, id: @import_item1.id
+    assert_equal "arrived_at_destination", @import_item1.reload.status
+    xhr :post, :updateStatus, import_item: {status: "truck_released", return_status: "Empty Returned"}, id: @import_item1.id
+    assert_equal "delivered", @import_item1.reload.status
     assert_template :updateStatus
   end
+
+  test "can not change status to truck allocated if truck is not allocated" do
+    get :index
+    assert_response :success
+    @import_item1.import_id = (FactoryGirl.create :import_with_dates).id
+    @import_item1.save!
+    truck = FactoryGirl.create :truck
+    exp_resp = "$('#statusModal .alert').remove();\n$('#statusModal .modal-body').append(\"<div class= 'alert alert-danger'> Add Truck Number first !</div>\")\n"
+    xhr :post, :updateStatus, import_item: {status: "allocate_truck"}, id: @import_item1.id
+    assert_equal exp_resp, response.body
+  end
+
+  test "can not loaded_out_of_port if all docs not received" do
+    truck = FactoryGirl.create :truck
+    @import_item1.import_id = (FactoryGirl.create :import, entry_type: "im4").id
+    @import_item1.save!
+    xhr :post, :updateStatus, import_item: {status: "allocate_truck", truck_id: truck.id}, id: @import_item1.id
+    assert_equal "truck_allocated", @import_item1.reload.status
+    xhr :post, :updateStatus, import_item: { status: "ready_to_load",
+                exit_note_received: "1", expiry_date: Date.today.to_s
+              }, id: @import_item1.id
+    assert_equal "ready_to_load", @import_item1.reload.status
+    xhr :post, :updateStatus, import_item: {status: "loaded_out_of_port", "remarks"=>"okay"}, id: @import_item1.id
+    exp_resp = "$('#statusModal .alert').remove();\n$('#statusModal .modal-body').append(\"<div class= 'alert alert-danger'> All documents are not received yet for this order</div>\")\n"
+    assert_equal exp_resp, response.body
+  end  
 
   test "should get history" do
     get :history
@@ -117,6 +153,13 @@ class ImportItemsControllerTest < ActionController::TestCase
                           value: 'Mansons'}
     @import_item2.reload
     assert_equal 'Mansons', @import_item2.transporter_name
+  end
+
+  test "Should update_empty_container " do
+    import_item = FactoryGirl.create :import_item, status: "delivered"
+    xhr :post, :update_empty_container, import_item: { interchange_number: 'abcd', close_date: Date.today.to_s}, id: import_item.id
+    import_item.reload
+    assert_equal 'abcd', import_item.interchange_number
   end
 
 end
