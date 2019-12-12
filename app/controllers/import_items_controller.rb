@@ -1,4 +1,5 @@
 class ImportItemsController < ApplicationController
+  include ImportItemConcern
   before_action :set_import_item, only: [:edit, :update_loading_date, :updateContext, :updateStatus, :edit_close_date, :show_info, :update_close_date, :history_info]
 
   def index
@@ -51,37 +52,7 @@ class ImportItemsController < ApplicationController
 
   def updateStatus
     @import = @import_item.import
-    initial_status = @import_item.status
-    remark_params = params[:import_item]
-    params[:import_item][:truck_number] = nil if params[:import_item][:truck_number].blank?
-    @import_item.attributes = import_item_params.except('status')
-    @import_item.remarks.create(desc: remark_params[:remarks], date: Date.today, category: "external") unless remark_params[:remarks].blank?
-    status = import_item_params[:status].downcase.gsub(' ', '_')
-    if @import_item.status == "under_loading_process" && @import_item.truck
-      @import_item.allocate_truck
-      @import_item.save
-    elsif @import_item.status == "truck_allocated" && @import_item.exit_note_received
-      if @import_item.import.entry_type == "wt8" && @import_item.expiry_date
-        @import_item.ready_to_load
-        @errors = @import_item.errors.full_messages
-        @import_item.save
-      elsif @import_item.import.entry_type == "im4"
-        @import_item.ready_to_load
-        @errors = @import_item.errors.full_messages
-        @import_item.save
-      else
-        @import_item.save
-      end
-    else
-      begin
-        @import_item.send("#{status}!".to_sym) if status != @import_item.status
-        @errors = @import_item.errors.full_messages
-        @import_item.save
-      rescue
-        @errors = @import_item.errors.full_messages
-        @import_item.save
-      end
-    end
+    update_status
   end
 
   def history
@@ -120,7 +91,7 @@ class ImportItemsController < ApplicationController
 
   def import_item_params
     params.permit(:id)
-    params.require(:import_item).permit(:truck_number, :status, :context, :transporter_name, :transporter, :truck_id, :last_loading_date, :exit_note_received, :expiry_date, :is_co_loaded, :return_status, :dropped_location)
+    params.require(:import_item).permit(:truck_number, :status, :context, :transporter_name, :transporter, :truck_id, :last_loading_date, :exit_note_received, :expiry_date, :is_co_loaded, :return_status, :dropped_location, :previous_month_entry)
   end
 
   def import_item_update_params

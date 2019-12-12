@@ -12,7 +12,7 @@ FactoryGirl.define do
   end
 
   factory :import_item, class: "ImportItem" do
-  	sequence(:container_number) { |con| "container_number_#{con}" }
+  	sequence(:container_number) { |con| "container_number_#{con}_#{Time.now.to_i}" }
     association :import
     status 'truck_allocated'
     association :truck

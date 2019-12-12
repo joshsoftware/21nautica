@@ -8,6 +8,7 @@ class ImportItemsControllerTest < ActionController::TestCase
     @import_item1 = FactoryGirl.create :import_item1
     @import_item2 = FactoryGirl.create :import_item2
     @import_item3 = FactoryGirl.create :import_item3
+    @import_item1.update_column(:import_id, @import.id)
     @vendor = FactoryGirl.create :vendor
     @import.status = "ready_to_load"
     @import.save
@@ -31,16 +32,13 @@ class ImportItemsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     @import_item1.save!
-    assert_raises(AASM::InvalidTransition) do
-      xhr :post, :updateStatus, import_item: {status: "loaded_out_of_port", "remarks"=>"okay"}, id: @import_item1.id
-    end
     @import_item1.truck_number = 'TR2345'
-    xhr :post, :updateStatus, import_item: {status: "allocate_truck", "remarks"=>"okay", truck_number: 'TR1'}, id: @import_item1.id
-    xhr :post, :updateStatus, import_item: {status: "loaded_out_of_port", "remarks"=>"okay"}, id: @import_item1.id
-    xhr :post, :updateStatus, import_item: {status: "arrived_at_malaba", "remarks"=>"okay"}, id: @import_item1.id
-    xhr :post, :updateStatus, import_item: {status: "departed_from_malaba", "remarks"=>"okay"}, id: @import_item1.id
-    xhr :post, :updateStatus, import_item: {status: "arrived_at_kampala", "remarks"=>"okay"}, id: @import_item1.id
-    xhr :post, :updateStatus, import_item: {status: "truck_released", "remarks"=>"okay"}, id: @import_item1.id
+    xhr :post, :updateStatus, import_item: {status: "allocate_truck", truck_number: 'TR1'}, id: @import_item1.id
+    xhr :post, :updateStatus, import_item: { status: "loaded_out_of_port" }, id: @import_item1.id
+    xhr :post, :updateStatus, import_item: { status: "arrived_at_malaba" }, id: @import_item1.id
+    xhr :post, :updateStatus, import_item: { status: "departed_from_malaba" }, id: @import_item1.id
+    xhr :post, :updateStatus, import_item: { status: "arrived_at_kampala" }, id: @import_item1.id
+    xhr :post, :updateStatus, import_item: { status: "truck_released" }, id: @import_item1.id
     assert_template :updateStatus
   end
 
@@ -118,6 +116,24 @@ class ImportItemsControllerTest < ActionController::TestCase
                           value: 'Mansons'}
     @import_item2.reload
     assert_equal 'Mansons', @import_item2.transporter_name
+  end
+
+  test "should update trip date" do
+    trip_import_item = FactoryGirl.create :import_item
+    trip_import_item.import_id = (FactoryGirl.create :import_with_dates).id
+    truck = FactoryGirl.create :truck
+    xhr :post, :updateStatus, import_item: {status: "allocate_truck", truck_id: truck.id}, id: trip_import_item.id
+    xhr :post, :updateStatus, import_item: { status: "ready_to_load", exit_note_received: "1", expiry_date: Date.today }, id: trip_import_item.id
+    xhr :post, :updateStatus, import_item: { status: "loaded_out_of_port",
+        previous_month_entry: "1" }, id: trip_import_item.id
+    # xhr :post, :updateStatus, import_item: { status: "arrived_at_malaba" }, id: @import_item1.id
+    # xhr :post, :updateStatus, import_item: { status: "departed_from_malaba" }, id: @import_item1.id
+    # xhr :post, :updateStatus, import_item: { status: "arrived_at_kampala" }, id: @import_item1.id
+    # xhr :post, :updateStatus, import_item: { status: "truck_released" }, id: @import_item1.id
+    p trip_import_item
+    p trip_import_item.status_date
+    assert_template :updateStatus
+    assert_equal Date.today, trip_import_item.status_date.trip_date
   end
 
 end
