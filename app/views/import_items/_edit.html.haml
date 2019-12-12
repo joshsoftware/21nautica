@@ -4,7 +4,7 @@
   - status << ['Allocated Truck', @import_item.aasm.events.join]
 - else
   - status << [@import_item.aasm.events.join.titleize, @import_item.aasm.events.join]
-= simple_form_for @import_item, url: updateStatus_import_item_path(@import_item), method: :post, html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}} do |f|
+= simple_form_for @import_item, url: updateStatus_import_item_path(@import_item), method: :post, html: { class: 'form-horizontal status_form'}, remote: true do |f|
   .modal-content
     .modal-header
       = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
@@ -91,6 +91,8 @@
   $("#import_item_status").on 'change', (event) ->
     if event.target.selectedOptions[0].value == "truck_released"
       $(".return_status_field").show()
+    if event.target.selectedOptions[0].value == "loaded_out_of_port"
+      isPreviousMonthEntry()
 
   $("#import_item_return_status").on 'change', (event) ->
     if event.target.selectedOptions[0].value == "Dropped at Customer"
@@ -118,3 +120,18 @@
       $(".import_item_truck_number").show().children("input select").prop("disabled", false)
     else
       $(".import_item_truck_number").hide().children("input select").prop("disabled", true)
+
+  isPreviousMonthEntry = () ->
+    d= new Date().getDate()
+    if d < 5
+      ans = confirm("Should we consider this as previous month trip?")
+      if ans
+        $('<input>').attr({
+            type: 'hidden',
+            id: 'import_item_previous_month_entry',
+            name: 'import_item[previous_month_entry]',
+            value: "1"
+        }).appendTo('.status_form');
+      else
+        $("#import_item_previous_month_entry").remove()
+

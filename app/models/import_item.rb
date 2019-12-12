@@ -21,6 +21,7 @@ class ImportItem < ActiveRecord::Base
   include EspinitaPatch
   include MovementsHelper
   include Remarkable
+  attr_accessor :previous_month_entry
 
   enum return_status: ["Empty Returned", "Dropped at Customer"]
   belongs_to :import
@@ -307,6 +308,13 @@ class ImportItem < ActiveRecord::Base
       status_date.update_attributes(status.to_sym => Date.today)
     else
       create_status_date(status.to_sym => Date.today)
+    end
+    if status == "loaded_out_of_port"
+      if self.previous_month_entry.present?
+        status_date.update_attributes(:trip_date => Time.now.prev_month.end_of_month.to_date)
+      else
+        status_date.update_attributes(:trip_date => Date.today)
+      end
     end
   end
 
