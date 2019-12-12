@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ImportItemsController < ApplicationController
   include ImportItemConcern
   before_action :set_import_item, only: [:edit, :update_loading_date, :updateContext, :updateStatus, :edit_close_date, :show_info, :update_close_date, :history_info]

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddingPoChanges < ActiveRecord::Migration
   def change
     add_column :imports, :bl_received_at, :date

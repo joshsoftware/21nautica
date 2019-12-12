@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddIndexToMovementsOnAssociationFields < ActiveRecord::Migration
   def change
     add_index :movements, :bill_of_lading_id

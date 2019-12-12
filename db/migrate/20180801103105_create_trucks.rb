@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateTrucks < ActiveRecord::Migration
   def change
     create_table :trucks do |t|

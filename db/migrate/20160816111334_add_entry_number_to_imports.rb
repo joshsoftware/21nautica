@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddEntryNumberToImports < ActiveRecord::Migration
   def change
     add_column :imports, :entry_number, :string

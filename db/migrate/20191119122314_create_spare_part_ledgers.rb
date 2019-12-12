@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateSparePartLedgers < ActiveRecord::Migration
   def change
     create_table :spare_part_ledgers do |t|

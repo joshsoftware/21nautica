@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateFuelStocks < ActiveRecord::Migration
   def change
     create_table :fuel_stocks do |t|
