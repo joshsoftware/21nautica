@@ -2,13 +2,13 @@ require 'test_helper'
 
 class RepairHeadTest < ActiveSupport::TestCase
   setup do
-    @repair_head = FactoryGirl.create :repair_head, name: 'stater'
+    @repair_head = FactoryGirl.create :repair_head
   end
 
   test 'should not create repair head with same name' do
-    repair_head = RepairHead.new
-    repair_head.name = 'stater'
-    assert_not repair_head.save
-    assert repair_head.errors.messages[:name].include?('Repair_Head with same name already exists')
+    name = RepairHead.first.name
+    repair_head = RepairHead.new(name:name)
+    refute repair_head.valid?
+    assert_not_nil repair_head.errors[:name]
   end
 end

@@ -9,6 +9,6 @@ class ExpenseHead < ActiveRecord::Base
   private
 
     def strip_whitespaces
-      self.name = self.name.strip.squish
+      self.name = self.name.strip.squish if name.present?
     end
 end

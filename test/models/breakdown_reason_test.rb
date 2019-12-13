@@ -12,7 +12,8 @@ class BreakdownReasonTest < ActiveSupport::TestCase
   end
 
   test 'Should not accept duplicate name' do
-    breakdown_reason = BreakdownReason.create name: 'break   drum'
+    name = BreakdownReason.first.name
+    breakdown_reason = BreakdownReason.create name:name
     assert_not breakdown_reason.save
     assert breakdown_reason.errors.messages[:name].include?('Reason is already present')
   end
