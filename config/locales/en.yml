@@ -41,3 +41,5 @@ en:
   breakdown_details:
     'saved' : 'Breakdown Details Saved Successfully'
     'update' : 'Breakdown Details Updated Successfully'
+  fuel_entry:
+    'saved': 'Fuel Entry Saved Successfully'

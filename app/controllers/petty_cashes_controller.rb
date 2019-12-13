@@ -1,6 +1,6 @@
 # Petty Cash Mangement Controller
 class PettyCashesController < ApplicationController
-  before_action :set_date, :set_expense_head, :set_trucks ,only: %i[new create]
+  before_action :set_date, :set_expense_head, :set_trucks ,only: %i[new create tabular_partial]
   def index
     if params[:date_filter] && params[:date_filter][:date].present?
       start_date, end_date = params[:date_filter][:date].split(' - ')
@@ -16,19 +16,34 @@ class PettyCashesController < ApplicationController
     @petty_cash = PettyCash.new
   end
 
-  def create
-    @petty_cash = current_user.petty_cashes.build(petty_cash_params)
-    if @petty_cash.save
-      if params[:petty_cash][:account_type].eql?('Cash')
-        flash[:notice] = I18n.t 'petty_cash.saved'
-        redirect_to :new_petty_cash
-      else
-        flash[:notice] = 'Mpesa Saved'
-        redirect_to :new_mpesaes
-      end 
-    else
-      render 'new'
+
+  def tabular_partial
+    @count = params[:count].present? ? params[:count].to_i + 1 : 0
+    @key = params[:key]
+    respond_to do |format|
+      format.js {  }
     end
+  end
+
+  def save_data(petty_cash)
+    petty_cash[:account_type] = params[:petty_cash][:account_type]
+    @petty_cash = current_user.petty_cashes.build(petty_cash)
+    @petty_cash.save
+  end
+
+  def create
+    values = params[:petty_cash].except(:account_type).values
+    sorted_array = values.sort_by{|k| k['date']}
+    petty_cash_hash = sorted_array.each {|k| k[:account_type]=params[:petty_cash][:account_type]}
+    @petty_cash = current_user.petty_cashes.create(petty_cash_hash)
+    PettyCash.adjust_balance(params[:petty_cash][:account_type]) 
+    if params[:petty_cash][:account_type].eql?('Cash')
+      flash[:notice] = I18n.t 'petty_cash.saved'
+      redirect_to :petty_cashes
+    else
+      flash[:notice] = 'Mpesa Saved'
+      redirect_to :mpesaes
+    end 
   end
 
   private
@@ -44,7 +59,7 @@ class PettyCashesController < ApplicationController
   
 
   def set_date
-    key = request.original_url.split(/[\/,?]/).include?('petty_cashes') ? 'Cash' : 'Bank'
+    key = params[:key].present? ? params[:key]: request.original_url.split(/[\/,?]/).include?('petty_cashes') ? 'Cash' : 'Bank'
     @date = PettyCash.of_account_type(key).last.try(:date) || Date.current.beginning_of_year-10.year
   end
 
@@ -58,16 +73,15 @@ class PettyCashesController < ApplicationController
 
   def set_records_with_date(key,start_date, end_date)
     PettyCash.of_account_type(key).having_records_between(start_date, end_date)
-                      .order(:id)
+                      .order(:date, :id)
                       .includes(:truck, :expense_head, :created_by)
                       .paginate(page: params[:page], per_page: 1000)
   end
 
   def set_records_with_default_date(key)
-    PettyCash.of_account_type(key).having_records_between(Date.today-7.days, Date.today).order(id: :desc)
+    PettyCash.of_account_type(key).having_records_between(Date.today-7.days, Date.today).order(:id,date: :desc)
     .includes(:truck, :expense_head, :created_by)
     .paginate(page: params[:page], per_page: 1000)    
   end
 
 end
-

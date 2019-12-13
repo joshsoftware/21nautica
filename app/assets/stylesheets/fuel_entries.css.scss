@@ -1,0 +1,17 @@
+
+label[for="fuel_entry_purchased_dispensed_purchase"], label[for="fuel_entry_purchased_dispensed_dispense"] {
+  margin-left: 7px;
+}
+.fuel_entry_office_vehicle label {
+  text-align: left !important;
+}
+.purchase-item {
+  display: none;
+}
+.fuel-entry-error {
+  color: orangered !important;
+}
+
+#fuel_entries_table_paginate .ui-button {
+  padding: 4px !important;
+}
