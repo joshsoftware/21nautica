@@ -12,7 +12,7 @@ class BillsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:bills)
     assert_template layout: "application"
-    assert_select 'table#bills', :count => 1
+    assert_select 'table#bills_table', 1
   end
 
   test "should get new" do
