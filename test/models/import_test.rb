@@ -91,7 +91,7 @@ class ImportTest < ActiveSupport::TestCase
   end
 
   test "Set bl received date when bl received type is original_telex" do
-    import = Import.new(to: 'location 2', from: 'location 1', estimate_arrival: '10-10-2014',
+    import = Import.new(to: 'location 2', from: 'location 1', estimate_arrival: '10-10-2021',
      equipment: '20GP', quantity: 3, rate_agreed: 3000, weight: 30,
      bl_received_type: "original_telex", work_order_number: 1234, bl_number: "test#{DateTime.now.to_i}")
     import.save

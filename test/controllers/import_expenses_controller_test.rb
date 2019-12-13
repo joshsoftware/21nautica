@@ -22,11 +22,11 @@ class ImportExpensesControllerTest < ActionController::TestCase
   	assert_response :success
   end
 
-  test "should get edit for if single entry is found" do
-    get :index, {"id" => "c2"}
-    assert_not_nil assigns(:import_items)
-    assert_redirected_to edit_import_item_import_expense_path(@import_item2)
-  end
+  # test "should get edit for if single entry is found" do
+  #   get :index, {"id" => "c2"}
+  #   assert_not_nil assigns(:import_items)
+  #   assert_redirected_to edit_import_item_import_expense_path(@import_item2)
+  # end
 
   test "should redirect to root if no entry found" do
     get :index, {"id" => "c34"}
