@@ -71,7 +71,6 @@ module Report
           p "************ Processing Customer #{customer.name} **********"
           daily_report = Report::DailyImport.new
           daily_report.create(customer)
-
           UserMailer.mail_report(customer, 'import').deliver
           #******** creating Report through workers*********************
           #DailyReportWorker.perform_async(customer.id, 'import')
