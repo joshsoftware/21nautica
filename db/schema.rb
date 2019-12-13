@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191119122314) do
+ActiveRecord::Schema.define(version: 20191211111819) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,6 +91,9 @@ ActiveRecord::Schema.define(version: 20191119122314) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "sales_rep_name"
+    t.string   "account_emails"
+    t.string   "operation_emails"
+    t.string   "management_emails"
   end
 
   create_table "debit_notes", force: true do |t|
@@ -248,6 +251,7 @@ ActiveRecord::Schema.define(version: 20191119122314) do
     t.integer  "return_status"
     t.date     "expiry_date"
     t.boolean  "is_co_loaded",          default: false
+    t.string   "interchange_number"
   end
 
   add_index "import_items", ["container_number"], name: "index_import_items_on_container_number", using: :btree
@@ -299,6 +303,13 @@ ActiveRecord::Schema.define(version: 20191119122314) do
   add_index "imports", ["bill_of_lading_id"], name: "index_imports_on_bill_of_lading_id", using: :btree
   add_index "imports", ["clearing_agent_id"], name: "index_imports_on_clearing_agent_id", using: :btree
   add_index "imports", ["customer_id"], name: "index_imports_on_customer_id", using: :btree
+
+  create_table "internal_emails", force: true do |t|
+    t.integer  "email_type"
+    t.string   "emails"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "invoices", force: true do |t|
     t.string   "number"

@@ -204,6 +204,7 @@ Rails.application.routes.draw do
      match :readjust, via: [:get]
     end
   end
+  resources :internal_emails
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

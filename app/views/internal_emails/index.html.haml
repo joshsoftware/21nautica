@@ -1,0 +1,13 @@
+%h1 Internal Emails
+= link_to "Add Iternal Email",new_internal_email_path, class: 'btn btn-primary pull-right'
+%table.table{id: 'internal_email_table', class: 'internal_email_table'}
+  %thead
+    %th Email Type
+    %th Emails
+    %th Action    
+  %tbody
+    - @internal_emails.each do |internal_email|
+      %tr
+        %td= internal_email.email_type
+        %td= internal_email.emails
+        %td= link_to "Edit",edit_internal_email_path(internal_email), class: 'btn btn-primary'

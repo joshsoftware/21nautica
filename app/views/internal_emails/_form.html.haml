@@ -1,0 +1,23 @@
+.col-md-12
+= simple_form_for(@internal_email, html: { id: 'add_new_internal_email', class: 'form-horizontal'},defaults: {input_html: {class: 'form-control'}}) do |f|
+  .well
+    .row
+      .col-md-6
+        = f.input :email_type, label: 'Internal Email Type', collection:internal_emails, include_blank: false, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "Email Type is required."}
+    .row
+      .col-md-6
+        =f.input :emails, label:'emails',as: :text, hint: 'Enter comma seperated emails. All emails will go to these email ids', input_html: {:"data-validation" => "email", :"data-validation-error-msg" => "Enter Valid Emails."}
+    .row
+      .col-md-6
+        = f.submit 'save', class: 'btn btn-primary'
+        = link_to 'Back',internal_emails_path, class: 'btn btn-primary'
+
+:javascript
+  window.validate_form = function(){
+    $.validate({
+      form: '#add_new_internal_email'
+
+    });
+  }
+  
+  validate_form();
