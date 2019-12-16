@@ -7,12 +7,7 @@ class PettyCashTest < ActiveSupport::TestCase
 
   test 'should transaction amount, transaction_type, date Must be present' do
     petty_cash = PettyCash.new
-    assert_not petty_cash.save
-    assert petty_cash.errors.messages[:transaction_amount]
-                     .include?("can't be blank")
-    assert petty_cash.errors.messages[:transaction_type]
-                     .include?("can't be blank")
-    assert petty_cash.errors.messages[:date]
-                     .include?("can't be blank")
+    refute petty_cash.valid?
+    assert_not_nil petty_cash.errors
   end
 end
