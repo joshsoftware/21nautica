@@ -2,17 +2,23 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 .received_table_class{
+  .date{
+    width: 100%;
+  }
+  .amount{
+    text-align: left;
+  }
+  .customers{
+    width: 100%;
+  }
+  .date_of_payment{
+    width:10%
+  }
+  .customers{
+    width:100%
+  }
   .customer_name{
-    width:250px;
-  }
-  td input[type="text"]{
-    width:100px;
-  }
-  td.reference input[type="text"]{
-    width:150px;
-  }
-  td.amount input[type="number"]{
-    width:150px;
+    width:30%
   }
 }
 select.customers{

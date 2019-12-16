@@ -35,6 +35,7 @@
 :javascript
   payments = #{@payments}
   if (payments != 0) {
+    var all_time_payments = payments
     PaymentFilterInit();
   }
   $('.readjust_tooltip').tooltip();
