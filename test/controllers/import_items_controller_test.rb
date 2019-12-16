@@ -36,7 +36,6 @@ class ImportItemsControllerTest < ActionController::TestCase
     @import_item1.import_id = (FactoryGirl.create :import_with_dates).id
     @import_item1.save!
     truck = FactoryGirl.create :truck
-
     xhr :post, :updateStatus, import_item: {status: "allocate_truck", truck_id: truck.id}, id: @import_item1.id
     assert_equal "truck_allocated", @import_item1.reload.status
     xhr :post, :updateStatus, import_item: { status: "ready_to_load",
@@ -159,11 +158,12 @@ class ImportItemsControllerTest < ActionController::TestCase
   test "should update trip date" do
     trip_import_item = FactoryGirl.create :import_item
     trip_import_item.import_id = (FactoryGirl.create :import_with_dates).id
+    trip_import_item.save!
     truck = FactoryGirl.create :truck
     xhr :post, :updateStatus, import_item: {status: "allocate_truck", truck_id: truck.id}, id: trip_import_item.id
     xhr :post, :updateStatus, import_item: { status: "ready_to_load", exit_note_received: "1", expiry_date: Date.today }, id: trip_import_item.id
-    xhr :post, :updateStatus, import_item: { status: "loaded_out_of_port",
-        previous_month_entry: "1" }, id: trip_import_item.id
+    xhr :post, :updateStatus, import_item: { status: "loaded_out_of_port" }, id: trip_import_item.id
+    trip_import_item.reload
     assert_template :updateStatus
     assert_equal Date.today, trip_import_item.status_date.trip_date
   end

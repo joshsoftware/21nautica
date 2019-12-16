@@ -55,5 +55,6 @@ FactoryGirl.define do
     return_location "Return location"
     entry_type "wt8"
     entry_date Date.today
+    status 'ready_to_load'
   end
 end
