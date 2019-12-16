@@ -1,14 +1,14 @@
 FactoryGirl.define do
   factory :import_item1, class: "ImportItem" do
-  	container_number	'c1'
+  	sequence(:container_number) { |n| "CONT1#{n}" }
   end
 
   factory :import_item2, class: "ImportItem" do
-    container_number	'c2'
+    sequence(:container_number) { |n| "CONT2#{n}" }
   end
 
   factory :import_item3, class: "ImportItem" do
-  	container_number	'c3'
+  	sequence(:container_number) { |n| "CONT3#{n}" }
   end
 
   factory :import_item, class: "ImportItem" do

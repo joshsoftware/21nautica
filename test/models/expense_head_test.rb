@@ -5,7 +5,7 @@ class ExpenseHeadTest < ActiveSupport::TestCase
     @expense_head = FactoryGirl.create :expense_head
   end
 
-  test 'Should name is presenset' do
+  test 'Should name is present' do
     expense_head = ExpenseHead.create
     assert_not expense_head.save
     assert expense_head.errors.messages[:name].include?("can't be blank")

@@ -29,36 +29,15 @@ class ImportsControllerTest < ActionController::TestCase
   end
 
   test "should get index" do
-    get :index
+    destination = 'location 2'
+    FactoryGirl.create :import
+    count = Import.not_ready_to_load.custom_shipping_dates_not_present.where(to: destination).count
+    get :index, {destination: destination}
     assert_not_nil assigns(:imports)
     assert_response :success
     assert_template layout: "application"
-    assert_select 'table#imports_table', :count => 1
+    assert_select 'table#imports_table tr', count
   end
-
-  test "should update work_order_number" do
-    xhr :post, :update, { id: @import.id,
-                    columnName: "work order number",
-                    value: "WON"
-                    }
-    xhr :post, :retainStatus, {id: @import.id}
-    @import.reload
-    assert_equal "WON", @import.work_order_number
-  end
-
-  # following test needed later
-  # test "should update import status to ready_to_load if work_order_number present" do
-  #   get :index
-  #   assert_response :success
-  #   @import.update(work_order_number: "wo1")
-  #   xhr :post, :updateStatus, import: {status: "original_documents_received", "remarks"=>"okay"}, id: @import.id
-  #   xhr :post, :updateStatus, import: {status: "container_discharged", "remarks"=>"okay"}, id: @import.id
-  #   xhr :post, :updateStatus, import: {status: "ready_to_load", "remarks"=>"okay"}, id: @import.id
-  #   assert_template :updateStatus
-  #   @import.reload
-  #   assert_equal "ready_to_load", @import.status
-  #   assert_select "table tr", :count => 0
-  # end
 
   test "should get new" do
     get :new

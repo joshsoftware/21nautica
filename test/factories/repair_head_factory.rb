@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :repair_head, class: 'RepairHead' do
-    name 'star'+Time.now.to_s
+    sequence(:name) { |name| "repair_head_#{Time.now.to_i} #{name}"}
     is_active true
   end
 end

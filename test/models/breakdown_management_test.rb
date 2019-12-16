@@ -11,7 +11,6 @@ class BreakdownManagementTest < ActiveSupport::TestCase
     assert breakdown_management.errors.messages[:location].include?("can't be blank")
     assert breakdown_management.errors.messages[:truck_id].include?("can't be blank")
     assert breakdown_management.errors.messages[:date].include?("can't be blank")
-    assert breakdown_management.errors.messages[:breakdown_reason_id].include?("can't be blank")
   end
 
   test 'Should sending date be nil when parts_required is true' do

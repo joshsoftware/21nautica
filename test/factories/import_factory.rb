@@ -20,7 +20,7 @@
 
 FactoryGirl.define do
   factory :import do |import|
-    sequence(:bl_number) { |bl_number| "BL_#{Time.now.to_i}_#{bl_number}"}
+    sequence(:bl_number) { |bl_number| "BL_#{Time.now.to_i} #{bl_number}"}
     to        		   'location 2'
     from      		   'location 1'
     estimate_arrival '10-10-2014'
@@ -32,8 +32,9 @@ FactoryGirl.define do
     association				:customer
     work_order_number 1234
   end
-  factory :import_with_dates, class: "Import" do
-    sequence(:bl_number) { |bl_number| "BL_#{bl_number}_#{Time.now.to_i}"}
+
+  factory :import_with_dates, class: "Import" do |import|
+    sequence(:bl_number) { |bl_number| "BL_#{Time.now.to_i} #{bl_number}"}
     to                 'location 2'
     from               'location 1'
     estimate_arrival '10-10-2014'
@@ -44,15 +45,15 @@ FactoryGirl.define do
     bl_received_type "copy"
     association             :customer
     work_order_number 1234
+    entry_number "CSD"
     bl_received_at Date.today
     charges_received_at Date.today
     charges_paid_at Date.today
     do_received_at Date.today
-    pl_received_at Date.today
-    gf_return_date Date.today
-    return_location "2323"
     rotation_number "S123"
-    entry_type 1
+    gf_return_date Date.today
+    return_location "Return location"
+    entry_type "wt8"
     entry_date Date.today
   end
 end

@@ -14,9 +14,10 @@ class FuelEntryTest < ActiveSupport::TestCase
   end
 
   test "give error message id if Vehicle or truck is not present not in adjustment entry" do
+    FuelStock.create(rate: 100, quantity: 100, balance: 100, date: Date.today)
     entry = FuelEntry.new(date: Date.today, quantity: 2, purchased_dispensed: "dispense")
     entry.save
-    assert entry.errors.full_messages.include?("Either truck or vehicle must be present")
+    assert entry.errors.full_messages.include?("Either truck or office vehicle must be present")
   end
 
   test "#check_fuel_entry_date" do
