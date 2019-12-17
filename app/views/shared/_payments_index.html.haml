@@ -1,8 +1,9 @@
 %table.table.table-hover.table-bordered#payment_details_table
-  %h4.col-sm-4= @header.name
-  %div.col-sm-3
-    = select_tag(:filter_by_days_select, options_for_select(get_date_range(controller_name)), 
-        class: "form-control")
+  %h4.col-sm-3= @header.name
+  %div.col-sm-1.mt-10
+    = label_tag "Date Range"
+  %div.col-sm-2
+    = text_field_tag :filter_by_date_select,date_filter_parameters(controller_name), as: :string, class:"form-control"
   %div.col-sm-1
     %a.glyphicon.glyphicon-download-alt{href: "#{received_path(@header.id)}"} Download
   %div.col-sm-1
@@ -34,7 +35,29 @@
 :javascript
   payments = #{@payments}
   if (payments != 0) {
+    var all_time_payments = payments
     PaymentFilterInit();
   }
-
   $('.readjust_tooltip').tooltip();
+  $(document).ready(function(){
+    var custom_label = ""
+    $("#filter_by_date_select").daterangepicker({
+    locale: { format: 'YYYY-MM-DD',
+              separator: ','},
+    autoUpdate:false,
+    cancelLabel: 'Clear',
+    ranges:#{get_date_range(controller)},
+    },
+    function(start, end, label) {
+      custom_label = label
+    })
+    $("#filter_by_date_select").val("All Time")
+    $(".ranges ul li")
+    $("#filter_by_date_select").on("apply.daterangepicker",function(){
+      if(custom_label != 'Custom Range'){
+        $(this).val(custom_label)
+      } 
+    })
+
+  })
+  

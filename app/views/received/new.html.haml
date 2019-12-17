@@ -10,7 +10,6 @@
         %th Amount
         %th Payment Mode
         %th Refernces Number
-        %th Remark
         %tbody
           %div.cloned_class
             = render 'form', :@count => 1
@@ -35,21 +34,19 @@
       format: 'dd/mm/yyyy',
       autoclose: true
     })
-    $('#add_more').on('click',function(){
+    $('#add_more').on('ajax:success',function(){
       count += 1;
       toggle_button();
-      setTimeout(function(){
-        $(".date").datepicker({
-          format: 'dd/mm/yyyy',
-          autoclose: true
-        })
-        $("select.customers").each(function (i, select){
-           if (!$(select).data('select2'))
-          {
-            $(select).select2({width:'100%'});
-          } 
-        })
-      }, 500)
+      $(".date").datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true
+      })
+      $("select.customers").each(function (i, select){
+          if (!$(select).data('select2'))
+        {
+          $(select).select2({width:'100%'});
+        } 
+      })
     })
     function toggle_button(){
       if(count == 1)
