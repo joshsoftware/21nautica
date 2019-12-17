@@ -81,7 +81,7 @@ class InvoicesController < ApplicationController
   end
 
   def send_invoice
-    invoice = Invoice.find(params[:id])
+    invoice = Invoice.find(params[:id]).join(invoiceable:[import:[import_item:[:truck]]])
     if invoice.amount > 0
       kit,invoice_type = collect_pdf_data(invoice)
       pdf = kit.to_pdf
@@ -131,6 +131,7 @@ class InvoicesController < ApplicationController
     else
       invoice_type = "TBL_export_invoice"
     end
+    # byebug
     html = render_to_string(:action => 'download.html.haml', :layout=> false)
     kit = PDFKit.new(html)
     kit.stylesheets << "#{Rails.root}/app/assets/stylesheets/invoices.css.scss"

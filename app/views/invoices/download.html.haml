@@ -124,3 +124,26 @@
               Phone : +256 757527576
           %td{colspan: "2"}
             %b This is a computer generated Invoice.
+  %br
+  %br
+  %br
+  %br
+  %br
+  %br
+  %br
+  %br
+  %br
+  %div#invoice_pdf
+    %table#invoicetable.invoice{style: "border-collapse: collapse"}
+      %thead
+        %th{colspan: "2",style: "text-align:center"} BL Number
+        %th{colspan: "2",style: "text-align:center"} Container Number
+        %th{colspan: "2",style: "text-align:center"} Truck Number
+        %th{colspan: "2",style: "text-align:center"} Entry Number 
+      %tbody
+        - @invoice.invoiceable.import.import_items.each do |import_item|
+          %tr
+            %td{colspan: "2",style: "text-align:center"}= @invoice.invoiceable.bl_number
+            %td{colspan: "2",style: "text-align:center"}= import_item.container_number
+            %td{colspan: "2",style: "text-align:center"}= import_item.truck.present? ?  import_item.truck.reg_number : import_item.truck_number
+            %td{colspan: "2",style: "text-align:center"}= @invoice.invoiceable.import.entry_number
