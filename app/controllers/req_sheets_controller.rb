@@ -1,5 +1,5 @@
 class ReqSheetsController < ApplicationController
-
+  before_action :set_spare_parts, only: %i[new]
   def index
     @req_sheets = ReqSheet.includes(:truck).order('created_at desc')
   end
@@ -34,7 +34,7 @@ class ReqSheetsController < ApplicationController
 
   def load_spare_part
     return unless params[:spare_part_id]
-    spare_part = SparePart.find params[:spare_part_id]
+    spare_part = SparePart.where(parent_id: nil).find params[:spare_part_id]
     render json: spare_part.to_json
   end
 
@@ -51,4 +51,7 @@ class ReqSheetsController < ApplicationController
                                      )
   end
 
+  def set_spare_parts
+    @spare_parts = SparePart.where(parent_id:nil).order(:product_name).pluck(:product_name, :id)
+  end
 end

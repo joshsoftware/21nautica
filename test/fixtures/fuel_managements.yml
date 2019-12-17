@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  quantity: 1.5
+  cost: 1.5
+  date: 2019-11-13
+  available: 1.5
+  is_adjustment: false
+  truck_id: 
+  vehicle_number: MyString
+  purchased_dispensed: MyString
+
+two:
+  quantity: 1.5
+  cost: 1.5
+  date: 2019-11-13
+  available: 1.5
+  is_adjustment: false
+  truck_id: 
+  vehicle_number: MyString
+  purchased_dispensed: MyString

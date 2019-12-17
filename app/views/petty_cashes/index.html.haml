@@ -4,7 +4,7 @@
   = form_for(:date_filter, class: 'form-inline', url: "#{request.original_url.split(/[\/,?]/).include?('petty_cashes') ? petty_cashes_path : mpesaes_path }", method: :get) do |f|
     %div.form-group.date-filter
       = f.label :Date_filter 
-      = f.text_field :date, input_html: { class: "daterange" }, as: :string, value: date_filter_parameters
+      = f.text_field :date, input_html: { class: "daterange" }, as: :string
       = f.submit 'Search', class: 'btn btn-success', id: 'search_button'
 %br
 %br

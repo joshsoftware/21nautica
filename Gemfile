@@ -14,7 +14,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer',  platforms: :ruby
-
+gem 'multi-select-rails', '~> 0.9.12'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
@@ -67,6 +67,8 @@ gem 'mina'
 gem 'sparkpost_rails', git: 'git@github.com:paritoshbotre/sparkpost_rails.git', ref: 'cab71c34b8bfa83041ed0c5c83a5aa0c74653e08'
 gem 'time_difference'
 gem 'whenever', require: false
+gem 'rollbar'
+# gem 'oj', '~> 2.16.1'
 
 group :development do
   gem 'tlsmail'

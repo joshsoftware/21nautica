@@ -27,7 +27,7 @@ class MechanicsControllerTest < ActionController::TestCase
 
   test 'should create mechanic' do
     assert_difference 'Mechanic.count', 1 do
-      post :create, mechanic: { name: 'Banger' }
+      post :create, mechanic: { name: 'Bangar'}
       assert_redirected_to action: 'index'
     end
   end

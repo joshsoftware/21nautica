@@ -3,7 +3,7 @@ class PettyCash < ActiveRecord::Base
   belongs_to :created_by, class_name: 'User', foreign_key: 'created_by_id'
   belongs_to :expense_head
   belongs_to :truck
-  validates_length_of :description, within: 0..100, on: :create, message: "Description should be within 100 char" 
+  validates_length_of :description, within: 0..100, on: :create, message: "Description should be within 100 char"
   validates  :transaction_type, :transaction_amount, presence: true
   # before_create :update_balance
   scope :having_records_between, ->(start_date, end_date) { where(date: start_date..end_date) }
@@ -23,5 +23,4 @@ class PettyCash < ActiveRecord::Base
       petty_cash.update_attribute(:available_balance,available_balance)
     end
   end
-
 end

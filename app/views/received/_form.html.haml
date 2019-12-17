@@ -1,0 +1,9 @@
+%tr      
+  %td{class: 'date_of_payment'}= text_field_tag "received[#{@count}][date_of_payment]",Date.today.strftime('%d/%m/%Y'), class:'date'
+  %td= select_tag "received[#{@count}][customer_id]",options_from_collection_for_select(Customer.order(:name), 'id', 'name'),class:'customers', prompt: "Select Customer",data: {"validation" => "required", "validation-error-msg" => "Customer is required."}
+  %td{class:'amount'}= number_field_tag "received[#{@count}][amount]", nil,class:'amount_class', data: {"validation" => "required", "validation-error-msg" => "amount is required."}
+  %td= select_tag "received[#{@count}][mode_of_payment]",options_for_select(PAYMENT_MODES),class:'payment',prompt: "Payment Mode",:"data-validation" => "required", :"data-validation-error-msg" => "Payment Mode is required."
+  %td{class: "reference"}= text_field_tag "received[#{@count}][reference]",nil,:placeholder => "cheque number / cash"
+  %td 
+    %a.btn.btn-danger.btn-xs{ "data-toggle" => "tooltip", "title" =>"delete","class" => "remove_button"}
+      %span.glyphicon.glyphicon-remove	
