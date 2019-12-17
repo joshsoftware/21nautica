@@ -42,7 +42,7 @@ class ReceivedControllerTest < ActionController::TestCase
 
   test 'it should readjust the payments' do
     get :readjust, id: @customer.id
-    assert_redirected_to new_received_path
+    assert_redirected_to customer_ledger_path
   end
 
   test 'should delete the payments paid' do
