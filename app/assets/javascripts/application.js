@@ -54,19 +54,23 @@ var callbacks = {
     var opening_balance = 0
     var closing_balance = 0
     var result_index = result.length -1
+    var payments = 0
     if(result.length){
       for(i= all_time_payments.length-1 ; i>=0;i--)
       {
-        if(all_time_payments[i].voucher_type=="Invoice" &&(all_time_payments[i].invoice_number == result[result_index].invoice_number)){
+        if(all_time_payments[i].invoice_number == result[result_index].invoice_number){
           break
         }
         if(all_time_payments[i].voucher_type=="Invoice")
         {
-          opening_balance=opening_balance+(all_time_payments[i].amount-all_time_payments[i].received)
+          opening_balance=opening_balance+all_time_payments[i].amount
+        }
+        else{
+          payments = payments+all_time_payments[i].amount
         }
       }
     }
-    
+    opening_balance = opening_balance - payments
     closing_balance = closing_balance+opening_balance
     for (i in result) {
       if(result[i].voucher_type == "Invoice") {
