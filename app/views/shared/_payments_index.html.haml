@@ -41,23 +41,28 @@
   $('.readjust_tooltip').tooltip();
   $(document).ready(function(){
     var custom_label = ""
+    var last_year = new Date().getFullYear()-1
+    var next_year = new Date().getFullYear()+1
+    var current_year = new Date().getFullYear()
+
     $("#filter_by_date_select").daterangepicker({
     locale: { format: 'YYYY-MM-DD',
               separator: ','},
-    autoUpdate:false,
     cancelLabel: 'Clear',
-    ranges:#{get_date_range(controller)},
+    ranges:{
+      "All Time":#{get_date_range(controller_name)},
+      "Current FY":[new Date(current_year,06,01), new Date(next_year,05,30)],
+      "Last FY":[new Date(last_year,06,01), new Date(current_year,05,30)]
+    }
     },
     function(start, end, label) {
       custom_label = label
     })
     $("#filter_by_date_select").val("All Time")
-    $(".ranges ul li")
     $("#filter_by_date_select").on("apply.daterangepicker",function(){
       if(custom_label != 'Custom Range'){
         $(this).val(custom_label)
-      } 
+      }
     })
-
   })
   
