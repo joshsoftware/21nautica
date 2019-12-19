@@ -6,7 +6,7 @@
       = label_tag 'Status '
       = select_tag 'status', options_for_select( ["Open", "Close"], params[:status] || 'Open')
       = f.label :Date_filter 
-      = f.text_field :date, input_html: { class: "daterange" }, as: :string, value: date_filter_parameters
+      = f.text_field :date, input_html: { class: "daterange" }, as: :string
       = f.submit 'Search', class: 'btn btn-success', id: 'search_button'
 
 %br
