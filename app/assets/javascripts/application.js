@@ -63,21 +63,21 @@ var callbacks = {
         }
         if(all_time_payments[i].voucher_type=="Invoice")
         {
-          opening_balance=opening_balance+all_time_payments[i].amount
+          opening_balance = opening_balance+all_time_payments[i].amount
         }
         else{
-          payments = payments+all_time_payments[i].amount
+          payments = payments + all_time_payments[i].amount
         }
       }
     }
-    opening_balance = opening_balance - payments
+    opening_balance = opening_balance + payments // used + beacuase we stored payemnts as - value
     closing_balance = closing_balance+opening_balance
     for (i in result) {
       if(result[i].voucher_type == "Invoice") {
         invoiced = invoiced + result[i].amount
         if(result[i].received!=result[i].amount)
         {
-          closing_balance = closing_balance + result[i].amount
+          closing_balance = closing_balance + (result[i].amount - result[i].received)
         }
       }
       else { // Payment
