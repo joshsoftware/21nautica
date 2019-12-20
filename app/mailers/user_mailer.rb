@@ -68,7 +68,7 @@ class UserMailer < ActionMailer::Base
     attachments[attachment_name] = File.read(attachment)
     subject = "Invoice // #{invoice.customer_name} // #{invoice.bl_number} // #{invoice.number}"
     emails = invoice.customer.add_default_emails_to_customer
-    mail(to: emails , subject: subject)
+    mail(to:emails, subject: subject) if emails.present?
     File.delete(attachment)
   end
 
