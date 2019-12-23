@@ -84,6 +84,7 @@ var callbacks = {
         received = received + result[i].amount
       }
     }
+    closing_balance = opening_balance + invoiced + received
     $("#payment_details_result .invoiced").html(invoiced)
     $("#payment_details_result .received").html(-received)
     $("#payment_details_result .opening_balance").html(opening_balance)
