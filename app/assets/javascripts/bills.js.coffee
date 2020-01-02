@@ -55,7 +55,7 @@ $(document).ready ->
   #******************* 
   
   if $('#bill_vendor_id').val() == ''
-    $('#add_bBillsController#validate_item_numberill_items').addClass('disabled', true)
+    $('#add_bBillsController#validate_item_numberbill_items').addClass('disabled')
     $('#add_debit_notes').addClass('disabled', true)
 
   check_if_vendor_present = ->

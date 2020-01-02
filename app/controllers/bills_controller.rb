@@ -76,8 +76,8 @@ class BillsController < ApplicationController
         import = Import.where('lower(bl_number) = ?', params[:item_number].strip.downcase).first
         result = import.try(:id)
         bl_invoice_date = import.bill_of_lading.invoices.last.try(:date) if import
-        freez_date = Freezpl.last.try(:date) 
-        if bl_invoice_date
+        freez_date = Freezpl.last.try(:date)
+        if bl_invoice_date && freez_date
           freez = bl_invoice_date <= freez_date ? true : false
         end
       else
