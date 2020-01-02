@@ -71,19 +71,15 @@ var callbacks = {
       }
     }
     opening_balance = opening_balance + payments // used + beacuase we stored payemnts as - value
-    closing_balance = closing_balance+opening_balance
     for (i in result) {
       if(result[i].voucher_type == "Invoice") {
         invoiced = invoiced + result[i].amount
-        if(result[i].received!=result[i].amount)
-        {
-          closing_balance = closing_balance + (result[i].amount - result[i].received)
-        }
       }
       else { // Payment
         received = received + result[i].amount
       }
     }
+    closing_balance = opening_balance + invoiced + received
     $("#payment_details_result .invoiced").html(invoiced)
     $("#payment_details_result .received").html(-received)
     $("#payment_details_result .opening_balance").html(opening_balance)
