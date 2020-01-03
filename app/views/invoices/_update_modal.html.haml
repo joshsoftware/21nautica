@@ -50,7 +50,7 @@
         .col-md-6
           #document_number
             = f.input :document_number
-          = f.input :date, as: :string, label: 'Invoice Date', input_html: {id: 'inv_date', class: 'form-control', value: f.object.date.try(:strftime, "%d-%m-%Y")}
+          = f.input :date, as: :string, label: 'Invoice Date', input_html: {id: 'inv_date', class: 'form-control', value: f.object.date.try(:strftime, "%d-%m-%Y"), :"data-validation" => "required", :"data-validation-error-msg" => "Date is required."}
       .row.col-md-12
         .panel.panel-default
           .panel-heading

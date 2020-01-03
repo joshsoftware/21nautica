@@ -252,7 +252,12 @@ class ImportItem < ActiveRecord::Base
     audits.each do |audit_entry|
        loading_dates.push(audit_entry.audited_changes[:updated_at].second) if (audit_entry[:audited_changes][:status] == ["truck_allocated", "loaded_out_of_port"])
     end
-    loading_dates.min
+    loading_dates.min.present? ? loading_dates.min : self.first_container_loaded_date_from_status
+  end
+
+  def first_container_loaded_date_from_status
+    import_items = ImportItem.where(import_id: self.import_id).pluck(:id)
+    StatusDate.where(import_item_id:import_items).pluck(:loaded_out_of_port).min
   end
 
   def check_rest_of_the_containers
