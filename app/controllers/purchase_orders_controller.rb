@@ -51,7 +51,7 @@ class PurchaseOrdersController < ApplicationController
     @start_date = report_search[:start_date].to_date
     @end_date = report_search[:end_date].to_date
     @results = report_search[:report_type] == 'LPO' ? search_by_purchase_order : search_by_req_sheet
-    @total = @results.sum(:price)
+    @total = @results.map{|result| result.quantity*result.price}.sum
   end
 
   def get_search_value(report_search)
