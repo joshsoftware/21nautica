@@ -51,7 +51,7 @@ class PurchaseOrdersController < ApplicationController
     @start_date = report_search[:start_date].to_date
     @end_date = report_search[:end_date].to_date
     @results = report_search[:report_type] == 'LPO' ? search_by_purchase_order : search_by_req_sheet
-    @total = @results.map{|result| result.quantity*result.price}.sum
+    @total = @results.map{|result| result.try(:quantity).to_i*result.try(:price).to_f}.sum
   end
 
   def get_search_value(report_search)
@@ -91,9 +91,9 @@ class PurchaseOrdersController < ApplicationController
   private
 
   def load_reports_data
-    @spare_parts = SparePart.where(parent_id:nil).pluck(:id, :product_name)
-    @suppliers = Supplier.pluck(:id, :name)
-    @trucks = Truck.pluck(:id, :reg_number)
+    @spare_parts = SparePart.order(:product_name).where(parent_id:nil).pluck(:id, :product_name)
+    @suppliers = Supplier.order(:name).pluck(:id, :name)
+    @trucks = Truck.order(:reg_number).pluck(:id, :reg_number)
   end
   
   def load_purchase_order
