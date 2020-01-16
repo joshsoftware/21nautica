@@ -8,7 +8,8 @@ module Report
       if klass == 'customer'
         customer = object
         # Collect ledgers for the customer
-        ledgers = customer.ledgers.includes(:voucher).order(date: :desc)
+        # ledgers = customer.ledgers.includes(:voucher).order(date: :desc)
+        ledgers = customer.ledgers.order(date: :desc)
       else
         vendor = object
         ledgers = vendor.vendor_ledgers.includes(:voucher).order(date: :desc)
@@ -44,7 +45,7 @@ module Report
           f << [ "Customer Name", "Total Invoice", "Total Payment", "Total", "( < 30 days)", "30-60 days", "60-90 days", "90-120 days", "( > 120 days)" ]
           Customer.order(:name).all.each do |c|
             data = create(c, klass)
-            str = CSV.parse(data)[-1][1..-1]
+            str = CSV.parse(data)[-2][1..-1]
             total = str.inject(0) {|s, i| s + i.to_i }
             total_invoiced = c.ledgers.where(voucher_type: "Invoice").sum(:amount)
             total_received = c.ledgers.where(voucher_type: "Payment").sum(:amount)
@@ -72,7 +73,7 @@ module Report
           key = :bw_30_60
         when (Date.today - 90.days)..(Date.today - 60.days)
           key = :bw_60_90
-        when (Date.today - 120.days)..(Date.today - 90.days)
+        when (Date.today - 119.days)..(Date.today - 90.days)
           key = :bw_90_120
         else
           key = :more_120
