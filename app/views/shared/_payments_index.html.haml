@@ -64,5 +64,10 @@
         $(this).val(custom_label)
       }
     })
+    $(".glyphicon-download-alt").on('click',function(){
+      setTimeout(function(){
+        $("#loader_div").hide();
+      }, 3000);
+    })
   })
   
