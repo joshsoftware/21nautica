@@ -134,7 +134,7 @@ class ImportItem < ActiveRecord::Base
       transitions from: :truck_allocated, to: :ready_to_load, guard: [:expiry_date_and_exit_note_received?]
     end    
 
-    event :loaded_out_of_port, :after => [:create_rfs_invoice, :save_status_date] do
+    event :loaded_out_of_port, :after => [:save_status_date, :create_rfs_invoice] do
       transitions from: :ready_to_load, to: :loaded_out_of_port, guard: [:is_all_docs_received?]
     end
 
@@ -262,12 +262,12 @@ class ImportItem < ActiveRecord::Base
     audits.each do |audit_entry|
        loading_dates.push(audit_entry.audited_changes[:updated_at].second) if (audit_entry[:audited_changes][:status] == ["truck_allocated", "loaded_out_of_port"])
     end
-    loading_dates.min.present? ? loading_dates.min : self.first_container_loaded_date_from_status
+    loading_dates.min.present? ? loading_dates.compact.min : self.first_container_loaded_date_from_status
   end
 
   def first_container_loaded_date_from_status
     import_items = ImportItem.where(import_id: self.import_id).pluck(:id)
-    StatusDate.where(import_item_id:import_items).pluck(:loaded_out_of_port).min
+    StatusDate.where(import_item_id:import_items).pluck(:loaded_out_of_port).compact.min
   end
 
   def check_rest_of_the_containers
