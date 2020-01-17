@@ -3,8 +3,13 @@
     .col-md-6
       = label_tag 'Customer_name'
       = select_tag('customer_id', options_from_collection_for_select(Customer.order(:name), 'id', 'name'), prompt: "Select Customer")
+    .col-md-6
+      %a.glyphicon.glyphicon-download-alt{href: "#{outstanding_received_index_path}"}
+        %span.download Outstanding Summary
   .row
     .col-md-12
+    %br
+    %br
     %div#received_details_table
     #payment_details_result
       %h4
@@ -26,3 +31,8 @@
 
 :javascript
   $("#customer_id").select2({width:'50%'})
+  $(document).on('click', ".glyphicon-download-alt", function(){
+    setTimeout(function(){
+      $("#loader_div").hide();
+    }, 3000);
+  })
