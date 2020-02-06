@@ -32,7 +32,7 @@ class UserMailer < ActionMailer::Base
 
   def mail_report_status(type)
     attachments["daily_report.log"] = File.read("#{Rails.root}/tmp/daily_report.log")
-    users = ["paritoshbotre@joshsoftware.com", "sameert@joshsoftware.com"]
+    users = ["paritoshbotre@joshsoftware.com"]
     mail(to: users.join(", "), subject: "#{type} Report Status")
     File.delete("#{Rails.root}/tmp/daily_report.log")
   end
