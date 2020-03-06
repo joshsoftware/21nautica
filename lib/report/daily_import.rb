@@ -67,7 +67,7 @@ module Report
       imports = @imports.ready_to_load
       # imports = @imports.where("imports.status='ready_to_load' OR (imports.bl_received_at IS NOT NULL AND imports.entry_number IS NOT NULL AND imports.entry_type IS NOT NULL)")
       imports.each do |import|
-        import.import_items.where.not(status: 'delivered', return_status: 'Empty Returned').includes(:status_date).each do |import_item|
+        import.import_items.where("(import_items.status != ? or import_items.status IS ?) and (import_items.return_status != ? or import_items.return_status IS ?)", "delivered", nil, 0, nil).where("import_items.interchange_number IS NULL").includes(:status_date).each do |import_item|
           status_date_array = []
           status_date = import_item.status_date
           if status_date
