@@ -32,6 +32,7 @@ class ImportItem < ActiveRecord::Base
   has_one :status_date, dependent: :destroy
 
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
+  validate :assignment_of_truck_id, if: "truck_id.present? && truck_id_changed?"
   validates_presence_of :container_number
   validates_uniqueness_of :container_number
   validate :validate_truck_number
@@ -41,7 +42,6 @@ class ImportItem < ActiveRecord::Base
   before_validation :strip_whitespaces, :only => [:container_number]
   #gf_expiry is skipped because it is updated on empty container report
   validate :validate_interchange_number
- 
   delegate :bl_number, to: :import
   delegate :clearing_agent, to: :import, allow_nil: true
 
@@ -102,6 +102,16 @@ class ImportItem < ActiveRecord::Base
     end
   end
 
+  def assignment_of_truck_id
+    #if not a third party truck
+    if truck.reg_number != "3rd Party Truck" && truck_id != 0 && truck_id != nil
+      count = ImportItem.where(truck_id: truck_id).where.not(status: 'delivered').count
+      if count > 0 && is_co_loaded == false
+        errors.add(:truck," #{truck.reg_number} is not free !")
+      end
+    end
+  end
+
   def customer_name
     import.customer.name
   end
@@ -124,7 +134,7 @@ class ImportItem < ActiveRecord::Base
       transitions from: :truck_allocated, to: :ready_to_load, guard: [:expiry_date_and_exit_note_received?]
     end    
 
-    event :loaded_out_of_port, :after => [:create_rfs_invoice, :save_status_date] do
+    event :loaded_out_of_port, :after => [:save_status_date, :create_rfs_invoice] do
       transitions from: :ready_to_load, to: :loaded_out_of_port, guard: [:is_all_docs_received?]
     end
 
@@ -187,10 +197,10 @@ class ImportItem < ActiveRecord::Base
   def release_truck
     if self.is_co_loaded
       if ImportItem.where(truck_id: truck_id).where.not(status: "delivered").count == 0
-        self.truck.update_attributes(status: Truck::FREE, current_import_item_id: nil) if truck.present?
+        self.truck.update_attributes(status: Truck::FREE, current_import_item_id: nil, location: nil) if truck.present?
       end  
     else
-      self.truck.update_attributes(status: Truck::FREE, current_import_item_id: nil) if truck.present?
+      self.truck.update_attributes(status: Truck::FREE, current_import_item_id: nil, location: nil) if truck.present?
     end
   end
 
@@ -252,7 +262,12 @@ class ImportItem < ActiveRecord::Base
     audits.each do |audit_entry|
        loading_dates.push(audit_entry.audited_changes[:updated_at].second) if (audit_entry[:audited_changes][:status] == ["truck_allocated", "loaded_out_of_port"])
     end
-    loading_dates.min
+    loading_dates.min.present? ? loading_dates.compact.min : self.first_container_loaded_date_from_status
+  end
+
+  def first_container_loaded_date_from_status
+    import_items = ImportItem.where(import_id: self.import_id).pluck(:id)
+    StatusDate.where(import_item_id:import_items).pluck(:loaded_out_of_port).compact.min
   end
 
   def check_rest_of_the_containers

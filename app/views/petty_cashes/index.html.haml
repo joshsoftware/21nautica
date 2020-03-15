@@ -1,7 +1,7 @@
-%h3.pull-left="#{request.original_url.split(/[\/,?]/).include?('petty_cashes') ? 'Petty Cash' : 'Mpesa'}"
-= link_to "Add Voucher", "#{request.original_url.split(/[\/,?]/).include?('petty_cashes') ? new_petty_cash_path : new_mpesaes_path }", class: 'btn btn-primary pull-right'
+%h3.pull-left="#{for_account == 'Cash' ? 'Petty Cash' : (for_account == 'Bank' ? 'Mpesa' : 'Petty Cash NBO')}"
+= link_to "Add Voucher", "#{for_account == 'Cash' ? new_petty_cash_path : (for_account == 'Bank' ? new_mpesaes_path : new_petty_cash_nbos_path) }", class: 'btn btn-primary pull-right'
 .pull-left.date-filter
-  = form_for(:date_filter, class: 'form-inline', url: "#{request.original_url.split(/[\/,?]/).include?('petty_cashes') ? petty_cashes_path : mpesaes_path }", method: :get) do |f|
+  = form_for(:date_filter, class: 'form-inline', url: "#{for_account == 'Cash' ? petty_cashes_path : (for_account == 'Bank' ? mpesaes_path : petty_cash_nbos_path) }", method: :get) do |f|
     %div.form-group.date-filter
       = f.label :Date_filter 
       = f.text_field :date, input_html: { class: "daterange" }, as: :string

@@ -1,15 +1,17 @@
 # Petty Cash Mangement Controller
 class PettyCashesController < ApplicationController
   before_action :set_date, :set_expense_head, :set_trucks ,only: %i[new create tabular_partial]
+  include PettyCashesHelper
   def index
     if params[:date_filter] && params[:date_filter][:date].present?
       start_date, end_date = params[:date_filter][:date].split(' - ')
       start_date = start_date.to_date
       end_date = end_date.to_date
-      @petty_cashes = request.original_url.split(/[\/,?]/).include?('petty_cashes') ? set_records_with_date('Cash',start_date,end_date) : set_records_with_date('Bank',start_date, end_date)
     else
-      @petty_cashes = request.original_url.split(/[\/,?]/).include?('petty_cashes') ? set_records_with_default_date('Cash') : set_records_with_default_date('Bank')
+      start_date = Date.today-7.days
+      end_date = Date.today
     end
+    @petty_cashes = set_records_with_date(for_account, start_date, end_date)
   end
 
   def new
@@ -40,10 +42,13 @@ class PettyCashesController < ApplicationController
     if params[:petty_cash][:account_type].eql?('Cash')
       flash[:notice] = I18n.t 'petty_cash.saved'
       redirect_to :petty_cashes
-    else
+    elsif params[:petty_cash][:account_type].eql?('Bank')
       flash[:notice] = 'Mpesa Saved'
       redirect_to :mpesaes
-    end 
+    else
+      flash[:notice] = 'Petyy Cash NBO is saved'
+      redirect_to :petty_cash_nbos
+    end
   end
 
   private
@@ -59,8 +64,7 @@ class PettyCashesController < ApplicationController
   
 
   def set_date
-    key = params[:key].present? ? params[:key]: request.original_url.split(/[\/,?]/).include?('petty_cashes') ? 'Cash' : 'Bank'
-    @date = PettyCash.of_account_type(key).last.try(:date) || Date.current.beginning_of_year-10.year
+    @date = PettyCash.of_account_type(for_account).last.try(:date) || Date.current.beginning_of_year-10.year
   end
 
   def set_expense_head
@@ -83,5 +87,4 @@ class PettyCashesController < ApplicationController
     .includes(:truck, :expense_head, :created_by)
     .paginate(page: params[:page], per_page: 1000)    
   end
-
 end

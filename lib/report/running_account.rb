@@ -42,7 +42,7 @@ module Report
       CSV.generate do |f|
         if klass == 'customer'
           f << [ "Customer Name", "Total Invoice", "Total Payment", "Total", "( < 30 days)", "30-60 days", "60-90 days", "90-120 days", "( > 120 days)" ]
-          Customer.all.each do |c|
+          Customer.order(:name).all.each do |c|
             data = create(c, klass)
             str = CSV.parse(data)[-1][1..-1]
             total = str.inject(0) {|s, i| s + i.to_i }
