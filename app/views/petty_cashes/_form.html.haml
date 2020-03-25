@@ -1,7 +1,7 @@
 .col-md-12
 = simple_form_for(@petty_cash, html: { id: 'add_new_petty_cash', class: 'form-horizontal petty_cash'},defaults: {input_html: {class: 'form-control petty_cash'}}) do |f|
   .well
-    = f.hidden_field :account_type, value:"#{request.original_url.split(/[\/,?]/).include?('petty_cashes') ? 'Cash' : 'Bank'}"
+    = f.hidden_field :account_type, value:"#{for_account}"
     %table.table{id: 'petty_cash_form_table',class:'petty_cash_form_class'}
       %thead
         %th.date_of_payment Date
@@ -17,7 +17,7 @@
       .col-md-6
         = f.submit 'save', class: 'btn btn-primary'
         =link_to "Add More",tabular_partial_path(count:@count,key:"#{request.original_url.split(/[\/,?]/).include?('petty_cashes') ? 'Cash' : 'Bank'}"),class:"btn btn-success",id:"add_more",:remote => true
-        = link_to 'Cancel',"#{request.original_url.split(/[\/,?]/).include?('petty_cashes') ? petty_cashes_path : mpesaes_path }", class: 'btn btn-primary'
+        = link_to 'Cancel',"#{for_account == 'Cash' ? petty_cashes_path : (for_account == 'Bank' ? mpesaes_path : petty_cash_nbos_path)}", class: 'btn btn-primary'
 
        
 :javascript

@@ -51,6 +51,7 @@
               %li= link_to 'Manual Invoice(customer)', manual_invoices_path
               %li= link_to 'Petty Cash', petty_cashes_path
               %li= link_to 'Mpesa', mpesaes_path
+              / %li= link_to 'Petty Cash NBO', petty_cash_nbos_path
         - if user_signed_in? && current_user.is?('Admin')
           %li.dropdown
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
