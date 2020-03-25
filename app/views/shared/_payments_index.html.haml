@@ -4,13 +4,12 @@
     = label_tag "Date Range"
   %div.col-sm-2
     = text_field_tag :filter_by_date_select,date_filter_parameters(controller_name), as: :string, class:"form-control"
-  %div.col-sm-2
+  %div.col-sm-3
     = link_to 'Readjust Payments', readjust_customer_path(@header.id), class: 'readjust_tooltip', :data => {:toggle => 'tooltip' }, 
       'data-placement' => 'down', 'title' => " Readjust if you delete any invoice or Payments"
-  %div.col-sm-2
-    %a.glyphicon.glyphicon-download-alt{href: "#{outstanding_received_index_path}"} Outstanding Summary
-  %div.col-sm-2
-    %a.glyphicon.glyphicon-download-alt{href: "#{received_path(@header.id)}"} Download Ledger
+  %div.col-sm-3
+    %a.glyphicon.glyphicon-download-alt{href: "#{received_path(@header.id)}"}
+      %span.download Download Ledger
   %tr.info
     %th Date
     %th Type
@@ -64,11 +63,6 @@
       if(custom_label != 'Custom Range'){
         $(this).val(custom_label)
       }
-    })
-    $(".glyphicon-download-alt").on('click',function(){
-      setTimeout(function(){
-        $("#loader_div").hide();
-      }, 3000);
     })
   })
   

@@ -65,9 +65,8 @@ module Report
       sheet.add_row ['Ref Number','BL Number', 'Shipper', 'Desc', 'Container', 'Truck Number', 'Location', 'Status','OBL','DO','Rotation#', 'Entry Date', 'Remarks', 'Truck Allocated', 'Ready to Load', 'Loaded Out Of Port', 'Arrived At Border', 'Arrived At Destination', 'Empty Container Status'],
                     style: heading, height: 40
       imports = @imports.ready_to_load
-      # imports = @imports.where("imports.status='ready_to_load' OR (imports.bl_received_at IS NOT NULL AND imports.entry_number IS NOT NULL AND imports.entry_type IS NOT NULL)")
       imports.each do |import|
-        import.import_items.each do |import_item|
+        import.import_items.where("import_items.interchange_number IS NULL").where("import_items.return_status = ? or import_items.return_status IS NULL", 1).includes(:status_date).each do |import_item|  
           status_date_array = []
           status_date = import_item.status_date
           if status_date
