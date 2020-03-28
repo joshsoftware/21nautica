@@ -136,7 +136,7 @@ class BillsController < ApplicationController
       @equipment_type = BillOfLading.where('lower(bl_number) = ?', number.downcase).first.equipment_type
       @invoice_for_bl = BillItem.where(activity_id: activity_id, activity_type: 'Import', item_for: "container")
       @sum_of_bl = BillItem.where(activity_id: activity_id, activity_type: 'Import').sum(:line_amount) 
-      @debit_notes = DebitNote.where(bill_id: bill_items.pluck(:bill_id))
+      @debit_notes = DebitNote.where('lower(number) = ?', number.downcase)
       @debit_notes_sum = @debit_notes.sum(:amount)
     else
       @debit_notes = DebitNote.where(bill_id: bill_items.pluck(:bill_id), debit_note_for: 'container')
