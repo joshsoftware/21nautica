@@ -41,6 +41,10 @@
         .row
           .col-md-6 Entry Number :
           .col-md-6 #{import.entry_number}
+      -if import.entry_date
+        .row
+          .col-md-6 Entry Date :
+          .col-md-6 #{import.entry_date.to_date.to_formatted_s}
       -if import.rotation_number
         .row
           .col-md-6 Rotation Number :
