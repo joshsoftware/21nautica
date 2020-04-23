@@ -36,6 +36,7 @@ gem 'will_paginate', '~> 3.1.0'
 gem 'will_paginate-bootstrap' 
 gem 'cancan'
 gem 'bootstrap-sass', '~> 3.2.0.4'
+gem 'bootstrap-tooltip-rails', '~> 0.1'
 
 # Haml-rails provides Haml generators for Rails 4
 gem 'haml-rails'

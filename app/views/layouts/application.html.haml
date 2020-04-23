@@ -24,9 +24,9 @@
         Logged in as
         = succeed "." do
           %strong= current_user.email
-        = link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link'
+        = link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link', :rel => 'tooltip', :title => "Edit my profile"
         |
-        = link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'
+        = link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link', :rel => 'tooltip', :title => "Logout my session"
 = render 'loader'
 :javascript
   if(#{is_rfs_host?}){
