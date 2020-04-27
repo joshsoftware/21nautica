@@ -207,6 +207,10 @@ Rails.application.routes.draw do
      match :readjust, via: [:get]
     end
   end
+  get 'reports/vendor_invoice'
+  get 'reports/customer_invoice'
+  get 'reports/payments_made'
+  get 'reports/payments_received'
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

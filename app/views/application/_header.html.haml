@@ -93,7 +93,17 @@
               %li= link_to 'Exp Head Master', expense_heads_path
               %li= link_to 'Repair Head Master', repair_heads_path 
               -# %li= link_to 'Merge Spare Parts', coming_soon_path
-              %li= link_to 'Breakdown Reason Master',breakdown_reasons_path 
+              %li= link_to 'Breakdown Reason Master',breakdown_reasons_path
+        - if user_signed_in? && current_user.is?('Admin')      
+          %li.dropdown
+            = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
+              Reports 
+              %span.caret
+            %ul.dropdown-menu
+              %li= link_to 'Vendor Invoice', reports_vendor_invoice_path 
+              %li= link_to 'Customer Invoice', reports_customer_invoice_path
+              %li= link_to 'Payments Made', reports_payments_made_path
+              %li= link_to 'Payments Received', reports_payments_received_path
       -#%div.navbar-form.navbar-left
         %form{role: "search", action: "/bill_of_ladings/search"}
           .form-group
