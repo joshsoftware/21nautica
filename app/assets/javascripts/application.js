@@ -12,6 +12,7 @@
 //
 //= require jquery.min
 //= require jquery_ujs
+//= require bootstrap/bootstrap-tooltip
 //= require jquery.turbolinks
 //= require bootstrap-sprockets
 //= require turbolinks
@@ -26,7 +27,11 @@
 
  $(document).on("page:load ready", function(){
    $("input.datepicker").datepicker();
+   $(function(){
+    $("a[rel='tooltip']").tooltip();
+   })
  });
+
 
 var callbacks = {
   beforeRecordRender: function(record) {

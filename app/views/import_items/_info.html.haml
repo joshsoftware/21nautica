@@ -13,7 +13,7 @@
           .col-md-6 #{import.bl_received_at.to_date.to_formatted_s}
       -if import.charges_received_at
         .row
-          .col-md-6 Cash Received Date :
+          .col-md-6 Charges Received Date :
           .col-md-6 #{import.charges_received_at.to_date.to_formatted_s}
       -if import.charges_paid_at
         .row
@@ -41,10 +41,24 @@
         .row
           .col-md-6 Entry Number :
           .col-md-6 #{import.entry_number}
+      -if import.entry_date
+        .row
+          .col-md-6 Entry Date :
+          .col-md-6 #{import.entry_date.to_date.to_formatted_s}
       -if import.rotation_number
         .row
           .col-md-6 Rotation Number :
           .col-md-6 #{import.rotation_number}
+      %hr
+      %h3.modal-title.underline Status Dates
+      -if @import_item.try(:status_date).try(:truck_allocated)
+        .row
+          .col-md-6 Truck Allocated Date :
+          .col-md-6 #{@import_item.try(:status_date).try(:truck_allocated).try(:to_date).try(:to_formatted_s)}      
+      -if @import_item.try(:status_date).try(:loaded_out_of_port)
+        .row
+          .col-md-6 Loaded Out Date :
+          .col-md-6 #{@import_item.try(:status_date).try(:loaded_out_of_port).try(:to_date).try(:to_formatted_s)}
 
     .modal-footer
       = link_to 'Close', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}

@@ -36,7 +36,7 @@
                                 $('#daterange').val('')
                                 $searchButton.click(); 
                              })
-                  $dateRange = "<label> DateRange: <input id='daterange' name='daterange' type='text' value='' placeholder='Select Date Range' class = 'daterange' data-provide='daterangepicker'> </label>"
+                  $dateRange = "<label> DateRange: <input id='daterange' name='daterange' type='text' value='' placeholder='Select Date Range' class = 'daterange' data-provide='daterangepicker' rel='tooltip' title='Search by ETA'> </label>"
               $('.dataTables_filter').prepend($dateRange)    
               $('.dataTables_filter').append($searchButton, $clearButton);
           },
