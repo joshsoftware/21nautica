@@ -207,8 +207,8 @@ Rails.application.routes.draw do
      match :readjust, via: [:get]
     end
   end
-  get 'reports/vendor_invoice'
-  get 'reports/customer_invoice'
+  get 'reports/vendor_invoices'
+  get 'reports/customer_invoices'
   get 'reports/payments_made'
   get 'reports/payments_received'
   # Example of regular route:
