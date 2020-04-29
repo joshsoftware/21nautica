@@ -9,11 +9,10 @@ class ReportsController < ApplicationController
 
   def payments_made
     @vendors = Vendor.order(:name).pluck(:name, :id)
-    vendor_id = params[:vendor_id] || @vendors.first[1].to_s
+    vendor_id = params[:vendor_id]
+    @paids = (params[:vendor_id].present? && params[:vendor_id] != 'all') ? Paid.where(vendor_id: vendor_id) : Paid.all
     if !params[:daterange].blank?
-      @paids = Paid.where(:date_of_payment => Date.parse(params[:daterange].split("-")[0])..Date.parse(params[:daterange].split("-")[1] ), vendor_id: vendor_id)
-    else
-      @paids = Paid.where(vendor_id: vendor_id)
+      @paids = @paids.where(:date_of_payment => Date.parse(params[:daterange].split("-")[0])..Date.parse(params[:daterange].split("-")[1] ))
     end
     respond_to do |format|
       format.html{}

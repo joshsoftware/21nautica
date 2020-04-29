@@ -10,7 +10,7 @@
   $(document).ready(function() {
     function vendorOptions() {
       var vendor_lists = #{@vendors.to_json}
-      options = '';
+      options = "<option value=all>All</option>";
       vendor_lists.forEach(function(vendor){
         options += "<option value="+vendor[1]+">"+vendor[0]+"</option>";
       })
