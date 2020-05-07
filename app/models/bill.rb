@@ -38,7 +38,7 @@ class Bill < ActiveRecord::Base
 
   def as_json(options= {})
     super(only: [:bill_number, :bill_date, :value, :after_delivery_status, :context, :truck_number],
-            methods: [:bill_vendor, :bill_remarks, :bill_created_by, :bill_approved_by, :edit_bills_path])
+            methods: [:bill_vendor, :bill_remarks, :bill_created_by, :bill_approved_by, :edit_bills_path, :vendor_name])
   end
 
   def edit_bills_path
@@ -88,4 +88,7 @@ class Bill < ActiveRecord::Base
       vendor_ledger.update_attributes(vendor_id: vendor_id, date: bill_date, amount: value, currency: currency)
   end
 
+  def vendor_name
+    vendor.try(:name)
+  end
 end

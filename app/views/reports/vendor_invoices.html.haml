@@ -1,0 +1,93 @@
+%h1 Vendor Invoices
+%br
+%table.table{id: 'vendor_invoices_table'}
+  %thead
+    %th Invoice Date
+    %th Invoice Number
+    %th Vendor Name
+    %th Amount
+
+:javascript
+  $(document).ready(function() {
+    function vendorOptions() {
+      var vendor_lists = #{@vendors.to_json}
+      options = "<option value=all>All</option>";
+      vendor_lists.forEach(function(vendor){
+        options += "<option value="+vendor[1]+">"+vendor[0]+"</option>";
+      })
+      return options;
+    }
+
+    function trigger_search() {
+      $(".search-button").click();
+    }
+    if ( $.fn.dataTable.isDataTable( '#vendor_invoices_table' ) ) {
+    }
+    else {
+      $('#vendor_invoices_table').DataTable( {
+          initComplete : function() {
+              var input = $('.dataTables_filter input').unbind(),
+                  self = this.api(),
+                  $searchButton = $('<button class="search-button hide">')
+                             .text('search')
+                             .click(function() {
+                                self.search(input.val()).draw();
+                             }),
+                  $clearButton = $('<button class="clear-button">')
+                             .text('clear')
+                             .click(function() {
+                                input.val('');
+                                $('#daterange').val('')
+                                $searchButton.click(); 
+                             })
+                  $vendorDropdown = "<select onchange=$('.search-button').click() class='vendorDropdown' id='vendorDropdown'>"+vendorOptions()+"</select>";
+                  $dateRange = "<label> DateRange: <input id='daterange' name='daterange' type='text' value='' placeholder='Select Date Range' class = 'daterange' data-provide='daterangepicker' rel='tooltip' title='Search by payment date'> </label>"
+              $('.dataTables_filter').find('label').hide()
+              $('.dataTables_filter').prepend($dateRange);
+              $('.dataTables_filter').prepend($vendorDropdown);
+              $('.dataTables_filter').append($searchButton, $clearButton);
+          },
+          "bJQueryUI": true,
+          "processing": true,
+          "serverSide": true,
+          "paging": true,
+          "pageLength": 25,
+          "aLengthMenu": [[10, 25, 50, 100, 1000], [10, 25, 50, 100, 1000]],
+          "ajax": {
+            url: "vendor_invoices",
+            type: "GET",
+            "data": function( result ) {
+                  var newresult = {"searchValue": result.search.value, daterange: $('#daterange').val(), vendor_id: $('#vendorDropdown').val(), start: result.start, "length": result.length}
+                  return newresult;
+                },
+            "dataSrc": function ( json ) {
+                data = json.data
+                return data
+            }
+          },
+          "columns": [
+              { "data": "bill_date", "bSortable": false},
+              { "data": "bill_number", "bSortable": false },
+              { "data": "vendor_name", "bSortable": false },
+              { "data": "value", "bSortable": false }
+          ]
+      } );
+    }
+
+    setTimeout( function(){
+      $('#daterange').daterangepicker({
+        locale: { 
+          format: 'DD/MM/YYYY',
+          cancelLabel: 'Clear'
+        },
+        cancelLabel: 'Clear',
+        startDate: new Date(),
+        endDate:  new Date(),
+        autoUpdateInput: false,
+      }, function(first_date, second_date){
+        $("#daterange").val(first_date.format('DD/MM/YYYY')+" - "+ second_date.format('DD/MM/YYYY'));
+        trigger_search();
+      })}, 1000)  
+  });
+
+

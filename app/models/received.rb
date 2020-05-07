@@ -15,4 +15,12 @@ class Received < Payment
   def update_ledger
     self.create_ledger(amount: self.amount, customer: self.customer, date: self.date_of_payment, received: 0)
   end
+
+  def report_json
+    as_json(methods: [:customer_name])
+  end
+
+  def customer_name
+    customer.try(:name)
+  end
 end

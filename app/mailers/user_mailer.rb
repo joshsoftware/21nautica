@@ -23,7 +23,7 @@ class UserMailer < ActionMailer::Base
   def error_mail_report(customer, e)
     @customer = customer
     @exception = e
-    mail(to: "paritoshbotre@joshsoftware.com", subject: "Error Report")
+    mail(to: "21nauticatest@gmail.com", subject: "Error Report")
   end
 
   def send_emails_to_all_customer(customer)
@@ -33,7 +33,7 @@ class UserMailer < ActionMailer::Base
 
   def mail_report_status(type)
     attachments["daily_report.log"] = File.read("#{Rails.root}/tmp/daily_report.log")
-    users = ["paritoshbotre@joshsoftware.com"]
+    users = ["21nauticatest@gmail.com"]
     mail(to: users.join(", "), subject: "#{type} Report Status")
     File.delete("#{Rails.root}/tmp/daily_report.log")
   end
