@@ -1,0 +1,102 @@
+%h1 Customer Invoices
+%br
+%table.table{id: 'customer_invoices_table'}
+  %thead
+    %th Invoice Date
+    %th Invoice Number
+    %th Customer Name
+    %th BL number
+    %th Ref. number
+    %th Container Qty.
+    %th Eqiup. Type
+    %th Amount
+
+:javascript
+  $(document).ready(function() {
+    function vendorOptions() {
+      var customer_lists = #{@customers.to_json}
+      options = "<option value=all>All</option>";
+      customer_lists.forEach(function(vendor){
+        options += "<option value="+vendor[1]+">"+vendor[0]+"</option>";
+      })
+      return options;
+    }
+
+    function trigger_search() {
+      $(".search-button").click();
+    }
+    if ( $.fn.dataTable.isDataTable( '#customer_invoices_table' ) ) {
+    }
+    else {
+      $('#customer_invoices_table').DataTable( {
+          initComplete : function() {
+              var input = $('.dataTables_filter input').unbind(),
+                  self = this.api(),
+                  $searchButton = $('<button class="search-button hide">')
+                             .text('search')
+                             .click(function() {
+                                self.search(input.val()).draw();
+                             }),
+                  $clearButton = $('<button class="clear-button">')
+                             .text('clear')
+                             .click(function() {
+                                input.val('');
+                                $('#daterange').val('')
+                                $searchButton.click(); 
+                             })
+                  $vendorDropdown = "<select onchange=$('.search-button').click() class='vendorDropdown' id='vendorDropdown'>"+vendorOptions()+"</select>";
+                  $dateRange = "<label> DateRange: <input id='daterange' name='daterange' type='text' value='' placeholder='Select Date Range' class = 'daterange' data-provide='daterangepicker' rel='tooltip' title='Search by payment date'> </label>"
+              $('.dataTables_filter').find('label').hide()
+              $('.dataTables_filter').prepend($dateRange);
+              $('.dataTables_filter').prepend($vendorDropdown);
+              $('.dataTables_filter').append($searchButton, $clearButton);
+          },
+          "bJQueryUI": true,
+          "processing": true,
+          "serverSide": true,
+          "paging": true,
+          "pageLength": 25,
+          "aLengthMenu": [[10, 25, 50, 100, 1000], [10, 25, 50, 100, 1000]],
+          "ajax": {
+            url: "customer_invoices",
+            type: "GET",
+            "data": function( result ) {
+                  var newresult = {"searchValue": result.search.value, daterange: $('#daterange').val(), customer_id: $('#vendorDropdown').val(), start: result.start, "length": result.length}
+                  return newresult;
+                },
+            "dataSrc": function ( json ) {
+                data = json.data
+                return data
+            }
+          },
+          "columns": [
+              { "data": "date", "bSortable": false},
+              { "data": "number", "bSortable": false },
+              { "data": "customer_name", "bSortable": false },
+              { "data": "bl_or_container_number", "bSortable": false },
+              { "data": "format_document_number", "bSortable": false },
+              { "data": "total_containers", "bSortable": false },
+              { "data": "equipment_type", "bSortable": false },
+              { "data": "amount", "bSortable": false }
+              
+          ]
+      } );
+    }
+
+    setTimeout( function(){
+      $('#daterange').daterangepicker({
+        locale: { 
+          format: 'DD/MM/YYYY',
+          cancelLabel: 'Clear'
+        },
+        cancelLabel: 'Clear',
+        startDate: new Date(),
+        endDate:  new Date(),
+        autoUpdateInput: false,
+      }, function(first_date, second_date){
+        $("#daterange").val(first_date.format('DD/MM/YYYY')+" - "+ second_date.format('DD/MM/YYYY'));
+        trigger_search();
+      })}, 1000)  
+  });
+
+
