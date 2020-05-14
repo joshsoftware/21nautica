@@ -57,7 +57,7 @@ class ImportItemsController < ApplicationController
 
   def history
     if !params[:searchValue].blank? || !params[:daterange].blank?
-      @import_items = ImportItem.select("imports.bl_number, import_items.container_number, imports.work_order_number, trucks.reg_number, customers.name, imports.equipment, import_items.close_date, import_items.vendor_id, import_items.after_delivery_status, import_items.return_status").includes(:truck, import: [:customer]).where.not(interchange_number: nil).order(created_at: :asc).references(:import)
+      @import_items = ImportItem.select("imports.bl_number, import_items.container_number, imports.work_order_number, trucks.reg_number, customers.name, imports.equipment, import_items.close_date, import_items.vendor_id, import_items.after_delivery_status, import_items.return_status").includes(:truck, import: [:customer]).where.not(import_items: {interchange_number: nil}).order(created_at: :asc).references(:import)
       @import_items = @import_items.where("imports.bl_number LIKE :query OR import_items.container_number ILIKE :query OR imports.work_order_number ILIKE :query OR trucks.reg_number ILIKE :query OR import_items.truck_number ILIKE :query", query: "%#{params[:searchValue]}%") unless params[:searchValue].blank?
       @import_items = @import_items.where(:imports =>{:estimate_arrival => Date.parse(params[:daterange].split("-")[0])..Date.parse(params[:daterange].split("-")[1])}) unless params[:daterange].blank?
     else
