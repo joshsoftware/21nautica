@@ -41,6 +41,7 @@ else
   set :branch, branch  
 end
 
+set :forward_agent, true
 set :domain, '54.89.118.119' 
 set :user, 'ubuntu'
 set :deploy_to, path
