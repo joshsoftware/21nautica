@@ -18,6 +18,7 @@
     %th Qty
     %th.bl-width Custom Status
     %th.shrink-name-custom Remarks
+    %th Action
   %tbody
     - @imports.each do |import|
       %tr{id: import.id }
@@ -39,12 +40,12 @@
                 .date.cp= "RN: #{import.rotation_number}"
               -if import.entry_number
                 .date.obl= "EN: #{import.entry_number}"
-          = link_to "Update", fetch_custom_modal_custom_path(id: import.id), :remote => true, :class => "button btn btn-small btn-primary"
+          = link_to "Update", fetch_custom_modal_custom_path(id: import.id), :remote => true, :class => "btn btn-sm btn-primary"
         %td.remarks.h5
           .desc
             = import.remarks.try(:last).try(:desc)
-          %button.btn.btn-small.btn-primary{'data-model-id' => "#{import.id}", 'data-model-type' => 'import', 'data-target' => '#remarkModal', 'data-toggle' => 'modal'} Add
-
+          %button.btn.btn-sm.btn-primary{'data-model-id' => "#{import.id}", 'data-model-type' => 'import', 'data-target' => '#remarkModal', 'data-toggle' => 'modal'} Add
+        %td= link_to 'Edit', edit_import_path(import), class: 'btn btn-primary btn-sm'
 = render :partial => 'remarks/remark', :locals => {:@table => "custom"}
 
 #statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
