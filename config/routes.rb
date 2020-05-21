@@ -128,7 +128,6 @@ Rails.application.routes.draw do
       post 'retainStatus'
     end
   end
-  resources :imports, only: [:new, :create]
   resources :paid, only: [:new, :show, :create, :index] do 
     collection do
       get :outstanding
@@ -184,6 +183,16 @@ Rails.application.routes.draw do
       post :update_inv_number
     end
   end
+
+  resources :local_imports do
+    member do
+      get :edit_idf
+    end
+  end
+  get '/local_operations', to: 'local_imports#operation_index'
+  get '/new_idf', to: 'local_imports#new_idf'
+
+  resources :local_import_items
   resources :suppliers
   resources :repair_heads 
   resources :job_cards
