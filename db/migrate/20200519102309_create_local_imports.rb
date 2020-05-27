@@ -22,6 +22,14 @@ class CreateLocalImports < ActiveRecord::Migration
       t.belongs_to :customer, index: true
       t.belongs_to :bill_of_lading, index: true
       t.belongs_to :shipping_line, index: true
+      t.date       :exemption_code_date
+      t.date       :kebs_exemption_code_date
+      t.string     :customs_entry_number
+      t.date       :customs_entry_date
+      t.date       :duty_payment_date
+      t.date       :sgr_move_date
+      t.date       :icd_arrival_date
+      t.date       :loaded_out_date
       t.timestamps
     end
   end

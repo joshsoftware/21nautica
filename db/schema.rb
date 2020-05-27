@@ -349,25 +349,16 @@ ActiveRecord::Schema.define(version: 20200519122432) do
   end
 
   create_table "local_import_items", force: true do |t|
-    t.date     "exemption_code_date"
-    t.date     "kebs_exemption_code_date"
-    t.string   "customs_entry_number"
-    t.date     "customs_entry_date"
-    t.date     "duty_payment_date"
-    t.date     "sgr_move_date"
-    t.date     "icd_arrival_date"
-    t.date     "loaded_out_date"
     t.date     "offloading_date"
     t.string   "container_number"
     t.string   "status"
+    t.string   "truck"
     t.integer  "local_import_id"
-    t.integer  "truck_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "local_import_items", ["local_import_id"], name: "index_local_import_items_on_local_import_id", using: :btree
-  add_index "local_import_items", ["truck_id"], name: "index_local_import_items_on_truck_id", using: :btree
 
   create_table "local_imports", force: true do |t|
     t.string   "bl_number"
@@ -391,6 +382,14 @@ ActiveRecord::Schema.define(version: 20200519122432) do
     t.integer  "customer_id"
     t.integer  "bill_of_lading_id"
     t.integer  "shipping_line_id"
+    t.date     "exemption_code_date"
+    t.date     "kebs_exemption_code_date"
+    t.string   "customs_entry_number"
+    t.date     "customs_entry_date"
+    t.date     "duty_payment_date"
+    t.date     "sgr_move_date"
+    t.date     "icd_arrival_date"
+    t.date     "loaded_out_date"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

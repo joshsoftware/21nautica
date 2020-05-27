@@ -47,5 +47,9 @@ en:
   fuel_entry:
     'saved': 'Fuel Entry Saved Successfully'
   local_import:
-    'create': 'Local Import Order Created Successfully'
-    'update': 'Local Import Order Updated Successfully'
+    create: 'Local Import Order Created Successfully'
+    update: 'Local Import Order Updated Successfully'
+    update_error: 'Error occured while updating Local Import!'
+  local_import_item:
+    update: 'Local Import Item Updated Successfully'
+    error: 'Error occured while updating Local Import Item!'

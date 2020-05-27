@@ -187,9 +187,17 @@ Rails.application.routes.draw do
   resources :local_imports do
     member do
       get :edit_idf
+      post :update_dates
+      get :load_offloading_form
+      patch :update_offloadings
+      patch :update_dates
+      get :update_dates_form
+      get :view_modal
+      get :view_offloading_modal
     end
   end
   get '/local_operations', to: 'local_imports#operation_index'
+  get '/local_history', to: 'local_imports#history_index'
   get '/new_idf', to: 'local_imports#new_idf'
 
   resources :local_import_items
