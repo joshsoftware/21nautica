@@ -13,6 +13,11 @@ class ImportsController < ApplicationController
     @customers = Customer.order(:name)
   end
 
+  def edit
+    @import = Import.find(params['id'])
+    @customers = Customer.order(:name)
+  end
+
   def create
     @import = Import.new(import_params)
     if @import.save
@@ -54,12 +59,23 @@ class ImportsController < ApplicationController
   end
   
   def update
-    import = Import.find(import_update_params[:id])
-    attribute = import_update_params[:columnName].downcase.gsub(' ', '_').to_sym
-    if import.update(attribute => import_update_params[:value])
-      render text: import_update_params[:value]
+    @import = Import.find(params['id'])
+    if import_update_params.keys.length > 1
+      attribute = import_update_params[:columnName].downcase.gsub(' ', '_').to_sym
+      if import.update(attribute => import_update_params[:value])
+        render text: import_update_params[:value]
+      else
+        render text: import.errors.full_messages
+      end
     else
-      render text: import.errors.full_messages
+      if @import.update_attributes(import_params)
+        @import.update(quantity: @import.import_items.count)
+        flash[:notice] = I18n.t 'import.update'
+        redirect_to :imports
+      else
+        @customers = Customer.all
+        render 'edit'
+      end
     end
   end
 
@@ -92,7 +108,7 @@ class ImportsController < ApplicationController
                                    :work_order_number, :remarks, :status,
                                    :shipping_line_id,
                                    :bl_received_type, :consignee_name,
-                                   import_items_attributes: [:container_number])
+                                   import_items_attributes: %i[container_number id _destroy])
   end
 
   def import_update_params

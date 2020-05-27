@@ -78,7 +78,7 @@ Rails.application.routes.draw do
     end
   end
   #post 'customers/create_new_customer' => 'customers#create_new_customer', as: :create_new_customer
-  resources :imports, only: [:new ,:create ,:index] do
+  resources :imports do
     member do
       # post 'updateStatus'
       post 'retainStatus'

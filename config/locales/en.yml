@@ -21,6 +21,8 @@
 
 en:
   hello: "Hello world"
+  import:
+    'update': 'Import Order Updated Successfully'
   repair_head:
     'success': 'Repair Head Saved Successfully'
     'update': 'Repait Head Updated Successfully'

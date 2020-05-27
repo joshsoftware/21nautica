@@ -1,76 +1,75 @@
 .row
+  %hr
   = simple_nested_form_for @import , html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
-    .col-md-6
-      .form-group.custom-radio
-        .col-md-3
-          %label.control-label BL- Received Type
-        .col-md-6
-          %label.radio-inline
-            = f.radio_button :bl_received_type, "copy", :checked => (@import.new_record?)
-            = label :bl_received_type, 'Copy', inline: true
-          %label.radio-inline
-            = f.radio_button :bl_received_type, "original_telex"
-            = label :bl_received_type, 'Original/Telex'    
-      = f.input :bl_number, label: 'BL- Number', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}      
+    .row{style:"margin-left:2%;"}
+      .col-md-8
+        .form-group.custom-radio
+          .col-md-3
+            %label.control-label BL- Received Type
+          .col-md-6
+            %label.radio-inline
+              = f.radio_button :bl_received_type, "copy", :checked => (@import.new_record?)
+              = label :bl_received_type, 'Copy', inline: true
+            %label.radio-inline
+              = f.radio_button :bl_received_type, "original_telex"
+              = label :bl_received_type, 'Original/Telex'
+    .row{style:"margin-left:2%;"}
+      .col-md-5
+        = f.input :bl_number, label: 'BL- Number', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+      .col-md-6
+        %div{data: {for: 'customerSelect'}}
+          = render '/shared/customer', customers: @customers, model: 'import'
+    .row{style:"margin-left:2%;"}
+      .col-md-5
+        = f.input :from, collection: PORTS.keys, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+      .col-md-6
+        = f.input :to, collection: [], input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+    .row{style:"margin-left:2%;"}
+      .col-md-5
+        = f.input :shipper
+      .col-md-6
+        = f.input :consignee_name
+    .row{style:"margin-left:2%;"}
+      .col-md-5
+        %div{data: {for: 'customerSelect'}}
+          = render '/shared/shipping_line', shippers: get_shipping_line_vendors, model: 'import'
+      .col-md-6
+        = f.input :estimate_arrival, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}}
+    .row{style:"margin-left:2%;"}
+      .col-md-5
+        = f.input :equipment, collection: EQUIPMENT_TYPE, as: :select, label: 'Equipment', include_blank: false
+      .col-md-6
+        = f.input :description, label: 'Description', label: "#{@import.description}"
+    .row{style:"margin-left:2%;"}
+      .col-md-5
+        = f.input :rate_agreed, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+      .col-md-6
+        = f.input :weight, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+    .row{style:"margin-left:2%;"}
+      .col-md-5
+        = f.input :work_order_number, label: "File Ref No.", input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+    %hr
+    %div{class:"quality-div", style:"margin-left:3%;margin-bottom:2%;font-weight:bold"}
+      Container Details :
 
-      %div{data: {for: 'customerSelect'}}
-        = render '/shared/customer', customers: @customers, model: 'import'
-
-
-      = f.input :from, collection: PORTS.keys, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
-
-      = f.input :to, collection: [], input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
-      = f.input :shipper
-      = f.input :consignee_name
-
-      %div{data: {for: 'customerSelect'}}
-        = render '/shared/shipping_line', shippers: get_shipping_line_vendors, model: 'import'
-
-      = f.input :estimate_arrival, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}}
-
-      = f.input :equipment, collection: EQUIPMENT_TYPE, as: :select, label: 'Equipment', include_blank: false
-
-      = f.input :quantity, input_html: {:"data-validation" => "number", :"data-validation-error-msg" => "Quantity Should be a valid Positive Number."}
-
-      = f.input :description, label: 'Description', label: "#{@import.description}"
-      = f.input :rate_agreed, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
-      = f.input :weight, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
-      = f.input :work_order_number, label: "File Ref Number", input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
-
+    .row{style:"margin-left:2%;"}
+      .col-md-8
+        %div.scrollable-menu
+          = f.fields_for :import_items, html: {class: 'number'} do |item_form|
+            .col-md-8
+              = item_form.input :container_number, label: "Container", input_html: {class: 'form-control'}
+            .col-md-2
+              = item_form.link_to_remove 'Remove', class: 'btn btn-danger btn-sm'
+          = f.link_to_add "Add Container", :import_items, class: 'btn btn-primary btn-sm'
+    %hr
+    .row{style:"margin-left:2%;"}
       .form-group
-        .col-sm-offset-2.col-sm-2
-          = f.submit 'Save', class: 'btn-primary', "data-disable-with" => "saving...."
-    .col-md-6
-
-
-      %div.scrollable-menu
-
-        = f.fields_for :import_items, html: {class: 'number'} do |items_form|
-
-          = items_form.input :container_number, label: "Container", input_html: {class: 'form-control'}
-
-        = f.link_to_add "", :import_items
-
-
-
+        .col-sm-offset-4.col-sm-2
+          = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
 
 :coffeescript
 
   window.ports = #{PORTS.to_json}
-
-  $('#import_quantity').on 'blur', (event) ->
-    existing_count = $('.fields').size()
-    quantity = this.value
-    if quantity > existing_count
-      i = 0
-      while i < (quantity - existing_count)
-        $('.add_nested_fields').click()
-        i++
-    else
-      i = existing_count - 1
-      while i >= quantity
-        $('.fields')[i].remove()
-        i--
 
   $('#new_import').on 'submit', (event) ->
     i = 0
@@ -83,24 +82,12 @@
           event.preventDefault()
           return
         i++
-    else
-      alert('Container count not matching with quantity')
-      event.preventDefault()
     if Object.keys(container_hash).length < $('.fields').size()
       alert('Duplicate container numbers!!')
       event.preventDefault()
-
-  jQuery ($) ->
-
-  $(document).on "nested:fieldRemoved", (event) ->
-    if $('#import_quantity')[0].value != ""
-      $('#import_quantity')[0].value = parseInt($('#import_quantity')[0].value) - 1
     return
-
-  return
 
 :javascript
   $(document).ready(function(){
     $("[data-for='multiselect']").select2();
   })
-
