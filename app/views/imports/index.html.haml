@@ -30,7 +30,10 @@
         %td= import.bl_number
         %td= import.shipping_line.try(:name)
         %td= import.equipment
-        %td= (import.weight.to_f/import.quantity).round(2)
+        - if import.quantity
+          %td= (import.weight.to_f/import.quantity).round(2)
+        - else
+          %td= '-'
         %td= import.work_order_number
         %td= import.estimate_arrival
         %td= import.quantity
