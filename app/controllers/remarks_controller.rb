@@ -31,6 +31,10 @@ class RemarksController < ApplicationController
       @model_instance = Import.find_by(id: remarks_params[:model_id])
     when "import_item"
       @model_instance = ImportItem.find_by(id: remarks_params[:model_id])
+    when "local_import"
+      @model_instance = LocalImport.find_by(id: remarks_params[:model_id])
+    when "local_import_item"
+      @model_instance = LocalImportItem.find_by(id: remarks_params[:model_id])
     end
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191216070605) do
+ActiveRecord::Schema.define(version: 20200519122432) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -347,6 +347,56 @@ ActiveRecord::Schema.define(version: 20191216070605) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "local_import_items", force: true do |t|
+    t.date     "offloading_date"
+    t.string   "container_number"
+    t.string   "status"
+    t.string   "truck"
+    t.integer  "local_import_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "local_import_items", ["local_import_id"], name: "index_local_import_items_on_local_import_id", using: :btree
+
+  create_table "local_imports", force: true do |t|
+    t.string   "bl_number"
+    t.string   "description"
+    t.integer  "shipper"
+    t.string   "equipment_type"
+    t.integer  "quantity"
+    t.boolean  "exemption_code_needed"
+    t.boolean  "kebs_exemption_code_needed"
+    t.string   "vessel_name"
+    t.date     "estimated_arrival"
+    t.string   "gwt"
+    t.string   "fpd"
+    t.string   "idf_number"
+    t.date     "idf_date"
+    t.string   "invoice_number"
+    t.string   "reference_number"
+    t.date     "reference_date"
+    t.string   "customer_reference"
+    t.string   "status"
+    t.integer  "customer_id"
+    t.integer  "bill_of_lading_id"
+    t.integer  "shipping_line_id"
+    t.date     "exemption_code_date"
+    t.date     "kebs_exemption_code_date"
+    t.string   "customs_entry_number"
+    t.date     "customs_entry_date"
+    t.date     "duty_payment_date"
+    t.date     "sgr_move_date"
+    t.date     "icd_arrival_date"
+    t.date     "loaded_out_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "local_imports", ["bill_of_lading_id"], name: "index_local_imports_on_bill_of_lading_id", using: :btree
+  add_index "local_imports", ["customer_id"], name: "index_local_imports_on_customer_id", using: :btree
+  add_index "local_imports", ["shipping_line_id"], name: "index_local_imports_on_shipping_line_id", using: :btree
 
   create_table "location_dates", force: true do |t|
     t.integer  "truck_id"
