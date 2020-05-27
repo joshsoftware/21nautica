@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 class LocalImportsController < ApplicationController
-  before_action :set_local_import, only: [:edit, :update, :edit_idf, :update_dates, :update_offloadings, :view_offloading_modal,
-                                          :load_offloading_form, :update_offloadings, :update_dates_form, :view_modal]
+  before_action :set_local_import, only: %i[edit update edit_idf update_dates update_offloadings view_offloading_modal
+                                            load_offloading_form update_offloadings update_dates_form view_modal]
 
   def index
     @local_imports = LocalImport.where(status: nil)
-    @equipment_type = EQUIPMENT_TYPE.inject({}) { |h, x| h[x] = x; h }
+    @equipment_type = EQUIPMENT_TYPE.each_with_object({}) {|x, h| h[x] = x; }
   end
 
   def operation_index
     @local_imports = LocalImport.where(status: :order_created)
-    @equipment_type = EQUIPMENT_TYPE.inject({}) { |h, x| h[x] = x; h }
+    @equipment_type = EQUIPMENT_TYPE.each_with_object({}) {|x, h| h[x] = x; }
   end
 
   def history_index
@@ -42,8 +42,8 @@ class LocalImportsController < ApplicationController
 
   def create
     @local_import = LocalImport.new(local_import_params)
-    @local_import.exemption_code_needed = false if !params[:local_import][:exemption_code_needed]
-    @local_import.kebs_exemption_code_needed = false if !params[:local_import][:kebs_exemption_code_needed]
+    # @local_import.exemption_code_needed = false unless params[:local_import][:exemption_code_needed]
+    # @local_import.kebs_exemption_code_needed = false unless params[:local_import][:kebs_exemption_code_needed]
 
     if @local_import.save
       if params[:local_import][:fpd] && params[:local_import][:bl_number]
@@ -61,11 +61,11 @@ class LocalImportsController < ApplicationController
 
   def update
     attributes = local_import_params
-    if attributes[:fpd] && attributes[:bl_number]
-      attributes[:exemption_code_needed] = false if !params[:local_import][:exemption_code_needed]
-      attributes[:kebs_exemption_code_needed] = false if !params[:local_import][:kebs_exemption_code_needed]
-    end
-    if @local_import.update_attributes(attributes)
+    # if attributes[:fpd] && attributes[:bl_number]
+    #   attributes[:exemption_code_needed] = false unless params[:local_import][:exemption_code_needed]
+    #   attributes[:kebs_exemption_code_needed] = false unless params[:local_import][:kebs_exemption_code_needed]
+    # end
+    if @local_import.update(attributes)
       if attributes[:fpd] && attributes[:bl_number]
         @local_import.update(quantity: @local_import.local_import_items.count, status: :order_created)
         create_bill_of_lading
@@ -76,24 +76,24 @@ class LocalImportsController < ApplicationController
       @customers = Customer.all
       render "edit"
     end
-    @local_import.update(status: :order_completed) if check_order_completed
   end
 
   def update_dates
     if @local_import.update(local_import_params)
       flash[:notice] = I18n.t "local_import.update"
     else
-      flash[:alert] = I18n.t "local_import.update_error" + @local_import.error.full_messages.join(', ') 
+      flash[:alert] = I18n.t "local_import.update_error" + @local_import.error.full_messages.join(", ")
     end
-    @local_import.update(status: :order_completed) if check_order_completed
+    @local_import.update(status: :order_completed) if order_completed?
     @local_imports = LocalImport.where(status: :order_created)
-    @equipment_type = EQUIPMENT_TYPE.inject({}) { |h, x| h[x] = x; h }
+    @equipment_type = EQUIPMENT_TYPE.each_with_object({}) {|x, h| h[x] = x; }
     render "operation_index"
   end
 
   def load_offloading_form; end
+
   def update_dates_form; end
-  
+
   def update_offloadings
     items = params[:local_import][:local_import_items_attributes]
     items.keys.each do |key|
@@ -106,31 +106,32 @@ class LocalImportsController < ApplicationController
         flash[:alert] = I18n.t "local_import_item.error" + li.errors.full_messages.join(", ")
       end
     end
-    @local_import.update(status: :order_completed) if check_order_completed
+    @local_import.update(status: :order_completed) if order_completed?
   end
 
   def view_modal
-    @local_import = @local_import.attributes.slice("exemption_code_date", "kebs_exemption_code_date", "customs_entry_number", 
-                      "customs_entry_date", "duty_payment_date", "sgr_move_date", "icd_arrival_date", "loaded_out_date")
+    @local_import = @local_import.attributes.slice("exemption_code_date", "kebs_exemption_code_date", "customs_entry_number",
+                                                   "customs_entry_date", "duty_payment_date", "sgr_move_date", "icd_arrival_date", "loaded_out_date")
   end
 
-  def view_offloading_modal;  end
+  def view_offloading_modal; end
 
   private
+
   def set_local_import
     @local_import = LocalImport.find(params[:id])
   end
 
   def check_exemption_dates
-    if @local_import.exemption_code_needed
-      return false if !@local_import.exemption_code_date
-    elsif @local_import.kebs_exemption_code_needed
-      return false if !@local_import.kebs_exemption_code_date
+    if @local_import.exemption_code_needed && !@local_import.exemption_code_date
+      return false
+    elsif @local_import.kebs_exemption_code_needed && !@local_import.kebs_exemption_code_date
+      return false
     end
     true
   end
 
-  def check_order_completed
+  def order_completed?
     check_exemption_dates && @local_import.customs_entry_number.present? &&
     @local_import.customs_entry_date.present? && @local_import.duty_payment_date.present? &&
     @local_import.sgr_move_date.present? && @local_import.icd_arrival_date.present? &&
