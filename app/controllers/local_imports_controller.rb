@@ -42,9 +42,6 @@ class LocalImportsController < ApplicationController
 
   def create
     @local_import = LocalImport.new(local_import_params)
-    # @local_import.exemption_code_needed = false unless params[:local_import][:exemption_code_needed]
-    # @local_import.kebs_exemption_code_needed = false unless params[:local_import][:kebs_exemption_code_needed]
-
     if @local_import.save
       if params[:local_import][:fpd] && params[:local_import][:bl_number]
         @local_import.update(quantity: @local_import.local_import_items.count, status: :order_created)
@@ -61,10 +58,6 @@ class LocalImportsController < ApplicationController
 
   def update
     attributes = local_import_params
-    # if attributes[:fpd] && attributes[:bl_number]
-    #   attributes[:exemption_code_needed] = false unless params[:local_import][:exemption_code_needed]
-    #   attributes[:kebs_exemption_code_needed] = false unless params[:local_import][:kebs_exemption_code_needed]
-    # end
     if @local_import.update(attributes)
       if attributes[:fpd] && attributes[:bl_number]
         @local_import.update(quantity: @local_import.local_import_items.count, status: :order_created)
