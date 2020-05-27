@@ -4,5 +4,5 @@
   .col-md-6
     = select_tag "#{model}[customer_id]", options_for_select(customers.collect{|customer| [customer.name, customer.id]}), {data: {for: 'multiselect'}, class: 'customer_select'}
   .col-md-2
-    = link_to 'Add new customer', new_customer_path, remote: true, class: 'btn btn-info'
+    = link_to 'Add new customer', new_customer_path, remote: true, class: 'btn btn-info btn-sm'
 

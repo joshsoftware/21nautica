@@ -25,7 +25,8 @@ class Import < ActiveRecord::Base
   include EspinitaPatch
   include Remarkable
 
-  has_many :import_items, :dependent => :destroy
+  has_many :import_items, dependent: :destroy
+  accepts_nested_attributes_for :import_items, allow_destroy: true
   has_many :bill_items, as: :activity
   belongs_to :customer
   belongs_to :bill_of_lading
@@ -43,8 +44,6 @@ class Import < ActiveRecord::Base
   before_validation :strip_whitespaces, :only => [:bl_number]
   validates_format_of :bl_received_at, :with => /\d{4}\-\d{2}\-\d{2}/, :message => "^Date must be in the following format: yyyy/mm/dd", :allow_blank => true
   validate :shouldnt_be_future_date
-
-  accepts_nested_attributes_for :import_items
 
   enum entry_type: ["wt8", "im4"]
   enum bl_received_type: ["copy", "original_telex"]

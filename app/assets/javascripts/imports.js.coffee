@@ -3,8 +3,19 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $(document).on "page:load ready", ->
-  $(".date").datepicker(
-    format :"dd-mm-yyyy")
+  $(".date").datepicker(format :"dd-mm-yyyy")
+  $el = $("#import_to")
+  optionSelected = $('#import_from').val()
+  if (optionSelected == "Dar Es Salaam")
+    newOptions = window.ports["Dar Es Salaam"]
+    $("#import_to").find("option:gt(0)").remove()
+    $.each newOptions, (index, value) ->
+      $el.append $('<option></option>').attr('value', value).text(value)
+  else
+    newOptions = window.ports["Mombasa"]
+    $("#import_to").find("option:gt(0)").remove()
+    $.each newOptions, (index, value) ->
+      $el.append $('<option></option>').attr('value', value).text(value)
   return
 
 $(document).on 'change', '#destination', ->
