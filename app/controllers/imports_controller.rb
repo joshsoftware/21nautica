@@ -21,6 +21,7 @@ class ImportsController < ApplicationController
   def create
     @import = Import.new(import_params)
     if @import.save
+      @import.update(quantity: @import.import_items.count)
       if is_ug_host?
         @bl_number = @import.bl_number
         authority_pdf = authority_letter_draft
