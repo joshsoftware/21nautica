@@ -36,7 +36,7 @@
         -# %td= import.reference_date
         %td
           - if is_rfs_host?
-            = "#{import.customer.name}" + " / " + "#{import.shipper}" +" / "+ "#{import.consignee_name}"
+            = "#{import.customer.name}" + " / " + "#{import.shipper}"
           - else
             = "#{import.customer.name}"
         %td= import.bl_number

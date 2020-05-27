@@ -28,7 +28,7 @@
         %td= import.reference_number
         %td= import.reference_date  
         - if is_rfs_host?
-          %td= "#{import.customer.name}" + " / " + "#{import.shipper}" +" / "+ "#{import.consignee_name}"
+          %td= "#{import.customer.name}" + " / " + "#{import.shipper}"
         - else
           %td= "#{import.customer.name}"
         %td= import.invoice_number
