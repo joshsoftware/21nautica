@@ -10,7 +10,7 @@
     %th Ref Number
     -# %th Ref Date
     - if is_rfs_host?
-      %th.shrink-name Customer Name / Shipper Name / Consignee Name
+      %th.shrink-name Customer Name / Shipper Name
     - else
       %th.shrink-name Customer Name
     %th BL No.
@@ -36,7 +36,7 @@
         -# %td= import.reference_date
         %td
           - if is_rfs_host?
-            = "#{import.customer.name}" + " / " + "#{import.shipper}" +" / "+ "#{import.consignee_name}"
+            = "#{import.customer.name}" + " / " + "#{import.shipper}"
           - else
             = "#{import.customer.name}"
         %td= import.bl_number
