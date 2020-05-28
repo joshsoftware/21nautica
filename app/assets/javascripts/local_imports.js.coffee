@@ -13,13 +13,7 @@ datatable_initialize = ->
                     "bJQueryUI": true
                     "bFilter": true,
                     "sPaginationType": "full_numbers"
-                    }).makeEditable(
-                      sUpdateURL: 'local_imports/update',
-                      aoColumns: [null, null, null,
-                                  null, null, null,
-                                  null, null, null,
-                                  null, null
-                                 ])
+                    })
 
 $(document).ready datatable_initialize
 
