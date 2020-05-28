@@ -1,0 +1,38 @@
+.row
+  %hr
+  = simple_form_for @local_import , html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
+    .row{style:"margin-left:2%;"}
+      .col-md-6
+        = f.input :reference_number, label: "Ref. Number", input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory"}
+      .col-md-6
+        = f.input :reference_date, as: :string, label: "Ref Date", input_html: { value: localize(f.object.reference_date || Date.today, format: "%d-%m-%Y"), class: 'form-control date', data: {behaviour: "datepicker"}}
+    .row{style:"margin-left:2%;"}
+      .col-md-6
+        = f.input :idf_number, label: "IDF Number"
+      .col-md-6
+        = f.input :idf_date, as: :string, label: "IDF Date", input_html: { value: localize(f.object.idf_date || Date.today, format: "%d-%m-%Y"), class: 'form-control date', data: {behaviour: "datepicker"}}
+    .row{style:"margin-left:2%;"}  
+      .col-md-6
+        %div{data: {for: 'customerSelect'}}
+          = render '/shared/customer', customers: @customers, model: 'local_import'
+      .col-md-6
+        = f.input :invoice_number, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory"}
+    .row{style:"margin-left:2%;"}
+      .col-md-6
+        = f.input :shipper
+      .col-md-6
+        = f.input :description
+    .row{style:"margin-left:2%;"}
+      .col-md-6
+        = f.input :gwt, label: "GWT"
+
+    %hr
+    .row{style:"margin-left:2%;"}
+      .form-group
+        .col-sm-offset-4.col-sm-2
+          = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
+    %hr
+:javascript
+  $(document).ready(function(){
+    $("[data-for='multiselect']").select2();
+  })
