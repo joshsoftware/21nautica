@@ -80,7 +80,15 @@
   window.ports = #{PORTS.to_json}
 
 :javascript
+  $(document).on('nested:fieldRemoved', function(event) {
+    if($('.fields:visible').length == 0)
+      $('.add_nested_fields').click()
+  })
+
   $(document).on('ready page:load', function(){
+    local_import_items = #{@local_import.local_import_items.count}
+    if(local_import_items == 0 && $('.fields').length == 0)
+      $('.add_nested_fields').click()
     ecn_val = #{@local_import.exemption_code_needed  || false}
     kecn_val = #{@local_import.kebs_exemption_code_needed || false}
     $('#ecn').prop('checked', ecn_val)
@@ -94,13 +102,11 @@
   })
 
   $('#ecn').on('change', function() {
-    console.log("Here")
     checked = $('#ecn').prop('checked')
     $('#ecn').prop('value', checked)
   })
 
   $('#kecn').on('change', function() {
-    console.log("Here")
     checked = $('#kecn').prop('checked')
     $('#kecn').prop('value', checked)
   })
