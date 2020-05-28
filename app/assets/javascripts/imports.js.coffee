@@ -11,7 +11,11 @@ $(document).on "page:load ready", ->
     $("#import_to").find("option:gt(0)").remove()
     $.each newOptions, (index, value) ->
       $el.append $('<option></option>').attr('value', value).text(value)
+<<<<<<< HEAD
   else
+=======
+  else if(window.ports && window.ports != undefined)
+>>>>>>> 5bfbd94252fbd77ce6c471e54bb202d4f7b2dab0
     newOptions = window.ports["Mombasa"]
     $("#import_to").find("option:gt(0)").remove()
     $.each newOptions, (index, value) ->

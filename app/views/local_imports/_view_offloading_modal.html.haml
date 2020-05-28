@@ -1,0 +1,23 @@
+#ViewOffloadingModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+        %h3.modal-title Offloading Details:
+      .modal-body
+        %table.table{id: 'local_imports_table'}
+          %thead
+            %th Sr.No
+            %th Container
+            %th Offloading Date
+            %th Truck
+          %tbody
+            - @local_import.local_import_items.each_with_index do |item, index|
+              %tr
+                %td= index + 1
+                %td= item.container_number
+                %td= item.offloading_date
+                %td= item.truck
+
+      .modal-footer
+        = link_to 'Close', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}

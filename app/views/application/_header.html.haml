@@ -12,7 +12,7 @@
           = link_to '21 Nautica', '#', class: 'navbar-brand'
       %ul.nav.navbar-nav
         - if user_signed_in? && ['Admin', 'Operations', 'Accounts', 'Transport'].include?(current_user.role)
-          %li.dropdown
+          %li.dropdown{class: ('active' if controller.controller_name.eql?('imports'))}
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
               Import
               %span.caret
@@ -27,7 +27,7 @@
               %li= link_to 'Import/Download Location', import_location_trucks_path
               %li= link_to 'Breakdown Mng', breakdown_managements_path
         - if user_signed_in? && ['Admin', 'Operations', 'Accounts', 'Transport'].include?(current_user.role)
-          %li.dropdown
+          %li.dropdown{class: ('active' if controller.controller_name.eql?('exports'))}
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
               Export
               %span.caret
@@ -95,7 +95,7 @@
               -# %li= link_to 'Merge Spare Parts', coming_soon_path
               %li= link_to 'Breakdown Reason Master',breakdown_reasons_path
         - if user_signed_in? && current_user.is?('Admin')      
-          %li.dropdown
+          %li.dropdown{class: ('active' if controller.controller_name.eql?('reports'))}
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
               Reports 
               %span.caret
@@ -104,6 +104,17 @@
               %li= link_to 'Customer Invoice', reports_customer_invoices_path
               %li= link_to 'Payments Made', reports_payments_made_path
               %li= link_to 'Payments Received', reports_payments_received_path
+        - if user_signed_in? && ['Admin', 'Local'].include?(current_user.role)
+          %li.dropdown{class: ('active' if controller.controller_name.eql?('local_imports'))}
+            = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
+              Local
+              %span.caret
+            %ul.dropdown-menu
+              %li= link_to 'New Order', new_local_import_path
+              %li= link_to 'IDF', local_imports_path
+              %li= link_to 'Operations', '/local_operations'
+              %li= link_to 'History', '/local_history'
+
       -#%div.navbar-form.navbar-left
         %form{role: "search", action: "/bill_of_ladings/search"}
           .form-group
