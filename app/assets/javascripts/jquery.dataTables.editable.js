@@ -1252,22 +1252,21 @@ returns true if plugin should continue with sending AJAX request, false will abo
 
 
             //If form ok button exists convert it to the JQuery-ui button
-            if (oConfirmRowAddingButton !== null && oConfirmRowAddingButton != undefined) {
+            if (oConfirmRowAddingButton !== null) {
                 if (properties.oAddNewRowOkButtonOptions !== null) {
                     oConfirmRowAddingButton.button(properties.oAddNewRowOkButtonOptions);
                 }
             }
 
             //If form cancel button exists convert it to the JQuery-ui button
-            if (oCancelRowAddingButton !== null && oCancelRowAddingButton != undefined) {
+            if (oCancelRowAddingButton !== null) {
                 if (properties.oAddNewRowCancelButtonOptions !== null) {
                     oCancelRowAddingButton.button(properties.oAddNewRowCancelButtonOptions);
                 }
             }
 
             //Add handler to the inline delete buttons
-            // $(".table-action-deletelink", oTable).live("click", _fnOnRowDeleteInline);
-            $(".table-action-deletelink", oTable).on("click", 'a', _fnOnRowDeleteInline);
+            $(".table-action-deletelink", oTable).live("click", _fnOnRowDeleteInline);
 
             if (!properties.bUseKeyTable) {
             //Set selected class on row that is clicked
