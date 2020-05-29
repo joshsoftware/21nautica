@@ -6,22 +6,16 @@ class LocalImportsController < ApplicationController
 
   def index
     @local_imports = LocalImport.where(status: nil)
+    @equipment_type = EQUIPMENT_TYPE.each_with_object({}) {|x, h| h[x] = x; }
   end
 
   def operation_index
-    if(!params[:destination] || params[:destination] == 'All')
-      @local_imports = LocalImport.where(status: :order_created)
-    else
-      @local_imports = LocalImport.where(status: :order_created, fpd: params[:destination])
-    end
+    @local_imports = LocalImport.where(status: :order_created)
+    @equipment_type = EQUIPMENT_TYPE.each_with_object({}) {|x, h| h[x] = x; }
   end
 
   def history_index
-    if(!params[:destination] || params[:destination] == 'All')
-      @local_imports = LocalImport.where(status: :order_completed)
-    else
-      @local_imports = LocalImport.where(status: :order_completed, fpd: params[:destination])
-    end
+    @local_imports = LocalImport.where(status: :order_completed)
   end
 
   def new

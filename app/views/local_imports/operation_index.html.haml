@@ -1,15 +1,7 @@
 .row
-  .col-md-4
-    %div{style:"margin-left:2%"}
-      %h4
-        %b Operations
-  .col-md-4.pull-right{style: "margin-top: 5px;margin-right: 2%"}
-    .destination_filter.pull-right
-      = form_tag local_operations_path, method: :get do |f|
-        %b= 'FPD :'.upcase
-        &emsp;
-        = select_tag 'destination', options_for_select( [:All, :Nairobi, :Mombasa], params[:destination] || 'All' )
-
+  %div{style:"margin-left:2%"}
+    %h4
+      %b Operations
 %hr{style:"margin:10px;"}
 %table.table{id: 'local_imports_table'}
   %thead
@@ -57,13 +49,13 @@
         %td= import.shipping_line.name
         %td= import.gwt
         %td
-          - if import.exemption_code_needed?
+          - if import.exemption_code_needed? 
             Yes
           - else
             No
         %td
-          - if import.kebs_exemption_code_needed?
-            Yes
+          - if import.kebs_exemption_code_needed? 
+            Yes 
           - else
             No
         %td.remarks.h5

@@ -1,14 +1,6 @@
 .row
-  .col-md-4
-    %h4
-      %b &emsp;Local Order History
-  .col-md-4.pull-right{style: "margin-top: 5px;margin-right: 2%"}
-    .destination_filter.pull-right
-      = form_tag local_history_path, method: :get do |f|
-        %b= 'FPD :'.upcase
-        &emsp;
-        = select_tag 'destination', options_for_select( [:All, :Nairobi, :Mombasa], params[:destination] || 'All' )
-
+  %h4
+    %b &emsp;Local Order History
 %hr{style:"margin:10px;"}
 %table.table{id: 'local_imports_table'}
   %thead
