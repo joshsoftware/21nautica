@@ -1,0 +1,93 @@
+!!!
+%html
+  %body
+    %p
+    %meta{content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %p
+      Dear Customer,
+    %br
+    We would like to thank you for giving us an opportunity to serve you. We would like to confirm that we are in receipt of your duty payment receipt. We are working on releasing the shipment and delivering the same to you. In the event you have any queries please don't hesitate to contact us.
+    %br
+    %br
+    %table{style: "width:auto"}
+      %tbody
+        %tr
+          %td Reference Number
+          %td
+            &emsp; : &emsp;
+            %b #{ @local_import.reference_number }
+        %tr
+          %td BL Number
+          %td 
+            &emsp; : &emsp;
+            %b #{ @local_import.bl_number }
+        %tr
+          %td ETA
+          %td
+            &emsp; : &emsp;
+            %b #{ @local_import.estimated_arrival }
+        %tr
+          %td Final Place of Discharge
+          %td
+            &emsp; : &emsp;
+            %b #{ @local_import.fpd }
+        %tr
+          %td Shipping Line
+          %td
+            &emsp; : &emsp;
+            %b #{ @local_import.shipping_line.name }
+        %tr
+          %td Equipment x Quantity
+          %td
+            &emsp; : &emsp;
+            %b #{ @local_import.equipment_type } &nbsp; x &nbsp; #{ @local_import.quantity }
+        %tr
+          %td Duty Paid Date
+          %td
+            &emsp; : &emsp;
+            %b #{ @local_import.duty_payment_date }
+        %tr
+          %td Description
+          %td
+            &emsp; : &emsp;
+            %b #{ @local_import.description }
+        %tr
+          %td Shipper Name
+          %td
+            &emsp; : &emsp;
+            %b #{ @local_import.shipper }
+    %br
+    We would be sending you regular updates on all your pending Shipments being handled by us. Please don't hesitate to contact us in case you have any queries.
+    %br
+    %br
+    Thanks for your support.
+    %br
+    Team Reliable 
+    %br
+    %br
+    For Any Queries you may reach,
+    %br
+    1) Mr. David :‭ +254 722 946 001‬
+    %br
+    2) M. Amber : ‭+254 792 938 222‬
+    %br
+    3) Mr. Kaushik  : ‭+254 708 626 923‬
+    %br
+
+    %br
+    %br
+    **********************************************************************
+    %br
+    %br
+    The information in this message is confidential and may be legally privileged. It is intended solely for the addressee.
+    %br
+    %br
+    Access to this message by anyone else is unauthorized. If you are not the intended recipient, any disclosure, copying, or distribution of the message, or any action or omission taken by you in reliance on it, is prohibited and may be unlawful. Please immediately contact the sender if you have received this message in error.
+    %br
+    %br
+    Thank You,
+    %br
+    21 Nautica Private Limited
+    %br
+    %br
+    **********************************************************************

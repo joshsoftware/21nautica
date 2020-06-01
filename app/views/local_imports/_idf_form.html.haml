@@ -10,7 +10,9 @@
       .col-md-6
         = f.input :idf_number, label: "IDF Number"
       .col-md-6
-        = f.input :idf_date, as: :string, label: "IDF Date", input_html: { value: localize(f.object.idf_date || Date.today, format: "%d-%m-%Y"), class: 'form-control date', data: {behaviour: "datepicker"}}
+        = f.input :idf_date, as: :string, label: "IDF Date", required: true,
+          input_html: { value: localize(f.object.idf_date || Date.today, format: "%d-%m-%Y"),
+                        data: {behaviour: "datepicker"}, class: 'form-control date' }
     .row{style:"margin-left:2%;"}  
       .col-md-6
         %div{data: {for: 'customerSelect'}}
@@ -25,11 +27,33 @@
     .row{style:"margin-left:2%;"}
       .col-md-6
         = f.input :gwt, label: "GWT"
-    .row{style:"margin-left:2%"}
       .col-md-6
-        =# f.input :country_of_origin
-      .col-md-6
-        =# f.input
+        = f.input :country_of_origin, class: 'form-control', required: true
+    .row{style:"margin-left:2%;margin-top:2%"}
+      .col-md-1
+        %b Comesa &emsp;
+      .col-md-1
+        %input{:type => "checkbox", :class => "form-check-input", :name => "local_import[comesa]", :id => "comesa"}
+
+    %hr
+    %h4{style:"margin-left:2%"}
+      %b Charges
+    %hr
+    .row{style:"margin-left:2%;"}
+      .col-md-6{style:"display:flex;"}
+        = f.input :fob, label: "FOB", input_html: {style:"width:auto;margin-left:68px"}
+        = f.input :fob_currency, collection: Money::Currency.collect{|c| c.iso_code}, as: :select,
+          include_blank: false, label: false, input_html: {style: "width:auto;float:left;margin-left:35px;"}
+      .col-md-6{style:"display:flex;"}
+        = f.input :freight, input_html: {style:"width:auto;margin-left:68px"}
+        = f.input :freight_currency, collection: Money::Currency.collect{|c| c.iso_code}, as: :select, 
+          include_blank: false, label: false, input_html: {style: "width:auto;float:left;margin-left:25px;"}
+
+    .row{style:"margin-left:2%;"}
+      .col-md-6{style:"display:flex;"}
+        = f.input :other_charges, label: 'Others', input_html: {style:"width:auto;margin-left:65px"}
+        = f.input :other_currency, collection: Money::Currency.collect{|c| c.iso_code}, as: :select,
+          include_blank: false, label: false, input_html: {style: "width:auto;float:left;margin-left:23px;"}
 
     %hr
     .row{style:"margin-left:2%;"}
@@ -40,4 +64,15 @@
 :javascript
   $(document).ready(function(){
     $("[data-for='multiselect']").select2();
+  })
+
+  $(document).on('ready page:load', function(){
+    comesa = #{@local_import.comesa || false}
+    $('#comesa').prop('checked', comesa)
+    $('#comesa').prop('value', comesa)
+  })
+
+  $('#comesa').on('change', function() {
+    checked = $('#comesa').prop('checked')
+    $('#comesa').prop('value', checked)
   })

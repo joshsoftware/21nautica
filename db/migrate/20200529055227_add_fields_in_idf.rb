@@ -8,7 +8,8 @@ class AddFieldsInIdf < ActiveRecord::Migration
     add_column :local_imports, :freight_currency, :string
     add_column :local_imports, :other_charges, :float
     add_column :local_imports, :other_currency, :string
-    add_column :local_imports, :customs_entry_value, :float
-    add_column :local_imports, :duty_amount, :float
+    add_column :local_imports, :copy_documets_date, :date
+    add_column :local_imports, :original_documents_date, :date
+    change_column :local_imports, :shipper, :string
   end
 end
