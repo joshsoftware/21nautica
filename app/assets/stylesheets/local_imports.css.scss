@@ -1,0 +1,34 @@
+// Place all the styles related to the imports controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.scrollable-menu {
+    height: auto;
+    max-height: 400px;
+    overflow-x: hidden;
+}
+
+#records_found {
+  font-weight: bold;
+}
+
+.width9 {
+  width: 9%;
+}
+
+.mt4 {
+  margin-top: 14px !important;
+}
+.shipping-line-imports {
+  width: 9% !important
+}
+
+.bl-width {
+  width: 10% !important
+}
+.remarks {
+  width: 13% !important
+}
+
+.idf-date {
+  width: 10% !important
+}

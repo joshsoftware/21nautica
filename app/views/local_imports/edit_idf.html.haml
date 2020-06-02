@@ -1,0 +1,6 @@
+%h4
+  %b= link_to 'IDF', local_imports_path 
+  %b &emsp;>&emsp; Edit &emsp;>&emsp; #{@local_import.id}
+= render :partial => 'idf_form'
+
+%div{data: {for: 'newCustomer'}}

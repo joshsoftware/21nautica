@@ -68,8 +68,8 @@
           = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
 
 :coffeescript
-
   window.ports = #{PORTS.to_json}
+  window.to = "#{@import.to}"
 
   $('#new_import').on 'submit', (event) ->
     i = 0
@@ -90,4 +90,15 @@
 :javascript
   $(document).ready(function(){
     $("[data-for='multiselect']").select2();
+  })
+
+  $(document).on('ready page:load', function() {
+    import_items = #{@import.import_items.count}
+    if(import_items == 0 && $('.fields').length == 0)
+      $('.add_nested_fields').click()
+  })
+
+  $(document).on('nested:fieldRemoved', function(event) {
+    if($('.fields:visible').length == 0)
+      $('.add_nested_fields').click()
   })

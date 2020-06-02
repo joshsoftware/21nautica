@@ -37,7 +37,6 @@ gem 'will_paginate-bootstrap'
 gem 'cancan'
 gem 'bootstrap-sass', '~> 3.2.0.4'
 gem 'bootstrap-tooltip-rails', '~> 0.1'
-
 # Haml-rails provides Haml generators for Rails 4
 gem 'haml-rails'
 # Use ActiveModel has_secure_password
@@ -69,6 +68,8 @@ gem 'sparkpost_rails', git: 'git@github.com:paritoshbotre/sparkpost_rails.git', 
 gem 'time_difference'
 gem 'whenever', require: false
 gem 'rollbar'
+gem 'country_select', '~> 4.0'
+gem 'money'
 # gem 'oj', '~> 2.16.1'
 
 group :development do

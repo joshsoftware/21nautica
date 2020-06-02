@@ -16,6 +16,8 @@ $(document).on "page:load ready", ->
     $("#import_to").find("option:gt(0)").remove()
     $.each newOptions, (index, value) ->
       $el.append $('<option></option>').attr('value', value).text(value)
+    if(window.to && window.to != undefined)
+      $("#import_to").val(window.to)
   return
 
 $(document).on 'change', '#destination', ->

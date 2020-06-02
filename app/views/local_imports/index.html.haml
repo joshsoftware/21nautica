@@ -1,0 +1,45 @@
+.row
+  %div{style:"float:left; margin-left:2%"}
+    %h4
+      %b IDF
+  %div{style:"float:rignt; margin-right:3%", class: "pull-right"}
+    = link_to 'Create IDF', '\new_idf', class: 'btn btn-primary'
+%hr{style:"margin:10px;"}
+%table.table{id: 'local_imports_table'}
+  %thead
+    %th.idf-date IDF Date
+    %th IDF Number
+    %th Ref Number
+    %th Ref Date
+    - if is_rfs_host?
+      %th.shrink-name Customer Name / Shipper Name
+    - else
+      %th.shrink-name Customer Name
+    %th Inv Number
+    %th Shipper
+    %th Description
+    %th GWT
+    %th Actions
+
+  %tbody
+    - @local_imports.each do |import|
+      %tr{id: import.id }
+        %td= import.idf_date
+        %td= import.idf_number
+        %td= import.reference_number
+        %td= import.reference_date  
+        - if is_rfs_host?
+          %td= "#{import.customer.name}" + " / " + "#{import.shipper}"
+        - else
+          %td= "#{import.customer.name}"
+        %td= import.invoice_number
+        %td= import.shipper
+        %td= import.description
+        %td= import.gwt
+        %td
+          = link_to 'Edit', edit_idf_local_import_path(import), class: 'btn btn-info btn-sm'
+          = link_to 'Add Order', edit_local_import_path(import), class: 'btn btn-primary btn-sm'
+%br
+%hr
+:coffeescript
+  @customers = #{@customers.to_json}

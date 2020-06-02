@@ -1,0 +1,18 @@
+%h4 
+  %b New Order
+= render 'form'
+
+%div{data: {for: 'newCustomer'}}
+
+:javascript
+  window.validate_form = function(){
+    $.validate({
+      form: '#new_customer',
+      scrollToTopOnError : false // Set this property to true if you have a long form
+    });
+    $.validate({
+      form: '#new_local_import',
+      scrollToTopOnError : false // Set this property to true if you have a long form
+    });
+  }
+  validate_form();

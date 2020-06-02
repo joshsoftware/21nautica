@@ -85,6 +85,13 @@ GEM
     coffee-script-source (1.8.0)
     concurrent-ruby (1.0.1)
     connection_pool (2.2.0)
+    countries (3.0.1)
+      i18n_data (~> 0.10.0)
+      sixarm_ruby_unaccent (~> 1.1)
+      unicode_utils (~> 1.4)
+    country_select (4.0.0)
+      countries (~> 3.0)
+      sort_alphabetical (~> 1.0)
     database_cleaner (1.4.0)
     debug_inspector (0.0.2)
     devise (3.4.1)
@@ -126,6 +133,7 @@ GEM
       ruby_parser (~> 3.5)
     htmlentities (4.3.3)
     i18n (0.7.0)
+    i18n_data (0.10.0)
     jbuilder (2.2.6)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
@@ -158,6 +166,8 @@ GEM
       metaclass (~> 0.0.1)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
+    money (6.13.7)
+      i18n (>= 0.6.4, <= 2)
     multi-select-rails (0.9.12)
       railties (>= 3.0)
     multi_json (1.10.1)
@@ -240,7 +250,10 @@ GEM
       rack (~> 1.5)
       rack-protection (~> 1.4)
       tilt (>= 1.3, < 3)
+    sixarm_ruby_unaccent (1.2.0)
     slop (3.6.0)
+    sort_alphabetical (1.1.0)
+      unicode_utils (>= 1.2.2)
     spring (1.2.0)
     sprockets (2.12.3)
       hike (~> 1.2)
@@ -270,6 +283,7 @@ GEM
     uglifier (2.7.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    unicode_utils (1.4.0)
     unicorn (4.8.3)
       kgio (~> 2.6)
       rack
@@ -300,6 +314,7 @@ DEPENDENCIES
   cancancan (~> 1.10)
   codeclimate-test-reporter
   coffee-rails (~> 4.0.0)
+  country_select (~> 4.0)
   database_cleaner
   devise
   dotenv-rails
@@ -316,6 +331,7 @@ DEPENDENCIES
   minitest-rails
   mocha
   momentjs-rails
+  money
   multi-select-rails (~> 0.9.12)
   nested_form
   numbers_in_words
