@@ -1,0 +1,93 @@
+#updateModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    = simple_form_for(@local_import, url: update_dates_local_import_path(@local_import), id: 'update-dates' ,html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+      .modal-content
+        .modal-header
+          = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+          %h3.modal-title Update Order Dates
+        .modal-body
+          .row
+            .col-md-5
+              %b Copy Documets Date:
+            .col-md-4
+              = f.input :copy_documents_date, html5: true, as: 'date', label: false, input_html: { class: 'form-control date', style: "width:auto" }
+          .row
+            .col-md-5
+              %b Original Documents Date:
+            .col-md-4
+              = f.input :original_documents_date, html5: true, as: 'date', label: false, input_html: { class: 'form-control date', style: "width:auto" }
+          -if @local_import.exemption_code_needed
+            .row
+              .col-md-5
+                %b Excemption Code Date:
+              .col-md-4
+                = f.input :exemption_code_date, html5: true, as: 'date', label: false, input_html: { class: 'form-control date', style: "width:auto" }
+          - if @local_import.kebs_exemption_code_needed
+            .row
+              .col-md-5
+                %b KEBS Excemption Code Date:
+              .col-md-4
+                = f.input :kebs_exemption_code_date, as: :date, html5: true, label: false, input_html: { class: 'form-control date', style: "width:auto" }
+          .row
+            .col-md-5
+              %b Customs Entry Number:
+            .col-md-7
+              = f.input :customs_entry_number, label: false, as: :text
+              #show_number_error
+          .row
+            .col-md-5
+              %b Customes Entry Date:
+            .col-md-4
+              = f.input :customs_entry_date, html5: true, as: 'date', label: false, input_html: { class: 'form-control date', style: "width:auto" }
+              #show_date_error
+          .row
+            .col-md-5
+              %b Duty Payment Date:
+            .col-md-4
+              = f.input :duty_payment_date, html5: true, as: 'date', label: false, input_html: { class: 'form-control date', style: "width:auto" }
+          .row
+            .col-md-5
+              %b SGR Move Date:
+            .col-md-4
+              = f.input :sgr_move_date, html5: true, as: 'date', label: false, input_html: { class: 'form-control date', style: "width:auto" }
+          .row
+            .col-md-5
+              %b ICD Arrival Date:
+            .col-md-4
+              = f.input :icd_arrival_date, html5: true, as: 'date', label: false, input_html: { class: 'form-control date', style: "width:auto" }
+          .row
+            .col-md-5
+              %b Loaded Out Date:
+            .col-md-4
+              = f.input :loaded_out_date, html5: true, as: 'date', label: false, input_html: { class: 'form-control date', style: "width:auto" }
+
+        .modal-footer
+          = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+          = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
+
+:coffeescript
+  $('#local_import_customs_entry_date').on 'change', (event) ->
+    if($('#local_import_customs_entry_date').val())
+      $('#show_date_error').hide()
+
+  $('#local_import_customs_entry_number').on 'change', (event) ->
+    if($('#local_import_customs_entry_number').val())
+      $('#show_number_error').hide()
+
+:javascript
+  $('#updateModal').submit(function(event) {
+    console.log('here');
+    let customs_date = document.getElementById("local_import_customs_entry_date").value;
+    let customs_number = document.getElementById("local_import_customs_entry_number").value;
+    if(customs_date && !customs_number) {
+      $('#show_number_error').html("<span class='text-danger' >Custom Entry Number is mandatory!</span><br/><br/>");
+      $('#show_number_error').show()
+      return false
+    } else if(!customs_date && customs_number) {
+      $('#show_date_error').html("<span class='text-danger' >Customs Entry Date is mandatory!</span><br/><br/>");
+      $('#show_number_error').show()
+      return false
+    } else {
+      $('#updateModal').modal('hide')
+    }
+  });

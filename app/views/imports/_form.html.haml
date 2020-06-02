@@ -68,8 +68,8 @@
           = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
 
 :coffeescript
-
   window.ports = #{PORTS.to_json}
+  window.to = "#{@import.to}"
 
   $('#new_import').on 'submit', (event) ->
     i = 0

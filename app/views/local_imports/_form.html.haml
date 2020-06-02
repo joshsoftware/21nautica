@@ -1,0 +1,151 @@
+.row
+  %hr
+  = simple_nested_form_for @local_import , html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
+    .row{style:"margin-left:2%;"}
+      .col-md-6
+        = f.input :reference_number, label: "Ref. Number", required: true
+      .col-md-6
+        = f.input :reference_date, as: :string, label: "Ref Date", input_html: { value: localize(f.object.reference_date || Date.today, format: "%d-%m-%Y"), class: 'form-control date', data: {behaviour: "datepicker"}}
+    .row{style:"margin-left:2%;"}
+      .col-md-6
+        = f.input :idf_number, label: "IDF Number", required: true
+      .col-md-6
+        = f.input :idf_date, as: :string, label: "IDF Date", input_html: { value: localize(f.object.idf_date || Date.today, format: "%d-%m-%Y"), class: 'form-control date', data: {behaviour: "datepicker"}}
+    .row{style:"margin-left:2%;"}  
+      .col-md-6
+        %div{data: {for: 'customerSelect'}}
+          = render '/shared/customer', customers: @customers, model: 'local_import'
+      .col-md-6
+        = f.input :invoice_number, required: true
+    .row{style:"margin-left:2%;"}
+      .col-md-6
+        = f.input :shipper
+      .col-md-6
+        = f.input :description
+    .row{style:"margin-left:2%;"}
+      .col-md-6
+        = f.input :gwt, label: "GWT"
+      .col-md-6
+        = f.input :country_of_origin, class: 'form-control', required: true
+
+    .row{style:"margin-left:2%;"}
+      .col-md-6
+        = f.input :customer_reference, label: "Customer Ref."
+      .col-md-6
+        = f.input :vessel_name, required: true
+    .row{style:"margin-left:2%;"}
+      .col-md-6
+        = f.input :estimated_arrival, as: :string, input_html: { value: localize(f.object.estimated_arrival || Date.today, format: "%d-%m-%Y"), class: 'form-control date', data: {behaviour: "datepicker"}}
+      .col-md-6
+        %div{data: {for: 'customerSelect'}}
+          = render '/shared/shipping_line', shippers: get_shipping_line_vendors, model: 'local_import'
+    .row{style:"margin-left:2%;"}
+      .col-md-6
+        = f.input :fpd, collection: [:Nairobi, :Mombasa], as: :select, include_blank: false, label: "FPD"
+      .col-md-6
+        = f.input :bl_number, required: true
+    .row{style:"margin-left:2%;"}
+      .col-md-6
+        = f.input :equipment_type, collection: EQUIPMENT_TYPE, as: :select, include_blank: false
+
+    %hr
+    .row{style:"margin-left:2%;margin-top:2%"}
+      .col-md-1
+        %b Comesa &emsp;
+      .col-md-1
+        %input{:type => "checkbox", :class => "form-check-input", :name => "local_import[comesa]", :id => "comesa"}
+      .col-md-2
+        %b Exemption Code Needed &emsp;
+      .col-md-2
+        %input{:type => "checkbox", :class => "form-check-input", :name => "local_import[exemption_code_needed]", :id => "ecn"}
+      .col-md-3
+        %b KEBS Exemption Code Needed &emsp;
+      .col-md-2
+        %input{:type => "checkbox", :class => "form-check-input", :name => "local_import[kebs_exemption_code_needed]", :id => "kecn"}
+    %br
+
+    %h4{style:"margin-left:2%;"}
+      %b Container Details
+    %hr
+    .row{style:"margin-left:2%;"}
+      .col-md-8
+        %div.scrollable-menu
+          = f.fields_for :local_import_items, html: {class: 'number'} do |item_form|
+            .col-md-8
+              = item_form.input :container_number, label: "Container", input_html: {class: 'form-control'}
+            .col-md-2
+              = item_form.link_to_remove 'Remove', class: 'btn btn-danger btn-sm'
+          = f.link_to_add "Add Container", :local_import_items, class: 'btn btn-primary btn-sm'
+
+    %br
+    %br
+    %h4{style:"margin-left:2%"}
+      %b Charges
+    %hr
+
+    .row{style:"margin-left:2%;"}
+      .col-md-6{style:"display:flex;"}
+        = f.input :fob, label: "FOB", input_html: {style:"width:auto;margin-left:68px"}
+        = f.input :fob_currency, collection: Money::Currency.collect{|c| c.iso_code}, as: :select,
+          include_blank: false, label: false, input_html: {style: "width:auto;float:left;margin-left:35px;"}
+      .col-md-6{style:"display:flex;"}
+        = f.input :freight, input_html: {style:"width:auto;margin-left:68px"}
+        = f.input :freight_currency, collection: Money::Currency.collect{|c| c.iso_code}, as: :select, 
+          include_blank: false, label: false, input_html: {style: "width:auto;float:left;margin-left:25px;"}
+
+    .row{style:"margin-left:2%;"}
+      .col-md-6{style:"display:flex;"}
+        = f.input :other_charges, label: 'Others', input_html: {style:"width:auto;margin-left:65px"}
+        = f.input :other_currency, collection: Money::Currency.collect{|c| c.iso_code}, as: :select,
+          include_blank: false, label: false, input_html: {style: "width:auto;float:left;margin-left:23px;"}
+
+    %hr
+    %br
+    .row{style:"margin-left:2%;"}
+      .form-group
+        .col-sm-offset-4.col-sm-2
+          = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
+    %hr
+
+:coffeescript
+  window.ports = #{PORTS.to_json}
+
+:javascript
+  $(document).on('nested:fieldRemoved', function(event) {
+    if($('.fields:visible').length == 0)
+      $('.add_nested_fields').click()
+  })
+
+  $(document).on('ready page:load', function(){
+    local_import_items = #{@local_import.local_import_items.count}
+    if(local_import_items == 0 && $('.fields').length == 0)
+      $('.add_nested_fields').click()
+    ecn_val = #{@local_import.exemption_code_needed  || false}
+    kecn_val = #{@local_import.kebs_exemption_code_needed || false}
+    comesa = #{@local_import.comesa || false}
+    $('#ecn').prop('checked', ecn_val)
+    $('#ecn').prop('value', ecn_val)
+    $('#kecn').prop('checked', kecn_val)
+    $('#kecn').prop('value', kecn_val)
+    $('#comesa').prop('checked', comesa)
+    $('#comesa').prop('value', comesa)
+  })
+
+  $(document).ready(function(){
+    $("[data-for='multiselect']").select2();
+  })
+
+  $('#ecn').on('change', function() {
+    checked = $('#ecn').prop('checked')
+    $('#ecn').prop('value', checked)
+  })
+
+  $('#kecn').on('change', function() {
+    checked = $('#kecn').prop('checked')
+    $('#kecn').prop('value', checked)
+  })
+
+  $('#comesa').on('change', function() {
+    checked = $('#comesa').prop('checked')
+    $('#comesa').prop('value', checked)
+  })

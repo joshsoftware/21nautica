@@ -69,6 +69,8 @@ gem 'sparkpost_rails', git: 'git@github.com:paritoshbotre/sparkpost_rails.git', 
 gem 'time_difference'
 gem 'whenever', require: false
 gem 'rollbar'
+gem 'country_select', '~> 4.0'
+gem 'money'
 # gem 'oj', '~> 2.16.1'
 
 group :development do
