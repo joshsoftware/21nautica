@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200519122432) do
+ActiveRecord::Schema.define(version: 20200601043415) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -363,7 +363,7 @@ ActiveRecord::Schema.define(version: 20200519122432) do
   create_table "local_imports", force: true do |t|
     t.string   "bl_number"
     t.string   "description"
-    t.integer  "shipper"
+    t.string   "shipper"
     t.string   "equipment_type"
     t.integer  "quantity"
     t.boolean  "exemption_code_needed"
@@ -392,6 +392,16 @@ ActiveRecord::Schema.define(version: 20200519122432) do
     t.date     "loaded_out_date"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "country_of_origin"
+    t.boolean  "comesa"
+    t.float    "fob"
+    t.string   "fob_currency"
+    t.float    "freight"
+    t.string   "freight_currency"
+    t.float    "other_charges"
+    t.string   "other_currency"
+    t.date     "copy_documents_date"
+    t.date     "original_documents_date"
   end
 
   add_index "local_imports", ["bill_of_lading_id"], name: "index_local_imports_on_bill_of_lading_id", using: :btree

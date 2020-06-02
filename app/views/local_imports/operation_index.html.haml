@@ -14,24 +14,20 @@
 %table.table{id: 'local_imports_table'}
   %thead
     %th.idf-date IDF Date
-    %th IDF Number
-    %th Ref Number
+    %th IDF No.
+    %th Ref No.
     -# %th Ref Date
-    - if is_rfs_host?
-      %th.shrink-name Customer Name / Shipper Name
-    - else
-      %th.shrink-name Customer Name
+    %th Customer
     %th BL No.
-    %th Inv Number
+    %th Inv No.
     %th Shipper
     %th Description
-    %th Quantity
+    %th Qty x Eq
     %th Vessel
     %th ETA
     %th S/Line
     %th GWT
-    %th Ex Code
-    %th KEBS Code
+    %th Comesa
     %th.local-import-remarks Remarks
     %th Update
 
@@ -42,30 +38,17 @@
         %td= import.idf_number
         %td= import.reference_number
         -# %td= import.reference_date
-        %td
-          - if is_rfs_host?
-            = "#{import.customer.name}" + " / " + "#{import.shipper}"
-          - else
-            = "#{import.customer.name}"
+        %td= import.customer.name
         %td= import.bl_number
         %td= import.invoice_number
         %td= import.shipper
         %td= import.description
-        %td= import.quantity
+        %td #{import.equipment_type} x #{import.quantity}
         %td= import.vessel_name
         %td= import.estimated_arrival
         %td= import.shipping_line.name
         %td= import.gwt
-        %td
-          - if import.exemption_code_needed?
-            Yes
-          - else
-            No
-        %td
-          - if import.kebs_exemption_code_needed?
-            Yes
-          - else
-            No
+        %td= import.comesa ? 'Yes' : '-'
         %td.remarks.h5
           .desc
             = import.remarks.try(:last).try(:desc)
