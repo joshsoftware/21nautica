@@ -9,19 +9,19 @@ class LocalImportsController < ApplicationController
   end
 
   def operation_index
-    if(!params[:destination] || params[:destination] == 'All')
-      @local_imports = LocalImport.where(status: :order_created)
-    else
-      @local_imports = LocalImport.where(status: :order_created, fpd: params[:destination])
-    end
+    @local_imports = if !params[:destination] || params[:destination] == "All"
+                       LocalImport.where(status: :order_created)
+                     else
+                       LocalImport.where(status: :order_created, fpd: params[:destination])
+                     end
   end
 
   def history_index
-    if(!params[:destination] || params[:destination] == 'All')
-      @local_imports = LocalImport.where(status: :order_completed)
-    else
-      @local_imports = LocalImport.where(status: :order_completed, fpd: params[:destination])
-    end
+    @local_imports = if !params[:destination] || params[:destination] == "All"
+                       LocalImport.where(status: :order_completed)
+                     else
+                       LocalImport.where(status: :order_completed, fpd: params[:destination])
+                     end
   end
 
   def new
@@ -100,7 +100,7 @@ class LocalImportsController < ApplicationController
       flash[:alert] = I18n.t "local_import.update_error" + @local_import.error.full_messages.join(", ")
     end
     respond_to do |format|
-      format.js {render inline: "location.reload();" }
+      format.js { render inline: "location.reload();" }
     end
   end
 
@@ -122,7 +122,7 @@ class LocalImportsController < ApplicationController
       end
     end
     respond_to do |format|
-      format.js {render inline: "location.reload();" }
+      format.js { render inline: "location.reload();" }
     end
   end
 
@@ -194,7 +194,7 @@ class LocalImportsController < ApplicationController
                                          :kebs_exemption_code_date, :customs_entry_number,
                                          :customs_entry_date, :duty_payment_date, :sgr_move_date,
                                          :icd_arrival_date, :loaded_out_date, :country_of_origin,
-                                         :comesa, :fob,:fob_currency, :freight, :freight_currency, :other_charges,
+                                         :comesa, :fob, :fob_currency, :freight, :freight_currency, :other_charges,
                                          :other_currency, :copy_documents_date, :original_documents_date,
                                          local_import_items_attributes: %i[container_number id _destroy])
   end
