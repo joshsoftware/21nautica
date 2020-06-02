@@ -127,8 +127,9 @@ class LocalImportsController < ApplicationController
   end
 
   def view_modal
-    @local_import = @local_import.attributes.slice("exemption_code_date", "kebs_exemption_code_date", "customs_entry_number",
-                                                   "customs_entry_date", "duty_payment_date", "sgr_move_date", "icd_arrival_date", "loaded_out_date")
+    @local_import = @local_import.attributes.slice("copy_documents_date", "original_documents_date", "exemption_code_date",
+                                                   "kebs_exemption_code_date", "customs_entry_number", "customs_entry_date",
+                                                   "duty_payment_date", "sgr_move_date", "icd_arrival_date", "loaded_out_date")
   end
 
   def view_offloading_modal; end
