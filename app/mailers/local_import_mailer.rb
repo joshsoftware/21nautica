@@ -31,4 +31,14 @@ class LocalImportMailer < ActionMailer::Base
     emails = customer.emails.to_s.split(",")
     mail(to: emails, subject: "Duty Payment Confirmation for #{local_import.bl_number}")
   end
+
+  def customer_summary_email(customer, filePath, fileName)
+    @customer = customer
+    emails = customer.emails.to_s.split(",")
+    attachments[fileName] = File.read(filePath + fileName)
+    if (File.exists?(file))
+      mail(to: emails, subject: "Customer Update : #{customer.name}")
+      File.delete(filePath + fileName)
+    end
+  end
 end
