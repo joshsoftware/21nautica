@@ -39,7 +39,7 @@ class UserMailer < ActionMailer::Base
   end
 
   def welcome_message_import(import, authority_letter_pdf = nil, authorisation_letter_pdf = nil)
-    @import = import
+    @import = Import.find_by_id(import)
     customer = Customer.find(@import.customer_id)
     emails = customer.add_default_emails_to_customer
     attach_pdf(authority_letter_pdf) if authority_letter_pdf

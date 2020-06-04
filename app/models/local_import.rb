@@ -3,7 +3,7 @@ class LocalImport < ActiveRecord::Base
   belongs_to :bill_of_lading
   belongs_to :shipping_line, class_name: "Vendor"
   validates_uniqueness_of :bl_number, allow_blank: true
-  validates_presence_of :reference_number, :customer, :idf_number, :gwt, :customer_reference, :fob, :freight
+  validates_presence_of :reference_number, :customer, :idf_number, :gwt, :customer_reference
   has_many :remarks, as: :remarkable
   has_many :local_import_items, dependent: :destroy
   accepts_nested_attributes_for :local_import_items, allow_destroy: true
