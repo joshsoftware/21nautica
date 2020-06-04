@@ -90,11 +90,12 @@ class LocalImportsController < ApplicationController
   end
 
   def update_dates
-    LocalImportMailer.customs_entry_email(@local_import).deliver if customs_data_entered?
-    LocalImportMailer.duty_paid_email(@local_import).deliver if duty_paid?
-
+    send_customs_email = customs_data_entered?
+    send_duty_paid_email = duty_paid?
     if @local_import.update(local_import_params)
       @local_import.update(status: :order_completed) if order_completed?
+      LocalImportMailer.customs_entry_email(@local_import).deliver if send_customs_email
+      LocalImportMailer.duty_paid_email(@local_import).deliver if send_duty_paid_email
       flash[:notice] = I18n.t "local_import.update"
     else
       flash[:alert] = I18n.t "local_import.update_error" + @local_import.errors.full_messages.join(", ")
