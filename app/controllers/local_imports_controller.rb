@@ -97,7 +97,7 @@ class LocalImportsController < ApplicationController
       @local_import.update(status: :order_completed) if order_completed?
       flash[:notice] = I18n.t "local_import.update"
     else
-      flash[:alert] = I18n.t "local_import.update_error" + @local_import.error.full_messages.join(", ")
+      flash[:alert] = I18n.t "local_import.update_error" + @local_import.errors.full_messages.join(", ")
     end
     respond_to do |format|
       format.js { render inline: "location.reload();" }
