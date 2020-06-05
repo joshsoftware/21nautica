@@ -179,7 +179,7 @@ class LocalImportsController < ApplicationController
   def create_bill_of_lading
     bl = BillOfLading.new(bl_number: @local_import.bl_number)
     if bl.save
-      @local_import.bill_of_lading = bl
+      @local_import.update(bill_of_lading: bl)
     else
       @local_import.errors.messages.merge!(bl.errors.messages)
       false
