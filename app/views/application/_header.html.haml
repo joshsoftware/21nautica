@@ -104,7 +104,7 @@
               %li= link_to 'Customer Invoice', reports_customer_invoices_path
               %li= link_to 'Payments Made', reports_payments_made_path
               %li= link_to 'Payments Received', reports_payments_received_path
-        - if user_signed_in? && ['Admin', 'Local'].include?(current_user.role) && is_rfs_host?
+        - if user_signed_in? && ['Admin', 'Local'].include?(current_user.role) && (is_rfs_host? || Rails.env.development?)
           %li.dropdown{class: ('active' if controller.controller_name.eql?('local_imports'))}
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
               Local

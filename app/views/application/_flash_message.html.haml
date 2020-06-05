@@ -1,5 +1,5 @@
 - [:notice, :error, :alert].each do |name|
-  %div{:class => "alert alert-#{name == :notice ? "success" : "error"}", :id => name, :style => "display: #{flash[name] ? 'block' : 'none'}", data: {dismiss: 'alert'}}
+  %div{:class => "alert alert-#{name == :notice ? "success" : "danger"}", :id => name, :style => "display: #{flash[name] ? 'block' : 'none'}", data: {dismiss: 'alert'}}
     - if flash[name]
       = flash[name]
 
