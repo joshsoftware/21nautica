@@ -2,7 +2,7 @@
 
 class LocalImportMailer < ActionMailer::Base
   default from: ENV["IDF_EMAIL_FROM"]
-  default from: ["dec.nbo@reliablefreight.co.ke"] if Rails.env.development?
+  default from: ["Customer Service <dec.nbo@reliablefreight.co.ke>"] if Rails.env.development?
 
   def new_idf_email(local_import)
     @local_import = local_import
@@ -36,7 +36,7 @@ class LocalImportMailer < ActionMailer::Base
     @customer = customer
     emails = customer.emails.to_s.split(",")
     attachments[fileName] = File.read(filePath + fileName)
-    if (File.exists?(file))
+    if (File.exists?(filePath + fileName))
       mail(to: emails, subject: "Customer Update : #{customer.name}")
       File.delete(filePath + fileName)
     end

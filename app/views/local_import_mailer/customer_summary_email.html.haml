@@ -5,40 +5,10 @@
     %meta{content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
     %p
       Dear Customer,
-    %p
+    Please find attached your updates for the shipments currently being handled by us.
     %br
-    We would like to thank you for giving us an opportunity to serve you. We would like to confirm that we have opened an IDF basis your Instructions. You may find the details of the IDF below, incase you have any questions please do not hesitate to contact us.
+    We would be sending you regular updates on all your pending Shipments being handled by us. Please don't hesitate to contact us in case you have any queries.
     %br
-    %br
-    %table{style: "width:auto"}
-      %tbody
-        %tr
-          %td Reference Number
-          %td
-            &emsp; : &emsp; 
-            %b #{ @local_import.reference_number }
-        %tr
-          %td IDF Number
-          %td 
-            &emsp; : &emsp; 
-            %b #{ @local_import.idf_number }
-        %tr
-          %td IDF Date
-          %td
-            &emsp; : &emsp; 
-            %b #{ @local_import.idf_date.to_s }
-        %tr
-          %td Shipper Name
-          %td
-            &emsp; : &emsp;
-            %b #{ @local_import.shipper }
-        %tr
-          %td Description
-          %td
-            &emsp; : &emsp;
-            %b #{ @local_import.description }
-    %br
-    We would be sending you regular updates on all your pending IDF's opened by us. Please do let us know once the shipment is ready to be shipped. 
     %br
     %br
     Thanks for your support.

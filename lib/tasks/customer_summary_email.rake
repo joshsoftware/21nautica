@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace "idf" do
   desc "Daily Customers Summary Email"
   task customer_summary_email: :environment do
@@ -5,19 +7,19 @@ namespace "idf" do
     customers.each do |c|
       customer = Customer.find(c)
       local_imports = LocalImport.where(customer: c)
-      history = local_imports.select { |l| l.status == "order_completed" }
-      operations = local_imports.select { |l| l.status == "order_created" }
-      idfs = local_imports.select { |l| l.status.nil? }
+      history = local_imports.select {|l| l.status == "order_completed" }
+      operations = local_imports.select {|l| l.status == "order_created" }
+      idfs = local_imports.select {|l| l.status.nil? }
 
       p = Axlsx::Package.new
-      p.workbook.add_worksheet(:name => "IDF") do |sheet|
+      p.workbook.add_worksheet(name: "IDF") do |sheet|
         sheet.add_row ["OUR REF", "INV NO.", "SHIPPER", "DESCRIPTION", "GWT-KGS", "BL NO", "IDF NUMBER", "IDF DATE"]
         idfs.each do |l|
           sheet.add_row [l.reference_number, l.invoice_number, l.shipper, l.gwt, l.description, l.bl_number, l.idf_number, l.idf_date]
         end
       end
 
-      p.workbook.add_worksheet(:name => "Active Shipments") do |sheet|
+      p.workbook.add_worksheet(name: "Active Shipments") do |sheet|
         sheet.add_row ["OUR REF", "Customer Reference", "SHIPPER", "GOODS DESCRIPTION", "CONTAINERS", "GWT- KGS", "BL NO",
                        "DATE ORIGINAL DOCS RECEIVED", "VESSEL", "ETA", "SHIPPING LINE", "RECEIPT OF EXEMPTION", "CUSTOMS ENTRY NO.",
                        "CUSTOMS PAYMENT DATE", "ALLOCATED TRUCK(S)"]
@@ -31,7 +33,7 @@ namespace "idf" do
         end
       end
 
-      p.workbook.add_worksheet(:name => "History") do |sheet|
+      p.workbook.add_worksheet(name: "History") do |sheet|
         sheet.add_row ["OUR REF", "Customer Reference", "SHIPPER", "GOODS DESCRIPTION", "CONTAINERS", "GWT- KGS", "BL NO",
                        "DATE ORIGINAL DOCS RECEIVED", "VESSEL", "ETA", "SHIPPING LINE", "RECEIPT OF EXEMPTION", "CUSTOMS ENTRY NO.",
                        "CUSTOMS PAYMENT DATE", "ALLOCATED TRUCK(S)", "OFFLOADING DATE"]

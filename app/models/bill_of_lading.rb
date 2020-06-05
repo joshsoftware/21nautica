@@ -2,6 +2,7 @@ class BillOfLading < ActiveRecord::Base
   # include Remarkable
   
   has_one :import
+  has_one :local_import
   has_many :movements
   has_many :invoices, as: :invoiceable
   validates_uniqueness_of :bl_number
