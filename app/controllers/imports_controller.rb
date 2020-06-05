@@ -69,6 +69,14 @@ class ImportsController < ApplicationController
         render text: import.errors.full_messages
       end
     else
+      if import_params[:bl_number].present? && @import.bl_number != import_params[:bl_number]
+        unless @import.bill_of_lading.update(bl_number: import_params[:bl_number])
+          flash[:error] = @import.bill_of_lading.errors.full_messages.join(', ')
+          @customers = Customer.all
+          render 'edit'
+          return
+        end
+      end
       if @import.update_attributes(import_params)
         @import.update(quantity: @import.import_items.count)
         flash[:notice] = I18n.t 'import.update'
