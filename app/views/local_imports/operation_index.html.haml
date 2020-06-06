@@ -17,6 +17,7 @@
     %th Customer
     %th BL No.
     %th Qty x Eq
+    %th ETA
     %th S/Line
     %th Shipper
     %th FPD
@@ -31,6 +32,7 @@
         %td= import.customer.name
         %td= import.bl_number
         %td #{import.equipment_type} x #{import.quantity}
+        %td= import.estimated_arrival.to_s
         %td= import.shipping_line.name
         %td= import.shipper
         %td= import.fpd.present? ? import.fpd[0] : '-'
