@@ -42,7 +42,7 @@
         - dates["CED"] = import.customs_entry_date if import.customs_entry_date.present?
         - dates["DPD"] = import.duty_payment_date if import.duty_payment_date.present?
         - dates["ICD"] = import.icd_arrival_date if import.icd_arrival_date.present?
-        %td
+        %td{style: "width:12%"}
           - if dates.keys.present?
             - dates.each do |k,v|
               %div
