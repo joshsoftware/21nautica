@@ -13,6 +13,10 @@
         .row
           .col-md-6 Date of Original Docs :
           .col-md-6 #{import.bl_received_at.to_date.to_formatted_s}
+      - if import.estimate_arrival
+        .row
+          .col-md-6 ETA :
+          .col-md-6 #{import.estimate_arrival.to_s}
       -if import.entry_date
         .row
           .col-md-6 Date of Entry :
