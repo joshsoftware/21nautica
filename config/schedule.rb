@@ -39,6 +39,6 @@ every '30 7,13 * * 1-6' do #Every day except Sunday at 7:30 and 13:30
   command 'cd /www/rfs-21nautica/current && RAILS_ENV=production bundle exec rake automated_emails:bl_entry_number_reminder --silent >> log/cron.log 2>> log/cron_error.log'
 end
 
-every :day, at: '02:30pm' do #Every day at 2:30 PM
+every :day, at: '09:30am' do #Every day at 12:30 PM EAT (09:30 AM UTC)
   command 'cd /www/rfs-21nautica/current && RAILS_ENV=production bundle exec rake idf:customer_summary_email --silent >> log/cron.log 2>> log/cron_error.log'
 end
