@@ -11,10 +11,7 @@
     %th IDF Number
     %th Ref Number
     %th Ref Date
-    - if is_rfs_host?
-      %th.shrink-name Customer Name / Shipper Name
-    - else
-      %th.shrink-name Customer Name
+    %th Customer Name
     %th Inv Number
     %th Shipper
     %th Description
@@ -28,10 +25,7 @@
         %td= import.idf_number
         %td= import.reference_number
         %td= import.reference_date  
-        - if is_rfs_host?
-          %td= "#{import.customer.name}" + " / " + "#{import.shipper}"
-        - else
-          %td= "#{import.customer.name}"
+        %td= import.customer.name
         %td= import.invoice_number
         %td= import.shipper
         %td= import.description
