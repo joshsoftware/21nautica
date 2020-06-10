@@ -16,7 +16,7 @@
     .row{style:"margin-left:2%;"}  
       .col-md-6
         %div{data: {for: 'customerSelect'}}
-          = render '/shared/customer', customers: @customers, model: 'local_import'
+          = render '/shared/customer', customers: @customers, model: 'local_import', customer_id: @local_import.customer_id
       .col-md-6
         = f.input :invoice_number, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory"}
     .row{style:"margin-left:2%;"}
