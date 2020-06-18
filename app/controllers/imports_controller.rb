@@ -108,6 +108,45 @@ class ImportsController < ApplicationController
     @import = Import.find(params[:id])
   end
 
+  def edit_import_customer
+    if params[:searchValue].present?
+      @imports = Import.select("customer_id, bl_number, work_order_number, estimate_arrival, quantity").includes(:customer).
+                        where("bl_number ILIKE :query OR work_order_number ILIKE :query", query: "%#{params[:searchValue]}%")
+    else
+      @imports = Import.none
+    end
+    respond_to do |format|
+      format.html {}
+      format.json {
+        render json: {:data => @imports.offset(params[:start]).limit(params[:length] || 10),
+                      "recordsTotal" => @imports.count, "recordsFiltered" => @imports.count}
+      }
+    end
+  end
+
+  def edit_customer_modal
+    @import = Import.find(params[:id])
+    @customers = Customer.order(:name)
+  end
+
+  def update_customer
+    import = Import.find(params[:id])
+    old_customer_id = import.customer_id
+    customer_id = params[:import][:customer_id]
+    if customer_id.present?
+      import.update(customer_id: customer_id)
+      if import.bill_of_lading.present? && import.bill_of_lading.invoices.present?
+        invoices = import.bill_of_lading.invoices
+        invoices.update_all(customer_id: customer_id)
+        import.readjust_on_customer_change(old_customer_id)
+        import.readjust_on_customer_change(customer_id)
+      end
+    end
+    respond_to do |format|
+      format.js { render inline: "location.reload();" }
+    end
+  end
+
   private
 
   def import_params

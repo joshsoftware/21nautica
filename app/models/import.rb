@@ -219,4 +219,19 @@ class Import < ActiveRecord::Base
   def update_gf_expiry_date
     import_items.update_all(g_f_expiry: gf_return_date)
   end
+
+  def readjust_on_customer_change(customer_id)
+    puts "\nCustomer id: #{customer_id}\n"
+    customer = Customer.find(customer_id)
+    # Remove all legders for the customer
+    Ledger.where(customer: customer).delete_all
+    # Add all invoice ledgers
+    customer.invoices.order(date: :asc).sent.each do |inv|
+      inv.create_ledger(amount: inv.amount, customer: inv.customer, date: inv.date, received: 0)
+    end
+    # Add all received ledgers
+    customer.payments.order(date_of_payment: :asc).each do |payment|
+      payment.create_ledger(amount: payment.amount, customer: payment.customer, date: payment.date_of_payment)
+    end
+  end
 end
