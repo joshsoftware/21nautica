@@ -110,8 +110,8 @@ class ImportsController < ApplicationController
 
   def edit_import_customer
     if params[:searchValue].present?
-      @imports = Import.select("customer_id, bl_number, work_order_number, estimate_arrival, quantity").includes(:customer).
-                        where("bl_number ILIKE :query OR work_order_number ILIKE :query", query: "%#{params[:searchValue]}%")
+      # @imports = Import.select("customers.name, bl_number, work_order_number, estimate_arrival, quantity").includes(:customer).references(:customer)
+      @imports = Import.where("bl_number ILIKE :query OR work_order_number ILIKE :query", query: "%#{params[:searchValue]}%").select("customers.name, bl_number, work_order_number, estimate_arrival, quantity").includes(:customer).references(:customer)
     else
       @imports = Import.none
     end
@@ -119,7 +119,7 @@ class ImportsController < ApplicationController
       format.html {}
       format.json {
         render json: {:data => @imports.offset(params[:start]).limit(params[:length] || 10),
-                      "recordsTotal" => @imports.count, "recordsFiltered" => @imports.count}
+                      "recordsTotal" => @imports.to_a.count, "recordsFiltered" => @imports.to_a.count}
       }
     end
   end

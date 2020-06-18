@@ -59,6 +59,7 @@
     $("input[type='radio']").click(function(){
       if($(this).val()=="New Spare")
       {
+        $("#parent_spare").prop("disabled", true)
          $(".parent").prop("disabled",true)
         $("#next").show()
         $("#s2id_parent_spare").hide()
@@ -76,6 +77,7 @@
         $("#spare_part_spare_part_category_id").prop("disabled",true)
       }
       else{
+        $("#parent_spare").prop("disabled", true)
         $(".parent").prop("disabled",false)
         $("#content_merge").show()
         $("#s2id_parent_spare").hide()
