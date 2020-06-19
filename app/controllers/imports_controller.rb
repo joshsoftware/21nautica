@@ -110,15 +110,15 @@ class ImportsController < ApplicationController
 
   def edit_import_customer
     if params[:searchValue].present?
-      # @imports = Import.select("customers.name, bl_number, work_order_number, estimate_arrival, quantity").includes(:customer).references(:customer)
-      @imports = Import.where("bl_number ILIKE :query OR work_order_number ILIKE :query", query: "%#{params[:searchValue]}%").select("customers.name, bl_number, work_order_number, estimate_arrival, quantity").includes(:customer).references(:customer)
+      @imports = Import.joins(:customer).select("customers.name as customer_name, *, quantity, imports.id as id")
+                       .where("bl_number ILIKE :query OR work_order_number ILIKE :query", query: "%#{params[:searchValue]}%")
     else
       @imports = Import.none
     end
     respond_to do |format|
       format.html {}
       format.json {
-        render json: {:data => @imports.offset(params[:start]).limit(params[:length] || 10),
+        render json: {:data => @imports.offset(params[:start]).limit(params[:length] || 10).as_json,
                       "recordsTotal" => @imports.to_a.count, "recordsFiltered" => @imports.to_a.count}
       }
     end
@@ -138,12 +138,15 @@ class ImportsController < ApplicationController
       if import.bill_of_lading.present? && import.bill_of_lading.invoices.present?
         invoices = import.bill_of_lading.invoices
         invoices.update_all(customer_id: customer_id)
-        import.readjust_on_customer_change(old_customer_id)
-        import.readjust_on_customer_change(customer_id)
+        readjust_on_customer_change(old_customer_id)
+        readjust_on_customer_change(customer_id)
       end
     end
     respond_to do |format|
-      format.js { render inline: "location.reload();" }
+      format.js {
+        render inline: "location.reload();"
+        flash[:notice] = I18n.t 'import.update'
+      }
     end
   end
 
@@ -161,5 +164,19 @@ class ImportsController < ApplicationController
 
   def import_update_params
     params.permit(:id, :columnName, :value, :clearing_agent, :estimate_arrival)
+  end
+
+  def readjust_on_customer_change(customer_id)
+    customer = Customer.find(customer_id)
+    # Remove all legders for the customer
+    Ledger.where(customer: customer).delete_all
+    # Add all invoice ledgers
+    customer.invoices.order(date: :asc).sent.each do |inv|
+      inv.create_ledger(amount: inv.amount, customer: inv.customer, date: inv.date, received: 0)
+    end
+    # Add all received ledgers
+    customer.payments.order(date_of_payment: :asc).each do |payment|
+      payment.create_ledger(amount: payment.amount, customer: payment.customer, date: payment.date_of_payment)
+    end
   end
 end

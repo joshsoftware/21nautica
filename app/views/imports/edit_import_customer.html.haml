@@ -31,11 +31,8 @@
                              .text('clear')
                              .click(function() {
                                 input.val('');
-                                $('#daterange').val('')
                                 $searchButton.click(); 
                              })
-                  $dateRange = "<label> DateRange: <input id='daterange' name='daterange' type='text' value='' placeholder='Select Date Range' class = 'daterange' data-provide='daterangepicker' rel='tooltip' title='Search by ETA'> </label>"
-              $('.dataTables_filter').prepend($dateRange)    
               $('.dataTables_filter').append($searchButton, $clearButton);
           },
           "bJQueryUI": true,
@@ -47,7 +44,7 @@
             url: "edit_import_customer",
             type: "POST",
             "data": function( result ) {
-                  var newresult = {"searchValue": result.search.value, daterange: $('#daterange').val(), start: result.start, "length": result.length}
+                  var newresult = {"searchValue": result.search.value, start: result.start, "length": result.length}
                   return newresult;
                 },
             "dataSrc": function ( json ) {
@@ -69,19 +66,5 @@
               { "data": "info_link", "bSortable": false }
           ]
       } );
-    }
-
-    setTimeout( function(){
-      $('#daterange').daterangepicker({
-        locale: { 
-          format: 'DD/MM/YYYY',
-          cancelLabel: 'Clear'
-        },
-        cancelLabel: 'Clear',
-        startDate: new Date(),
-        endDate:  new Date(),
-        autoUpdateInput: false,
-      }, function(first_date, second_date){
-        $("#daterange").val(first_date.format('DD/MM/YYYY')+" - "+ second_date.format('DD/MM/YYYY'));
-      })}, 1000)  
+    } 
   });
