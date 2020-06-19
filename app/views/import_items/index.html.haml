@@ -18,7 +18,7 @@
     %th.import-items-cont-number Container Number
     %th.import-items-eq Display EQ
     %th.import-items-eta Estimate Arrival
-    - if is_rfs_host? || is_ug_host?
+    - if is_rfs_host? || is_ug_host? || Rails.env.development?
       %th.import-items-truck-number Truck Number / Location
     %th.import-items-last-load-date Last Loading Date
     %th.shipping-line-status DO Received?
@@ -36,7 +36,7 @@
         %td= item.container_number
         %td= item.import.equipment
         %td= item.import.estimate_arrival
-        - if is_rfs_host? || is_ug_host?
+        - if is_rfs_host? || is_ug_host? || Rails.env.development?
           %td.truck_id
             = "#{item.truck.nil? ? '' : (item.truck_id == 0 ? item.truck_number : item.truck.reg_number)} / #{item.truck.nil? ? '' : item.truck.location}"
         %td.last_loading_date= item.last_loading_date.nil? ? '' : item.last_loading_date.strftime('%Y-%m-%d')
