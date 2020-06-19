@@ -1,0 +1,19 @@
+#EditCustomerModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    = simple_form_for(@import, url: update_customer_import_path(@import), id: 'update-dates' ,html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+      .modal-content
+        .modal-header
+          = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+          %h3.modal-title Order Details:
+        .modal-body
+          %br
+          %div{data: {for: 'customerSelect'}}
+            = render '/shared/customer', customers: @customers, model: 'import', customer_id: @import.customer_id
+          %br
+        .modal-footer
+          = link_to 'Close', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+          = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
+
+:coffeescript
+  $('#EditCustomerModal').on 'submit', (event) ->
+    $('#EditCustomerModal').modal('hide')
