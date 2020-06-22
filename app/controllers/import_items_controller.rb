@@ -100,9 +100,12 @@ class ImportItemsController < ApplicationController
   def location_dates_modal
     truck = @import_item.truck
     status_date = @import_item.status_date
-    from = status_date.truck_allocated || Date.today
-    to = status_date.delivered || Date.today
-    @location_dates = truck.location_dates.where(date: from..to)
+    @location_dates = []
+    if truck.present? && status_date.present?
+      from = status_date.truck_allocated || Date.today
+      to = status_date.delivered || Date.today
+      @location_dates = truck.location_dates.where(date: from..to)
+    end
   end
 
   private
