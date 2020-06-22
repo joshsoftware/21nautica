@@ -50,6 +50,7 @@ class PurchaseOrdersController < ApplicationController
     @value = get_search_value(report_search)
     @start_date = report_search[:start_date].to_date
     @end_date = report_search[:end_date].to_date
+    @only_stocks = report_search[:only_stocks] || false
     @results = report_search[:report_type] == 'LPO' ? search_by_purchase_order : search_by_req_sheet
     @total = @results.map{|result| result.try(:quantity).to_i*result.try(:price).to_f}.sum
   end
@@ -72,9 +73,17 @@ class PurchaseOrdersController < ApplicationController
     purchase_orders = PurchaseOrder.where(date: @start_date..@end_date)
     purchase_orders = purchase_orders.where("#{@field}" => @value) if PurchaseOrder.column_names.include?(@field)
     if PurchaseOrderItem.column_names.include?(@field)
-      PurchaseOrderItem.includes(:truck,:spare_part,purchase_order:[:supplier]).where(purchase_order_id: purchase_orders.pluck(:id), "#{@field}" => @value)
+      if @only_stocks
+        PurchaseOrderItem.includes(:truck,:spare_part,purchase_order:[:supplier]).where(purchase_order_id: purchase_orders.pluck(:id), "#{@field}" => @value, of_type: 'Stock')
+      else
+        PurchaseOrderItem.includes(:truck,:spare_part,purchase_order:[:supplier]).where(purchase_order_id: purchase_orders.pluck(:id), "#{@field}" => @value)
+      end
     else
-      PurchaseOrderItem.includes(:truck,:spare_part,purchase_order:[:supplier]).where(purchase_order_id: purchase_orders.pluck(:id))
+      if @only_stocks
+        PurchaseOrderItem.includes(:truck,:spare_part,purchase_order:[:supplier]).where(purchase_order_id: purchase_orders.pluck(:id), of_type: 'Stock')
+      else
+        PurchaseOrderItem.includes(:truck,:spare_part,purchase_order:[:supplier]).where(purchase_order_id: purchase_orders.pluck(:id))
+      end
     end
   end
 
