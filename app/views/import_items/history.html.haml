@@ -12,6 +12,8 @@
     %th Close Date
     %th
 
+#ShowLocationDatesModal
+
 #historyInfoModal.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
   .modal-dialog
 
@@ -55,6 +57,7 @@
             "dataSrc": function ( json ) {
                 data = json.data
                 data.forEach(function(data, index){
+                  data.location_dates = "<a class='btn btn-link' data-remote='true' href='/import_items/"+data.id+"/location_dates_modal'>"+data.rfs_truck_number+"</a>"
                   if(data.return_status)
                     data.after_delivery_status = data.return_status
                     data.info_link = "<a class='btn btn-link' data-remote='true' href='/import_items/"+data.id+"/history_info'>Info</a>"
@@ -66,7 +69,7 @@
               { "data": "bl_number", "bSortable": false},
               { "data": "container_number", "bSortable": false },
               { "data": "work_order_number", "bSortable": false },
-              { "data": "rfs_truck_number", "bSortable": false },
+              { "data": "location_dates", "bSortable": false },
               { "data": "customer_name", "bSortable": false },
               { "data": "equipment_type", "bSortable": false },
               { "data": "delivery_date", "bSortable": false },
@@ -91,5 +94,3 @@
         $("#daterange").val(first_date.format('DD/MM/YYYY')+" - "+ second_date.format('DD/MM/YYYY'));
       })}, 1000)  
   });
-
-

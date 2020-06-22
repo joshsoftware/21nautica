@@ -2,7 +2,7 @@
 
 class ImportItemsController < ApplicationController
   include ImportItemConcern
-  before_action :set_import_item, only: %i[edit update_loading_date updateContext updateStatus edit_close_date show_info update_close_date history_info]
+  before_action :set_import_item, only: %i[edit update_loading_date updateContext updateStatus edit_close_date show_info update_close_date history_info location_dates_modal]
 
   def index
     param = params[:destination_item] if params[:destination_item].present?
@@ -96,6 +96,14 @@ class ImportItemsController < ApplicationController
   def show_info; end
 
   def history_info; end
+
+  def location_dates_modal
+    truck = @import_item.truck
+    status_date = @import_item.status_date
+    from = status_date.truck_allocated || Date.today
+    to = status_date.delivered || Date.today
+    @location_dates = truck.location_dates.where(date: from..to)
+  end
 
   private
 

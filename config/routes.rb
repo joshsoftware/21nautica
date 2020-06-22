@@ -118,6 +118,7 @@ Rails.application.routes.draw do
       get 'show_info'
       get 'history_info'
       post 'update_empty_container'
+      get 'location_dates_modal'
     end
     collection do
       post :update_loading_date
