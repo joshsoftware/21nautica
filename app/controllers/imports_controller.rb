@@ -108,6 +108,48 @@ class ImportsController < ApplicationController
     @import = Import.find(params[:id])
   end
 
+  def edit_import_customer
+    if params[:searchValue].present?
+      @imports = Import.joins(:customer).select("customers.name as customer_name, *, quantity, imports.id as id")
+                       .where("bl_number ILIKE :query OR work_order_number ILIKE :query", query: "%#{params[:searchValue]}%")
+    else
+      @imports = Import.none
+    end
+    respond_to do |format|
+      format.html {}
+      format.json {
+        render json: {:data => @imports.offset(params[:start]).limit(params[:length] || 10).as_json,
+                      "recordsTotal" => @imports.to_a.count, "recordsFiltered" => @imports.to_a.count}
+      }
+    end
+  end
+
+  def edit_customer_modal
+    @import = Import.find(params[:id])
+    @customers = Customer.order(:name)
+  end
+
+  def update_customer
+    import = Import.find(params[:id])
+    old_customer_id = import.customer_id
+    customer_id = params[:import][:customer_id]
+    if customer_id.present?
+      import.update(customer_id: customer_id)
+      if import.bill_of_lading.present? && import.bill_of_lading.invoices.present?
+        invoices = import.bill_of_lading.invoices
+        invoices.update_all(customer_id: customer_id)
+        readjust_on_customer_change(old_customer_id)
+        readjust_on_customer_change(customer_id)
+      end
+    end
+    respond_to do |format|
+      format.js {
+        render inline: "location.reload();"
+        flash[:notice] = I18n.t 'import.update'
+      }
+    end
+  end
+
   private
 
   def import_params
@@ -122,5 +164,19 @@ class ImportsController < ApplicationController
 
   def import_update_params
     params.permit(:id, :columnName, :value, :clearing_agent, :estimate_arrival)
+  end
+
+  def readjust_on_customer_change(customer_id)
+    customer = Customer.find(customer_id)
+    # Remove all legders for the customer
+    Ledger.where(customer: customer).delete_all
+    # Add all invoice ledgers
+    customer.invoices.order(date: :asc).sent.each do |inv|
+      inv.create_ledger(amount: inv.amount, customer: inv.customer, date: inv.date, received: 0)
+    end
+    # Add all received ledgers
+    customer.payments.order(date_of_payment: :asc).each do |payment|
+      payment.create_ledger(amount: payment.amount, customer: payment.customer, date: payment.date_of_payment)
+    end
   end
 end

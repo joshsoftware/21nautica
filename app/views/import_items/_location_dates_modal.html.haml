@@ -1,0 +1,25 @@
+#LocationDatesModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+        %h3.modal-title Tracking Details:
+      .modal-body
+        .row
+          .col-md-1
+          .col-md-3
+            %b DATE
+          .col-md-7
+            %b LOCATION
+          %br
+          %hr
+        - @location_dates.each do |ld|
+          .row
+            .col-md-1
+            .col-md-3
+              %b= ld.date
+            .col-md-7
+              = ld.location
+          %br
+      .modal-footer
+        = link_to 'Close', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}

@@ -16,7 +16,9 @@
         = f.input :start_date, as: :string, input_html: { id: 'start_date', class: 'form-control' }
       .col-md-4
         = f.input :end_date, as: :string, input_html: { id: 'end_date', class: 'form-control' }
-
+      .col-md-2#only_stocks
+        = f.check_box :only_stocks, {}, true, false
+        %b &emsp; Stocks Only?
     = f.submit 'Search', class: 'btn btn-primary'
 
 #results
@@ -27,13 +29,5 @@
   var spare_parts = #{@spare_parts.to_json}
   $('#start_date').datepicker({ format: 'dd-mm-yyyy' })
   $('#end_date').datepicker({ format: 'dd-mm-yyyy' })
-
+  $('#only_stocks').hide();
   $('.select2').select2();
-
-          
-        
-      
-
-
-
-        

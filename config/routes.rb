@@ -82,8 +82,11 @@ Rails.application.routes.draw do
     member do
       # post 'updateStatus'
       post 'retainStatus'
+      get :edit_customer_modal
+      patch :update_customer
     end
   end
+  match '/edit_import_customer' => 'imports#edit_import_customer', via: [:get, :post]
 
   resources :shippings, only: [:index] do
     member do
@@ -115,6 +118,7 @@ Rails.application.routes.draw do
       get 'show_info'
       get 'history_info'
       post 'update_empty_container'
+      get 'location_dates_modal'
     end
     collection do
       post :update_loading_date

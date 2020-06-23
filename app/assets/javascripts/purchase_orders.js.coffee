@@ -85,9 +85,11 @@ $(document).ready ->
     lpo_list = [['supplier_id', 'Supplier Name'], ['truck_id', 'Truck Number'], ['spare_part_id', 'Part Name']]
     req_list = [['truck_id', 'Truck Number'], ['spare_part_id', 'Part Name']]
     if $(this).val() == 'LPO'
+      $('#only_stocks').show();
       $.each lpo_list, (index, value) ->
         $field.append('<option value='+value[0]+'>'+value[1]+'</option>')
     else if $(this).val() == 'REQ'
+      $('#only_stocks').hide();
       $.each req_list, (index, value) ->
         $field.append('<option value='+value[0]+'>'+value[1]+'</option>')
 
