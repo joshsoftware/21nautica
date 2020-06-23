@@ -18,7 +18,7 @@
     %th.import-items-cont-number Container Number
     %th.import-items-eq Display EQ
     %th.import-items-eta Estimate Arrival
-    - if is_rfs_host? || is_ug_host?
+    - if is_rfs_host? || is_ug_host? || Rails.env.development?
       %th.import-items-truck-number Truck Number / Location
     %th.import-items-last-load-date Last Loading Date
     %th.shipping-line-status DO Received?
@@ -36,9 +36,10 @@
         %td= item.container_number
         %td= item.import.equipment
         %td= item.import.estimate_arrival
-        - if is_rfs_host? || is_ug_host?
+        - if is_rfs_host? || is_ug_host? || Rails.env.development?
+          - truck_location = "#{item.truck.nil? ? '' : (item.truck_id == 0 ? item.truck_number : item.truck.reg_number)} / #{item.truck.nil? ? '' : item.truck.location}"
           %td.truck_id
-            = "#{item.truck.nil? ? '' : (item.truck_id == 0 ? item.truck_number : item.truck.reg_number)} / #{item.truck.nil? ? '' : item.truck.location}"
+            = link_to truck_location, location_dates_modal_import_item_path(item), remote: true
         %td.last_loading_date= item.last_loading_date.nil? ? '' : item.last_loading_date.strftime('%Y-%m-%d')
         %td.shipping-status
           = link_to "#{import.do_received_at.present? ? 'Yes' : 'No'}", show_info_import_item_path(item), remote: true, class: 'btn btn-link'
@@ -56,6 +57,7 @@
           %button.btn.btn-small.btn-primary{'data-model-id' => "#{item.id}", 'data-model-type' => 'import_item', 'data-target' => '#remarkModal', 'data-toggle' => 'modal'} Add
 
 = render 'remarks/remark'
+#ShowLocationDatesModal
 
 :css
   .truck_id {

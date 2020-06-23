@@ -14,7 +14,7 @@
         #truck_number
         = f.input :status, collection: status, :input_html => {:class => 'select required form-control text-capitalize'}
         - readonly = ['loaded_out_of_port', 'arrived_at_border', 'departed_from_border', 'arrived_at_destination'].include?(@import_item.status)
-        -if is_rfs_host? || is_ug_host?
+        -if is_rfs_host? || is_ug_host? || Rails.env.development?
           .co-loaded.form-group
             .col-md-3
               = f.label :is_co_loaded, "Is Co-loaded?"

@@ -70,6 +70,16 @@ class LocalImportsController < ApplicationController
   end
 
   def update
+    if local_import_table_params.values.length > 1
+      params = local_import_table_params
+      local_import = LocalImport.find(params[:id])
+      local_import.update(params[:columnName] => params[:value])
+      respond_to do |format|
+        format.js { render inline: 'location.reload();'
+                    flash[:notice] = I18n.t 'local_import.update' }
+      end
+      return
+    end
     attributes = local_import_params
     attributes[:exemption_code_needed] = false unless attributes[:exemption_code_needed]
     attributes[:kebs_exemption_code_needed] = false unless attributes[:kebs_exemption_code_needed]
@@ -199,5 +209,9 @@ class LocalImportsController < ApplicationController
                                          :comesa, :fob, :fob_currency, :freight, :freight_currency, :other_charges,
                                          :other_currency, :copy_documents_date, :original_documents_date,
                                          local_import_items_attributes: %i[container_number id _destroy])
+  end
+
+  def local_import_table_params
+    params.permit(:id, :columnName, :value)
   end
 end

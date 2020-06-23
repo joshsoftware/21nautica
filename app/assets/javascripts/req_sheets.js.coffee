@@ -44,14 +44,12 @@ $(document).ready ->
       amount = amount + parseFloat(total_price)
     $('#req_sheet_value').val(amount.toFixed(2))
 
-
-  $('body').on 'change', '.spare_part_id', ->
-    $('.fields .spare_part_id').each (index) ->
-      spare_part_id = $(this).closest('tr').find('.spare_part').select2('val')
-      $spare_part_description = $(this).closest('tr')
-      if spare_part_id
-        $.get('/req_sheets/load_spare_part', {spare_part_id: spare_part_id }).done (data) ->
-          $spare_part_description.find('.req_part_description').val(data.description)
+  $('body').on 'change', '#spare_part_id', ->
+    spare_part_id = $(this).closest('tr').find('.spare_part').select2('val')
+    $spare_part_description = $(this).closest('tr')
+    if spare_part_id
+      $.get('/req_sheets/load_spare_part', {spare_part_id: spare_part_id }).done (data) ->
+        $spare_part_description.find('.req_part_description').val(data.description)
 
   $('body').on 'change', '#req_sheet_truck_id', ->
     truck_id = $(this).select2('val')
