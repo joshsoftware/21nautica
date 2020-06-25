@@ -104,7 +104,17 @@ class ImportItemsController < ApplicationController
     if truck.present? && status_date.present?
       from = status_date.truck_allocated || Date.today
       to = status_date.delivered || Date.today
-      @location_dates = truck.location_dates.where(date: from..to)
+      @location_dates = truck.location_dates.where(date: from..to).as_json
+      status_date = status_date.as_json
+      @location_dates.each do |ld|
+        status = status_date.key(ld['date'])
+        ld['status'] = status ? status : '-'
+      end
+      keys = (status_date.keys - @location_dates.map {|ld| ld['status']}) - ['id', 'import_item_id', 'created_at', 'updated_at']
+      keys.each do |key|
+        @location_dates.push({ 'date' => status_date[key], 'location' => '-', 'status' => key }) if status_date[key]
+      end
+      @location_dates = @location_dates.sort_by { |ld| ld['date'] }
     end
   end
 
