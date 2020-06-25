@@ -6,20 +6,23 @@
         %h3.modal-title Tracking Details:
       .modal-body
         .row
-          .col-md-1
           .col-md-3
-            %b DATE
-          .col-md-7
-            %b LOCATION
+            %b &emsp;DATE
+          .col-md-5
+            %b &emsp;LOCATION
+          .col-md-4
+            %b &nbsp;STATUS
           %br
           %hr
         - @location_dates.each do |ld|
           .row
-            .col-md-1
             .col-md-3
-              %b= ld.date
-            .col-md-7
-              = ld.location
+              &nbsp;
+              %b= ld['date']
+            .col-md-5
+              = ld['location']
+            .col-md-4
+              = ld['status'].humanize
           %br
       .modal-footer
         = link_to 'Close', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
