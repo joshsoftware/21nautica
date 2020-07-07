@@ -2,6 +2,10 @@ module ImportItemConcern
   extend ActiveSupport::Concern
 
   def update_status
+    if @import_item.truck_id.to_s != import_item_params[:truck_id]
+      @import_item.status_date.update(truck_allocated: Date.today)
+    end
+
     @import = @import_item.import
     initial_status = @import_item.status
     remark_params = params[:import_item]
@@ -9,6 +13,7 @@ module ImportItemConcern
     @import_item.attributes = import_item_params.except('status')
     @import_item.remarks.create(desc: remark_params[:remarks], date: Date.today, category: "external") unless remark_params[:remarks].blank?
     status = import_item_params[:status].downcase.gsub(' ', '_')
+
     if @import_item.status == "under_loading_process" && @import_item.truck
       @import_item.allocate_truck
       @import_item.save
