@@ -8,7 +8,7 @@ class DownloadLocation
 
   def process
     if @generate_xlsx
-      @location_dates = LocationDate.where(date: @start_date..@end_date).order('date ASC')
+      @location_dates = LocationDate.where(date: @start_date..@end_date).order('date DESC')
       package = Axlsx::Package.new
       workbook = package.workbook
 
@@ -37,13 +37,19 @@ class DownloadLocation
   def export_headers
     dates = @location_dates.pluck(:date)
     dates = dates.collect { |d| d.strftime('%d/%m/%Y') }
-    ['TRUCK NUMBER'] + dates.uniq
+    ['TRUCK NUMBER', 'STATUS', 'CUSTOMER NAME'] + dates.uniq
   end
 
   def add_data(sheet)
     Truck.includes(:location_dates).each do |truck|
-      locations = truck.location_dates.where(date: @start_date..@end_date).order('date ASC')
-      sheet.add_row [truck.reg_number] + locations.pluck(:location)
+      locations = truck.location_dates.where(date: @start_date..@end_date).order('date DESC')
+      status = 'Free'
+      customer = nil
+      if truck.current_import_item_id
+        customer = truck.current_import_item.import.try(:customer).try(:name) if truck.current_import_item.import
+        status = truck.current_import_item.status
+      end
+      sheet.add_row [truck.reg_number, status, customer] + locations.pluck(:location)
     end
   end
 end
