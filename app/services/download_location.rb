@@ -24,14 +24,20 @@ class DownloadLocation
       CSV.generate do |data|
         data << headers
         Truck.find_each do |truck|
-          data << [truck.reg_number, truck.location]
+          status = 'Free'
+          customer = nil
+          if truck.current_import_item_id
+            customer = truck.current_import_item.import.try(:customer).try(:name) if truck.current_import_item.import
+            status = truck.current_import_item.status
+          end
+          data << [truck.reg_number, truck.location, status, customer]
         end
       end
     end
   end
 
   def headers
-    ['TRUCK NUMBER', 'LOCATION']
+    ['TRUCK NUMBER', 'LOCATION', 'STATUS', 'CUSTOMER NAME']
   end
 
   def export_headers
