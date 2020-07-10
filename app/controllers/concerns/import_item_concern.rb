@@ -2,7 +2,7 @@ module ImportItemConcern
   extend ActiveSupport::Concern
 
   def update_status
-    if @import_item.truck_id.to_s != import_item_params[:truck_id]
+    if @import_item.status_date.present? && @import_item.truck_id.to_s != import_item_params[:truck_id]
       @import_item.status_date.update(truck_allocated: Date.today)
     end
 
