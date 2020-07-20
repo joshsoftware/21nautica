@@ -76,7 +76,7 @@ class TrucksController < ApplicationController
     params.require(:truck).permit(:reg_number, :trailer_reg_number,
                                   :driver_name, :fuel_capacity,
                                   :make_model_id, :insurance_expiry,
-                                  :insurance_premium_amt_yearly)
+                                  :insurance_premium_amt_yearly, :is_active)
   end
 
   def set_make_model

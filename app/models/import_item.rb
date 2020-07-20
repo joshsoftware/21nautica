@@ -38,7 +38,7 @@ class ImportItem < ActiveRecord::Base
   validate :validate_truck_number
   validate :validate_expiry_date
   validate :validate_exit_note_received
-  validate :should_not_remove_truck, unless: :g_f_expiry_changed?
+  validate :should_not_remove_truck, unless: "g_f_expiry_changed? || next_truck_is_planned"
   before_validation :strip_whitespaces, :only => [:container_number]
   #gf_expiry is skipped because it is updated on empty container report
   validate :validate_interchange_number
@@ -61,6 +61,10 @@ class ImportItem < ActiveRecord::Base
     ImportExpense::CATEGORIES.each do |category|
       record.import_expenses.create(category: category)
     end
+  end
+
+  def next_truck_is_planned
+    tentative_truck_allocation.present? && next_truck_id.present?
   end
 
   def free_truck

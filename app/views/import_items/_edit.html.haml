@@ -29,6 +29,12 @@
               = f.input :truck_number, collection: reallocate_truck_numbers[:third_party_allotted_trucks], label: 'Allotted Trucks', input_html: {class: "import_item_truck_number11", id: "allotted_truck_numbers"}
 
           = f.input :last_loading_date, as: :string, input_html: { class: "form-control last_loading_date", value: f.object.last_loading_date.try(:strftime, "%Y-%m-%d") }, label: "Last Loading date"
+
+          - if @import_item.under_loading_process?
+            %hr
+            = f.input :next_truck_id, collection: reallocate_truck_numbers[:available_next], include_blank: true, input_html: { id: "next_truck_id" }
+            = f.input :tentative_truck_allocation, as: :string, input_html: { class: "form-control tentative_truck_allocation", value: f.object.tentative_truck_allocation.try(:strftime, "%Y-%m-%d") || Date.today }, label: "Tentative Allocation"
+
           .custom-entry-released
             %hr
             .form-group
@@ -47,8 +53,8 @@
         = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
 
 :coffeescript
-  $('#import_item_truck_id, #allotted_trucks, #allotted_truck_numbers').select2({allowClear: true, placeholder: "Select an truck"});
-  $('#import_item_last_loading_date').datepicker({ format: 'yyyy/mm/dd' });
+  $('#import_item_truck_id, #allotted_trucks, #allotted_truck_numbers, #next_truck_id').select2({allowClear: true, placeholder: "Select an truck"});
+  $('#import_item_last_loading_date, #import_item_tentative_truck_allocation').datepicker({ format: 'yyyy/mm/dd' });
   $('#import_item_expiry_date').datepicker({ format: 'yyyy/mm/dd' });
   import_item = #{@import_item.to_json}
   if $("#import_item_status").val() == "under_loading_process"

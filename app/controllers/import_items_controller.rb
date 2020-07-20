@@ -123,7 +123,8 @@ class ImportItemsController < ApplicationController
   def import_item_params
     params.permit(:id)
     params.require(:import_item).permit(:truck_number, :status, :context, :transporter_name, :transporter, :truck_id, :last_loading_date,
-                                        :exit_note_received, :expiry_date, :is_co_loaded, :return_status, :dropped_location, :previous_month_entry)
+                                        :exit_note_received, :expiry_date, :is_co_loaded, :return_status, :dropped_location, :previous_month_entry,
+                                        :next_truck_id, :tentative_truck_allocation)
   end
 
   def import_item_update_params
