@@ -17,7 +17,11 @@
       = f.input :insurance_premium_amt_yearly, label: 'Yearly Insurance Amount'
     .col-md-6
       = f.input :insurance_expiry, label: 'Insurance Expiry Date',as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker", :'date-autoclose'=> 'true'}}
-
+  .row
+    .col-md-6
+      - options = { "True" => true, "False" => false }
+      = f.input :is_active, collection: options, include_blank: false
+  %hr
   = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
   = link_to 'Cancel', trucks_path, class: 'btn btn-primary', data: {dismiss: 'modal'}
 

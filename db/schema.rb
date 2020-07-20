@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200601043415) do
+ActiveRecord::Schema.define(version: 20200716120111) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -234,12 +234,14 @@ ActiveRecord::Schema.define(version: 20200601043415) do
     t.integer  "vendor_id"
     t.integer  "truck_id"
     t.datetime "last_loading_date"
-    t.boolean  "exit_note_received",    default: false
+    t.boolean  "exit_note_received",         default: false
     t.string   "dropped_location"
     t.integer  "return_status"
     t.date     "expiry_date"
-    t.boolean  "is_co_loaded",          default: false
+    t.boolean  "is_co_loaded",               default: false
     t.string   "interchange_number"
+    t.date     "tentative_truck_allocation"
+    t.integer  "next_truck_id"
   end
 
   add_index "import_items", ["container_number"], name: "index_import_items_on_container_number", using: :btree
@@ -247,7 +249,9 @@ ActiveRecord::Schema.define(version: 20200601043415) do
   add_index "import_items", ["expiry_date"], name: "index_import_items_on_expiry_date", using: :btree
   add_index "import_items", ["import_id"], name: "index_import_items_on_import_id", using: :btree
   add_index "import_items", ["is_co_loaded"], name: "index_import_items_on_is_co_loaded", using: :btree
+  add_index "import_items", ["next_truck_id"], name: "index_import_items_on_next_truck_id", using: :btree
   add_index "import_items", ["status"], name: "index_import_items_on_status", using: :btree
+  add_index "import_items", ["tentative_truck_allocation"], name: "index_import_items_on_tentative_truck_allocation", using: :btree
   add_index "import_items", ["truck_id"], name: "index_import_items_on_truck_id", using: :btree
   add_index "import_items", ["truck_number"], name: "index_import_items_on_truck_number", using: :btree
   add_index "import_items", ["vendor_id"], name: "index_import_items_on_vendor_id", using: :btree
