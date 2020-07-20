@@ -32,7 +32,11 @@
 
           - if @import_item.under_loading_process?
             %hr
-            = f.input :next_truck_id, collection: reallocate_truck_numbers[:available_next], include_blank: true, input_html: { id: "next_truck_id" }
+            - available_next = reallocate_truck_numbers[:available_next]
+            - if @import_item.next_truck_id.present?
+              - t = Truck.select(:reg_number, :id).where(id: @import_item.next_truck_id).last
+              - available_next << [t.reg_number, t.id]
+            = f.input :next_truck_id, collection: available_next, include_blank: true, input_html: { id: "next_truck_id" }
             = f.input :tentative_truck_allocation, as: :string, input_html: { class: "form-control tentative_truck_allocation", value: f.object.tentative_truck_allocation.try(:strftime, "%Y-%m-%d") || Date.today }, label: "Tentative Allocation"
 
           .custom-entry-released

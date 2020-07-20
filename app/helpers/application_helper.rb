@@ -26,8 +26,8 @@ module ApplicationHelper
     end
 
     next_truck_ids = ImportItem.pluck(:next_truck_id).uniq
-    only_allocated_ids = allotted_not_coloaded.pluck(:id) - next_truck_ids
-    available_next = Truck.joins(:import_items).where(import_items: {id: only_allocated_ids}).active.pluck(:reg_number, :id).uniq
+    available_next = Truck.joins(:import_items).where(import_items: {id: allotted_not_coloaded.pluck(:id)}).active.where.not(id: next_truck_ids)
+    available_next = available_next.pluck(:reg_number, :id).uniq
 
     if @import_item.truck_id == 0
       third_party_allotted_trucks << [@import_item.truck_number, @import_item.truck_number]
