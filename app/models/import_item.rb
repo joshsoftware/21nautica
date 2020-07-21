@@ -68,7 +68,7 @@ class ImportItem < ActiveRecord::Base
     if retVal && (next_truck_id_changed? || tentative_truck_allocation_changed?)
       next_truck_reg_number = Truck.find(next_truck_id).reg_number
       desc = "Next Truck: #{next_truck_reg_number}, Date: #{tentative_truck_allocation}"
-      Remark.create(desc: desc, remarkable_id: id, remarkable_type: 'ImportItem', category: 0)
+      Remark.create(desc: desc, remarkable_id: id, remarkable_type: 'ImportItem', category: 1)
     end
     retVal
   end
