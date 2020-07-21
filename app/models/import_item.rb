@@ -64,7 +64,13 @@ class ImportItem < ActiveRecord::Base
   end
 
   def next_truck_is_planned
-    tentative_truck_allocation.present? && next_truck_id.present?
+    retVal = tentative_truck_allocation.present? && next_truck_id.present?
+    if retVal && (next_truck_id_changed? || tentative_truck_allocation_changed?)
+      next_truck_reg_number = Truck.find(next_truck_id).reg_number
+      desc = "Next Truck: #{next_truck_reg_number}, Date: #{tentative_truck_allocation}"
+      Remark.create(desc: desc, remarkable_id: id, remarkable_type: 'ImportItem', category: 0)
+    end
+    retVal
   end
 
   def free_truck
