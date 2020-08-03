@@ -136,7 +136,7 @@ class ImportItem < ActiveRecord::Base
     state :arrived_at_destination
     state :delivered
 
-    event :allocate_truck, :after => [:check_rest_of_the_containers, :save_status_date] do
+    event :allocate_truck, :after => [:check_rest_of_the_containers, :save_status_date, :remove_next_truck_id] do
       transitions from: :under_loading_process, to: :truck_allocated, guard: [:is_truck_number_assigned?]
     end
 
@@ -173,7 +173,11 @@ class ImportItem < ActiveRecord::Base
     if Truck.find_by(id: truck_id).try(:reg_number).to_s.downcase.include?("3rd party truck") && truck_number.blank?
       self.errors[:base] <<  "Truck number should be present if 3rd party truck is selected"
     end
-    !self.errors.present?
+    self.errors.empty?
+  end
+
+  def remove_next_truck_id
+    self.update(next_truck_id: nil)
   end
 
   def is_all_docs_received? #all shipping dates present?
