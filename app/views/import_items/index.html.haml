@@ -60,7 +60,7 @@
             class: 'btn btn-small btn-primary'
         %td.remarks.h5
           .desc
-            = item.remarks.order(id: :asc).last.desc
+            = item.remarks.order(id: :asc).last.try(:desc)
           %button.btn.btn-small.btn-primary{'data-model-id' => "#{item.id}", 'data-model-type' => 'import_item', 'data-target' => '#remarkModal', 'data-toggle' => 'modal'} Add
 
 = render 'remarks/remark'
