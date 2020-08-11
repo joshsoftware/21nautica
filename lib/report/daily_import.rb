@@ -17,12 +17,15 @@ module Report
         {'Snapshot' => nil, 'In Transit' => nil, 'History' => 'delivered', 'Summary' => nil}.each do |name, status|
           workbook.add_worksheet(name: name) do |sheet|
             if name == 'Snapshot'
+              p "**** Snapshot for Customer #{customer.name} ****"
               add_snapshot_report(customer, sheet, center, heading, status)
               sheet.column_widths nil, nil, nil, nil, nil, nil,
                                   nil, nil, nil, nil, nil, nil, 70
             elsif name == 'Summary'
+              p "**** Summary for Customer #{customer.name} ****"
               add_summary_data(customer, sheet, center, heading, status)
             else
+              p "**** Inside else for Customer #{customer.name} ****"
               add_data(customer, sheet, center, heading, status)
               sheet.column_widths nil,nil,nil,nil,nil,nil,30,30,
                                     25,25,25,25,30,33,30,25
@@ -33,6 +36,7 @@ module Report
               pane.x_split = 3
               pane.active_pane = :bottom_right
             end
+            p "****-- File created successfully for Customer #{customer.name} --****"
           end
         end
       end

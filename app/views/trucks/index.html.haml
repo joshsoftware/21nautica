@@ -11,6 +11,8 @@
     %th Client
     %th Work order No
     %th LLD
+    %th Next W/O No
+    %th Active
     %th Action
   %tbody
     - @trucks.each do |truck|
@@ -30,4 +32,7 @@
           %td= customer.name
           %td= current_import_item.work_order_number
           %td= current_import_item.last_loading_date.try(:strftime, '%Y-%m-%d')
+        - next_import_item = ImportItem.where(next_truck_id: truck.id).last
+        %td= next_import_item ? next_import_item.work_order_number : ''
+        %th= truck.is_active ? 'Y' : 'N'
         %td= link_to "Edit", edit_truck_path(truck), class: 'btn btn-primary'

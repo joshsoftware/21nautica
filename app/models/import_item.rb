@@ -38,7 +38,7 @@ class ImportItem < ActiveRecord::Base
   validate :validate_truck_number
   validate :validate_expiry_date
   validate :validate_exit_note_received
-  validate :should_not_remove_truck, unless: :g_f_expiry_changed?
+  validate :should_not_remove_truck, unless: "g_f_expiry_changed? || next_truck_is_planned"
   before_validation :strip_whitespaces, :only => [:container_number]
   #gf_expiry is skipped because it is updated on empty container report
   validate :validate_interchange_number
@@ -61,6 +61,16 @@ class ImportItem < ActiveRecord::Base
     ImportExpense::CATEGORIES.each do |category|
       record.import_expenses.create(category: category)
     end
+  end
+
+  def next_truck_is_planned
+    retVal = tentative_truck_allocation.present? && next_truck_id.present?
+    if retVal && (next_truck_id_changed? || tentative_truck_allocation_changed?)
+      next_truck_reg_number = Truck.find(next_truck_id).reg_number
+      desc = "Next Truck: #{next_truck_reg_number}, Date: #{tentative_truck_allocation}"
+      Remark.create(desc: desc, remarkable_id: id, remarkable_type: 'ImportItem', category: 1)
+    end
+    retVal
   end
 
   def free_truck
@@ -126,7 +136,7 @@ class ImportItem < ActiveRecord::Base
     state :arrived_at_destination
     state :delivered
 
-    event :allocate_truck, :after => [:check_rest_of_the_containers, :save_status_date] do
+    event :allocate_truck, :after => [:check_rest_of_the_containers, :save_status_date, :remove_next_truck_id] do
       transitions from: :under_loading_process, to: :truck_allocated, guard: [:is_truck_number_assigned?]
     end
 
@@ -163,7 +173,11 @@ class ImportItem < ActiveRecord::Base
     if Truck.find_by(id: truck_id).try(:reg_number).to_s.downcase.include?("3rd party truck") && truck_number.blank?
       self.errors[:base] <<  "Truck number should be present if 3rd party truck is selected"
     end
-    !self.errors.present?
+    self.errors.empty?
+  end
+
+  def remove_next_truck_id
+    self.update(next_truck_id: nil)
   end
 
   def is_all_docs_received? #all shipping dates present?

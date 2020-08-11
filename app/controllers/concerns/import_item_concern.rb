@@ -2,9 +2,9 @@ module ImportItemConcern
   extend ActiveSupport::Concern
 
   def update_status
-    # if @import_item.truck_id.to_s != import_item_params[:truck_id]
-    #   @import_item.status_date.update(truck_allocated: Date.today)
-    # end
+    if @import_item.status_date.present? && @import_item.truck_id.to_s != import_item_params[:truck_id]
+      @import_item.status_date.update(truck_allocated: Date.today)
+    end
 
     @import = @import_item.import
     initial_status = @import_item.status
@@ -16,8 +16,10 @@ module ImportItemConcern
 
     if @import_item.status == "under_loading_process" && @import_item.truck
       @import_item.allocate_truck
+      @import_item.next_truck_id = nil
       @import_item.save
     elsif @import_item.status == "truck_allocated" && @import_item.exit_note_received
+      @import_item.next_truck_id = nil
       if @import_item.import.entry_type == "wt8" && @import_item.expiry_date
         @import_item.ready_to_load
         @errors = @import_item.errors.full_messages

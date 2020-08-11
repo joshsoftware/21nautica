@@ -24,6 +24,11 @@ module ApplicationHelper
       free_trucks << [@import_item.truck.reg_number, @import_item.truck_id] unless @import_item.is_co_loaded
       alloted << [@import_item.truck.reg_number, @import_item.truck_id] if @import_item.is_co_loaded
     end
+
+    item_ids = ImportItem.where(status: [:loaded_out_of_port, :arrived_at_border, :departed_from_border, :arrived_at_destination, :delivered], is_co_loaded: false).pluck(:id)
+    next_truck_ids = ImportItem.pluck(:next_truck_id).uniq
+    available_next = Truck.joins(:import_items).where(import_items: {id: item_ids}).active.uniq.where.not(id: next_truck_ids).pluck(:reg_number, :id)
+
     if @import_item.truck_id == 0
       third_party_allotted_trucks << [@import_item.truck_number, @import_item.truck_number]
     end
@@ -31,7 +36,8 @@ module ApplicationHelper
     {
       free: free_trucks.prepend(third_party_truck).sort_by{|t| t[0]},
       alloted: alloted.prepend(third_party_truck).sort_by{|t| t[0]},
-      third_party_allotted_trucks: third_party_allotted_trucks.sort_by{|t| t[0]}
+      third_party_allotted_trucks: third_party_allotted_trucks.sort_by{|t| t[0]},
+      available_next: available_next.sort_by{|t| t[0]}
     }
   end
 

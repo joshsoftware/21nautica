@@ -35,4 +35,4 @@ log
 .rvmrc
 .env
 
-/.byebug_history
+.byebug_history
