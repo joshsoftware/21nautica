@@ -1,0 +1,48 @@
+#AuditsModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+        %h3.modal-title Audits
+      .modal-body
+        - if @audits.present?
+          %h4
+          - item = ImportItem.find_by_id(@audits.last.auditable_id)
+          - if item.present?
+            %table
+              %tr
+                %td
+                  Container Number
+                %td
+                  %b &emsp; #{item.container_number}
+              %tr
+                %td
+                  BL Number
+                %td
+                  %b &emsp; #{item.bl_number}
+              %tr
+                %td
+                  Current State
+                %td
+                  %b &emsp; #{item.status}
+        %br
+          %table.table{style: "border: 1"}
+            %tr
+              %th Date
+              %th Action
+              %th Changes
+              %th User
+            - @audits.each do |audit|
+              %tr
+                %th #{audit.created_at.strftime('%d/%m/%Y')}
+                %td #{audit.action}
+                %td #{audit.audited_changes.except(:updated_at)}
+                %td #{audit.user_id ? audit.user.email : '-'}
+
+        %br
+      .modal-footer
+        = link_to 'Close', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+
+:coffeescript
+  $('#AuditsModal').on 'submit', (event) ->
+    $('#AuditsModal').modal('hide')

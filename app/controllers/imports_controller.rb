@@ -150,6 +150,16 @@ class ImportsController < ApplicationController
     end
   end
 
+  def destroy
+    import = Import.find_by_id(params['id'])
+    if import.present? && import.destroy
+      flash[:notice] = "Import order deleted Successfully"
+    else
+      flash[:error] = "Could not delete the Import order!"
+    end
+    redirect_to imports_path
+  end
+
   private
 
   def import_params

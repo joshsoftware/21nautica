@@ -70,6 +70,7 @@
               %li= link_to 'Merge Spare Part',merge_spare_parts_path
               %li= link_to 'Reverse Merge Spare Part',undo_merge_spare_parts_path
               %li= link_to 'Edit Import Customer', edit_import_customer_path
+              %li= link_to 'Audits', audits_path
         - if user_signed_in? && (current_user.is?('Admin') || current_user.is?('Yard'))
           %li.dropdown
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do

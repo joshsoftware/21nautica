@@ -123,7 +123,7 @@ module Report
       if status
         @imports = customer.imports.includes(import_items: [:truck]).where.not("import_items.interchange_number" => nil)
         # Restricts histroy tab not to have records older than 6 months.
-        @imports = @imports.where('imports.updated_at > ?', Date.today - 6.months)
+        @imports = @imports.where('imports.updated_at > ?', Date.today - 6.months) if ENV['HOSTNAME'] == 'RFS'
         @import_item_ids = ImportItem.where(import_id: @imports.pluck(:id)).pluck(:id)
         auditable_ids = @imports.pluck(:id) + @import_item_ids
         @audited_data = Espinita::Audit.where(auditable_id: auditable_ids,
