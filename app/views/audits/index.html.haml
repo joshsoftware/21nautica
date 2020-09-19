@@ -38,7 +38,7 @@
           "paging": true,
           "pageLength": 25,
           "ajax": {
-            url: "",
+            url: "audits",
             type: "GET",
             "data": function( result ) {
                   var newresult = {"searchValue": result.search.value, start: result.start, "length": result.length}
@@ -47,9 +47,7 @@
             "dataSrc": function ( json ) {
                 data = json.data
                 data.forEach(function(data, index){
-                  if(data.return_status)
-                    data.after_delivery_status = data.return_status
-                    data.info_link = "<a class='btn btn-info btn-sm' data-remote='true' href='/audits/"+data.id+"/audits_modal'>Audits</a>"
+                  data.info_link = "<a class='btn btn-info btn-sm' data-remote='true' href='/audits/"+data.id+"/audits_modal'>Audits</a>"
                 })
                 return data
             }
