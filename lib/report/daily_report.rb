@@ -67,11 +67,12 @@ module Report
           f1 = File.open(path, 'a+')
           f1.puts("Processing - #{customer.name}")
           f1.close
-
+          next if customer.name == "21 Nautica"
           p "************ Processing Customer #{customer.name} **********"
           daily_report = Report::DailyImport.new
           daily_report.create(customer)
           UserMailer.mail_report(customer, 'import').deliver
+          p "************ Mail sent to  Customer #{customer.name} **********"
           #******** creating Report through workers*********************
           #DailyReportWorker.perform_async(customer.id, 'import')
         rescue Exception => e

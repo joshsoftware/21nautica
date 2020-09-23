@@ -16,16 +16,14 @@ module Report
 
         {'Snapshot' => nil, 'In Transit' => nil, 'History' => 'delivered', 'Summary' => nil}.each do |name, status|
           workbook.add_worksheet(name: name) do |sheet|
+            p "**** Processing #{name} for Customer #{customer.name} ****"
             if name == 'Snapshot'
-              p "**** Snapshot for Customer #{customer.name} ****"
               add_snapshot_report(customer, sheet, center, heading, status)
               sheet.column_widths nil, nil, nil, nil, nil, nil,
                                   nil, nil, nil, nil, nil, nil, 70
             elsif name == 'Summary'
-              p "**** Summary for Customer #{customer.name} ****"
               add_summary_data(customer, sheet, center, heading, status)
             else
-              p "**** Inside else for Customer #{customer.name} ****"
               add_data(customer, sheet, center, heading, status)
               sheet.column_widths nil,nil,nil,nil,nil,nil,30,30,
                                     25,25,25,25,30,33,30,25
@@ -124,6 +122,8 @@ module Report
                   style: heading, height: 40
       if status
         @imports = customer.imports.includes(import_items: [:truck]).where.not("import_items.interchange_number" => nil)
+        # Restricts histroy tab not to have records older than 6 months.
+        @imports = @imports.where('imports.updated_at > ?', Date.today - 6.months) if ENV['HOSTNAME'] == 'RFS'
         @import_item_ids = ImportItem.where(import_id: @imports.pluck(:id)).pluck(:id)
         auditable_ids = @imports.pluck(:id) + @import_item_ids
         @audited_data = Espinita::Audit.where(auditable_id: auditable_ids,

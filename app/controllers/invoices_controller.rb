@@ -131,6 +131,7 @@ class InvoicesController < ApplicationController
     else
       invoice_type = "TBL_export_invoice"
     end
+    invoice_type = "#{invoice.number}_".concat invoice_type
     html = render_to_string(:action => 'download.html.haml', :layout=> false)
     kit = PDFKit.new(html)
     kit.stylesheets << "#{Rails.root}/app/assets/stylesheets/invoices.css.scss"

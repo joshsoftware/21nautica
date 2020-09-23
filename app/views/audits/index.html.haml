@@ -1,0 +1,63 @@
+%h3 Audits
+
+%table.table{id: 'audits_table'}
+  %thead
+    %th Container Number
+    %th BL Number
+    %th Status
+    %th Action
+
+
+#Audits
+
+:javascript
+  $(document).ready(function() {
+    if ( $.fn.dataTable.isDataTable( '#audits_table' ) ) {
+    }
+    else {
+      $('#audits_table').DataTable( {
+          initComplete : function() {
+              var input = $('.dataTables_filter input').unbind(),
+                  self = this.api(),
+                  $searchButton = $('<button class="search-button">')
+                             .text('search')
+                             .click(function() {
+                                self.search(input.val()).draw();
+                             }),
+                  $clearButton = $('<button class="clear-button">')
+                             .text('clear')
+                             .click(function() {
+                                input.val('');
+                                $searchButton.click(); 
+                             })
+              $('.dataTables_filter').append($searchButton, $clearButton);
+          },
+          "bJQueryUI": true,
+          "processing": true,
+          "serverSide": true,
+          "paging": true,
+          "pageLength": 25,
+          "ajax": {
+            url: "audits",
+            type: "GET",
+            "data": function( result ) {
+                  var newresult = {"searchValue": result.search.value, start: result.start, "length": result.length}
+                  return newresult;
+                },
+            "dataSrc": function ( json ) {
+                data = json.data
+                data.forEach(function(data, index){
+                  data.info_link = "<a class='btn btn-info btn-sm' data-remote='true' href='/audits/"+data.id+"/audits_modal'>Audits</a>"
+                })
+                return data
+            }
+          },
+          "columns": [
+              { "data": "container_number", "bSortable": false},
+              { "data": "bl_number", "bSortable": false },
+              { "data": "status", "bSortable": false },
+              { "data": "info_link", "bSortable": false }
+          ]
+      } );
+    } 
+  });

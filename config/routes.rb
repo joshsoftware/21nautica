@@ -88,6 +88,12 @@ Rails.application.routes.draw do
   end
   match '/edit_import_customer' => 'imports#edit_import_customer', via: [:get, :post]
 
+  resources :audits, only: [:index] do
+    member do
+      get :audits_modal
+    end
+  end
+
   resources :shippings, only: [:index] do
     member do
       post 'update'
