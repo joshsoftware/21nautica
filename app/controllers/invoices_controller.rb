@@ -73,19 +73,23 @@ class InvoicesController < ApplicationController
 
   def download
     invoice = Invoice.find(params[:id])
-    kit, invoice_type = collect_pdf_data(invoice)
+    kit = collect_pdf_data(invoice)
+    filename = invoice.number
+    filename.concat("_#{invoice.bl_number}") if invoice.bl_number.present?
     respond_to do |format|
       format.html {}
-      format.pdf {send_data(kit.to_pdf, :filename => "#{invoice_type}.pdf", :type => 'application/pdf')}
+      format.pdf {send_data(kit.to_pdf, :filename => "#{filename}.pdf", :type => 'application/pdf')}
     end
   end
 
   def send_invoice
     invoice = Invoice.find(params[:id])
     if invoice.amount > 0
-      kit,invoice_type = collect_pdf_data(invoice)
+      filename = invoice.number
+      filename.concat("_#{invoice.bl_number}") if invoice.bl_number.present?
+      kit = collect_pdf_data(invoice)
       pdf = kit.to_pdf
-      file = kit.to_file("#{Rails.root}/tmp/#{invoice_type}.pdf")
+      file = kit.to_file("#{Rails.root}/tmp/#{filename}.pdf")
       UserMailer.mail_invoice(invoice, file).deliver
       invoice.invoice_sent! unless invoice.sent?
     else
@@ -121,20 +125,20 @@ class InvoicesController < ApplicationController
   def collect_pdf_data(invoice)
     @invoice = invoice
     @particulars = @invoice.particulars
-    if (invoice.is_additional_invoice)# this is additional invoice
-      invoice_type = "additional_invoice"
-      @ref_no = invoice.previous_invoice.number
-    elsif invoice.is_import_invoice?
-      invoice_type = "import_invoice"
-    elsif invoice.is_Haulage_export_invoice?
-      invoice_type = "Haulage_export_invoice"
-    else
-      invoice_type = "TBL_export_invoice"
-    end
-    invoice_type = "#{invoice.number}_".concat invoice_type
+    # Commented code was for assigning Invoice Type as a Filename
+    # if (invoice.is_additional_invoice)# this is additional invoice
+    #   invoice_type = "additional_invoice"
+    #   @ref_no = invoice.previous_invoice.number
+    # elsif invoice.is_import_invoice?
+    #   invoice_type = "import_invoice"
+    # elsif invoice.is_Haulage_export_invoice?
+    #   invoice_type = "Haulage_export_invoice"
+    # else
+    #   invoice_type = "TBL_export_invoice"
+    # end
     html = render_to_string(:action => 'download.html.haml', :layout=> false)
     kit = PDFKit.new(html)
     kit.stylesheets << "#{Rails.root}/app/assets/stylesheets/invoices.css.scss"
-    return kit, invoice_type
+    return kit #, invoice_type
   end
 end
