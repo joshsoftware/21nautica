@@ -219,9 +219,9 @@ Rails.application.routes.draw do
   resources :petty_cashes, except: [:destroy, :edit, :update]
   get '/tabular_partial' => 'petty_cashes#tabular_partial'
   resources :fuel_entries, except: [:destroy, :edit, :update]
-  get '/mpesaes' => 'petty_cashes#index', as: 'mpesaes'
+  get '/mpesaes' => 'petty_cashes#mpesaes', as: 'mpesaes'
   get '/mpesaes/new' => 'petty_cashes#new', as: 'new_mpesaes'
-  get '/petty_cash_nbos' => 'petty_cashes#index', as: 'petty_cash_nbos'
+  get '/petty_cash_nbos' => 'petty_cashes#petty_cash_nbos', as: 'petty_cash_nbos'
   get '/petty_cash_nbos/new' => 'petty_cashes#new', as: 'new_petty_cash_nbos'
   resources :remarks
   resources :mechanics
