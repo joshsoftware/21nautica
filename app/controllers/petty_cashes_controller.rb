@@ -3,15 +3,17 @@ class PettyCashesController < ApplicationController
   before_action :set_date, :set_expense_head, :set_trucks ,only: %i[new create tabular_partial]
   include PettyCashesHelper
   def index
-    if params[:date_filter] && params[:date_filter][:date].present?
-      start_date, end_date = params[:date_filter][:date].split(' - ')
-      start_date = start_date.to_date
-      end_date = end_date.to_date
-    else
-      start_date = Date.today-7.days
-      end_date = Date.today
-    end
-    @petty_cashes = set_records_with_date(for_account, start_date, end_date)
+    set_index_data
+  end
+
+  def petty_cash_nbos
+    set_index_data
+    render :index
+  end
+
+  def mpesaes
+    set_index_data
+    render :index
   end
 
   def new
@@ -62,6 +64,17 @@ class PettyCashesController < ApplicationController
     )
   end
   
+  def set_index_data
+    if params[:date_filter] && params[:date_filter][:date].present?
+      start_date, end_date = params[:date_filter][:date].split(' - ')
+      start_date = start_date.to_date
+      end_date = end_date.to_date
+    else
+      start_date = Date.today-7.days
+      end_date = Date.today
+    end
+    @petty_cashes = set_records_with_date(for_account, start_date, end_date)
+  end
 
   def set_date
     @date = PettyCash.of_account_type(for_account).last.try(:date) || Date.current.beginning_of_year-10.year
