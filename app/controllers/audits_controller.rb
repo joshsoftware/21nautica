@@ -3,7 +3,7 @@
 class AuditsController < ApplicationController
   def index
     if params[:searchValue].present?
-      import_items = ImportItem.where("container_number ILIKE :query", query: "%#{params[:searchValue]}%").joins(:import)
+      import_items = ImportItem.joins(:import).where("container_number ILIKE :query or imports.bl_number ILIKE :query or imports.work_order_number ILIKE :query", query: "%#{params[:searchValue]}%")
     else
       import_items = ImportItem.none
     end
