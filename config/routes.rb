@@ -3,8 +3,8 @@ Rails.application.routes.draw do
 
   resources 'bills' do
     collection do
-      match :get_container, via: :get 
-      match :get_number, via: :get 
+      match :get_container, via: :get
+      match :get_number, via: :get
       match :load_vendor_charges, via: :get
       match :validate_item_number, via: :get
       match :validate_of_uniquness_format, via: :get
@@ -15,11 +15,11 @@ Rails.application.routes.draw do
   mount Sidekiq::Web, at: "/sidekiq"
 
   resources 'vendors'
-  match 'search_bills' => 'bills#search', as: 'bills_search', via: [:get, :post] 
+  match 'search_bills' => 'bills#search', as: 'bills_search', via: [:get, :post]
   #  readjustment payment made
-  match '/paid/delete/Bill/:id' => 'bills#delete_ledger', via: [:delete] 
-  match '/paid/delete/DebitNote/:id' => 'debit_notes#delete_ledger', via: [:delete] 
-  match '/paid/delete/Payment/:id' => 'paid#delete_ledger', via: [:delete] 
+  match '/paid/delete/Bill/:id' => 'bills#delete_ledger', via: [:delete]
+  match '/paid/delete/DebitNote/:id' => 'debit_notes#delete_ledger', via: [:delete]
+  match '/paid/delete/Payment/:id' => 'paid#delete_ledger', via: [:delete]
 
   # readjustment payment received
   match 'delete/Invoice/:id' => 'invoices#delete_ledger', via: [:delete]
@@ -35,10 +35,10 @@ Rails.application.routes.draw do
 
   resources :users, only: [:new, :index, :create, :update, :edit]
 
-  devise_for :users, :skip => [:registrations]
+  devise_for :user, :skip => [:registrations]
   as :user do
-    get 'users/edit' => 'devise/registrations#edit', :as => 'edit_user_registration'
-    put 'users' => 'devise/registrations#update', :as => 'user_registration'
+    get 'user/edit' => 'devise/registrations#edit', :as => 'edit_user_registration'
+    put 'user' => 'devise/registrations#update', :as => 'user_registration'
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
@@ -138,7 +138,7 @@ Rails.application.routes.draw do
       post 'retainStatus'
     end
   end
-  resources :paid, only: [:new, :show, :create, :index] do 
+  resources :paid, only: [:new, :show, :create, :index] do
     collection do
       get :outstanding
     end
@@ -179,7 +179,7 @@ Rails.application.routes.draw do
   end
   resources :trucks do
     collection do
-      get :load_truck_numbers 
+      get :load_truck_numbers
       match :import_location, via: [:get, :post]
       post :download_location
       post :export_location
@@ -212,7 +212,7 @@ Rails.application.routes.draw do
 
   resources :local_import_items
   resources :suppliers
-  resources :repair_heads 
+  resources :repair_heads
   resources :job_cards
   get '/coming_soon' => "welcome#coming_soon"
   resources :expense_heads, except: :destroy
