@@ -12,7 +12,7 @@
           = link_to '21 Nautica', '#', class: 'navbar-brand'
       %ul.nav.navbar-nav
         - if user_signed_in? && ['Admin', 'Operations', 'Accounts', 'Transport'].include?(current_user.role)
-          %li.dropdown{class: ('active' if controller.controller_name.eql?('imports'))}
+          %li.dropdown
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
               Import
               %span.caret
@@ -27,7 +27,7 @@
               %li= link_to 'Import/Download Location', import_location_trucks_path
               %li= link_to 'Breakdown Mng', breakdown_managements_path
         - if user_signed_in? && ['Admin', 'Operations', 'Accounts', 'Transport'].include?(current_user.role)
-          %li.dropdown{class: ('active' if controller.controller_name.eql?('exports'))}
+          %li.dropdown
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
               Export
               %span.caret
@@ -51,7 +51,7 @@
               %li= link_to 'Manual Invoice(customer)', manual_invoices_path
               %li= link_to 'Petty Cash', petty_cashes_path
               %li= link_to 'Mpesa', mpesaes_path
-              %li= link_to 'Petty Cash NBO', petty_cash_nbos_path
+              / %li= link_to 'Petty Cash NBO', petty_cash_nbos_path
         - if user_signed_in? && current_user.is?('Admin')
           %li.dropdown
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
@@ -97,7 +97,7 @@
               -# %li= link_to 'Merge Spare Parts', coming_soon_path
               %li= link_to 'Breakdown Reason Master',breakdown_reasons_path
         - if user_signed_in? && current_user.is?('Admin')      
-          %li.dropdown{class: ('active' if controller.controller_name.eql?('reports'))}
+          %li.dropdown
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
               Reports 
               %span.caret

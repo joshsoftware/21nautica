@@ -22,7 +22,6 @@
 en:
   hello: "Hello world"
   import:
-    'create': 'Import Order Created Successfully'
     'update': 'Import Order Updated Successfully'
   repair_head:
     'success': 'Repair Head Saved Successfully'
@@ -46,10 +45,3 @@ en:
     'update' : 'Breakdown Details Updated Successfully'
   fuel_entry:
     'saved': 'Fuel Entry Saved Successfully'
-  local_import:
-    create: 'Local Import Order Created Successfully'
-    update: 'Local Import Order Updated Successfully'
-    update_error: 'Error occured while updating Local Import!'
-  local_import_item:
-    update: 'Local Import Item Updated Successfully'
-    error: 'Error occured while updating Local Import Item!'
