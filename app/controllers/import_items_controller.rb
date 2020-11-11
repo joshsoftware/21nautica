@@ -64,7 +64,7 @@ class ImportItemsController < ApplicationController
         customers.name, imports.equipment, import_items.close_date, import_items.vendor_id, import_items.after_delivery_status,
         import_items.return_status").includes(:truck, import: [:customer]).where(status: :delivered).order(created_at: :asc).references(:import)
       @import_items = @import_items
-                      .where("imports.bl_number ILIKE :query OR import_items.container_number ILIKE :query OR imports.work_order_number ILIKE :query OR trucks.reg_number ILIKE :query OR import_items.truck_number ILIKE :query",
+                      .where("imports.bl_number ILIKE :query OR import_items.container_number ILIKE :query OR imports.work_order_number ILIKE :query OR trucks.reg_number ILIKE :query OR import_items.truck_number ILIKE :query OR customers.name ILIKE :query",
                              query: "%#{params[:searchValue]}%")
       @import_items = @import_items.where(imports: {estimate_arrival: Date.parse(params[:daterange].split("-")[0])..Date.parse(params[:daterange].split("-")[1])}) if params[:daterange].present?
     else
