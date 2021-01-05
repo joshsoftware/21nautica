@@ -1,0 +1,59 @@
+%table.heading
+  %h4 Container Stats
+  %table.table#container_stat
+    %thead
+      %th Days >
+      %th Last Month
+      %th Current Month
+      %th Next Month
+    %tr
+      %td= "Container Awaitng arrival"
+      %td= @last_month_awaiting_arrivals.count
+      %td= @current_month_awaiting_arrivals.count
+      %td= @next_month_awaiting_arrivals.count
+    %tr
+      %td= "Pending Allocation"
+      %td= @last_month_under_loading_import_items.count
+      %td= @current_month_under_loading_import_items.count
+      %td= @next_month_under_loading_import_items.count
+
+%table.heading
+  %h4 Import Stats
+%table.table#import_item_stat
+  %thead
+    %th State
+    %th Days >
+    %th 1
+    %th 3
+    %th 4
+    %th 5+
+  %tbody
+    - @import_item_stats.each do |stat|
+      %tr
+        %td= stat[:heading]
+        %td= ""
+        %td= stat[:one]
+        %td= stat[:three]
+        %td= stat[:four]
+        %td= stat[:five]
+
+%table.heading
+  %h4 Performance Stats
+%table.table#performance_stat
+  %thead
+  %th Days
+  %th <7
+  %th 8
+  %th 9
+  %th 10
+  %th 11
+  %th >12
+  %tbody
+    %tr
+      %td Count
+      %td= @performance_stats[:less_seven]
+      %td= @performance_stats[:eight]
+      %td= @performance_stats[:nine]
+      %td= @performance_stats[:ten]
+      %td= @performance_stats[:eleven]
+      %td= @performance_stats[:twelve_more]
