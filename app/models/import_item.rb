@@ -142,7 +142,7 @@ class ImportItem < ActiveRecord::Base
 
     event :ready_to_load, :after => [:save_status_date] do
       transitions from: :truck_allocated, to: :ready_to_load, guard: [:expiry_date_and_exit_note_received?]
-    end    
+    end
 
     event :loaded_out_of_port, :after => [:save_status_date, :create_rfs_invoice] do
       transitions from: :ready_to_load, to: :loaded_out_of_port, guard: [:is_all_docs_received?]
@@ -212,7 +212,7 @@ class ImportItem < ActiveRecord::Base
     if self.is_co_loaded
       if ImportItem.where(truck_id: truck_id).where.not(status: "delivered").count == 0
         self.truck.update_attributes(status: Truck::FREE, current_import_item_id: nil, location: nil) if truck.present?
-      end  
+      end
     else
       self.truck.update_attributes(status: Truck::FREE, current_import_item_id: nil, location: nil) if truck.present?
     end
@@ -327,6 +327,25 @@ class ImportItem < ActiveRecord::Base
     end
   end
 
+  def self.stats(import_items, status, heading)
+    { heading: heading,
+      one:   import_items.where("status_dates.#{status} > ?",Time.now - 2.day).count,
+      three: import_items.where("(status_dates.#{status} <= ?) AND status_dates.#{status} > ?",(Time.now - 2.day), (Time.now - 4.day)).count,
+      four:  import_items.where("(status_dates.#{status} <= ?) AND status_dates.#{status} > ?",(Time.now - 4.day), (Time.now - 5.day)).count,
+      five:  import_items.where("(status_dates.#{status} <= ?)",(Time.now - 5.day)).count}
+  end
+
+  def self.performance_stats
+    arrived_at_destination_import_items = ImportItem.where(status: ["delivered"]).joins("LEFT OUTER JOIN status_dates ON status_dates.import_item_id = import_items.id")
+    {
+      less_seven: arrived_at_destination_import_items.where("(status_dates.delivered - status_dates.ready_to_load) <= ?", 7 ).count,
+      eight: arrived_at_destination_import_items.where("(status_dates.delivered - status_dates.ready_to_load) = ?", 8 ).count,
+      nine: arrived_at_destination_import_items.where("(status_dates.delivered - status_dates.ready_to_load) = ?", 9 ).count,
+      ten: arrived_at_destination_import_items.where("(status_dates.delivered - status_dates.ready_to_load) = ?", 10 ).count,
+      eleven: arrived_at_destination_import_items.where("(status_dates.delivered - status_dates.ready_to_load) = ?", 11 ).count,
+      twelve_more: arrived_at_destination_import_items.where("(status_dates.delivered - status_dates.ready_to_load) >=?", 12 ).count
+    }
+  end
   def update_last_loading_date
     loading_date = self.last_loading_date
     import.import_items.update_all(last_loading_date: loading_date)
@@ -377,7 +396,7 @@ class ImportItem < ActiveRecord::Base
     if self.exit_note_received.blank? && self.exit_note_received_changed?
       self.errors[:base] << "Exit note received can't be uncheck once checked"
       return false
-    end    
+    end
   end
 
   def should_not_remove_truck
