@@ -1,0 +1,24 @@
+#ClientWiseContainerModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+        %h3.modal-title Client Wise Container Count:
+      .modal-body
+        .row
+          .col-md-7
+            %b &emsp;Name
+          .col-md-5.text-center
+            %b &emsp;Container Count
+          %br
+          %hr
+        - @client_wise_container_count.each do |client, count|
+          .row
+            .col-md-7
+              &nbsp;
+              %b= client
+            .col-md-5.text-center
+              = count
+          %br
+      .modal-footer
+        = link_to 'Close', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
