@@ -1,0 +1,24 @@
+#ContainersListingModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+        %h3.modal-title Containers List:
+      .modal-body
+        .row
+          .col-md-7
+            %b &emsp;Name
+          .col-md-5
+            %b &emsp;Container No.
+          %br
+          %hr
+        - @containers_list.each do |container|
+          .row
+            .col-md-7
+              &nbsp;
+              %b= container.import.customer[:name]
+            .col-md-5
+              = container[:container_number]
+          %br
+      .modal-footer
+        = link_to 'Close', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
