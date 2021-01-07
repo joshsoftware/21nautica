@@ -20,7 +20,7 @@
         %td= link_to @current_month_under_loading_import_items.count, containers_listing_modal_path({month: 0}), :remote => true
         %td= link_to @next_month_under_loading_import_items.count, containers_listing_modal_path({month: 1}), :remote => true
 
-   %table.heading
+  %table.heading
     %h4 Import Stats
   %table.table#import_item_stat
     %thead
