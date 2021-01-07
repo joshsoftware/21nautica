@@ -215,6 +215,8 @@ Rails.application.routes.draw do
   resources :repair_heads
   resources :job_cards
   get '/coming_soon' => "welcome#coming_soon"
+  get '/client_wise_container_modal' => "welcome#client_wise_container_modal"
+  get '/containers_listing_modal' => "welcome#containers_listing_modal"
   resources :expense_heads, except: :destroy
   resources :petty_cashes, except: [:destroy, :edit, :update]
   get '/tabular_partial' => 'petty_cashes#tabular_partial'

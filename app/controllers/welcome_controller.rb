@@ -6,6 +6,28 @@ class WelcomeController < ApplicationController
     @performance_stats = ImportItem.performance_stats
   end
 
+  def client_wise_container_modal
+    if(params[:month].to_i == -1)
+      client_wise_container_count = ImportItem.joins(import: :customer).where.not(status: ["arrived_at_destination", "delivered"]).where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today - 1.month).month, (Date.today - 1.month).year).group("customers.name").order('count_all desc').count
+    elsif(params[:month].to_i == 1)
+      client_wise_container_count = ImportItem.joins(import: :customer).where.not(status: ["arrived_at_destination", "delivered"]).where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today + 1.month).month, (Date.today + 1.month).year).group("customers.name").order('count_all desc').count
+    else
+      client_wise_container_count = ImportItem.joins(import: :customer).where.not(status: ["arrived_at_destination", "delivered"]).where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", Date.today.month, Date.today.year).group("customers.name").order('count_all desc').count
+    end
+    @client_wise_container_count = client_wise_container_count
+  end
+
+  def containers_listing_modal
+    if(params[:month].to_i == -1)
+      containers_list = @last_month_under_loading_import_items.order("customers.name")
+    elsif(params[:month].to_i == 1)
+      containers_list = @next_month_under_loading_import_items.order("customers.name")
+    else
+      containers_list = @current_month_under_loading_import_items.order("customers.name")
+    end
+    @containers_list = containers_list
+  end
+
   private
 
   def loaded_import_items_list
@@ -37,9 +59,9 @@ class WelcomeController < ApplicationController
   end
 
   def under_loading_list
-    @last_month_under_loading_import_items = ImportItem.joins(:import).where("import_items.status= 'under_loading_process' AND extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today - 1.month).month, (Date.today - 1.month).year)
-    @current_month_under_loading_import_items = ImportItem.joins(:import).where("import_items.status= 'under_loading_process' AND extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", Date.today.month, Date.today.year)
-    @next_month_under_loading_import_items = ImportItem.joins(:import).where("import_items.status= 'under_loading_process' AND extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today + 1.month).month, (Date.today + 1.month).year)
+    @last_month_under_loading_import_items = ImportItem.joins(import: :customer).where("import_items.status= 'under_loading_process' AND extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today - 1.month).month, (Date.today - 1.month).year)
+    @current_month_under_loading_import_items = ImportItem.joins(import: :customer).where("import_items.status= 'under_loading_process' AND extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", Date.today.month, Date.today.year)
+    @next_month_under_loading_import_items = ImportItem.joins(import: :customer).where("import_items.status= 'under_loading_process' AND extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today + 1.month).month, (Date.today + 1.month).year)
   end
 
   def containers_awaiting_arrival_list

@@ -1,3 +1,5 @@
+#ShowClientWiseContainerModal
+#ShowContainersListingModal
 - if current_user.role == "Admin"
   %table.heading
     %h4 Container Stats
@@ -9,14 +11,14 @@
         %th Next Month
       %tr
         %td= "Container Awaitng arrival"
-        %td= @last_month_awaiting_arrivals.count
-        %td= @current_month_awaiting_arrivals.count
-        %td= @next_month_awaiting_arrivals.count
+        %td= link_to @last_month_awaiting_arrivals.count, client_wise_container_modal_path({month: -1}), :remote => true
+        %td= link_to @current_month_awaiting_arrivals.count, client_wise_container_modal_path({month: 0}), :remote => true
+        %td= link_to @next_month_awaiting_arrivals.count, client_wise_container_modal_path({month: 1}), :remote => true
       %tr
         %td= "Pending Allocation"
-        %td= @last_month_under_loading_import_items.count
-        %td= @current_month_under_loading_import_items.count
-        %td= @next_month_under_loading_import_items.count
+        %td= link_to @last_month_under_loading_import_items.count, containers_listing_modal_path({month: -1}), :remote => true
+        %td= link_to @current_month_under_loading_import_items.count, containers_listing_modal_path({month: 0}), :remote => true
+        %td= link_to @next_month_under_loading_import_items.count, containers_listing_modal_path({month: 1}), :remote => true
 
   %table.heading
     %h4 Import Stats
