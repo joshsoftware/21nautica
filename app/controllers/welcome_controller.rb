@@ -7,12 +7,13 @@ class WelcomeController < ApplicationController
   end
 
   def client_wise_container_modal
+    import_ids = Import.not_ready_to_load.custom_shipping_dates_not_present.ids
     if(params[:month].to_i == -1)
-      client_wise_container_count = ImportItem.joins(import: :customer).where.not(status: ["arrived_at_destination", "delivered"]).where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today - 1.month).month, (Date.today - 1.month).year).group("customers.name").order('count_all desc').count
+      client_wise_container_count = ImportItem.joins(import: :customer).where(import_id: import_ids).where.not(status: ["arrived_at_destination", "delivered"]).where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today - 1.month).month, (Date.today - 1.month).year).group("customers.name").order('count_all desc').count
     elsif(params[:month].to_i == 1)
-      client_wise_container_count = ImportItem.joins(import: :customer).where.not(status: ["arrived_at_destination", "delivered"]).where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today + 1.month).month, (Date.today + 1.month).year).group("customers.name").order('count_all desc').count
+      client_wise_container_count = ImportItem.joins(import: :customer).where(import_id: import_ids).where.not(status: ["arrived_at_destination", "delivered"]).where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today + 1.month).month, (Date.today + 1.month).year).group("customers.name").order('count_all desc').count
     else
-      client_wise_container_count = ImportItem.joins(import: :customer).where.not(status: ["arrived_at_destination", "delivered"]).where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", Date.today.month, Date.today.year).group("customers.name").order('count_all desc').count
+      client_wise_container_count = ImportItem.joins(import: :customer).where(import_id: import_ids).where.not(status: ["arrived_at_destination", "delivered"]).where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", Date.today.month, Date.today.year).group("customers.name").order('count_all desc').count
     end
     @client_wise_container_count = client_wise_container_count
   end
@@ -59,14 +60,15 @@ class WelcomeController < ApplicationController
   end
 
   def under_loading_list
-    @last_month_under_loading_import_items = ImportItem.joins(import: :customer).where("import_items.status= 'under_loading_process' AND extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today - 1.month).month, (Date.today - 1.month).year)
-    @current_month_under_loading_import_items = ImportItem.joins(import: :customer).where("import_items.status= 'under_loading_process' AND extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", Date.today.month, Date.today.year)
-    @next_month_under_loading_import_items = ImportItem.joins(import: :customer).where("import_items.status= 'under_loading_process' AND extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today + 1.month).month, (Date.today + 1.month).year)
+    @last_month_under_loading_import_items = ImportItem.joins(import: :customer).where("imports.status='ready_to_load' OR (imports.bl_received_at IS NOT NULL AND imports.entry_number IS NOT NULL AND imports.entry_type IS NOT NULL)").where("import_items.status != 'delivered'").where(status:"under_loading_process").where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today - 1.month).month, (Date.today - 1.month).year)
+    @current_month_under_loading_import_items = ImportItem.joins(import: :customer).where("imports.status='ready_to_load' OR (imports.bl_received_at IS NOT NULL AND imports.entry_number IS NOT NULL AND imports.entry_type IS NOT NULL)").where("import_items.status != 'delivered'").where(status:"under_loading_process").where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", Date.today.month, Date.today.year)
+    @next_month_under_loading_import_items = ImportItem.joins(import: :customer).where("imports.status='ready_to_load' OR (imports.bl_received_at IS NOT NULL AND imports.entry_number IS NOT NULL AND imports.entry_type IS NOT NULL)").where("import_items.status != 'delivered'").where(status:"under_loading_process").where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today + 1.month).month, (Date.today + 1.month).year)
   end
 
   def containers_awaiting_arrival_list
-    @last_month_awaiting_arrivals = ImportItem.joins(:import).where.not(status: ["arrived_at_destination", "delivered"]).where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today - 1.month).month, (Date.today - 1.month).year)
-    @current_month_awaiting_arrivals = ImportItem.joins(:import).where.not(status: ["arrived_at_destination", "delivered"]).where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", Date.today.month, Date.today.year)
-    @next_month_awaiting_arrivals = ImportItem.joins(:import).where.not(status: ["arrived_at_destination", "delivered"]).where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today + 1.month).month, (Date.today + 1.month).year)
+    import_ids = Import.not_ready_to_load.custom_shipping_dates_not_present.ids
+    @last_month_awaiting_arrivals = ImportItem.joins(:import).where(import_id: import_ids).where.not(status: ["arrived_at_destination", "delivered"]).where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today - 1.month).month, (Date.today - 1.month).year)
+    @current_month_awaiting_arrivals = ImportItem.joins(:import).where(import_id: import_ids).where.not(status: ["arrived_at_destination", "delivered"]).where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", Date.today.month, Date.today.year)
+    @next_month_awaiting_arrivals = ImportItem.joins(:import).where(import_id: import_ids).where.not(status: ["arrived_at_destination", "delivered"]).where("extract(month from imports.estimate_arrival)=? AND extract(year from imports.estimate_arrival)=?", (Date.today + 1.month).month, (Date.today + 1.month).year)
   end
 end
