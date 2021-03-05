@@ -15,7 +15,7 @@ class TrucksController < ApplicationController
       flash[:notice] = "Truck created sucessfully"
       redirect_to trucks_path
     else
-      flash[:alert] = @truck.errors.full_messages 
+      flash[:alert] = @truck.errors.full_messages
       render 'new'
     end
   end
@@ -30,7 +30,7 @@ class TrucksController < ApplicationController
       flash[:notice] = "Truck created sucessfully"
       redirect_to trucks_path
     else
-      flash[:notice] = @truck.errors.full_messages 
+      flash[:notice] = @truck.errors.full_messages
       render 'new'
     end
   end
@@ -43,7 +43,7 @@ class TrucksController < ApplicationController
   def import_location
     render && return if request.get?
     CSV.read(params[:file].path, headers: true).each do |row|
-      Truck.update_location(row['TRUCK NUMBER'], row['LOCATION'])
+      Truck.update_location(row['TRUCK NUMBER'], row[1])
     end
     flash[:notice] = "Imported Location sucessfully"
     redirect_to import_location_trucks_path
