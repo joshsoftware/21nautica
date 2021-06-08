@@ -21,7 +21,8 @@ class ImportsController < ApplicationController
   def create
     @import = Import.new(import_params)
     if @import.save
-      @import.update(quantity: @import.import_items.count)
+      weight = @import.item_quantity*@import.item_weight
+      @import.update(quantity: @import.import_items.count, weight: weight, remaining_weight: weight)
       if is_ug_host?
         @bl_number = @import.bl_number
         authority_pdf = authority_letter_draft
@@ -78,7 +79,9 @@ class ImportsController < ApplicationController
         end
       end
       if @import.update_attributes(import_params)
-        @import.update(quantity: @import.import_items.count)
+        weight = @import.item_quantity*@import.item_weight
+        assigned_weight = @import.import_items.pluck(:item_quantity, :item_weight).map { |i| i.inject(:*)}.sum
+        @import.update(quantity: @import.import_items.count, weight: weight, remaining_weight: weight - assigned_weight)
         flash[:notice] = I18n.t 'import.update'
         redirect_to :imports
       else
@@ -169,6 +172,7 @@ class ImportsController < ApplicationController
                                    :work_order_number, :remarks, :status,
                                    :shipping_line_id,
                                    :bl_received_type, :consignee_name,
+                                   :item_quantity, :item_weight, :order_type,
                                    import_items_attributes: %i[container_number id _destroy equipment])
   end
 
