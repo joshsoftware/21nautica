@@ -1,5 +1,5 @@
 # frozen_string_literal: true
- 
+
 class ImportsController < ApplicationController
   def index
     destination = params[:destination] || 'Kampala'
@@ -58,7 +58,7 @@ class ImportsController < ApplicationController
     pdf = kit.to_pdf
     kit.to_file("#{Rails.root}/tmp/#{@bl_number}_#{filename}.pdf")
   end
-  
+
   def update
     @import = Import.find(params['id'])
     if import_update_params.keys.length > 1
@@ -163,13 +163,13 @@ class ImportsController < ApplicationController
   private
 
   def import_params
-    params.require(:import).permit(:equipment, :quantity, :from, :to, :shipper,
+    params.require(:import).permit(:quantity, :from, :to, :shipper,
                                    :bl_number, :estimate_arrival, :description,
                                    :customer_id, :rate_agreed, :weight,
                                    :work_order_number, :remarks, :status,
                                    :shipping_line_id,
                                    :bl_received_type, :consignee_name,
-                                   import_items_attributes: %i[container_number id _destroy])
+                                   import_items_attributes: %i[container_number id _destroy equipment])
   end
 
   def import_update_params
