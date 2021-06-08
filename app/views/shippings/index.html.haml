@@ -1,5 +1,5 @@
 .destination_filter.pull-right
-  = form_tag shippings_path, method: :get do |f|  
+  = form_tag shippings_path, method: :get do |f|
     = label_tag 'List Destination '
     = select_tag 'destination', options_for_select( ["Kampala", "Kigali", "Lusaka", "Goma"], params[:destination] || 'Kampala' )
 
@@ -11,7 +11,6 @@
       %th.shrink-name Customer Name
     %th.bl-width BL Number
     %th.shipping-line-shippings Shipping Line
-    %th Eq
     %th Weight
     %th Ref
     %th ETA
@@ -28,7 +27,6 @@
           %td= "#{import.customer.name}" + " / " + "#{import.shipping_line.try(:name)}"
         %td= import.bl_number
         %td= import.shipping_line.try(:name)
-        %td= import.equipment
         - if import.quantity
           %td= (import.weight.to_f/import.quantity).round(2)
         - else
@@ -79,7 +77,7 @@
           = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
 #shipping_modal
 
-  
+
 
 :coffeescript
   @customers = #{@customers.to_json}
@@ -100,5 +98,3 @@
 
   $('#statusModal').on 'hide.bs.modal', (event) ->
     $("#shippings_table tr td.updateStatus .updateStatus").show()
-
-    
