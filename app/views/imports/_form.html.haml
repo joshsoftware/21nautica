@@ -2,7 +2,7 @@
   %hr
   = simple_nested_form_for @import , html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
     .row{style:"margin-left:2%;"}
-      .col-md-8
+      .col-md-6
         .form-group.custom-radio
           .col-md-3
             %label.control-label BL- Received Type
@@ -13,6 +13,8 @@
             %label.radio-inline
               = f.radio_button :bl_received_type, "original_telex"
               = label :bl_received_type, 'Original/Telex'
+      .col-md-4
+        = f.input :order_type, collection: ORDER_TYPE, as: :select, label: 'Order Type', include_blank: false, id: 'order_type'
     .row{style:"margin-left:2%;"}
       .col-md-5
         = f.input :bl_number, label: 'BL- Number', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
@@ -42,9 +44,12 @@
         = f.input :description
     .row{style:"margin-left:2%;"}
       .col-md-5
-        = f.input :rate_agreed, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+        = f.input :item_quantity, label: "Item Quantity"
       .col-md-6
-        = f.input :weight, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+        = f.input :item_weight, label: "Item Weight", input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+    .row{style:"margin-left:2%;"}
+      .col-md-5
+        = f.input :rate_agreed, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
 
     %hr
     %div{class:"quality-div", style:"margin-left:3%;margin-bottom:2%;font-weight:bold"}
