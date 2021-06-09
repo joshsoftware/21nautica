@@ -26,6 +26,7 @@ en:
     'update': 'Import Order Updated Successfully'
   lose_cargo_import:
     'update': 'Lose Cargo Import Order Updated Successfully'
+    'item_quantity_error': 'Sum of container quantities should not be greater than order item quantity'
   repair_head:
     'success': 'Repair Head Saved Successfully'
     'update': 'Repait Head Updated Successfully'

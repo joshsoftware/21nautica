@@ -12,6 +12,13 @@ class LoseCargoImportsController < ApplicationController
 
   def update
     @import = Import.find(params['id'])
+    total_quantity = params["import"]["import_items_attributes"].map { |import_item| import_item[1]["item_quantity"].to_i}.sum
+    if(total_quantity > @import.item_quantity)
+      flash[:error] = I18n.t 'lose_cargo_import.item_quantity_error'
+      @customers = Customer.all
+      render 'edit'
+      return
+    end
     if import_update_params.keys.length > 1
       attribute = import_update_params[:columnName].downcase.gsub(' ', '_').to_sym
       if import.update(attribute => import_update_params[:value])
