@@ -24,6 +24,8 @@ en:
   import:
     'create': 'Import Order Created Successfully'
     'update': 'Import Order Updated Successfully'
+  lose_cargo_import:
+    'update': 'Lose Cargo Import Order Updated Successfully'
   repair_head:
     'success': 'Repair Head Saved Successfully'
     'update': 'Repait Head Updated Successfully'
