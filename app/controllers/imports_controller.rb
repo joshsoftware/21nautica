@@ -20,9 +20,10 @@ class ImportsController < ApplicationController
 
   def create
     @import = Import.new(import_params)
-    if @import.save
-      weight = @import.item_quantity*@import.item_weight
-      @import.update(quantity: @import.import_items.count, weight: weight, remaining_weight: weight)
+    if @import.save!
+      weight = @import.item_quantity * @import.item_weight
+      assigned_weight = @import.import_items.pluck(:item_quantity, :item_weight).map { |i| i.inject(:*)}.sum
+      @import.update(quantity: @import.import_items.count, weight: weight, remaining_weight: weight- assigned_weight)
       if is_ug_host?
         @bl_number = @import.bl_number
         authority_pdf = authority_letter_draft
@@ -173,7 +174,7 @@ class ImportsController < ApplicationController
                                    :shipping_line_id,
                                    :bl_received_type, :consignee_name,
                                    :item_quantity, :item_weight, :order_type,
-                                   import_items_attributes: %i[container_number id _destroy equipment])
+                                   import_items_attributes: %i[container_number id _destroy equipment item_weight item_quantity])
   end
 
   def import_update_params

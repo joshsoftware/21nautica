@@ -14,7 +14,7 @@
               = f.radio_button :bl_received_type, "original_telex"
               = label :bl_received_type, 'Original/Telex'
       .col-md-4
-        = select_tag 'order_type',options_for_select(ORDER_TYPE), id: 'order-type', class: "form-control", label: "Order Type"
+        = f.input :order_type, collection: ORDER_TYPE, as: :select, label: 'Order Type', include_blank: false, id: 'order_type'
     .row{style:"margin-left:2%;"}
       .col-md-5
         = f.input :bl_number, label: 'BL- Number', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
@@ -59,12 +59,12 @@
       .col-md-12
         %div.scrollable-menu
           = f.fields_for :import_items, html: {class: 'number'} do |item_form|
-            .col-md-4#equipment
-              = item_form.input :equipment, collection: EQUIPMENT_TYPE, as: :select, label: 'Equipment', input_html: {class: 'form-control'}
-            .col-md-5#container-no
+            .col-md-4
+              = item_form.input :equipment, collection: EQUIPMENT_TYPE, as: :select, label: 'Equipment', include_blank: false,  input_html: {class: 'form-control'}, id: ""
+            .col-md-5
               = item_form.input :container_number, label: "Container", input_html: {class: 'form-control'}
-            .col-lg-3#item-quantity
-              = item_form.input :item_quantity, label: "Quantity",input_html: {class: 'form-control', style:{ display: "none"}}
+            .col-lg-3
+              = item_form.input :item_quantity, label: "Quantity",input_html: {class: 'form-control'}
               = item_form.input :item_weight, label: "Item Weight", :as => :hidden, :input_html => { :value => @import.item_weight }
             .col-md-2
               = item_form.link_to_remove 'Remove', class: 'btn btn-danger btn-sm'
@@ -96,23 +96,6 @@
     return
 
 :javascript
-  $(document).ready(function(){
-    $("[data-for='multiselect']").select2();
-  })
-
-  $("#order-type").on('change', function(event){
-    if(event.target.value == "Lose-Cargo"){
-      document.getElementById("equipment").style.display = "none"
-      document.getElementById("container-no").style.display = "none"
-      document.getElementById("item-quantity").style.display = "block"
-    }
-    else {
-      document.getElementById("equipment").style.display = "block"
-      document.getElementById("container-no").style.display = "block"
-      document.getElementById("item-quantity").style.display = "none"
-    }
-  })
-
   $(document).on('ready page:load', function() {
     import_items = #{@import.import_items.count}
     if(import_items == 0 && $('.fields').length == 0)

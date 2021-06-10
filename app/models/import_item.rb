@@ -33,8 +33,8 @@ class ImportItem < ActiveRecord::Base
 
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
   validate :assignment_of_truck_id, if: "truck_id.present? && truck_id_changed?"
-  validates_presence_of :container_number
-  validates_uniqueness_of :container_number
+  # validates_presence_of :container_number
+  # validates_uniqueness_of :container_number
   validate :validate_truck_number
   validate :validate_expiry_date
   validate :validate_exit_note_received
