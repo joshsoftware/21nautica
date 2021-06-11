@@ -14,11 +14,7 @@
               = f.radio_button :bl_received_type, "original_telex"
               = label :bl_received_type, 'Original/Telex'
       .col-md-6
-        .form-group
-          .col-md-3
-            %label Order Type
-          .col-md-6
-            = select_tag 'order_type',options_for_select(ORDER_TYPE), id: 'order-type', class: "form-control", label: "Order Type"
+        = f.input :order_type, label: "Order Type", :as => :hidden, :input_html => { :value => @order_type }
     .row{style:"margin-left:2%;"}
       .col-md-5
         = f.input :bl_number, label: 'BL- Number', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
@@ -58,21 +54,29 @@
     %hr
     %div{class:"quality-div", style:"margin-left:3%;margin-bottom:2%;font-weight:bold"}
       Container Details :
-
-    .row{style:"margin-left:2%;"}
-      .col-md-12
-        %div.scrollable-menu
-          = f.fields_for :import_items, html: {class: 'number'} do |item_form|
-            .col-md-4#equipment
-              = item_form.input :equipment, collection: EQUIPMENT_TYPE, as: :select, label: 'Equipment', input_html: {class: 'form-control'}
-            .col-md-5#container-no
-              = item_form.input :container_number, label: "Container", input_html: {class: 'form-control'}
-            .col-lg-3#item-quantity
-              = item_form.input :item_quantity, label: "Quantity",input_html: {class: 'form-control', style:{ display: "none"}}
-              = item_form.input :item_weight, label: "Item Weight", :as => :hidden, :input_html => { :value => @import.item_weight }
-            .col-md-2
-              = item_form.link_to_remove 'Remove', class: 'btn btn-danger btn-sm'
-          = f.link_to_add "Add Container", :import_items, class: 'btn btn-primary btn-sm'
+    - if @order_type == "Normal"
+      .row{style:"margin-left:2%;"}
+        .col-md-12
+          %div.scrollable-menu
+            = f.fields_for :import_items, html: {class: 'number'} do |item_form|
+              .col-md-4#equipment
+                = item_form.input :equipment, collection: EQUIPMENT_TYPE, as: :select, label: 'Equipment', input_html: {class: 'form-control'}
+              .col-md-5#container-no
+                = item_form.input :container_number, label: "Container", input_html: {class: 'form-control'}
+              .col-md-2
+                = item_form.link_to_remove 'Remove', class: 'btn btn-danger btn-sm'
+            = f.link_to_add "Add Container", :import_items, class: 'btn btn-primary btn-sm'
+    - else 
+      .row{style:"margin-left:2%;"}
+        .col-md-12
+          %div.scrollable-menu
+            = f.fields_for :import_items, html: {class: 'number'} do |item_form|
+              .col-lg-3
+                = item_form.input :item_quantity, label: "Quantity",input_html: {class: 'form-control'}
+                = item_form.input :item_weight, label: "Item Weight", :as => :hidden, :input_html => { :value => @import.item_weight }
+              .col-md-2
+                = item_form.link_to_remove 'Remove', class: 'btn btn-danger btn-sm'
+            = f.link_to_add "Add Container", :import_items, class: 'btn btn-primary btn-sm'
     %hr
     .row{style:"margin-left:2%;"}
       .form-group

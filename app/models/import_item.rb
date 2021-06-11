@@ -81,7 +81,7 @@ class ImportItem < ActiveRecord::Base
   end
 
   def strip_whitespaces
-    self.container_number = container_number.strip.squish
+    self.container_number = container_number.nil? ? "" : container_number.strip.squish
   end
 
   def mark_unmark_coload_truck

@@ -5,6 +5,13 @@ class LoseCargoImportsController < ApplicationController
     @imports = Import.ready_to_load.where("order_type=? AND remaining_weight > 0", ORDER_TYPE.last).where(to: destination)
   end
 
+  def new
+    @import = Import.new
+    @import.build_bill_of_lading
+    @customers = Customer.order(:name)
+    @import.order_type = "Lose-Cargo"
+  end
+
   def edit
     @import = Import.find(params['id'])
     @customers = Customer.order(:name)

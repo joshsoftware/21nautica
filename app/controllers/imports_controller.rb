@@ -11,11 +11,13 @@ class ImportsController < ApplicationController
     @import = Import.new
     @import.build_bill_of_lading
     @customers = Customer.order(:name)
+    @order_type = "Normal"
   end
 
   def edit
     @import = Import.find(params['id'])
     @customers = Customer.order(:name)
+    @order_type = @import.order_type
   end
 
   def create
@@ -35,6 +37,7 @@ class ImportsController < ApplicationController
       redirect_to imports_path
     else
       @customers = Customer.all
+      @order_type = @import.order_type
       render 'new'
     end
   end
@@ -75,6 +78,7 @@ class ImportsController < ApplicationController
         unless @import.bill_of_lading.update(bl_number: import_params[:bl_number])
           flash[:error] = @import.bill_of_lading.errors.full_messages.join(', ')
           @customers = Customer.all
+          @order_type = @import.order_type
           render 'edit'
           return
         end
@@ -87,6 +91,7 @@ class ImportsController < ApplicationController
         redirect_to :imports
       else
         @customers = Customer.all
+        @order_type = @import.order_type
         render 'edit'
       end
     end

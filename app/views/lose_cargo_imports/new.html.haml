@@ -1,6 +1,7 @@
+%h1 New Lose Cargo Order
 .row
   %hr
-  = simple_nested_form_for @import , html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
+  = simple_nested_form_for @import , html: { id: 'import_edit_form', method: :post, class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
     .row{style:"margin-left:2%;"}
       .col-md-6
         .form-group.custom-radio
@@ -13,8 +14,8 @@
             %label.radio-inline
               = f.radio_button :bl_received_type, "original_telex"
               = label :bl_received_type, 'Original/Telex'
-      .col-md-4
-        = f.input :order_type, collection: ORDER_TYPE, as: :select, label: 'Order Type', include_blank: false, id: 'order_type'
+      .col-md-5
+        = f.input :order_type, label: "Order Type", :as => :hidden, :input_html => { :value => "Lose-Cargo" }
     .row{style:"margin-left:2%;"}
       .col-md-5
         = f.input :bl_number, label: 'BL- Number', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
@@ -59,16 +60,13 @@
       .col-md-12
         %div.scrollable-menu
           = f.fields_for :import_items, html: {class: 'number'} do |item_form|
-            .col-md-4
-              = item_form.input :equipment, collection: EQUIPMENT_TYPE, as: :select, label: 'Equipment', include_blank: false,  input_html: {class: 'form-control'}, id: ""
-            .col-md-5
-              = item_form.input :container_number, label: "Container", input_html: {class: 'form-control'}
             .col-lg-3
               = item_form.input :item_quantity, label: "Quantity",input_html: {class: 'form-control'}
               = item_form.input :item_weight, label: "Item Weight", :as => :hidden, :input_html => { :value => @import.item_weight }
             .col-md-2
               = item_form.link_to_remove 'Remove', class: 'btn btn-danger btn-sm'
           = f.link_to_add "Add Container", :import_items, class: 'btn btn-primary btn-sm'
+
     %hr
     .row{style:"margin-left:2%;"}
       .form-group
@@ -96,6 +94,10 @@
     return
 
 :javascript
+  $(document).ready(function(){
+    $("[data-for='multiselect']").select2();
+  })
+
   $(document).on('ready page:load', function() {
     import_items = #{@import.import_items.count}
     if(import_items == 0 && $('.fields').length == 0)
