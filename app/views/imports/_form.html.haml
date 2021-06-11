@@ -2,7 +2,7 @@
   %hr
   = simple_nested_form_for @import , html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
     .row{style:"margin-left:2%;"}
-      .col-md-6
+      .col-md-5
         .form-group.custom-radio
           .col-md-3
             %label.control-label BL- Received Type
@@ -13,8 +13,12 @@
             %label.radio-inline
               = f.radio_button :bl_received_type, "original_telex"
               = label :bl_received_type, 'Original/Telex'
-      .col-md-4
-        = select_tag 'order_type',options_for_select(ORDER_TYPE), id: 'order-type', class: "form-control", label: "Order Type"
+      .col-md-6
+        .form-group
+          .col-md-3
+            %label Order Type
+          .col-md-6
+            = select_tag 'order_type',options_for_select(ORDER_TYPE), id: 'order-type', class: "form-control", label: "Order Type"
     .row{style:"margin-left:2%;"}
       .col-md-5
         = f.input :bl_number, label: 'BL- Number', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
@@ -99,6 +103,8 @@
   $(document).ready(function(){
     $("[data-for='multiselect']").select2();
   })
+
+
 
   $("#order-type").on('change', function(event){
     if(event.target.value == "Lose-Cargo"){
