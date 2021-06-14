@@ -31,7 +31,7 @@
           .col-md-6
             = select_tag "import[shipping_line_id]", options_for_select(get_shipping_line_vendors), {data: {for: 'multiselect'}, class: 'customer_select', disabled: true}
       .col-md-6
-        = f.input :estimate_arrival, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}}
+        = f.input :estimate_arrival, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}}, disabled: true
     .row{style:"margin-left:2%;"}
       .col-md-5
         = f.input :work_order_number, label: "File Ref No.", input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}, disabled: true
@@ -39,9 +39,9 @@
         = f.input :description, disabled: true
     .row{style:"margin-left:2%;"}
       .col-md-5
-        = f.input :item_quantity, label: "Item Quantity"
+        = f.input :item_quantity, label: "Item Quantity", disabled: true
       .col-md-6
-        = f.input :item_weight, label: "Item Weight", input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+        = f.input :item_weight, label: "Item Weight", input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}, disabled: true
     .row{style:"margin-left:2%;"}
       .col-md-5
         = f.input :rate_agreed, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}, disabled: true
