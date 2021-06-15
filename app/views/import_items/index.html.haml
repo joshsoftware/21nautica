@@ -15,7 +15,7 @@
     - else
       %th.import-items-cust-name Customer Name
     %th.import-items-bl-number BL # / File Ref #
-    %th.import-items-cont-number Container Number/ Quantity
+    %th.import-items-cont-number Container Number/ [Quantity, Weight]
     %th.import-items-eq Display EQ
     %th.import-items-eta Estimate Arrival
     - if is_rfs_host? || is_ug_host? || Rails.env.development?
@@ -34,7 +34,7 @@
           %td= item.customer_name
         %td= "#{item.import.bl_number} / #{item.import.work_order_number}"
         - if item.import.order_type == "Lose-Cargo"
-          %td= item.item_quantity
+          %td= "[#{item.item_quantity}, #{item.item_weight}]"
         - else
           %td= item.container_number
         %td= item.equipment

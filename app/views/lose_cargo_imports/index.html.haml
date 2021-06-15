@@ -28,7 +28,7 @@
         %td= import.bl_number
         %td= import.work_order_number
         %td= import.estimate_arrival
-        %td= (import.remaining_weight/ import.item_weight).to_i
+        %td= import.remaining_quantity.to_i
         %td= import.remaining_weight.to_f
         %td= shipping_date_divs(import).html_safe
         %td= custom_date_divs(import).html_safe
@@ -37,7 +37,7 @@
             = import.remarks.try(:last).try(:desc)
           %button.btn.btn-sm.btn-primary{'data-model-id' => "#{import.id}", 'data-model-type' => 'import', 'data-target' => '#remarkModal', 'data-toggle' => 'modal'} Add
         %td{style: "white-space: nowrap"}
-          = link_to 'Edit', edit_lose_cargo_import_path(import), class: 'btn btn-primary btn-sm'
+          = link_to 'View', lose_cargo_import_path(import), class: 'btn btn-primary btn-sm'
 
 #statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog

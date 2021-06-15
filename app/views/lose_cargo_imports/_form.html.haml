@@ -1,106 +1,79 @@
-.row
-  %hr
-  = simple_nested_form_for @import ,url: lose_cargo_import_path, html: { id: 'import_edit_form', method: :put, class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
-    .row{style:"margin-left:2%;"}
-      .col-md-5
-        = f.input :order_type, collection: ORDER_TYPE, as: :select, label: 'Order Type', include_blank: false, id: 'order_type', disabled: true
-    .row{style:"margin-left:2%;"}
-      .col-md-5
-        = f.input :bl_number, label: 'BL- Number', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}, disabled: true
-      .col-md-6
-        .form-group
-          .col-md-3
-            = label_tag 'Customer name', nil, class: 'control-label'
-          .col-md-6
-            = select_tag "import[@import.customer_id]", options_for_select(@customers.collect{|customer| [customer.name, customer.id]}, selected: @import.customer_id), {data: {for: 'multiselect'}, class: 'customer_select', disabled: true}
-    .row{style:"margin-left:2%;"}
-      .col-md-5
-        = f.input :from, collection: PORTS.keys, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}, disabled: true
-      .col-md-6
-        = f.input :to, collection: [], input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}, disabled: true
-    .row{style:"margin-left:2%;"}
-      .col-md-5
-        = f.input :shipper, disabled: true
-      .col-md-6
-        = f.input :consignee_name, disabled: true
-    .row{style:"margin-left:2%;"}
-      .col-md-5
-        .form-group
-          .col-md-3
-            = label_tag 'Shipping Line', nil, class: 'control-label'
-          .col-md-6
-            = select_tag "import[shipping_line_id]", options_for_select(get_shipping_line_vendors), {data: {for: 'multiselect'}, class: 'customer_select', disabled: true}
-      .col-md-6
-        = f.input :estimate_arrival, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}}, disabled: true
-    .row{style:"margin-left:2%;"}
-      .col-md-5
-        = f.input :work_order_number, label: "File Ref No.", input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}, disabled: true
-      .col-md-6
-        = f.input :description, disabled: true
-    .row{style:"margin-left:2%;"}
-      .col-md-5
-        = f.input :item_quantity, label: "Item Quantity", disabled: true
-      .col-md-6
-        = f.input :item_weight, label: "Item Weight", input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}, disabled: true
-    .row{style:"margin-left:2%;"}
-      .col-md-5
-        = f.input :rate_agreed, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}, disabled: true
+%br
+%table.table-borderless{id: 'imports_table'}
+  %tbody
+    %tr{style:"margin-left:2%;"}
+      %td.col-md-5
+        .col-md-4{style: "font-weight: bold"} Order Type:
+        .col-md-4= @import.order_type
+    %tr{style:"margin-left:2%;"}
+      %td.col-md-5
+        .col-md-4{style: "font-weight: bold"} Customer name:
+        .col-md-4= @import.customer.name
+      %td.col-md-6
+        .col-md-4{style: "font-weight: bold"} BL- Number:
+        .col-md-4= @import.bl_number
+    %tr{style:"margin-left:2%;"}
+      %td.col-md-5
+        .col-md-4{style: "font-weight: bold"} From:
+        .col-md-4= @import.from
+      %td.col-md-6
+        .col-md-4{style: "font-weight: bold"} To:
+        .col-md-4= @import.to
+    %tr{style:"margin-left:2%;"}
+      %td.col-md-5
+        .col-md-4{style: "font-weight: bold"} Shipper:
+        .col-md-4= @import.shipper
+      %td.col-md-6
+        .col-md-4{style: "font-weight: bold"} Consignee Name:
+        .col-md-4= @import.consignee_name
+    %tr{style:"margin-left:2%;"}
+      %td.col-md-5
+        .col-md-4{style: "font-weight: bold"} Shipping Line:
+        .col-md-4= @import.shipping_line.name
+      %td.col-md-6
+        .col-md-4{style: "font-weight: bold"} Estimate Arrival:
+        .col-md-4= @import.estimate_arrival
+    %tr{style:"margin-left:2%;"}
+      %td.col-md-5
+        .col-md-4{style: "font-weight: bold"} Work Order Number:
+        .col-md-4= @import.work_order_number
+      %td.col-md-6
+        .col-md-4{style: "font-weight: bold"} Description:
+        .col-md-4= @import.description
+    %tr{style:"margin-left:2%;"}
+      %td.col-md-5
+        .col-md-4{style: "font-weight: bold"} Item Quantity:
+        .col-md-4= @import.item_quantity
+      %td.col-md-6
+        .col-md-4{style: "font-weight: bold"} Item Weight:
+        .col-md-4= @import.weight.to_f.round(2)
+    %tr{style:"margin-left:2%;"}
+      %td.col-md-5
+        .col-md-4{style: "font-weight: bold"} Rate Agreed:
+        .col-md-4= @import.rate_agreed
 
-    %hr
-    .row
-      %div{class:"quality-div", style:"margin-left:3%;margin-bottom:2%;font-weight:bold"}
-        .col-sm-10
-          Container Details :
-        .col-sm-2
-          = f.link_to_add "Add Container", :import_items, class: 'btn btn-primary btn-sm'
-    %br
+
+%hr
+  .row
+    %div{class:"quality-div", style:"margin-left:3%;margin-bottom:2%;font-weight:bold"}
+    .col-sm-10{style: "font-weight: bold"}
+      Item Details :
+    .col-sm-2
+      %button.btn.btn-small.btn-primary{'data-import-id' => "#{@import.id}", 'data-target' => '#addItemModal', 'data-toggle' => 'modal'} Add Item
+
     .row{style:"margin-left:2%;"}
-      .col-lg-14
+      .col-md-12
         %div.scrollable-menu
-          = f.fields_for :import_items, html: {class: 'number'} do |item_form|
-            .col-lg-3
-              = item_form.input :item_quantity, label: "Quantity",input_html: {class: 'form-control'}
-              = item_form.input :item_weight, label: "Item Weight", :as => :hidden, :input_html => { :value => @import.item_weight }
-            .col-lg-2
-              = item_form.link_to_remove 'Remove', class: 'btn btn-danger btn-sm'
-    %hr
-    .row{style:"margin-left:2%;"}
-      .form-group
-        .col-sm-offset-4.col-sm-2
-          = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
+          - @import_items.each do |import_item|
+            .row
+              .col-md-4
+                .col-md-4{style: "font-weight: bold"} Quantity:
+                .col-md-4= import_item.item_quantity
+              .col-md-4
+                .col-md-4{style: "font-weight: bold"} Weight:
+                .col-md-4= import_item.item_weight
+              - if import_item.status == "under_loading_process"
+                .col-md-2
+                  = link_to 'Remove', lose_cargo_import_path(import_item), method: :delete, class: 'btn btn-danger btn-sm', data: {confirm: "Are you sure?"}
 
-:coffeescript
-  window.ports = #{PORTS.to_json}
-  window.to = "#{@import.to}"
-
-  $('#new_import').on 'submit', (event) ->
-    i = 0
-    container_hash = {}
-    if ($('.fields').size() == parseInt($('#import_quantity')[0].value))
-      while i < $('.fields').size()
-        container_hash[$('.fields input')[i].value] = i
-        if( $('.fields input')[i].value == "" )
-          alert('Please fill in all container numbers')
-          event.preventDefault()
-          return
-        i++
-    if Object.keys(container_hash).length < $('.fields').size()
-      alert('Duplicate container numbers!!')
-      event.preventDefault()
-    return
-
-:javascript
-  $(document).ready(function(){
-    $("[data-for='multiselect']").select2();
-  })
-
-  $(document).on('ready page:load', function() {
-    import_items = #{@import.import_items.count}
-    if(import_items == 0 && $('.fields').length == 0)
-      $('.add_nested_fields').click()
-  })
-
-  $(document).on('nested:fieldRemoved', function(event) {
-    if($('.fields:visible').length == 0)
-      $('.add_nested_fields').click()
-  })
+= render partial: 'lose_cargo_imports/add_item'

@@ -5,71 +5,49 @@ class LoseCargoImportsController < ApplicationController
     @imports = Import.ready_to_load.where("order_type=? AND remaining_weight > 0", ORDER_TYPE.last).where(to: destination)
   end
 
-  def new
-    @import = Import.new
-    @import.build_bill_of_lading
-    @customers = Customer.order(:name)
-    @import.order_type = "Lose-Cargo"
-  end
+  def create_item
+    import_item = ImportItem.new(import_item_params)
+    import = Import.find_by_id(import_item_params['import_id'])
+    if(import_item_params['item_quantity'].to_i > import.remaining_quantity.to_i)
+      flash[:error] = "Item quantity should not be greater than #{import.remaining_quantity.to_i}"
+    elsif(import_item_params['item_weight'].to_f > import.remaining_weight.to_f)
+      flash[:error] = "Item quantity should not be greater than #{import.remaining_weight}"
 
-  def edit
-    @import = Import.find(params['id'])
-    @customers = Customer.order(:name)
-  end
-
-  def update
-    @import = Import.find(params['id'])
-    total_quantity = params["import"]["import_items_attributes"].map { |import_item| import_item[1]["item_quantity"].to_i}.sum
-    if(total_quantity > @import.item_quantity)
-      flash[:error] = I18n.t 'lose_cargo_import.item_quantity_error'
-      @customers = Customer.all
-      render 'edit'
-      return
-    end
-    if import_update_params.keys.length > 1
-      attribute = import_update_params[:columnName].downcase.gsub(' ', '_').to_sym
-      if import.update(attribute => import_update_params[:value])
-        render text: import_update_params[:value]
-      else
-        render text: import.errors.full_messages
-      end
+    elsif import_item.save!
+      remaining_quantity = import.remaining_quantity - import_item.item_quantity
+      remaining_weight = import.remaining_weight - import_item.item_weight
+      import.update_attributes(remaining_quantity: remaining_quantity, remaining_weight: remaining_weight)
+      flash[:notice] = "Item added Successfully"
     else
-      if import_params[:bl_number].present? && @import.bl_number != import_params[:bl_number]
-        unless @import.bill_of_lading.update(bl_number: import_params[:bl_number])
-          flash[:error] = @import.bill_of_lading.errors.full_messages.join(', ')
-          @customers = Customer.all
-          render 'edit'
-          return
-        end
-      end
-      if @import.update_attributes(import_params)
-        weight = @import.item_quantity*@import.item_weight
-        assigned_weight = @import.import_items.pluck(:item_quantity, :item_weight).map { |i| i.inject(:*)}.sum
-        @import.update(quantity: @import.import_items.count, weight: weight, remaining_weight: weight - assigned_weight)
-        flash[:notice] = I18n.t 'lose_cargo_import.update'
-        redirect_to :lose_cargo_imports
-      else
-        @customers = Customer.all
-        render 'edit'
-      end
+      flash[:error] = "Could not able to add the Item!"
+    end
+    respond_to do |format|
+      format.js {render inline: "location.reload();" }
     end
   end
 
+  def show
+    @import = Import.find(params['id'])
+    @import_items = @import.import_items
+    @customers = Customer.order(:name)
+  end
+
+  def destroy
+    import_item = ImportItem.find_by_id(params['id'])
+    import = import_item.import
+    remaining_quantity = import.remaining_quantity + import_item.item_quantity
+    remaining_weight = import.remaining_weight + import_item.item_weight
+    if import_item.present? && import_item.destroy
+      import.update_attributes(remaining_quantity: remaining_quantity, remaining_weight: remaining_weight)
+      flash[:notice] = "Item removed Successfully"
+    else
+      flash[:error] = "Could not remove the Item!"
+    end
+    redirect_to lose_cargo_import_path(import)
+  end
   private
 
-  def import_params
-    params.require(:import).permit(:quantity, :from, :to, :shipper,
-                                   :bl_number, :estimate_arrival, :description,
-                                   :customer_id, :rate_agreed, :weight,
-                                   :work_order_number, :remarks, :status,
-                                   :shipping_line_id,
-                                   :bl_received_type, :consignee_name,
-                                   :item_quantity, :item_weight, :order_type,
-                                   import_items_attributes: %i[container_number id _destroy equipment item_weight item_quantity])
+  def import_item_params
+    params.require(:import_item).permit(:container_number, :id, :_destroy, :equipment, :item_weight, :item_quantity, :import_id)
   end
-
-  def import_update_params
-    params.permit(:id, :columnName, :value, :clearing_agent, :estimate_arrival)
-  end
-
 end

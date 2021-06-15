@@ -23,9 +23,7 @@ class ImportsController < ApplicationController
   def create
     @import = Import.new(import_params)
     if @import.save!
-      weight = @import.item_quantity * @import.item_weight
-      assigned_weight = @import.import_items.pluck(:item_quantity, :item_weight).map { |i| i.inject(:*)}.sum
-      @import.update(quantity: @import.import_items.count, weight: weight, remaining_weight: weight- assigned_weight)
+      @import.update(quantity: @import.import_items.count, remaining_weight: @import.weight, remaining_quantity: @import.item_quantity)
       if is_ug_host?
         @bl_number = @import.bl_number
         authority_pdf = authority_letter_draft
@@ -84,9 +82,7 @@ class ImportsController < ApplicationController
         end
       end
       if @import.update_attributes(import_params)
-        weight = @import.item_quantity*@import.item_weight
-        assigned_weight = @import.import_items.pluck(:item_quantity, :item_weight).map { |i| i.inject(:*)}.sum
-        @import.update(quantity: @import.import_items.count, weight: weight, remaining_weight: weight - assigned_weight)
+        @import.update(quantity: @import.import_items.count)
         flash[:notice] = I18n.t 'import.update'
         redirect_to :imports
       else

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210608183326) do
+ActiveRecord::Schema.define(version: 20210615072737) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -299,7 +299,7 @@ ActiveRecord::Schema.define(version: 20210608183326) do
     t.integer  "entry_type"
     t.date     "entry_date"
     t.integer  "item_quantity",              default: 1
-    t.float    "item_weight",                default: 0.0
+    t.float    "remaining_quantity",         default: 0.0
     t.float    "remaining_weight",           default: 0.0
     t.string   "order_type",                 default: "Normal"
   end
