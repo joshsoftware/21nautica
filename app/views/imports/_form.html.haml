@@ -113,7 +113,7 @@
       $('.add_nested_fields').click()
   })
 
-  if(document.getElementById("order_type").value == "Lose-Cargo"){
+  if(document.getElementById("order_type").value == "Lose"){
     document.getElementById("container_details").style.display = "none"
     document.getElementById("container_heading").style.display = "none"
   }
@@ -121,7 +121,7 @@
   $("#order_type").on('change', function(event){
     event.preventDefault()
     $('#import_order_type').val(event.target.value)
-    if(event.target.value == "Lose-Cargo"){
+    if(event.target.value == "Lose"){
       document.getElementById("container_details").style.display = "none"
       document.getElementById("container_heading").style.display = "none"
     }

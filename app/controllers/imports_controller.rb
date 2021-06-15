@@ -11,18 +11,17 @@ class ImportsController < ApplicationController
     @import = Import.new
     @import.build_bill_of_lading
     @customers = Customer.order(:name)
-    @order_type = "Normal"
   end
 
   def edit
     @import = Import.find(params['id'])
     @customers = Customer.order(:name)
-    @order_type = @import.order_type
   end
 
   def create
     @import = Import.new(import_params)
     if @import.save!
+      @import.import_items.destroy_all if @import.order_type == ORDER_TYPE.last
       @import.update(quantity: @import.import_items.count, remaining_weight: @import.weight, remaining_quantity: @import.item_quantity)
       if is_ug_host?
         @bl_number = @import.bl_number
@@ -82,6 +81,7 @@ class ImportsController < ApplicationController
         end
       end
       if @import.update_attributes(import_params)
+        @import.import_items.destroy_all if @import.order_type == ORDER_TYPE.last
         @import.update(quantity: @import.import_items.count)
         flash[:notice] = I18n.t 'import.update'
         redirect_to :imports

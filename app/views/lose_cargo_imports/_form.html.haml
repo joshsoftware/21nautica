@@ -51,6 +51,9 @@
       %td.col-md-5
         .col-md-4{style: "font-weight: bold"} Rate Agreed:
         .col-md-4= @import.rate_agreed
+      %td.col-md-6
+        .col-md-4{style: "font-weight: bold"} Remaining Quantity:
+        .col-md-4= @import.remaining_quantity.to_i
 
 
 %hr
@@ -61,18 +64,27 @@
     .col-sm-2
       %button.btn.btn-small.btn-primary{'data-import-id' => "#{@import.id}", 'data-target' => '#addItemModal', 'data-toggle' => 'modal'} Add Item
 
+    %br
+    %br
     .row{style:"margin-left:2%;"}
       .col-md-12
         %div.scrollable-menu
           - @import_items.each do |import_item|
             .row
-              .col-md-4
+              %br
+              .col-md-3
                 .col-md-4{style: "font-weight: bold"} Quantity:
                 .col-md-4= import_item.item_quantity
+              .col-md-3
+                .col-md-4{style: "font-weight: bold"} Status:
+                .col-md-4= import_item.status
               .col-md-4
-                .col-md-4{style: "font-weight: bold"} Weight:
-                .col-md-4= import_item.item_weight
-              - if import_item.status == "under_loading_process"
+                .col-md-4{style: "font-weight: bold"} Truck No.:
+                - if import_item.truck.present?
+                  .col-md-4= import_item.truck.reg_number
+                - else
+                  .col-md-4= ""
+              - if REMOVE_ALLOWED_STATUSES.include?(import_item.status)
                 .col-md-2
                   = link_to 'Remove', lose_cargo_import_path(import_item), method: :delete, class: 'btn btn-danger btn-sm', data: {confirm: "Are you sure?"}
 

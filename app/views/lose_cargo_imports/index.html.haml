@@ -13,7 +13,6 @@
     %th Ref
     %th.imports-eta ETA
     %th Remaining Quantity
-    %th Remaining Weight
     %th.width9 Shipping Status
     %th Custom Status
     %th.imports-remarks Remarks
@@ -29,7 +28,6 @@
         %td= import.work_order_number
         %td= import.estimate_arrival
         %td= import.remaining_quantity.to_i
-        %td= import.remaining_weight.to_f
         %td= shipping_date_divs(import).html_safe
         %td= custom_date_divs(import).html_safe
         %td.remarks.h5
