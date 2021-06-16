@@ -2,7 +2,7 @@
   %hr
   = simple_nested_form_for @import , html: {class: 'form-horizontal'}, defaults: {input_html: {class: 'form-control'}} do |f|
     .row{style:"margin-left:2%;"}
-      .col-md-8
+      .col-md-5
         .form-group.custom-radio
           .col-md-3
             %label.control-label BL- Received Type
@@ -13,6 +13,14 @@
             %label.radio-inline
               = f.radio_button :bl_received_type, "original_telex"
               = label :bl_received_type, 'Original/Telex'
+              .col-md-6
+      .col-md-6
+        .form-group
+          .col-md-3
+            %label Order Type
+          .col-md-6
+            = select_tag :order_type,options_for_select(ORDER_TYPE), class: "form-control", label: "Order Type", id: "order_type", selected: :order_type
+            = f.input :order_type, as: :hidden
     .row{style:"margin-left:2%;"}
       .col-md-5
         = f.input :bl_number, label: 'BL- Number', input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
@@ -37,26 +45,28 @@
         = f.input :estimate_arrival, as: :string, input_html: { class: 'form-control date', data: {behaviour: "datepicker"}}
     .row{style:"margin-left:2%;"}
       .col-md-5
-        = f.input :equipment, collection: EQUIPMENT_TYPE, as: :select, label: 'Equipment', include_blank: false
-      .col-md-6
-        = f.input :description
-    .row{style:"margin-left:2%;"}
-      .col-md-5
-        = f.input :rate_agreed, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+        = f.input :item_quantity, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
       .col-md-6
         = f.input :weight, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
     .row{style:"margin-left:2%;"}
       .col-md-5
+        = f.input :rate_agreed, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
+      .col-md-6
+        = f.input :description
+    .row{style:"margin-left:2%;"}
+      .col-md-5
         = f.input :work_order_number, label: "File Ref No.", input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory."}
     %hr
-    %div{class:"quality-div", style:"margin-left:3%;margin-bottom:2%;font-weight:bold"}
+    %div{class:"quality-div",id: "container_heading", style:"margin-left:3%;margin-bottom:2%;font-weight:bold"}
       Container Details :
 
     .row{style:"margin-left:2%;"}
-      .col-md-8
-        %div.scrollable-menu
+      .col-md-12
+        %div.scrollable-menu#container_details
           = f.fields_for :import_items, html: {class: 'number'} do |item_form|
-            .col-md-8
+            .col-md-4
+              = item_form.input :equipment, collection: EQUIPMENT_TYPE, as: :select, label: 'Equipment', include_blank: false,  input_html: {class: 'form-control'}
+            .col-md-5
               = item_form.input :container_number, label: "Container", input_html: {class: 'form-control'}
             .col-md-2
               = item_form.link_to_remove 'Remove', class: 'btn btn-danger btn-sm'
@@ -90,4 +100,33 @@
 :javascript
   $(document).ready(function(){
     $("[data-for='multiselect']").select2();
+  })
+
+  $(document).on('ready page:load', function() {
+    import_items = #{@import.import_items.count}
+    if(import_items == 0 && $('.fields').length == 0)
+      $('.add_nested_fields').click()
+  })
+
+  $(document).on('nested:fieldRemoved', function(event) {
+    if($('.fields:visible').length == 0)
+      $('.add_nested_fields').click()
+  })
+
+  if(document.getElementById("order_type").value == "Lose"){
+    document.getElementById("container_details").style.display = "none"
+    document.getElementById("container_heading").style.display = "none"
+  }
+
+  $("#order_type").on('change', function(event){
+    event.preventDefault()
+    $('#import_order_type').val(event.target.value)
+    if(event.target.value == "Lose"){
+      document.getElementById("container_details").style.display = "none"
+      document.getElementById("container_heading").style.display = "none"
+    }
+    else{
+      document.getElementById("container_details").style.display = "block"
+      document.getElementById("container_heading").style.display = "block"
+    }
   })
