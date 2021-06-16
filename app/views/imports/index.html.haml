@@ -1,5 +1,5 @@
 .destination_filter.pull-right
-  = form_tag imports_path, method: :get do |f|  
+  = form_tag imports_path, method: :get do |f|
     = label_tag 'List Destination '
     = select_tag 'destination', options_for_select( ["Kampala", "Kigali", "Lusaka", "Goma"], params[:destination] || 'Kampala' )
 
@@ -11,7 +11,6 @@
       %th.shrink-name Customer Name
     %th.bl-width BL Number
     %th.shipping-line-imports Shipping Line
-    %th Eq
     %th Weight
     %th Ref
     %th.imports-eta ETA
@@ -29,7 +28,6 @@
           %td= "#{import.customer.name}"
         %td= import.bl_number
         %td= import.shipping_line.try(:name)
-        %td= import.equipment
         - if import.quantity
           %td= (import.weight.to_f/import.quantity).round(2)
         - else
@@ -70,7 +68,6 @@
 
 :coffeescript
   @customers = #{@customers.to_json}
-  @equipment = #{@equipment.to_json}
   @clearing_agent = #{@clearing_agent.to_json}
 
   $('#statusModal').on 'show.bs.modal', (event) ->

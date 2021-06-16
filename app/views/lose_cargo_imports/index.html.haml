@@ -1,63 +1,41 @@
 .destination_filter.pull-right
-  = form_tag shippings_path, method: :get do |f|
+  = form_tag lose_cargo_imports_path, method: :get do |f|
     = label_tag 'List Destination '
     = select_tag 'destination', options_for_select( ["Kampala", "Kigali", "Lusaka", "Goma"], params[:destination] || 'Kampala' )
 
-%table.table{id: 'shippings_table'}
+%table.table{id: 'imports_table'}
   %thead
     - if is_rfs_host?
-      %th.shrink-name Customer / Shipper / Consignee Name
+      %th.shrink-name Customer Name / Shipper Name / Consignee Name
     - else
       %th.shrink-name Customer Name
     %th.bl-width BL Number
-    %th.shipping-line-shippings Shipping Line
-    %th Weight
     %th Ref
-    %th ETA
-    %th Qty
-    %th.bl-width Shipping Status
-    %th.shippings-remarks Remarks
+    %th.imports-eta ETA
+    %th Remaining Quantity
+    %th.width9 Shipping Status
+    %th Custom Status
+    %th.imports-remarks Remarks
     %th Action
   %tbody
     - @imports.each do |import|
       %tr{id: import.id }
         - if is_rfs_host?
-          %td= "#{import.customer.name}" + " / " + "#{import.shipper}" +" / "+ "#{import.consignee_name}"+" / "+ "#{import.shipping_line.try(:name)}"
+          %td= "#{import.customer.name}" + " / " + "#{import.shipper}" +" / "+ "#{import.consignee_name}"
         - else
-          %td= "#{import.customer.name}" + " / " + "#{import.shipping_line.try(:name)}"
+          %td= "#{import.customer.name}"
         %td= import.bl_number
-        %td= import.shipping_line.try(:name)
-        - if import.quantity
-          %td= (import.weight.to_f/import.quantity).round(2)
-        - else
-          %td= '-'
         %td= import.work_order_number
         %td= import.estimate_arrival
-        %td= import.quantity
-        %td.shippingStatus{class: "text-center"}
-          .h5
-            .status_updated_at
-              -if import.bl_received_at
-                .date.obl= "OBL: #{import.bl_received_at.to_date.to_formatted_s}"
-              -if import.charges_received_at
-                .date.cr= "C/R: #{import.charges_received_at.to_date.to_formatted_s}"
-              -if import.charges_paid_at
-                .date.cp= "C/P: #{import.charges_paid_at.to_date.to_formatted_s}"
-              -if import.do_received_at
-                .date.do= "DO: #{import.do_received_at.to_date.to_formatted_s}"
-              -if import.pl_received_at
-                .date.pl= "P/L: #{import.pl_received_at.to_date.to_formatted_s}"
-          = link_to "Update", fetch_shipping_modal_shipping_path(id: import.id), :remote => true, :class => "btn btn-sm btn-primary"
+        %td= import.remaining_quantity.to_i
+        %td= shipping_date_divs(import).html_safe
+        %td= custom_date_divs(import).html_safe
         %td.remarks.h5
           .desc
             = import.remarks.try(:last).try(:desc)
           %button.btn.btn-sm.btn-primary{'data-model-id' => "#{import.id}", 'data-model-type' => 'import', 'data-target' => '#remarkModal', 'data-toggle' => 'modal'} Add
         %td{style: "white-space: nowrap"}
-          = link_to 'Edit', edit_import_path(import), class: 'btn btn-primary btn-sm'
-          - if current_user.is?('Admin')
-            = link_to 'Delete', import_path(import), method: :delete, class: 'btn btn-danger btn-sm', data: {confirm: "Are you sure?"}
-
-= render :partial => 'remarks/remark', :locals => {:@table => "shipping"}
+          = link_to 'View', lose_cargo_import_path(import), class: 'btn btn-primary btn-sm'
 
 #statusModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
   .modal-dialog
@@ -71,30 +49,30 @@
             = f.label :bl_number
           = f.input :status, collection: [], :input_html => {:class => 'select required form-control text-capitalize'}
           = f.input :remarks, as: :text, required: false
+          = f.hidden_field :category, :value => "external"
 
         .modal-footer
           = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
           = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
-#shipping_modal
 
-
+= render 'remarks/remark'
 
 :coffeescript
   @customers = #{@customers.to_json}
-  @equipment = #{@equipment.to_json}
+  @clearing_agent = #{@clearing_agent.to_json}
 
-  $('#statusModal').on 'shown.bs.modal', (event) ->
+  $('#statusModal').on 'show.bs.modal', (event) ->
     $('#statusModal .alert').remove()
     link_tag = $(event.relatedTarget)
     id = link_tag.attr('data-import-id')
 
-    $("#shippings_table tr#"+ id + " td.updateStatus .updateStatus").hide()
+    $("#imports_table tr#"+ id + " td.updateStatus .updateStatus").hide()
     $('#statusModal #bl_number label').text("BL Number : " + link_tag.attr('data-bl-number'))
     $('#statusModal form #import_status').html("")
     for i in link_tag.attr('data-states').split(",")
       $('#statusModal form #import_status').append("<option value=" + i + ">" + i.replace(/_/g, ' ') + "</option>")
 
-    $('#statusModal form').attr('action', "/shippings/" + id + "/updateStatus")
+    $('#statusModal form').attr('action', "/imports/" + id + "/updateStatus")
 
   $('#statusModal').on 'hide.bs.modal', (event) ->
-    $("#shippings_table tr td.updateStatus .updateStatus").show()
+    $("#imports_table tr td.updateStatus .updateStatus").show()

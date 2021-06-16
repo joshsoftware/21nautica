@@ -1,5 +1,5 @@
 # frozen_string_literal: true
- 
+
 class ImportsController < ApplicationController
   def index
     destination = params[:destination] || 'Kampala'
@@ -20,8 +20,9 @@ class ImportsController < ApplicationController
 
   def create
     @import = Import.new(import_params)
-    if @import.save
-      @import.update(quantity: @import.import_items.count)
+    if @import.save!
+      @import.import_items.destroy_all if @import.order_type == ORDER_TYPE.last
+      @import.update(quantity: @import.import_items.count, remaining_weight: @import.weight, remaining_quantity: @import.item_quantity)
       if is_ug_host?
         @bl_number = @import.bl_number
         authority_pdf = authority_letter_draft
@@ -33,6 +34,7 @@ class ImportsController < ApplicationController
       redirect_to imports_path
     else
       @customers = Customer.all
+      @order_type = @import.order_type
       render 'new'
     end
   end
@@ -58,7 +60,7 @@ class ImportsController < ApplicationController
     pdf = kit.to_pdf
     kit.to_file("#{Rails.root}/tmp/#{@bl_number}_#{filename}.pdf")
   end
-  
+
   def update
     @import = Import.find(params['id'])
     if import_update_params.keys.length > 1
@@ -73,16 +75,19 @@ class ImportsController < ApplicationController
         unless @import.bill_of_lading.update(bl_number: import_params[:bl_number])
           flash[:error] = @import.bill_of_lading.errors.full_messages.join(', ')
           @customers = Customer.all
+          @order_type = @import.order_type
           render 'edit'
           return
         end
       end
       if @import.update_attributes(import_params)
+        @import.import_items.destroy_all if @import.order_type == ORDER_TYPE.last
         @import.update(quantity: @import.import_items.count)
         flash[:notice] = I18n.t 'import.update'
         redirect_to :imports
       else
         @customers = Customer.all
+        @order_type = @import.order_type
         render 'edit'
       end
     end
@@ -163,13 +168,14 @@ class ImportsController < ApplicationController
   private
 
   def import_params
-    params.require(:import).permit(:equipment, :quantity, :from, :to, :shipper,
+    params.require(:import).permit(:quantity, :from, :to, :shipper,
                                    :bl_number, :estimate_arrival, :description,
                                    :customer_id, :rate_agreed, :weight,
                                    :work_order_number, :remarks, :status,
                                    :shipping_line_id,
                                    :bl_received_type, :consignee_name,
-                                   import_items_attributes: %i[container_number id _destroy])
+                                   :item_quantity, :item_weight, :order_type,
+                                   import_items_attributes: %i[container_number id _destroy equipment item_weight item_quantity])
   end
 
   def import_update_params

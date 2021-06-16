@@ -2,6 +2,8 @@
 - status << [@import_item.status.titleize, @import_item.status]
 - if @import_item.status == 'under_loading_process'
   - status << ['Allocated Truck', @import_item.aasm.events.join]
+- elsif @import_item.status == 'truck_allocated'
+  - status << ['Under Loading Process', 'under_loading_process'] << ['Ready to Load', 'ready_to_load']
 - else
   - status << [@import_item.aasm.events.join.titleize, @import_item.aasm.events.join]
 = simple_form_for @import_item, url: updateStatus_import_item_path(@import_item), method: :post, html: { class: 'form-horizontal status_form'}, remote: true do |f|
@@ -74,7 +76,7 @@
       toggleTruckNumber(true)
     else
       toggleTruckNumber(false)
-    
+
     $('#import_item_remarks').val('')
     if #{@import_item.status == "delivered"}
       $("#edit_import_item_#{@import_item.id} :input").prop("disabled", true);
@@ -125,7 +127,7 @@
       $(".allotted-trucks").hide().find('*').attr('disabled', true);
     toggleTruckNumber($("#allotted_trucks").val() =="0")
 
-  toggleTruckNumber = (flag) -> 
+  toggleTruckNumber = (flag) ->
     if flag
       $(".import_item_truck_number").show().children("input select").prop("disabled", false)
     else
@@ -144,4 +146,3 @@
         }).appendTo('.status_form');
       else
         $("#import_item_previous_month_entry").remove()
-

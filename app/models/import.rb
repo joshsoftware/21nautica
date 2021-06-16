@@ -38,7 +38,7 @@ class Import < ActiveRecord::Base
   before_save :set_entry_date, if: :entry_number_changed?
   after_save :update_gf_expiry_date, if: :gf_return_date_changed?
 
-  validates_presence_of :rate_agreed, :to, :from, :weight, :bl_number, :bl_received_type
+  validates_presence_of :rate_agreed, :to, :from, :bl_number, :bl_received_type
   validates_presence_of :work_order_number, on: :create
   validates_uniqueness_of :bl_number
   before_validation :strip_whitespaces, :only => [:bl_number]
@@ -135,7 +135,7 @@ class Import < ActiveRecord::Base
   def clearing_agent=(clearing_agent)
     self.c_agent = Vendor.where(name: clearing_agent).first
   end
-  
+
   def late_document_mail
     if estimate_arrival_changed? && estimate_arrival < DateTime.now
       UserMailer.late_document_mail(self).deliver()
