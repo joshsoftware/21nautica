@@ -23,6 +23,9 @@ en:
   hello: "Hello world"
   import:
     'update': 'Import Order Updated Successfully'
+  lose_cargo_import:
+    'update': 'Lose Cargo Import Order Updated Successfully'
+    'item_quantity_error': 'Sum of container quantities should not be greater than order item quantity'
   repair_head:
     'success': 'Repair Head Saved Successfully'
     'update': 'Repait Head Updated Successfully'
@@ -45,3 +48,10 @@ en:
     'update' : 'Breakdown Details Updated Successfully'
   fuel_entry:
     'saved': 'Fuel Entry Saved Successfully'
+  local_import:
+    create: 'Local Import Order Created Successfully'
+    update: 'Local Import Order Updated Successfully'
+    update_error: 'Error occured while updating Local Import!'
+  local_import_item:
+    update: 'Local Import Item Updated Successfully'
+    error: 'Error occured while updating Local Import Item!'

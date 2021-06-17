@@ -1,5 +1,5 @@
 .destination_filter_import_item.pull-right
-  = form_tag import_items_path, method: :get do |f|  
+  = form_tag import_items_path, method: :get do |f|
     = label_tag 'List Destination '
     = select_tag 'destination_item', options_for_select( ["Kampala", "Kigali", "Lusaka", "Goma"], params[:destination_item] || 'Kampala')
 
@@ -15,7 +15,7 @@
     - else
       %th.import-items-cust-name Customer Name
     %th.import-items-bl-number BL # / File Ref #
-    %th.import-items-cont-number Container Number
+    %th.import-items-cont-number Container Number/ Quantity
     %th.import-items-eq Display EQ
     %th.import-items-eta Estimate Arrival
     - if is_rfs_host? || is_ug_host? || Rails.env.development?
@@ -33,8 +33,11 @@
         - else
           %td= item.customer_name
         %td= "#{item.import.bl_number} / #{item.import.work_order_number}"
-        %td= item.container_number
-        %td= item.import.equipment
+        - if item.import.order_type == "Lose"
+          %td= item.item_quantity
+        - else
+          %td= item.container_number
+        %td= item.equipment
         %td= item.import.estimate_arrival
         - if is_rfs_host? || is_ug_host? || Rails.env.development?
           %td.truck_id
