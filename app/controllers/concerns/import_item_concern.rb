@@ -2,6 +2,14 @@ module ImportItemConcern
   extend ActiveSupport::Concern
 
   def update_status
+    if @import_item.status == "truck_allocated" && params[:import_item][:status] == "under_loading_process"
+      @import_item.truck.update_column(:status, "free")
+      @import_item.update(status: "under_loading_process", truck_id:nil, tentative_truck_allocation: nil)
+      @import_item.status_date.update(under_loading_process: Date.today, truck_allocated:nil)
+      @import_item.save
+      return;
+    end
+
     if @import_item.status_date.present? && @import_item.truck_id.to_s != import_item_params[:truck_id]
       @import_item.status_date.update(truck_allocated: Date.today)
     end
@@ -40,6 +48,6 @@ module ImportItemConcern
         @errors = @import_item.errors.full_messages
         @import_item.save
       end
-    end    
+    end
   end
 end
