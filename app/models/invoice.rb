@@ -1,7 +1,7 @@
 class Invoice < ActiveRecord::Base
   include AASM
   # include Remarkable
-  
+
   validates_presence_of :customer
   belongs_to :customer
   belongs_to :invoiceable, polymorphic: true
@@ -110,11 +110,11 @@ class Invoice < ActiveRecord::Base
   end
 
   def bl_number
-    self.invoiceable.try(:bl_number) || self.legacy_bl
+    self.invoiceable.try(:bl_number).gsub("/", "-").gsub(" ", "") || self.legacy_bl
   end
 
   def bl_or_container_number
-    self.bl_number || self.container_number || ""
+    self.bl_number.gsub("/", "-").gsub(" ", "") || self.container_number || ""
   end
 
   def entry_number
