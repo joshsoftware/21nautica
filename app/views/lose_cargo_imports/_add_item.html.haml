@@ -1,0 +1,21 @@
+#addItemModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "basicModal", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        = link_to '×', 'javascript:void(0)', class: 'close', data: {dismiss: 'modal'}, aria: {labelledby: 'close'}
+        %h1.modal-title Add Item
+      = simple_form_for(:import_item, url: '/lose_cargo_imports/create_item', html: { class: 'form-horizontal'}, remote: true, defaults: {input_html: {class: 'form-control'}}) do |f|
+        .modal-body
+          = f.input :item_quantity, input_html: {:"data-validation" => "required", :"data-validation-error-msg" => "This field is mandatory.", type: 'number', min: '1', step: 'any'}
+          = f.hidden_field :import_id, :value => 0
+        .modal-footer
+          = link_to 'Cancel', 'javascript:void(0)', class: 'btn btn-primary', data: {dismiss: 'modal'}
+          = f.submit 'Save', class: 'btn btn-primary', "data-disable-with" => "saving..."
+
+:coffeescript
+  $('#addItemModal').on 'shown.bs.modal', (event) ->
+    $('#addItemModal .alert').remove()
+
+    link_tag = $(event.relatedTarget)
+    import_id = link_tag.attr('data-import-id')
+    $('#import_item_import_id').val(import_id)

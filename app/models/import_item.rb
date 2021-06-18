@@ -33,8 +33,8 @@ class ImportItem < ActiveRecord::Base
 
   validate :assignment_of_truck_number, if: "truck_number.present? && truck_number_changed?"
   validate :assignment_of_truck_id, if: "truck_id.present? && truck_id_changed?"
-  validates_presence_of :container_number
-  validates_uniqueness_of :container_number
+  # validates_presence_of :container_number
+  # validates_uniqueness_of :container_number
   validate :validate_truck_number
   validate :validate_expiry_date
   validate :validate_exit_note_received
@@ -74,13 +74,14 @@ class ImportItem < ActiveRecord::Base
   end
 
   def free_truck
+    return true if self.status == "under_loading_process"
     if !truck_id.zero? && !(ImportItem.where.not(:status => "delivered").where(truck_id: self.truck_id).count > 0)
       truck.update_column(:status, "free")
     end
   end
 
   def strip_whitespaces
-    self.container_number = container_number.strip.squish
+    self.container_number = container_number.nil? ? "" : container_number.strip.squish
   end
 
   def mark_unmark_coload_truck
@@ -381,7 +382,7 @@ class ImportItem < ActiveRecord::Base
   end
 
   def should_not_remove_truck
-    if self.truck_id.blank? && self.truck_id_changed?
+    if self.truck_id.blank? && self.truck_id_changed? && self.status != "under_loading_process"
       self.errors[:base] << "You can change the truck but cannot remove"
       return false
     end

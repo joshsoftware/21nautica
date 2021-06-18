@@ -9,19 +9,19 @@ require 'mina/rvm'    # for rvm support. (http://rvm.io)
 #   deploy_to    - Path to deploy into.
 #   repository   - Git repo to clone from. (needed by mina/git)
 #   branch       - Branch name to deploy. (needed by mina/git)
-server = ENV['server'] || 'erp'
+server = ENV['server'] || 'staging'
 puts 'server'
 puts server
 
 if server == 'ug'
   set :rails_env, "production"
   app_env = 'ug-production'
-  path = '/www/ug-21nautica' 
+  path = '/www/ug-21nautica'
   set :branch, 'ug_production'
 elsif server == 'erp'
   set :rails_env, "production"
   app_env = 'erp-production'
-  path = '/www/erp-21nautica' 
+  path = '/www/erp-21nautica'
   set :branch, 'erp'
 elsif server == 'int'
   set :rails_env, "production"
@@ -37,12 +37,12 @@ else
   path = '/www/staging'
   set :rails_env, 'staging'
   app_env = 'staging'
-  branch = ENV['branch'] || 'staging'
-  set :branch, branch  
+  branch = ENV['branch'] || 'rfs-staging'
+  set :branch, branch
 end
 
 set :forward_agent, true
-set :domain, '54.89.118.119' 
+set :domain, '54.89.118.119'
 set :user, 'ubuntu'
 set :deploy_to, path
 set :repository, 'git@github.com:joshsoftware/21nautica.git'

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200716120111) do
+ActiveRecord::Schema.define(version: 20210615072737) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -242,6 +242,9 @@ ActiveRecord::Schema.define(version: 20200716120111) do
     t.string   "interchange_number"
     t.date     "tentative_truck_allocation"
     t.integer  "next_truck_id"
+    t.string   "equipment"
+    t.integer  "item_quantity",              default: 0
+    t.float    "item_weight",                default: 0.0
   end
 
   add_index "import_items", ["container_number"], name: "index_import_items_on_container_number", using: :btree
@@ -281,7 +284,7 @@ ActiveRecord::Schema.define(version: 20200716120111) do
     t.integer  "shipping_line_id"
     t.boolean  "is_all_container_delivered", default: false
     t.string   "entry_number"
-    t.integer  "shipper"
+    t.string   "shipper"
     t.integer  "bl_received_type"
     t.string   "consignee_name"
     t.date     "bl_received_at"
@@ -295,6 +298,10 @@ ActiveRecord::Schema.define(version: 20200716120111) do
     t.string   "rotation_number"
     t.integer  "entry_type"
     t.date     "entry_date"
+    t.integer  "item_quantity",              default: 1
+    t.float    "remaining_quantity",         default: 0.0
+    t.float    "remaining_weight",           default: 0.0
+    t.string   "order_type",                 default: "Normal"
   end
 
   add_index "imports", ["bill_of_lading_id"], name: "index_imports_on_bill_of_lading_id", using: :btree
