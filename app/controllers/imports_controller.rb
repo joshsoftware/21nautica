@@ -21,7 +21,7 @@ class ImportsController < ApplicationController
   def create
     begin
       @import = Import.new(import_params)
-        if(@import.order_type == "Normal")
+      if(@import.order_type == "Normal")
         @import.order_type = ORDER_TYPE.first
       end
       if @import.save!
@@ -175,7 +175,7 @@ class ImportsController < ApplicationController
 
   private
 
-  def import_params(params)
+  def import_params
     params.require(:import).permit(:quantity, :from, :to, :shipper,
                                    :bl_number, :estimate_arrival, :description,
                                    :customer_id, :rate_agreed, :weight,
