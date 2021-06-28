@@ -43,6 +43,7 @@ class ImportsController < ApplicationController
       end
     rescue Exception => e
       @customers = Customer.all
+      @order_type = ORDER_TYPE.first
       render 'new'
       flash[:error] = e
     end
