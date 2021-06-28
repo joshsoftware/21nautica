@@ -19,23 +19,33 @@ class ImportsController < ApplicationController
   end
 
   def create
-    @import = Import.new(import_params)
-    if @import.save!
-      @import.import_items.destroy_all if @import.order_type == ORDER_TYPE.last
-      @import.update(quantity: @import.import_items.count, remaining_weight: @import.weight, remaining_quantity: @import.item_quantity)
-      if is_ug_host?
-        @bl_number = @import.bl_number
-        authority_pdf = authority_letter_draft
-        authorisation_pdf = authorisation_letter_pdf
-        UserMailer.welcome_message_import(@import, authority_pdf, authorisation_pdf).deliver
-      else
-        UserMailer.welcome_message_import(@import).deliver()
+    begin
+      @import = Import.new(import_params)
+        if(@import.order_type == "Normal")
+        @import.order_type = ORDER_TYPE.first
       end
-      redirect_to imports_path
-    else
+      if @import.save!
+        @import.import_items.destroy_all if @import.order_type == ORDER_TYPE.last
+        @import.update(quantity: @import.import_items.count, remaining_weight: @import.weight, remaining_quantity: @import.item_quantity)
+        if is_ug_host?
+          @bl_number = @import.bl_number
+          authority_pdf = authority_letter_draft
+          authorisation_pdf = authorisation_letter_pdf
+          UserMailer.welcome_message_import(@import, authority_pdf, authorisation_pdf).deliver
+        else
+          UserMailer.welcome_message_import(@import).deliver()
+        end
+        redirect_to imports_path
+      else
+        @customers = Customer.all
+        @order_type = @import.order_type
+        render 'new'
+      end
+    rescue Exception => e
       @customers = Customer.all
       @order_type = @import.order_type
       render 'new'
+      flash[:error] = e
     end
   end
 
@@ -167,7 +177,7 @@ class ImportsController < ApplicationController
 
   private
 
-  def import_params
+  def import_params(params)
     params.require(:import).permit(:quantity, :from, :to, :shipper,
                                    :bl_number, :estimate_arrival, :description,
                                    :customer_id, :rate_agreed, :weight,
