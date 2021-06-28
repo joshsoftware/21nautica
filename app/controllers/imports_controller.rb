@@ -42,10 +42,8 @@ class ImportsController < ApplicationController
         render 'new'
       end
     rescue Exception => e
-      @customers = Customer.all
-      @order_type = ORDER_TYPE.first
-      render 'new'
       flash[:error] = e
+      redirect_to imports_path
     end
   end
 
