@@ -33,7 +33,7 @@ gem 'nested_form'
 gem 'aasm', '~> 3.3'
 # bootstrap-sass is a Sass-powered version of Bootstrap. Read more: https://github.com/twbs/bootstrap-sass
 gem 'will_paginate', '~> 3.1.0'
-gem 'will_paginate-bootstrap' 
+gem 'will_paginate-bootstrap'
 gem 'cancan'
 gem 'bootstrap-sass', '~> 3.2.0.4'
 gem 'bootstrap-tooltip-rails', '~> 0.1'
@@ -41,7 +41,7 @@ gem 'bootstrap-tooltip-rails', '~> 0.1'
 gem 'haml-rails'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
+gem 'newrelic_rpm'
 # Espinita is an ORM extension that logs all changes to your models
 gem "espinita", github: 'anilmaurya/espinita'
 
@@ -102,7 +102,7 @@ group :test do
   gem "minitest-around"
 end
 
-group :test, :development do 
+group :test, :development do
   gem 'pry'
   gem 'pry-nav'
   gem 'byebug'
