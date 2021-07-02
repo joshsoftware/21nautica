@@ -42,6 +42,10 @@ class TrucksController < ApplicationController
 
   def import_location
     render && return if request.get?
+    unless params[:file].present?
+      flash[:error] = "Please select file"
+      return
+    end
     CSV.read(params[:file].path, headers: true).each do |row|
       Truck.update_location(row['TRUCK NUMBER'], row['LOCATION'])
     end
