@@ -27,6 +27,7 @@
               %li= link_to 'Outstanding Empty Container', import_empty_containers_path
               %li= link_to 'Import/Download Location', import_location_trucks_path
               %li= link_to 'Breakdown Mng', breakdown_managements_path
+              %li= link_to 'Performance Review', export_preformance_review_report_import_items_path
         - if user_signed_in? && ['Admin', 'Operations', 'Accounts', 'Transport'].include?(current_user.role)
           %li.dropdown{class: ('active' if controller.controller_name.eql?('exports'))}
             = link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do

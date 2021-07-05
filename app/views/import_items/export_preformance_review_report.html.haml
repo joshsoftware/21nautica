@@ -1,0 +1,25 @@
+.margin-top
+  .panel.panel-default.table-responsive.col-lg-12.no-padding
+    .panel-heading.import_report
+      %h3 Performance Review Report
+    .panel-body
+    
+    = form_tag export_preformance_review_report_import_items_path, method: 'POST', class: 'form form-inline' do
+      .well
+        .row
+          %label.col-md-3 From Date:
+          %input{name: 'from_date', type: 'date', placeholder: 'From Date', value: @from_date}
+        %br
+        .row
+          %label.col-md-3 To Date:
+          %input{name: 'to_date', type: 'date', placeholder: 'From Date', value: @to_date}
+        %br
+        .row
+          .col-md-2
+          = submit_tag "Download Report", class: "btn btn-primary btn-padding"
+
+
+:css
+  .import_report {
+    background-color: '#fa0'
+  }

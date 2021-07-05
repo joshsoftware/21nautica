@@ -133,6 +133,7 @@ Rails.application.routes.draw do
     end
     collection do
       post :update_loading_date
+      match :export_preformance_review_report, via: [:get, :post]
     end
 
     resource :import_expense, only: [:edit, :update, :destroy]
