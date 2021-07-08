@@ -118,6 +118,24 @@ class ImportItemsController < ApplicationController
     end
   end
 
+  def export_preformance_review_report
+    @from_date = params[:from_date] || Date.today.beginning_of_month.strftime('%Y-%m-%d')
+    @to_date = params[:to_date] || Date.today.strftime('%Y-%m-%d')
+
+    render && return if request.get?
+    # set the Worksheet name
+
+    worksheet_name = "Performances Review #{@from_date}"
+    Report::PerformanceReviewReport.new.create_report(worksheet_name, @from_date, @to_date)
+
+    file_path = "#{Rails.root}/tmp/#{worksheet_name}.xlsx"
+    File.open(file_path, 'r') do |f|
+      send_data f.read, filename: "#{worksheet_name}.xlsx", type: 'application/xlsx' 
+    end
+
+    File.delete(file_path)
+  end
+
   private
 
   def import_item_params
