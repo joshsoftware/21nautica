@@ -20,7 +20,7 @@ class ImportsController < ApplicationController
 
   def create
     @import = Import.new(import_params)
-    if @import.save!
+    if @import.save
       @import.import_items.destroy_all if @import.order_type == ORDER_TYPE.last
       @import.update(quantity: @import.import_items.count, remaining_weight: @import.weight, remaining_quantity: @import.item_quantity)
       if is_ug_host?
@@ -35,6 +35,7 @@ class ImportsController < ApplicationController
     else
       @customers = Customer.all
       @order_type = @import.order_type
+      flash[:error] = @import.errors.full_messages.try(:join, ', ')
       render 'new'
     end
   end
