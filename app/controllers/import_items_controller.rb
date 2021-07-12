@@ -116,6 +116,11 @@ class ImportItemsController < ApplicationController
       end
       @location_dates = @location_dates.sort_by { |ld| ld['date'] }
     end
+
+    respond_to do |format|
+      format.js
+      format.html {redirect_to import_items_path}
+    end
   end
 
   def export_preformance_review_report
