@@ -124,8 +124,10 @@ class ImportItemsController < ApplicationController
 
     render && return if request.get?
     # set the Worksheet name
+    from_date = DateTime.parse(@from_date).strftime("%d%m%Y")
+    to_date = DateTime.parse(@to_date).strftime("%d%m%Y")
 
-    worksheet_name = "Performances Review #{@from_date}"
+    worksheet_name = "perf_review_#{from_date}_#{to_date}"
     Report::PerformanceReviewReport.new.create_report(worksheet_name, @from_date, @to_date)
 
     file_path = "#{Rails.root}/tmp/#{worksheet_name}.xlsx"
